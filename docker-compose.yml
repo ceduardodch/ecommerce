@@ -47,6 +47,7 @@ services:
       AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://adminshop.b2b.com.ec}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in Coolify}
       COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in Coolify}
+      MEDUSA_RUN_MIGRATIONS_ON_START: ${MEDUSA_RUN_MIGRATIONS_ON_START:-false}
     ports:
       - "${MEDUSA_ADMIN_PORT_MAPPING:-127.0.0.1:18215:9000}"
     expose:

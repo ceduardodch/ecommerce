@@ -42,4 +42,4 @@ COPY --from=builder /app/apps/backend/.medusa/server apps/backend
 
 EXPOSE 9000
 
-CMD ["sh", "-c", "cd apps/backend && npx medusa db:migrate && npm run start"]
+CMD ["sh", "-c", "cd apps/backend && if [ \"${MEDUSA_RUN_MIGRATIONS_ON_START:-false}\" = \"true\" ]; then /app/node_modules/.bin/medusa db:migrate --skip-links; fi && npm run start"]
