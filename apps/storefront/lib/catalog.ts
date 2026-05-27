@@ -13,7 +13,7 @@ export type Product = {
   tags: string[]
 }
 
-const fallbackProducts: Product[] = [
+export const fallbackProducts: Product[] = [
   {
     id: "prod-cctv-kit-4",
     variantId: "var-cctv-kit-4",

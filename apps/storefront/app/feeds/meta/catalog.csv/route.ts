@@ -1,3 +1,43 @@
+import { fallbackProducts } from "../../../../lib/catalog"
+
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
+function csv(value: string | number) {
+  const text = String(value ?? "")
+  if (/[",\n]/.test(text)) return `"${text.replace(/"/g, '""')}"`
+  return text
+}
+
+function fallbackCsv() {
+  const columns = [
+    "id",
+    "title",
+    "description",
+    "availability",
+    "condition",
+    "price",
+    "link",
+    "image_link",
+    "brand",
+  ]
+  const rows = fallbackProducts.map((product) => [
+    product.sku || product.id,
+    product.title,
+    product.description,
+    product.stock > 0 ? "in stock" : "out of stock",
+    "new",
+    `${product.price.amount.toFixed(2)} USD`,
+    product.productUrl,
+    product.imageUrl,
+    product.brand,
+  ])
+
+  return [columns.join(","), ...rows.map((row) => row.map(csv).join(","))].join(
+    "\n"
+  )
+}
+
 export async function GET() {
   const toolsUrl =
     process.env.TOOLS_API_INTERNAL_URL ||
@@ -6,7 +46,8 @@ export async function GET() {
 
   try {
     const response = await fetch(`${toolsUrl}/feeds/meta/catalog.csv`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
+      signal: AbortSignal.timeout(2000),
     })
     if (!response.ok) throw new Error("catalog feed unavailable")
     const csv = await response.text()
@@ -16,13 +57,10 @@ export async function GET() {
       },
     })
   } catch {
-    return new Response(
-      "id,title,description,availability,condition,price,link,image_link,brand\n",
-      {
-        headers: {
-          "content-type": "text/csv; charset=utf-8",
-        },
-      }
-    )
+    return new Response(fallbackCsv(), {
+      headers: {
+        "content-type": "text/csv; charset=utf-8",
+      },
+    })
   }
 }
