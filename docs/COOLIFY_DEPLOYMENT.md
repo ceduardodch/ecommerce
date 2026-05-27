@@ -9,6 +9,7 @@ Public routing:
 - `shop.b2b.com.ec` -> `storefront:3000`
 - `medusa-api:9000` and `ecommerce-tools:8787` are internal-only through Docker `expose`.
 - Do not publish `medusa-api` or `ecommerce-tools` directly to the host unless a specific webhook route is being protected and reviewed.
+- Default host bind for the public storefront is `127.0.0.1:18214:3000` through `STOREFRONT_PORT_MAPPING`.
 
 If Coolify requires a single public service, expose the storefront first. Add internal-only service URLs through Docker DNS:
 
@@ -27,6 +28,7 @@ Set these in Coolify environment variables, not in Git:
 - `PAYPHONE_STORE_ID` when `PAYPHONE_DRY_RUN=false`
 - `MEDUSA_PUBLISHABLE_KEY` after Medusa seed/admin setup
 - `MEDUSA_ADMIN_API_KEY` when production order sync is enabled
+- `STOREFRONT_PORT_MAPPING`, default `127.0.0.1:18214:3000`
 
 The compose file intentionally fails if the required core secrets are missing.
 

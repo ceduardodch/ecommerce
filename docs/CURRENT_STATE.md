@@ -34,7 +34,7 @@ El compose del ecommerce levanta:
 
 OpenClaw no esta en este compose. Debe desplegarse como app separada en Coolify con volumen propio.
 
-`medusa-api` y `ecommerce-tools` deben quedar internos; el compose usa `expose` para esos servicios. El unico servicio publico esperado es `storefront:3000` detras de `shop.b2b.com.ec`.
+`medusa-api` y `ecommerce-tools` deben quedar internos; el compose usa `expose` para esos servicios. El unico servicio publicado al host es el storefront por `STOREFRONT_PORT_MAPPING`, con default `127.0.0.1:18214:3000`, detras de `shop.b2b.com.ec`.
 
 ## Flujo funcional disponible
 
@@ -94,7 +94,7 @@ Resultado:
 - `docker compose config`: OK.
 - `npm run build`: OK, 3 paquetes exitosos.
 - `npm run tools:test`: OK, 3 tests pasaron.
-- Compose hardening: `medusa-api` y `ecommerce-tools` quedan con `expose`; solo `storefront` conserva `ports`.
+- Compose hardening: `medusa-api` y `ecommerce-tools` quedan con `expose`; solo `storefront` conserva `ports` limitado a `127.0.0.1:18214`.
 
 ## Validaciones recomendadas
 

@@ -39,7 +39,8 @@ docker compose up --build
 
 Useful URLs:
 
-- Storefront: `http://localhost:3000`
+- Storefront dev: `http://localhost:3000`
+- Storefront Docker compose: `http://localhost:18214`
 - Medusa: `http://localhost:9000`
 - Tools API: `http://localhost:8787/healthz`
 - Meta feed: `http://localhost:8787/feeds/meta/catalog.csv`

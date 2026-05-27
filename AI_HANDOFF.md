@@ -66,7 +66,7 @@ http://ecommerce-tools:8787
 
 Si la red interna de Coolify no resuelve ese host desde la app separada, exponer `ecommerce-tools` con token o conectar ambas apps a la misma red Docker/Coolify.
 
-En produccion no publicar `medusa-api` ni `ecommerce-tools` como puertos de host. El compose deja esos servicios internos y publica solo el storefront.
+En produccion no publicar `medusa-api` ni `ecommerce-tools` como puertos de host. El compose deja esos servicios internos y publica solo el storefront por `127.0.0.1:18214:3000` salvo que `STOREFRONT_PORT_MAPPING` indique otro bind.
 
 ## Primeros comandos
 

@@ -108,7 +108,7 @@ services:
       NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://shop.b2b.com.ec}
       TOOLS_API_INTERNAL_URL: http://ecommerce-tools:8787
     ports:
-      - "3000:3000"
+      - "${STOREFRONT_PORT_MAPPING:-127.0.0.1:18214:3000}"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 20s
