@@ -1,0 +1,41 @@
+{
+  "name": "b2b-ai-native-ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@11.6.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "turbo start",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "backend:dev": "turbo dev --filter=@b2b/medusa-backend",
+    "backend:build": "turbo build --filter=@b2b/medusa-backend",
+    "backend:start": "turbo start --filter=@b2b/medusa-backend",
+    "backend:seed": "turbo seed --filter=@b2b/medusa-backend",
+    "storefront:dev": "turbo dev --filter=@b2b/storefront",
+    "storefront:build": "turbo build --filter=@b2b/storefront",
+    "storefront:start": "turbo start --filter=@b2b/storefront",
+    "tools:dev": "turbo dev --filter=@b2b/ecommerce-tools",
+    "tools:build": "turbo build --filter=@b2b/ecommerce-tools",
+    "tools:start": "turbo start --filter=@b2b/ecommerce-tools",
+    "tools:test": "turbo test --filter=@b2b/ecommerce-tools"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "turbo": "^2.0.14"
+  },
+  "workspaces": [
+    "apps/**",
+    "services/**",
+    "!apps/backend/.medusa/**",
+    "!apps/storefront/.next/**"
+  ],
+  "overrides": {
+    "ajv": "^8.0.0"
+  }
+}

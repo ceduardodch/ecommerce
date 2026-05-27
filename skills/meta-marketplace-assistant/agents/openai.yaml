@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meta Marketplace Assistant"
+  short_description: "Draft Meta and Marketplace product posts safely."
+  default_prompt: "Use the meta-marketplace-assistant skill to draft Facebook, Instagram, and Marketplace content from ecommerce products with human review gates."

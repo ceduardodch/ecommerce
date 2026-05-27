@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ecommerce Sales"
+  short_description: "Sell products conversationally with OpenClaw tools."
+  default_prompt: "Use the ecommerce-sales skill to search products, quote, create orders, and generate PayPhone links for WhatsApp buyers."

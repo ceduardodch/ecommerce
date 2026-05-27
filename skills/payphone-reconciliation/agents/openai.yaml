@@ -1,0 +1,4 @@
+interface:
+  display_name: "PayPhone Reconciliation"
+  short_description: "Reconcile PayPhone payment links and orders."
+  default_prompt: "Use the payphone-reconciliation skill to verify PayPhone payment notifications, match them to ecommerce orders, and produce human-review payment status."

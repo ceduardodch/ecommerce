@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - release
+      - main
+  push:
+    branches:
+      - develop
+      - release
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        run: npm run build
+
+      - name: Test tools
+        run: npm run tools:test
+
+      - name: Validate compose
+        run: docker compose config >/tmp/ecommerce-compose.yml
