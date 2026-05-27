@@ -89,6 +89,13 @@ const approvedTestimonials: Array<{
   approved: boolean
 }> = []
 
+const starProductSkus = [
+  "MGC-WOK-GRANITO-32",
+  "MGC-OLLA-GRANITO-20",
+  "MGC-OLLA-GRANITO-24",
+  "MGC-SET-MGC-GRANITO",
+]
+
 function money(amount: number) {
   return `$${amount.toFixed(2)}`
 }
@@ -108,6 +115,21 @@ function hasPromo(product: Product) {
     product.originalPrice !== undefined &&
     product.originalPrice.amount > product.price.amount
   )
+}
+
+function starRank(product: Product) {
+  const skuIndex = starProductSkus.indexOf(product.sku)
+  if (skuIndex >= 0) return skuIndex
+  const normalized = `${product.title} ${product.sku}`.toLowerCase()
+  if (normalized.includes("wok") && normalized.includes("32")) return 0
+  if (normalized.includes("20 cm")) return 1
+  if (normalized.includes("24 cm")) return 2
+  if (normalized.includes("set")) return 3
+  return 99
+}
+
+function isStarProduct(product: Product) {
+  return starRank(product) < 99
 }
 
 function filterProducts(
@@ -254,16 +276,11 @@ export default async function Home({ searchParams }: HomeProps) {
   const categories = [...new Set(products.map((product) => product.category))]
   const visibleProducts = filterProducts(products, query, selectedCategory)
   const promoProducts = products.filter(hasPromo)
-  const starProducts = products.filter((product) =>
-    [
-      "prod-wok-granito-32",
-      "prod-olla-granito-20",
-      "prod-olla-granito-24",
-      "prod-set-mgc-granito",
-    ].includes(product.id),
-  )
+  const starProducts = products.filter(isStarProduct).sort((a, b) => {
+    return starRank(a) - starRank(b)
+  })
   const featured =
-    products.find((product) => product.id === "prod-wok-granito-32") ||
+    products.find((product) => starRank(product) === 0) ||
     promoProducts[0] ||
     products[0]
   const deals = (starProducts.length ? starProducts : products).slice(0, 4)
