@@ -37,6 +37,13 @@ type TrackingPayload = {
   eventId?: string
   product?: TrackingProduct
   products?: TrackingProduct[]
+  customer?: {
+    name?: string
+    phone?: string
+    email?: string
+    whatsappConsent?: boolean
+    tags?: string[]
+  }
   searchString?: string
   cta?: string
   placement?: string
@@ -435,6 +442,49 @@ export function TrackedWhatsAppLink({
 
         event.preventDefault()
         window.open(href, "_blank", "noopener,noreferrer")
+      }}
+    >
+      {children}
+    </a>
+  )
+}
+
+export function TrackedEventLink({
+  href,
+  eventName = "Lead",
+  type = "campaign_click",
+  cta,
+  placement,
+  className,
+  children,
+  metadata,
+}: {
+  href: string
+  eventName?: MetaEventName
+  type?: string
+  cta: string
+  placement: string
+  className?: string
+  children: ReactNode
+  metadata?: Record<string, unknown>
+}) {
+  return (
+    <a
+      className={className}
+      href={href}
+      onClick={(event) => {
+        trackStorefrontEvent({
+          eventName,
+          type,
+          cta,
+          placement,
+          leadId: randomId("lead"),
+          metadata,
+        })
+
+        if (href.startsWith("#")) return
+        event.preventDefault()
+        window.location.assign(href)
       }}
     >
       {children}

@@ -59,6 +59,9 @@ El servicio `ecommerce-tools` permite:
 - En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no responde o no tiene productos, no se muestra catalogo demo.
 - El fallback de cocina queda solo para desarrollo/pruebas con `ALLOW_DEMO_CATALOG=true`.
 - La orientacion actual es nicho cocina saludable: ollas y woks de granito, set MGC, utensilios compatibles, cuidado, recompra y promociones reales.
+- El storefront ahora esta orientado a social-commerce: hero de video local, prueba visual de producto, seccion "Visto en redes", guias publicas y captura "Club Cocina Saludable".
+- Los videos reales se colocan en `apps/storefront/public/media` como `hero-cocina.mp4`, `prueba-huevo.mp4`, `limpieza-rapida.mp4` y `receta-wok.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
+- Las guias publicas viven en `/guias` y `/guias/teflon-pfas`. El copy de salud evita diagnosticos, causalidad medica y claims PFOA/PFAS/PTFE sin certificacion del proveedor.
 - Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.
 - Catalogo fuente trazado a posts: `data/catalog/eter-niu-products.csv`.
 

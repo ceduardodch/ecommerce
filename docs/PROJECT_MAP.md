@@ -51,8 +51,10 @@ Next.js storefront publico.
 Responsabilidades:
 
 - Catalogo publico para `shop.b2b.com.ec`.
-- Cards de producto.
-- Boton de compra por WhatsApp.
+- Home social-commerce con slots locales de video, prueba de producto y catalogo visual.
+- Cards de producto con CTA WhatsApp y tracking de lead.
+- Guias publicas de valor para cocina saludable y PFAS/PFOA/PTFE.
+- Captura "Club Cocina Saludable" para email/WhatsApp, cupon y recompra.
 - Feed Meta proxy.
 - Pagina sandbox de PayPhone.
 - Experiencia cocina saludable-first: ollas y woks de granito, sets MGC, utensilios compatibles, recompra, cuidado y promociones reales.
@@ -60,7 +62,10 @@ Responsabilidades:
 Archivos clave:
 
 - `apps/storefront/app/page.tsx`: pantalla principal.
+- `apps/storefront/app/guias`: guias publicas de cocina saludable.
+- `apps/storefront/app/components/lead-capture-form.tsx`: formulario Club Cocina Saludable que registra `lead_created`.
 - `apps/storefront/app/globals.css`: estilos globales.
+- `apps/storefront/public/media`: posters locales y slots para MP4 aprobados.
 - `apps/storefront/lib/catalog.ts`: lectura de catalogo desde `ecommerce-tools`; fallback solo si `ALLOW_DEMO_CATALOG=true`.
 - `apps/storefront/app/feeds/meta/catalog.csv/route.ts`: proxy del feed Meta.
 - `apps/storefront/app/payphone/sandbox/[clientTransactionId]/page.tsx`: pagina local de pago sandbox.

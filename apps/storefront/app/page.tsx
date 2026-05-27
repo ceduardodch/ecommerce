@@ -1,24 +1,35 @@
+import { existsSync } from "node:fs"
+import { join } from "node:path"
 import {
   BadgeDollarSign,
+  BookOpen,
   ChefHat,
   ClipboardCheck,
   CookingPot,
   Flame,
+  HeartHandshake,
+  Leaf,
   MessageCircle,
   PackageSearch,
-  RefreshCw,
+  PlayCircle,
   Search,
   ShieldCheck,
   Sparkles,
+  Star,
   Tags,
   Timer,
   Truck,
   Utensils,
-  Zap,
+  Video,
 } from "lucide-react"
 import type { Product } from "../lib/catalog"
 import { getProducts } from "../lib/catalog"
-import { PageAnalytics, TrackedWhatsAppLink } from "./components/analytics"
+import { LeadCaptureForm } from "./components/lead-capture-form"
+import {
+  PageAnalytics,
+  TrackedEventLink,
+  TrackedWhatsAppLink,
+} from "./components/analytics"
 
 type HomeProps = {
   searchParams?: Promise<{
@@ -27,8 +38,69 @@ type HomeProps = {
   }>
 }
 
+type MediaSlot = {
+  id: string
+  title: string
+  label: string
+  poster: string
+  video: string
+  metric: string
+}
+
+const mediaSlots: MediaSlot[] = [
+  {
+    id: "hero-cocina",
+    title: "Ollas de granito en uso diario",
+    label: "Video principal",
+    poster: "/media/poster-hero.svg",
+    video: "hero-cocina.mp4",
+    metric: "Menos aceite",
+  },
+  {
+    id: "prueba-huevo",
+    title: "Prueba huevo y queso",
+    label: "Prueba de producto",
+    poster: "/media/poster-huevo.svg",
+    video: "prueba-huevo.mp4",
+    metric: "No se pega",
+  },
+  {
+    id: "limpieza-rapida",
+    title: "Limpieza despues de cocinar",
+    label: "Uso real",
+    poster: "/media/poster-limpieza.svg",
+    video: "limpieza-rapida.mp4",
+    metric: "Limpieza facil",
+  },
+  {
+    id: "receta-wok",
+    title: "Receta rapida en wok 32 cm",
+    label: "Receta",
+    poster: "/media/poster-receta.svg",
+    video: "receta-wok.mp4",
+    metric: "Wok 32 cm",
+  },
+]
+
+const approvedTestimonials: Array<{
+  name: string
+  city: string
+  quote: string
+  approved: boolean
+}> = []
+
 function money(amount: number) {
   return `$${amount.toFixed(2)}`
+}
+
+function mediaPath(file: string) {
+  try {
+    return existsSync(join(process.cwd(), "public", "media", file))
+      ? `/media/${file}`
+      : undefined
+  } catch {
+    return undefined
+  }
 }
 
 function hasPromo(product: Product) {
@@ -95,17 +167,14 @@ function ProductCard({
         <div className="product-heading">
           <p>{product.category}</p>
           <h2>{product.title}</h2>
-          <span>{product.sku}</span>
         </div>
-        <p className="description">{product.description}</p>
         <div className="product-specs">
           {product.material ? <span>{product.material}</span> : null}
           {product.diameterCm ? <span>{product.diameterCm} cm</span> : null}
           {product.capacity ? <span>{product.capacity}</span> : null}
-          {product.teflonFree ? <span>Sin teflon</span> : null}
-          {product.tipoCocina ? <span>{product.tipoCocina}</span> : null}
-          {product.nivel ? <span>{product.nivel}</span> : null}
+          {product.teflonFree ? <span>Opcion sin teflon</span> : null}
         </div>
+        <p className="description">{product.bundleUseCase || product.description}</p>
         <div className="signal-row">
           <span>
             <Truck size={15} />
@@ -127,13 +196,51 @@ function ProductCard({
           </div>
           <TrackedWhatsAppLink
             className="primary-button"
-            placement={compact ? "deal_card" : "product_card"}
+            placement={compact ? "social_deal_card" : "catalog_card"}
             product={product}
           >
             <MessageCircle size={18} />
-            Cotizar por WhatsApp
+            Cotizar
           </TrackedWhatsAppLink>
         </div>
+      </div>
+    </article>
+  )
+}
+
+function VideoSlot({ slot, featured }: { slot: MediaSlot; featured?: Product }) {
+  const video = mediaPath(slot.video)
+
+  return (
+    <article className="video-slot">
+      <div className="video-frame">
+        {video ? (
+          <video
+            aria-label={slot.title}
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={slot.poster}
+          >
+            <source src={video} type="video/mp4" />
+          </video>
+        ) : (
+          <img alt={slot.title} src={slot.poster} />
+        )}
+        <span>
+          <PlayCircle size={16} />
+          {slot.label}
+        </span>
+      </div>
+      <div>
+        <strong>{slot.title}</strong>
+        <p>{slot.metric}</p>
+        {featured ? (
+          <TrackedWhatsAppLink placement={`video_${slot.id}`} product={featured}>
+            Preguntar por WhatsApp
+          </TrackedWhatsAppLink>
+        ) : null}
       </div>
     </article>
   )
@@ -155,31 +262,26 @@ export default async function Home({ searchParams }: HomeProps) {
       "prod-set-mgc-granito",
     ].includes(product.id),
   )
-  const dealSource = starProducts.length
-    ? starProducts
-    : promoProducts.length
-      ? promoProducts
-      : products
-  const deals = dealSource.slice(0, 4)
-  const bundleProducts = products.filter((product) => product.bundleEligible)
-  const bundles = (bundleProducts.length ? bundleProducts : products).slice(
-    0,
-    3,
-  )
-  const reorderProducts = products
-    .filter((product) => product.reorderAfterDays)
-    .sort((a, b) => (a.reorderAfterDays || 999) - (b.reorderAfterDays || 999))
-    .slice(0, 3)
-  const whatsappPopular = [...products]
-    .sort((a, b) => b.stock - a.stock)
-    .slice(0, 3)
   const featured =
     products.find((product) => product.id === "prod-wok-granito-32") ||
     promoProducts[0] ||
     products[0]
+  const deals = (starProducts.length ? starProducts : products).slice(0, 4)
+  const bundles = products
+    .filter((product) => product.bundleEligible)
+    .slice(0, 3)
+  const guideProducts = (starProducts.length ? starProducts : products).slice(
+    0,
+    3,
+  )
+  const socialProducts = (starProducts.length ? starProducts : products).slice(
+    0,
+    4,
+  )
+  const approvedStories = approvedTestimonials.filter((item) => item.approved)
 
   return (
-    <main className="page-shell">
+    <main className="page-shell social-shell">
       <PageAnalytics
         category={selectedCategory}
         featured={featured}
@@ -187,14 +289,17 @@ export default async function Home({ searchParams }: HomeProps) {
       />
       <div className="promo-bar">
         <span>
-          <Zap size={16} />
+          <Sparkles size={16} />
           GRANITOHOY
         </span>
-        <strong>
-          Ollas y woks de granito para cocinar con menos aceite, sin promesas
-          medicas
-        </strong>
-        <a href="#productos">Ver productos</a>
+        <strong>Guia de cocina saludable + cupon para tu primera cotizacion</strong>
+        <TrackedEventLink
+          cta="promo_bar_guia"
+          href="#club"
+          placement="promo_bar"
+        >
+          Descargar
+        </TrackedEventLink>
       </div>
 
       <header className="topbar">
@@ -203,10 +308,10 @@ export default async function Home({ searchParams }: HomeProps) {
           <span>Eter Niu Cocina</span>
         </a>
         <nav>
+          <a href="#videos">Videos</a>
           <a href="#productos">Productos</a>
-          <a href="#menos-aceite">Menos aceite</a>
-          <a href="#guia">Guia</a>
-          <a href="#catalogo">Catalogo</a>
+          <a href="#guias">Guias</a>
+          <a href="#club">Club</a>
         </nav>
         <a className="ghost-button" href="/feeds/meta/catalog.csv">
           <PackageSearch size={18} />
@@ -214,79 +319,129 @@ export default async function Home({ searchParams }: HomeProps) {
         </a>
       </header>
 
-      <section className="market-hero" aria-label="Catalogo de cocina">
+      <section className="social-hero" aria-label="Cocina saludable">
+        <div className="hero-media">
+          <VideoSlot featured={featured} slot={mediaSlots[0]} />
+        </div>
         <div className="hero-copy">
           <p className="eyebrow">Cocina saludable por WhatsApp</p>
-          <h1>Ollas de granito para cocinar mejor en casa.</h1>
+          <h1>Ollas de granito para cocinar con menos aceite en casa.</h1>
           <p className="hero-subcopy">
-            Woks, ollas y sets de granito para preparar comida diaria con menos
-            aceite, limpieza facil y asesoria humana antes de pagar.
+            Elige wok, olla o set segun tu familia. Te asesoramos por WhatsApp
+            antes de pagar y registramos tu interes para dar seguimiento real.
           </p>
-          <form className="search-box" action="/">
-            <Search size={20} />
-            <input
-              aria-label="Buscar productos de cocina"
-              defaultValue={query}
-              name="q"
-              placeholder="Busca: wok 32 cm, olla 24 cm, menos aceite..."
-            />
-            {selectedCategory ? (
-              <input name="category" type="hidden" value={selectedCategory} />
-            ) : null}
-            <button type="submit">Buscar</button>
-          </form>
-          <div className="category-strip" aria-label="Categorias">
-            <a className={!selectedCategory ? "active" : ""} href="/">
-              Todo
-            </a>
-            {categories.map((category) => (
-              <a
-                className={selectedCategory === category ? "active" : ""}
-                href={`/?category=${encodeURIComponent(category)}`}
-                key={category}
+          <div className="hero-actions">
+            {featured ? (
+              <TrackedWhatsAppLink
+                className="primary-button hero-cta"
+                placement="hero_primary"
+                product={featured}
               >
-                {category}
-              </a>
-            ))}
+                <MessageCircle size={19} />
+                Quiero asesoria por WhatsApp
+              </TrackedWhatsAppLink>
+            ) : null}
+            <TrackedEventLink
+              className="secondary-button"
+              cta="hero_guia_cupon"
+              href="#club"
+              placement="hero_secondary"
+              metadata={{ leadMagnet: "guia_cocina_saludable" }}
+            >
+              <BookOpen size={18} />
+              Descargar guia + cupon
+            </TrackedEventLink>
+          </div>
+          <div className="hero-proof">
+            <span>
+              <Leaf size={17} />
+              Alternativa a antiadherentes tradicionales
+            </span>
+            <span>
+              <BadgeDollarSign size={17} />
+              Gama media, no low-cost
+            </span>
+            <span>
+              <ShieldCheck size={17} />
+              Claims fuertes solo con certificacion
+            </span>
           </div>
         </div>
-
-        {featured ? (
-          <TrackedWhatsAppLink
-            className="deal-spotlight"
-            placement="hero_spotlight"
-            product={featured}
-          >
-            <img alt={featured.title} src={featured.imageUrl} />
-            <div>
-              <span>Producto estrella</span>
-              <strong>{featured.title}</strong>
-              <p>{featured.healthAngle || featured.bundleUseCase}</p>
-              <b>{money(featured.price.amount)}</b>
-            </div>
-          </TrackedWhatsAppLink>
-        ) : null}
       </section>
 
-      <section className="trust-strip" aria-label="Condiciones comerciales">
+      <section className="search-panel" aria-label="Buscar productos">
+        <form className="search-box" action="/">
+          <Search size={20} />
+          <input
+            aria-label="Buscar productos de cocina"
+            defaultValue={query}
+            name="q"
+            placeholder="Busca: wok 32 cm, olla familiar, menos aceite..."
+          />
+          {selectedCategory ? (
+            <input name="category" type="hidden" value={selectedCategory} />
+          ) : null}
+          <button type="submit">Buscar</button>
+        </form>
+        <div className="category-strip" aria-label="Categorias">
+          <a className={!selectedCategory ? "active" : ""} href="/">
+            Todo
+          </a>
+          {categories.map((category) => (
+            <a
+              className={selectedCategory === category ? "active" : ""}
+              href={`/?category=${encodeURIComponent(category)}`}
+              key={category}
+            >
+              {category}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="proof-strip" aria-label="Pruebas de producto">
         <div>
-          <ShieldCheck size={18} />
-          Opcion sin teflon para uso diario
+          <Video size={22} />
+          <strong>Video primero</strong>
+          <span>Slots listos para Reels, pruebas y recetas.</span>
         </div>
         <div>
-          <BadgeDollarSign size={18} />
-          Pago por link PayPhone cuando aceptas la cotizacion
+          <Utensils size={22} />
+          <strong>Uso diario</strong>
+          <span>Huevo, queso, salteados, sopas y limpieza rapida.</span>
         </div>
         <div>
-          <MessageCircle size={18} />
-          Asesoria por WhatsApp antes de comprar
+          <HeartHandshake size={22} />
+          <strong>Postventa</strong>
+          <span>Cuidado a 7 dias y complementos por CRM.</span>
         </div>
+      </section>
+
+      <section className="section-head" id="videos">
+        <div>
+          <p className="eyebrow">Visto en redes</p>
+          <h2>Pruebas visuales, recetas y cuidado</h2>
+        </div>
+        <span>
+          <PlayCircle size={18} />
+          Sin embeds externos
+        </span>
+      </section>
+
+      <section className="video-grid" aria-label="Videos de cocina">
+        {mediaSlots.slice(1).map((slot, index) => (
+          <VideoSlot
+            featured={socialProducts[index] || featured}
+            key={slot.id}
+            slot={slot}
+          />
+        ))}
       </section>
 
       <section className="section-head" id="productos">
         <div>
           <p className="eyebrow">Productos estrella</p>
-          <h2>Los mas pedidos de granito para casa y recetas</h2>
+          <h2>Granito para cocinar rico sin comprar barato dos veces</h2>
         </div>
         <span>
           <Flame size={18} />
@@ -305,131 +460,120 @@ export default async function Home({ searchParams }: HomeProps) {
         ) : null}
       </section>
 
-      <section className="split-sections">
-        <div className="band" id="combos">
-          <div className="section-head compact-head">
+      <section className="social-proof-grid" aria-label="Contenido de redes">
+        {socialProducts.map((product, index) => (
+          <article className="social-card" key={product.id}>
+            <img alt={product.title} src={product.imageUrl} />
             <div>
-              <p className="eyebrow">Como elegir</p>
-              <h2>20 cm, 24 cm o wok 32 cm</h2>
-            </div>
-          </div>
-          <div className="mini-list">
-            {bundles.map((product) => (
+              <span>Reel {index + 1}</span>
+              <h2>{product.contentAngles?.[0] || product.title}</h2>
+              <p>{product.healthAngle || product.bundleUseCase}</p>
               <TrackedWhatsAppLink
-                key={product.id}
-                placement="combo_list"
+                className="text-link"
+                placement={`social_reel_${index + 1}`}
                 product={product}
               >
-                <Tags size={18} />
-                <span>{product.title}</span>
-                <strong>{money(product.price.amount)}</strong>
+                Pedir este producto
               </TrackedWhatsAppLink>
-            ))}
-          </div>
-        </div>
-
-        <div className="band">
-          <div className="section-head compact-head">
-            <div>
-              <p className="eyebrow">WhatsApp</p>
-              <h2>Mas cotizados por chat</h2>
             </div>
-          </div>
-          <div className="mini-list">
-            {whatsappPopular.map((product) => (
-              <TrackedWhatsAppLink
-                key={product.id}
-                placement="whatsapp_popular"
-                product={product}
-              >
-                <MessageCircle size={18} />
-                <span>{product.title}</span>
-                <strong>{product.stock} disp.</strong>
-              </TrackedWhatsAppLink>
-            ))}
-          </div>
+          </article>
+        ))}
+      </section>
+
+      {approvedStories.length ? (
+        <section className="testimonial-grid" aria-label="Testimonios reales">
+          {approvedStories.map((story) => (
+            <article key={`${story.name}-${story.city}`}>
+              <Star size={20} />
+              <p>{story.quote}</p>
+              <strong>
+                {story.name}, {story.city}
+              </strong>
+            </article>
+          ))}
+        </section>
+      ) : null}
+
+      <section className="guide-band" id="guias">
+        <div>
+          <p className="eyebrow">Guia Cocina Saludable</p>
+          <h2>Aprende a elegir antes de comprar</h2>
+        </div>
+        <div className="guide-cards">
+          <TrackedEventLink
+            cta="guide_teflon_pfas"
+            href="/guias/teflon-pfas"
+            placement="guide_band"
+            type="campaign_click"
+          >
+            <ShieldCheck size={22} />
+            <span>PFAS, PFOA y teflon explicado simple</span>
+          </TrackedEventLink>
+          <TrackedEventLink
+            cta="guide_sizes"
+            href="/guias"
+            placement="guide_band"
+            type="campaign_click"
+          >
+            <ChefHat size={22} />
+            <span>20 cm, 24 cm o wok 32 cm</span>
+          </TrackedEventLink>
+          <TrackedEventLink
+            cta="guide_care"
+            href="/guias"
+            placement="guide_band"
+            type="campaign_click"
+          >
+            <ClipboardCheck size={22} />
+            <span>Cuidado para que el granito dure mas</span>
+          </TrackedEventLink>
         </div>
       </section>
 
-      <section className="use-grid" id="menos-aceite" aria-label="Guias por uso">
-        <div>
-          <ChefHat size={26} />
-          <h2>Cocina con menos aceite</h2>
-          <p>
-            Woks y sartenes de granito ayudan a preparar huevos, vegetales y
-            salteados sin depender de mucho aceite.
-          </p>
-        </div>
-        <div>
-          <Utensils size={26} />
-          <h2>No se pega, se limpia rapido</h2>
-          <p>
-            El enfoque es uso diario: fuego medio, utensilios suaves y limpieza
-            simple despues de cocinar.
-          </p>
-        </div>
-        <div>
-          <Sparkles size={26} />
-          <h2>Para familia, diario y recetas</h2>
-          <p>
-            Olla 20 cm para pocas porciones, 24 cm para familia y wok 32 cm
-            para recetas completas.
-          </p>
-        </div>
-      </section>
-
-      <section className="education-grid" id="guia" aria-label="Guia saludable">
-        <div>
-          <p className="eyebrow">Eleccion informada</p>
-          <h2>Por que evitar teflon viejo o rayado</h2>
-          <p>
-            No hacemos diagnosticos ni promesas medicas. El mensaje correcto es
-            elegir alternativas de uso diario, cuidar el recubrimiento y pedir
-            certificacion cuando un proveedor declare PFOA, PFAS o PTFE.
-          </p>
-        </div>
-        <div>
-          <p className="eyebrow">Granito diario</p>
-          <h2>Mejor que comprar barato dos veces</h2>
-          <p>
-            La gama media apunta a durar mas que opciones basicas, sin entrar en
-            precios premium. Por eso el bot pregunta para cuantas personas
-            cocinas antes de recomendar.
-          </p>
-        </div>
-      </section>
-
-      <section className="section-head" id="recompra">
-        <div>
-          <p className="eyebrow">Cuidado</p>
-          <h2>Postventa para cuidar la olla y recomendar complementos</h2>
-        </div>
-        <span>
-          <RefreshCw size={18} />
-          CRM WhatsApp
-        </span>
-      </section>
-
-      <section className="reorder-strip" aria-label="Productos para recompra">
-        {reorderProducts.map((product) => (
+      <section className="chooser-grid" aria-label="Como elegir">
+        {guideProducts.map((product) => (
           <TrackedWhatsAppLink
             key={product.id}
-            placement="reorder_strip"
+            placement="size_chooser"
             product={product}
           >
-            <ClipboardCheck size={20} />
+            <Tags size={18} />
             <span>{product.title}</span>
-            <strong>{product.reorderAfterDays} dias</strong>
+            <strong>{product.capacity || money(product.price.amount)}</strong>
           </TrackedWhatsAppLink>
         ))}
       </section>
 
+      <section className="club-section" id="club">
+        <div className="club-copy">
+          <p className="eyebrow">Club Cocina Saludable</p>
+          <h2>Recibe la guia, el cupon y recordatorios utiles.</h2>
+          <p>
+            El formulario alimenta el CRM para que la IA sepa si vienes por
+            guia, video, producto especifico o recompra. Sin conversaciones
+            completas ni datos sensibles para Meta.
+          </p>
+          <div className="followup-flow">
+            <span>Dia 0 guia</span>
+            <span>Dia 2 tamano</span>
+            <span>Dia 7 cuidado</span>
+            <span>Dia 30 complemento</span>
+            <span>Dia 90 recompra</span>
+          </div>
+        </div>
+        <LeadCaptureForm
+          products={products.slice(0, 8).map((product) => ({
+            id: product.id,
+            sku: product.sku,
+            title: product.title,
+          }))}
+        />
+      </section>
+
       <section className="section-head" id="catalogo">
         <div>
-          <p className="eyebrow">Catalogo saludable</p>
-          <h2>
-            {visibleProducts.length} productos reales listos para cotizar
-          </h2>
+          <p className="eyebrow">Catalogo conectado a Medusa</p>
+          <h2>{visibleProducts.length} productos listos para cotizar</h2>
         </div>
         <span>
           <PackageSearch size={18} />
@@ -450,13 +594,13 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <nav className="mobile-action-bar" aria-label="Acciones rapidas">
+        <a href="#videos">
+          <PlayCircle size={18} />
+          Videos
+        </a>
         <a href="#productos">
           <Flame size={18} />
           Estrella
-        </a>
-        <a href="#catalogo">
-          <PackageSearch size={18} />
-          Catalogo
         </a>
         {featured ? (
           <TrackedWhatsAppLink placement="mobile_bar" product={featured}>

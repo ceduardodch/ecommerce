@@ -129,6 +129,8 @@ Flujo diario:
 
 - El storefront registra eventos web por `POST /api/events`, que proxy a `POST /tools/events`.
 - Eventos soportados: `page_view`, `product_interest`, `search`, `whatsapp_opened`, `lead_created`, `checkout_started`, `purchase_confirmed`, `campaign_click`, `care_followup_sent` y `complement_interest`.
+- El formulario "Club Cocina Saludable" registra `lead_created` con tags `newsletter` y `guia-cupon`, mas metadata como ciudad, personas en casa, producto de interes, cupon y plan de followup.
+- Las guias `/guias` y `/guias/teflon-pfas` generan contexto de campana. Si el lead viene de guia PFAS, responder con educacion segura, sin diagnosticos ni afirmaciones medicas absolutas.
 - Los CTAs de WhatsApp incluyen `ProductoID`, `Variante`, `SKU`, precio, material, diametro y `Lead` para que OpenClaw pueda unir conversacion con interes previo.
 - Si el mensaje llega con un `Lead`, consultar `GET /tools/ai-context/customer/:phone?leadId=<Lead>` para recuperar producto visto, origen y siguiente accion sugerida.
 - Meta CAPI solo envia eventos si estan configurados `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y existe consentimiento.
