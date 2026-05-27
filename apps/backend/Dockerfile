@@ -20,4 +20,4 @@ RUN npm run backend:build
 
 EXPOSE 9000
 
-CMD ["npm", "run", "backend:start"]
+CMD ["sh", "-c", "cd apps/backend/.medusa/server && npm run start"]
