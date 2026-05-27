@@ -103,6 +103,7 @@ services:
         server {
           listen 80;
           server_name _;
+          absolute_redirect off;
 
           location = / {
             return 302 /app;
