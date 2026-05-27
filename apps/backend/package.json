@@ -13,7 +13,7 @@
     "medusa"
   ],
   "scripts": {
-    "build": "medusa build",
+    "build": "medusa build && node ./scripts/patch-admin-cache-reload.mjs",
     "start": "medusa start",
     "dev": "medusa develop",
     "seed": "medusa exec ./src/migration-scripts/initial-data-seed.ts",
