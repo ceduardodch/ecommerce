@@ -43,10 +43,12 @@ services:
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in Coolify}@postgres:5432/medusa-store
       REDIS_URL: redis://redis:6379
       STORE_CORS: ${STORE_CORS:-http://localhost:3000,https://shop.b2b.com.ec}
-      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,https://shop.b2b.com.ec}
-      AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://admin.shop.b2b.com.ec}
+      AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://admin.shop.b2b.com.ec}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in Coolify}
       COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in Coolify}
+    ports:
+      - "${MEDUSA_ADMIN_PORT_MAPPING:-127.0.0.1:18215:9000}"
     expose:
       - "9000"
     healthcheck:

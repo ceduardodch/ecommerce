@@ -17,6 +17,7 @@ export function buildMetaCatalogCsv(products: Product[]) {
     "link",
     "image_link",
     "brand",
+    "sale_price",
   ]
   const rows = products.map((product) => [
     product.sku || product.id,
@@ -28,6 +29,9 @@ export function buildMetaCatalogCsv(products: Product[]) {
     product.productUrl,
     product.imageUrl,
     product.brand,
+    product.originalPrice && product.originalPrice.amount > product.price.amount
+      ? `${product.price.amount.toFixed(2)} USD`
+      : "",
   ])
 
   return [columns.join(","), ...rows.map((row) => row.map(csv).join(","))].join(

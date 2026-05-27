@@ -26,8 +26,9 @@ describe("commerce tools", () => {
   it("exports required Meta catalog columns", () => {
     const csv = buildMetaCatalogCsv(demoCatalog)
     expect(csv.split("\n")[0]).toBe(
-      "id,title,description,availability,condition,price,link,image_link,brand"
+      "id,title,description,availability,condition,price,link,image_link,brand,sale_price"
     )
     expect(csv).toContain("in stock")
+    expect(csv).toContain("389.00 USD")
   })
 })

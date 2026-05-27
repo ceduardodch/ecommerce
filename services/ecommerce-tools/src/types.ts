@@ -12,6 +12,12 @@ export type Product = {
   category: string
   brand: string
   price: Money
+  originalPrice?: Money
+  discountPercent?: number
+  promoLabel?: string
+  stockSignal?: string
+  bundleEligible?: boolean
+  deliveryBadge?: string
   stock: number
   imageUrl: string
   productUrl: string

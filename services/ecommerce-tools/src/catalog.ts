@@ -30,12 +30,29 @@ function productUrl(config: AppConfig, product: MedusaProduct) {
   return `${config.storePublicUrl.replace(/\/$/, "")}/products/${handle}`
 }
 
+function numberFromMetadata(value: unknown) {
+  const number = Number(value)
+  return Number.isFinite(number) && number > 0 ? number : undefined
+}
+
+function stringFromMetadata(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined
+}
+
 function normalizeMedusaProduct(config: AppConfig, product: MedusaProduct): Product {
   const variant = product.variants?.[0]
   const rawPrice =
     variant?.calculated_price?.calculated_amount ??
     variant?.prices?.find((price) => price.currency_code === "usd")?.amount ??
     0
+
+  const priceAmount = Number(rawPrice)
+  const originalAmount = numberFromMetadata(product.metadata?.originalPrice)
+  const discountPercent =
+    numberFromMetadata(product.metadata?.discountPercent) ||
+    (originalAmount && originalAmount > priceAmount
+      ? Math.round(((originalAmount - priceAmount) / originalAmount) * 100)
+      : undefined)
 
   return {
     id: product.id,
@@ -48,7 +65,17 @@ function normalizeMedusaProduct(config: AppConfig, product: MedusaProduct): Prod
       product.collection?.title ||
       String(product.metadata?.category || "Catalogo"),
     brand: String(product.metadata?.brand || config.metaCatalogBrand),
-    price: { amount: Number(rawPrice), currency: "USD" },
+    price: { amount: priceAmount, currency: "USD" },
+    originalPrice: originalAmount
+      ? { amount: originalAmount, currency: "USD" }
+      : undefined,
+    discountPercent,
+    promoLabel: stringFromMetadata(product.metadata?.promoLabel),
+    stockSignal: stringFromMetadata(product.metadata?.stockSignal),
+    bundleEligible:
+      product.metadata?.bundleEligible === true ||
+      product.metadata?.bundleEligible === "true",
+    deliveryBadge: stringFromMetadata(product.metadata?.deliveryBadge),
     stock: Number(product.metadata?.stock || 0),
     imageUrl: product.thumbnail || product.images?.[0]?.url || "",
     productUrl: productUrl(config, product),

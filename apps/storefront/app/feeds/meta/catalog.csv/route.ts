@@ -20,6 +20,7 @@ function fallbackCsv() {
     "link",
     "image_link",
     "brand",
+    "sale_price",
   ]
   const rows = fallbackProducts.map((product) => [
     product.sku || product.id,
@@ -31,6 +32,9 @@ function fallbackCsv() {
     product.productUrl,
     product.imageUrl,
     product.brand,
+    product.originalPrice && product.originalPrice.amount > product.price.amount
+      ? `${product.price.amount.toFixed(2)} USD`
+      : "",
   ])
 
   return [columns.join(","), ...rows.map((row) => row.map(csv).join(","))].join(

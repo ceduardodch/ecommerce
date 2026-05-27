@@ -42,6 +42,7 @@ Useful URLs:
 - Storefront dev: `http://localhost:3000`
 - Storefront Docker compose: `http://localhost:18214`
 - Medusa: `http://localhost:9000`
+- Medusa Admin production route: `https://admin.shop.b2b.com.ec/app`
 - Tools API: `http://localhost:8787/healthz`
 - Meta feed: `http://localhost:8787/feeds/meta/catalog.csv`
 
@@ -73,7 +74,7 @@ Use the dedicated seller agent and skills:
 
 ## Deployment
 
-Use `docker-compose.yml` as the Coolify compose app and route `shop.b2b.com.ec` to `storefront:3000`.
+Use `docker-compose.yml` as the Coolify compose app. Route `shop.b2b.com.ec` to the storefront host port and `admin.shop.b2b.com.ec` through Cloudflare Access to the Medusa Admin host port.
 
 ## Branch Strategy
 

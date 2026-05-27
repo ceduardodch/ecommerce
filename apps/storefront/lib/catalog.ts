@@ -7,6 +7,12 @@ export type Product = {
   category: string
   brand: string
   price: { amount: number; currency: "USD" }
+  originalPrice?: { amount: number; currency: "USD" }
+  discountPercent?: number
+  promoLabel?: string
+  stockSignal?: string
+  bundleEligible?: boolean
+  deliveryBadge?: string
   stock: number
   imageUrl: string
   productUrl: string
@@ -24,6 +30,12 @@ export const fallbackProducts: Product[] = [
     category: "Seguridad",
     brand: "B2B",
     price: { amount: 389, currency: "USD" },
+    originalPrice: { amount: 449, currency: "USD" },
+    discountPercent: 13,
+    promoLabel: "Combo instalado",
+    stockSignal: "8 kits listos para agenda",
+    bundleEligible: true,
+    deliveryBadge: "Instalacion coordinada",
     stock: 8,
     imageUrl:
       "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1000&q=80",
@@ -40,6 +52,12 @@ export const fallbackProducts: Product[] = [
     category: "Redes",
     brand: "B2B",
     price: { amount: 169, currency: "USD" },
+    originalPrice: { amount: 199, currency: "USD" },
+    discountPercent: 15,
+    promoLabel: "Oferta oficina",
+    stockSignal: "Stock alto",
+    bundleEligible: true,
+    deliveryBadge: "Entrega 24-48h",
     stock: 14,
     imageUrl:
       "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=1000&q=80",
@@ -56,6 +74,12 @@ export const fallbackProducts: Product[] = [
     category: "Ventas",
     brand: "B2B",
     price: { amount: 119, currency: "USD" },
+    originalPrice: { amount: 139, currency: "USD" },
+    discountPercent: 14,
+    promoLabel: "Mas pedido por WhatsApp",
+    stockSignal: "11 unidades disponibles",
+    bundleEligible: false,
+    deliveryBadge: "Activacion guiada",
     stock: 11,
     imageUrl:
       "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?auto=format&fit=crop&w=1000&q=80",
@@ -84,6 +108,7 @@ export async function getProducts() {
 
 export function whatsappLink(product: Product) {
   const seller = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
-  const text = `Hola, quiero cotizar ${product.title} (${product.sku}).`
+  const promo = product.promoLabel ? ` Promo: ${product.promoLabel}.` : ""
+  const text = `Hola, quiero cotizar ${product.title} (${product.sku}) por $${product.price.amount.toFixed(2)}.${promo}`
   return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
 }
