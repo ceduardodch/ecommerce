@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs"
 import { join } from "node:path"
+import type { CSSProperties } from "react"
 import {
   BadgeDollarSign,
   BookOpen,
@@ -47,38 +48,74 @@ type MediaSlot = {
   metric: string
 }
 
+type EditorialTile = {
+  id: string
+  eyebrow: string
+  title: string
+  text: string
+  poster: string
+  cta: string
+}
+
 const mediaSlots: MediaSlot[] = [
   {
     id: "hero-cocina",
-    title: "Ollas de granito en uso diario",
-    label: "Video principal",
+    title: "Cocina rico con menos aceite",
+    label: "Hero video",
     poster: "/media/poster-hero.svg",
     video: "hero-cocina.mp4",
-    metric: "Menos aceite",
+    metric: "Granito para el dia a dia",
   },
   {
     id: "prueba-huevo",
-    title: "Prueba huevo y queso",
-    label: "Prueba de producto",
+    title: "Huevo, queso y nada pegado",
+    label: "Prueba real",
     poster: "/media/poster-huevo.svg",
     video: "prueba-huevo.mp4",
     metric: "No se pega",
   },
   {
     id: "limpieza-rapida",
-    title: "Limpieza despues de cocinar",
-    label: "Uso real",
+    title: "Se limpia en minutos",
+    label: "Despues de cocinar",
     poster: "/media/poster-limpieza.svg",
     video: "limpieza-rapida.mp4",
     metric: "Limpieza facil",
   },
   {
     id: "receta-wok",
-    title: "Receta rapida en wok 32 cm",
+    title: "Cena completa en wok 32 cm",
     label: "Receta",
     poster: "/media/poster-receta.svg",
     video: "receta-wok.mp4",
     metric: "Wok 32 cm",
+  },
+]
+
+const editorialTiles: EditorialTile[] = [
+  {
+    id: "mesa-diaria",
+    eyebrow: "Para todos los dias",
+    title: "La olla que se queda en la cocina, no guardada.",
+    text: "Bonita para dejarla afuera, practica para huevos, arroz, guisos y salteados.",
+    poster: "/media/editorial-mesa.svg",
+    cta: "Ver recomendacion",
+  },
+  {
+    id: "combo-familiar",
+    eyebrow: "Bundle inteligente",
+    title: "Arma tu cambio de cocina por piezas, no por impulso.",
+    text: "Te recomendamos wok, olla o set segun cuantas personas comen en casa.",
+    poster: "/media/editorial-set.svg",
+    cta: "Armar combo",
+  },
+  {
+    id: "cuidado",
+    eyebrow: "Postventa",
+    title: "Cuidado simple para que el granito dure mas.",
+    text: "Utensilios suaves, fuego medio, limpieza correcta y recordatorio por WhatsApp.",
+    poster: "/media/editorial-cuidado.svg",
+    cta: "Recibir guia",
   },
 ]
 
@@ -197,6 +234,12 @@ function ProductCard({
           {product.teflonFree ? <span>Opcion sin teflon</span> : null}
         </div>
         <p className="description">{product.bundleUseCase || product.description}</p>
+        <div className="surface-row" aria-label="Materiales y estilo">
+          <span style={{ "--swatch": "#1c1d19" } as CSSProperties} />
+          <span style={{ "--swatch": "#c9bca7" } as CSSProperties} />
+          <span style={{ "--swatch": "#7f9a73" } as CSSProperties} />
+          <small>granito / tapa / cuidado</small>
+        </div>
         <div className="signal-row">
           <span>
             <Truck size={15} />
@@ -225,6 +268,43 @@ function ProductCard({
             Cotizar
           </TrackedWhatsAppLink>
         </div>
+      </div>
+    </article>
+  )
+}
+
+function EditorialTileCard({
+  tile,
+  product,
+}: {
+  tile: EditorialTile
+  product?: Product
+}) {
+  return (
+    <article className="editorial-tile">
+      <img alt={tile.title} src={tile.poster} />
+      <div>
+        <span>{tile.eyebrow}</span>
+        <h2>{tile.title}</h2>
+        <p>{tile.text}</p>
+        {product ? (
+          <TrackedWhatsAppLink
+            className="text-link"
+            placement={`editorial_${tile.id}`}
+            product={product}
+          >
+            {tile.cta}
+          </TrackedWhatsAppLink>
+        ) : (
+          <TrackedEventLink
+            className="text-link"
+            cta={`editorial_${tile.id}`}
+            href="#club"
+            placement={`editorial_${tile.id}`}
+          >
+            {tile.cta}
+          </TrackedEventLink>
+        )}
       </div>
     </article>
   )
@@ -296,6 +376,10 @@ export default async function Home({ searchParams }: HomeProps) {
     4,
   )
   const approvedStories = approvedTestimonials.filter((item) => item.approved)
+  const heroSavings =
+    featured?.originalPrice && featured.originalPrice.amount > featured.price.amount
+      ? featured.originalPrice.amount - featured.price.amount
+      : 0
 
   return (
     <main className="page-shell social-shell">
@@ -309,7 +393,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <Sparkles size={16} />
           GRANITOHOY
         </span>
-        <strong>Guia de cocina saludable + cupon para tu primera cotizacion</strong>
+        <strong>Lanzamiento cocina saludable: guia + cupon por WhatsApp</strong>
         <TrackedEventLink
           cta="promo_bar_guia"
           href="#club"
@@ -325,10 +409,10 @@ export default async function Home({ searchParams }: HomeProps) {
           <span>Eter Niu Cocina</span>
         </a>
         <nav>
-          <a href="#videos">Videos</a>
-          <a href="#productos">Productos</a>
+          <a href="#momentos">Momentos</a>
+          <a href="#videos">Pruebas</a>
+          <a href="#productos">Comprar</a>
           <a href="#guias">Guias</a>
-          <a href="#club">Club</a>
         </nav>
         <a className="ghost-button" href="/feeds/meta/catalog.csv">
           <PackageSearch size={18} />
@@ -341,11 +425,11 @@ export default async function Home({ searchParams }: HomeProps) {
           <VideoSlot featured={featured} slot={mediaSlots[0]} />
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">Cocina saludable por WhatsApp</p>
-          <h1>Ollas de granito para cocinar con menos aceite en casa.</h1>
+          <p className="eyebrow">Eter Niu Cocina</p>
+          <h1>Cocina rico. Lava facil. Usa menos aceite.</h1>
           <p className="hero-subcopy">
-            Elige wok, olla o set segun tu familia. Te asesoramos por WhatsApp
-            antes de pagar y registramos tu interes para dar seguimiento real.
+            Ollas y woks de granito para cambiar antiadherentes viejos por una
+            cocina mas bonita, practica y asesorada por WhatsApp.
           </p>
           <div className="hero-actions">
             {featured ? (
@@ -355,7 +439,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 product={featured}
               >
                 <MessageCircle size={19} />
-                Quiero asesoria por WhatsApp
+                Quiero mi recomendacion
               </TrackedWhatsAppLink>
             ) : null}
             <TrackedEventLink
@@ -366,21 +450,37 @@ export default async function Home({ searchParams }: HomeProps) {
               metadata={{ leadMagnet: "guia_cocina_saludable" }}
             >
               <BookOpen size={18} />
-              Descargar guia + cupon
+              Guia + cupon
             </TrackedEventLink>
           </div>
+          {featured ? (
+            <div className="hero-commerce-card">
+              <div>
+                <span>Mas pedido por redes</span>
+                <strong>{featured.title}</strong>
+                <p>
+                  {featured.diameterCm ? `${featured.diameterCm} cm · ` : ""}
+                  {featured.capacity || "Uso diario"} · {featured.material}
+                </p>
+              </div>
+              <div>
+                {heroSavings > 0 ? <span>Ahorra {money(heroSavings)}</span> : null}
+                <strong>{money(featured.price.amount)}</strong>
+              </div>
+            </div>
+          ) : null}
           <div className="hero-proof">
             <span>
               <Leaf size={17} />
-              Alternativa a antiadherentes tradicionales
+              Alternativa sin teflon
             </span>
             <span>
               <BadgeDollarSign size={17} />
-              Gama media, no low-cost
+              Gama media
             </span>
             <span>
               <ShieldCheck size={17} />
-              Claims fuertes solo con certificacion
+              Compra guiada
             </span>
           </div>
         </div>
@@ -419,25 +519,42 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="proof-strip" aria-label="Pruebas de producto">
         <div>
           <Video size={22} />
-          <strong>Video primero</strong>
-          <span>Slots listos para Reels, pruebas y recetas.</span>
+          <strong>Prueba antes de comprar</strong>
+          <span>Huevo, queso, limpieza y receta en formato Reel.</span>
         </div>
         <div>
           <Utensils size={22} />
-          <strong>Uso diario</strong>
-          <span>Huevo, queso, salteados, sopas y limpieza rapida.</span>
+          <strong>Asesoria por uso</strong>
+          <span>No es lo mismo cocinar para 2 que para 5 personas.</span>
         </div>
         <div>
           <HeartHandshake size={22} />
-          <strong>Postventa</strong>
-          <span>Cuidado a 7 dias y complementos por CRM.</span>
+          <strong>Seguimiento real</strong>
+          <span>Guia, cuidado y complemento quedan en CRM.</span>
         </div>
+      </section>
+
+      <section className="section-head" id="momentos">
+        <div>
+          <p className="eyebrow">Compra por momento</p>
+          <h2>Menos catalogo frio, mas cocina que se antoja</h2>
+        </div>
+      </section>
+
+      <section className="editorial-grid" aria-label="Momentos de cocina">
+        {editorialTiles.map((tile, index) => (
+          <EditorialTileCard
+            key={tile.id}
+            product={socialProducts[index] || featured}
+            tile={tile}
+          />
+        ))}
       </section>
 
       <section className="section-head" id="videos">
         <div>
           <p className="eyebrow">Visto en redes</p>
-          <h2>Pruebas visuales, recetas y cuidado</h2>
+          <h2>Pruebas visuales que venden sin explicar demasiado</h2>
         </div>
         <span>
           <PlayCircle size={18} />
@@ -458,11 +575,11 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="section-head" id="productos">
         <div>
           <p className="eyebrow">Productos estrella</p>
-          <h2>Granito para cocinar rico sin comprar barato dos veces</h2>
+          <h2>Los favoritos para empezar a cambiar tu cocina</h2>
         </div>
         <span>
           <Flame size={18} />
-          Stock visible
+          Desde {featured ? money(featured.price.amount) : "$95"}
         </span>
       </section>
 
@@ -514,7 +631,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="guide-band" id="guias">
         <div>
           <p className="eyebrow">Guia Cocina Saludable</p>
-          <h2>Aprende a elegir antes de comprar</h2>
+          <h2>Compra con criterio, no por miedo</h2>
         </div>
         <div className="guide-cards">
           <TrackedEventLink
@@ -564,11 +681,10 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="club-section" id="club">
         <div className="club-copy">
           <p className="eyebrow">Club Cocina Saludable</p>
-          <h2>Recibe la guia, el cupon y recordatorios utiles.</h2>
+          <h2>Guia, cupon y recordatorios sin llenar tu WhatsApp.</h2>
           <p>
-            El formulario alimenta el CRM para que la IA sepa si vienes por
-            guia, video, producto especifico o recompra. Sin conversaciones
-            completas ni datos sensibles para Meta.
+            Te enviamos ayuda segun tu cocina: tamano de familia, producto de
+            interes y ciudad. La IA usa ese contexto para recomendar mejor.
           </p>
           <div className="followup-flow">
             <span>Dia 0 guia</span>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Set de ollas de granito</title>
+  <desc id="desc">Imagen local editorial para set familiar de ollas y sartenes de granito.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#17231b"/>
+      <stop offset="0.56" stop-color="#176b49"/>
+      <stop offset="1" stop-color="#f5a45d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="28" stdDeviation="22" flood-color="#111813" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <rect width="1400" height="1000" fill="url(#bg)"/>
+  <circle cx="220" cy="180" r="118" fill="#ffd166" opacity="0.75"/>
+  <circle cx="1220" cy="764" r="148" fill="#fffdf6" opacity="0.16"/>
+  <g filter="url(#shadow)">
+    <g transform="translate(196 340)">
+      <ellipse cx="250" cy="260" rx="250" ry="68" fill="#0d120f"/>
+      <rect x="62" y="112" width="376" height="174" rx="78" fill="#222721"/>
+      <ellipse cx="250" cy="114" rx="190" ry="62" fill="#3b453d"/>
+      <ellipse cx="250" cy="96" rx="142" ry="40" fill="#fffdf6"/>
+    </g>
+    <g transform="translate(528 260)">
+      <ellipse cx="300" cy="360" rx="300" ry="76" fill="#0d120f"/>
+      <rect x="70" y="146" width="460" height="248" rx="112" fill="#1a1f1b"/>
+      <ellipse cx="300" cy="150" rx="230" ry="76" fill="#343d35"/>
+      <ellipse cx="300" cy="126" rx="174" ry="54" fill="#fffdf6"/>
+      <circle cx="360" cy="120" r="34" fill="#ffd166"/>
+    </g>
+    <g transform="translate(900 396)">
+      <ellipse cx="190" cy="224" rx="210" ry="56" fill="#0d120f"/>
+      <rect x="36" y="104" width="308" height="144" rx="66" fill="#222721"/>
+      <ellipse cx="190" cy="104" rx="154" ry="48" fill="#3b453d"/>
+    </g>
+  </g>
+  <text x="92" y="130" fill="#fffdf6" font-family="Georgia, serif" font-size="74" font-weight="700">Cambia por piezas</text>
+  <text x="96" y="194" fill="#f9e5bf" font-family="Arial, sans-serif" font-size="34" font-weight="800">wok / olla / set familiar</text>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Cuidado de olla de granito</title>
+  <desc id="desc">Imagen local editorial para cuidado y limpieza de ollas de granito.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6"/>
+      <stop offset="0.55" stop-color="#e7f4e7"/>
+      <stop offset="1" stop-color="#f5a45d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="22" flood-color="#191b14" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="1400" height="1000" fill="url(#bg)"/>
+  <circle cx="1180" cy="200" r="132" fill="#176b49" opacity="0.82"/>
+  <circle cx="238" cy="792" r="150" fill="#d83b24" opacity="0.75"/>
+  <g filter="url(#shadow)">
+    <ellipse cx="686" cy="650" rx="412" ry="88" fill="#151a16"/>
+    <rect x="342" y="436" width="688" height="238" rx="106" fill="#20251f"/>
+    <ellipse cx="686" cy="438" rx="344" ry="92" fill="#3b453d"/>
+    <ellipse cx="686" cy="412" rx="270" ry="64" fill="#fffdf6"/>
+    <path d="M508 396c88 42 260 42 356 0" fill="none" stroke="#ffd166" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="#176b49" stroke-width="28" stroke-linecap="round">
+    <path d="M456 250c80 48 176 48 286 0"/>
+    <path d="M846 222c54 48 122 64 204 44"/>
+  </g>
+  <text x="92" y="130" fill="#191b14" font-family="Georgia, serif" font-size="74" font-weight="700">Cuidala bien</text>
+  <text x="96" y="194" fill="#686f61" font-family="Arial, sans-serif" font-size="34" font-weight="800">fuego medio / utensilios suaves / esponja</text>
+</svg>
