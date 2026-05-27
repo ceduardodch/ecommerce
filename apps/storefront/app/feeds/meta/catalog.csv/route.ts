@@ -28,7 +28,9 @@ function fallbackCsv() {
     product.description,
     product.stock > 0 ? "in stock" : "out of stock",
     "new",
-    `${product.price.amount.toFixed(2)} USD`,
+    product.originalPrice && product.originalPrice.amount > product.price.amount
+      ? `${product.originalPrice.amount.toFixed(2)} USD`
+      : `${product.price.amount.toFixed(2)} USD`,
     product.productUrl,
     product.imageUrl,
     product.brand,

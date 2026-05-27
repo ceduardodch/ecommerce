@@ -29,6 +29,10 @@ describe("commerce tools", () => {
       "id,title,description,availability,condition,price,link,image_link,brand,sale_price"
     )
     expect(csv).toContain("in stock")
+    expect(csv).toContain(
+      "B2B-CCTV-4CH,Kit CCTV IP 4 camaras"
+    )
+    expect(csv).toContain("449.00 USD")
     expect(csv).toContain("389.00 USD")
   })
 })
