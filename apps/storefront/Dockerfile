@@ -14,7 +14,7 @@ COPY package.json package-lock.json turbo.json ./
 COPY apps/backend/package.json apps/backend/package.json
 COPY apps/storefront/package.json apps/storefront/package.json
 COPY services/ecommerce-tools/package.json services/ecommerce-tools/package.json
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 RUN npm run storefront:build
