@@ -17,7 +17,8 @@ import {
   Zap,
 } from "lucide-react"
 import type { Product } from "../lib/catalog"
-import { getProducts, whatsappLink } from "../lib/catalog"
+import { getProducts } from "../lib/catalog"
+import { PageAnalytics, TrackedWhatsAppLink } from "./components/analytics"
 
 type HomeProps = {
   searchParams?: Promise<{
@@ -99,6 +100,9 @@ function ProductCard({
         <p className="description">{product.description}</p>
         <div className="product-specs">
           {product.material ? <span>{product.material}</span> : null}
+          {product.diameterCm ? <span>{product.diameterCm} cm</span> : null}
+          {product.capacity ? <span>{product.capacity}</span> : null}
+          {product.teflonFree ? <span>Sin teflon</span> : null}
           {product.tipoCocina ? <span>{product.tipoCocina}</span> : null}
           {product.nivel ? <span>{product.nivel}</span> : null}
         </div>
@@ -121,15 +125,14 @@ function ProductCard({
             ) : null}
             <strong>{money(product.price.amount)}</strong>
           </div>
-          <a
+          <TrackedWhatsAppLink
             className="primary-button"
-            href={whatsappLink(product)}
-            rel="noreferrer"
-            target="_blank"
+            placement={compact ? "deal_card" : "product_card"}
+            product={product}
           >
             <MessageCircle size={18} />
             Cotizar por WhatsApp
-          </a>
+          </TrackedWhatsAppLink>
         </div>
       </div>
     </article>
@@ -144,7 +147,20 @@ export default async function Home({ searchParams }: HomeProps) {
   const categories = [...new Set(products.map((product) => product.category))]
   const visibleProducts = filterProducts(products, query, selectedCategory)
   const promoProducts = products.filter(hasPromo)
-  const deals = (promoProducts.length ? promoProducts : products).slice(0, 4)
+  const starProducts = products.filter((product) =>
+    [
+      "prod-wok-granito-32",
+      "prod-olla-granito-20",
+      "prod-olla-granito-24",
+      "prod-set-mgc-granito",
+    ].includes(product.id),
+  )
+  const dealSource = starProducts.length
+    ? starProducts
+    : promoProducts.length
+      ? promoProducts
+      : products
+  const deals = dealSource.slice(0, 4)
   const bundleProducts = products.filter((product) => product.bundleEligible)
   const bundles = (bundleProducts.length ? bundleProducts : products).slice(
     0,
@@ -157,30 +173,39 @@ export default async function Home({ searchParams }: HomeProps) {
   const whatsappPopular = [...products]
     .sort((a, b) => b.stock - a.stock)
     .slice(0, 3)
-  const featured = promoProducts[0] || products[0]
+  const featured =
+    products.find((product) => product.id === "prod-wok-granito-32") ||
+    promoProducts[0] ||
+    products[0]
 
   return (
     <main className="page-shell">
+      <PageAnalytics
+        category={selectedCategory}
+        featured={featured}
+        query={query}
+      />
       <div className="promo-bar">
         <span>
           <Zap size={16} />
-          COCINAHOY
+          GRANITOHOY
         </span>
         <strong>
-          Promos reales en ollas, cuchillos y combos con stock visible
+          Ollas y woks de granito para cocinar con menos aceite, sin promesas
+          medicas
         </strong>
-        <a href="#ofertas">Ver ofertas</a>
+        <a href="#productos">Ver productos</a>
       </div>
 
       <header className="topbar">
         <a className="brand-mark" href="/">
           <CookingPot size={22} />
-          <span>B2B Cocina</span>
+          <span>Eter Niu Cocina</span>
         </a>
         <nav>
-          <a href="#ofertas">Ofertas</a>
-          <a href="#combos">Combos</a>
-          <a href="#recompra">Recompra</a>
+          <a href="#productos">Productos</a>
+          <a href="#menos-aceite">Menos aceite</a>
+          <a href="#guia">Guia</a>
           <a href="#catalogo">Catalogo</a>
         </nav>
         <a className="ghost-button" href="/feeds/meta/catalog.csv">
@@ -191,15 +216,19 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="market-hero" aria-label="Catalogo de cocina">
         <div className="hero-copy">
-          <p className="eyebrow">Cocina niche por WhatsApp</p>
-          <h1>Ollas, cuchillos y combos para cocinar mejor y vender mas.</h1>
+          <p className="eyebrow">Cocina saludable por WhatsApp</p>
+          <h1>Ollas de granito para cocinar mejor en casa.</h1>
+          <p className="hero-subcopy">
+            Woks, ollas y sets de granito para preparar comida diaria con menos
+            aceite, limpieza facil y asesoria humana antes de pagar.
+          </p>
           <form className="search-box" action="/">
             <Search size={20} />
             <input
               aria-label="Buscar productos de cocina"
               defaultValue={query}
               name="q"
-              placeholder="Busca: ollas acero, cuchillos chef, combo emprendedor..."
+              placeholder="Busca: wok 32 cm, olla 24 cm, menos aceite..."
             />
             {selectedCategory ? (
               <input name="category" type="hidden" value={selectedCategory} />
@@ -223,27 +252,26 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
 
         {featured ? (
-          <a
+          <TrackedWhatsAppLink
             className="deal-spotlight"
-            href={whatsappLink(featured)}
-            rel="noreferrer"
-            target="_blank"
+            placement="hero_spotlight"
+            product={featured}
           >
             <img alt={featured.title} src={featured.imageUrl} />
             <div>
-              <span>Oferta destacada</span>
+              <span>Producto estrella</span>
               <strong>{featured.title}</strong>
-              <p>{featured.bundleUseCase || featured.promoLabel}</p>
+              <p>{featured.healthAngle || featured.bundleUseCase}</p>
               <b>{money(featured.price.amount)}</b>
             </div>
-          </a>
+          </TrackedWhatsAppLink>
         ) : null}
       </section>
 
       <section className="trust-strip" aria-label="Condiciones comerciales">
         <div>
           <ShieldCheck size={18} />
-          Factura, stock real y revision humana
+          Opcion sin teflon para uso diario
         </div>
         <div>
           <BadgeDollarSign size={18} />
@@ -251,14 +279,14 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
         <div>
           <MessageCircle size={18} />
-          Asesor de cocina por WhatsApp
+          Asesoria por WhatsApp antes de comprar
         </div>
       </section>
 
-      <section className="section-head" id="ofertas">
+      <section className="section-head" id="productos">
         <div>
-          <p className="eyebrow">Cierra hoy</p>
-          <h2>Ofertas para equipar cocina sin comprar de mas</h2>
+          <p className="eyebrow">Productos estrella</p>
+          <h2>Los mas pedidos de granito para casa y recetas</h2>
         </div>
         <span>
           <Flame size={18} />
@@ -266,7 +294,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </span>
       </section>
 
-      <section className="deal-grid" aria-label="Ofertas de cocina">
+      <section className="deal-grid" aria-label="Productos estrella de granito">
         {deals.map((product) => (
           <ProductCard compact key={product.id} product={product} />
         ))}
@@ -281,22 +309,21 @@ export default async function Home({ searchParams }: HomeProps) {
         <div className="band" id="combos">
           <div className="section-head compact-head">
             <div>
-              <p className="eyebrow">Combos</p>
-              <h2>Paquetes para casa, chef y emprendimiento</h2>
+              <p className="eyebrow">Como elegir</p>
+              <h2>20 cm, 24 cm o wok 32 cm</h2>
             </div>
           </div>
           <div className="mini-list">
             {bundles.map((product) => (
-              <a
-                href={whatsappLink(product)}
+              <TrackedWhatsAppLink
                 key={product.id}
-                rel="noreferrer"
-                target="_blank"
+                placement="combo_list"
+                product={product}
               >
                 <Tags size={18} />
                 <span>{product.title}</span>
                 <strong>{money(product.price.amount)}</strong>
-              </a>
+              </TrackedWhatsAppLink>
             ))}
           </div>
         </div>
@@ -310,48 +337,72 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
           <div className="mini-list">
             {whatsappPopular.map((product) => (
-              <a
-                href={whatsappLink(product)}
+              <TrackedWhatsAppLink
                 key={product.id}
-                rel="noreferrer"
-                target="_blank"
+                placement="whatsapp_popular"
+                product={product}
               >
                 <MessageCircle size={18} />
                 <span>{product.title}</span>
                 <strong>{product.stock} disp.</strong>
-              </a>
+              </TrackedWhatsAppLink>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="use-grid" aria-label="Guias por uso">
+      <section className="use-grid" id="menos-aceite" aria-label="Guias por uso">
         <div>
           <ChefHat size={26} />
-          <h2>Chef o cocina intensa</h2>
+          <h2>Cocina con menos aceite</h2>
           <p>
-            Cuchillos, sartenes y tablas para preparar rapido sin perder
-            control.
+            Woks y sartenes de granito ayudan a preparar huevos, vegetales y
+            salteados sin depender de mucho aceite.
           </p>
         </div>
         <div>
           <Utensils size={26} />
-          <h2>Casa bien equipada</h2>
-          <p>Sets para empezar con ollas, utensilios y cuidado simple.</p>
+          <h2>No se pega, se limpia rapido</h2>
+          <p>
+            El enfoque es uso diario: fuego medio, utensilios suaves y limpieza
+            simple despues de cocinar.
+          </p>
         </div>
         <div>
           <Sparkles size={26} />
-          <h2>Regalo util</h2>
+          <h2>Para familia, diario y recetas</h2>
           <p>
-            Combos de alto uso que se sienten premium sin inflar el presupuesto.
+            Olla 20 cm para pocas porciones, 24 cm para familia y wok 32 cm
+            para recetas completas.
+          </p>
+        </div>
+      </section>
+
+      <section className="education-grid" id="guia" aria-label="Guia saludable">
+        <div>
+          <p className="eyebrow">Eleccion informada</p>
+          <h2>Por que evitar teflon viejo o rayado</h2>
+          <p>
+            No hacemos diagnosticos ni promesas medicas. El mensaje correcto es
+            elegir alternativas de uso diario, cuidar el recubrimiento y pedir
+            certificacion cuando un proveedor declare PFOA, PFAS o PTFE.
+          </p>
+        </div>
+        <div>
+          <p className="eyebrow">Granito diario</p>
+          <h2>Mejor que comprar barato dos veces</h2>
+          <p>
+            La gama media apunta a durar mas que opciones basicas, sin entrar en
+            precios premium. Por eso el bot pregunta para cuantas personas
+            cocinas antes de recomendar.
           </p>
         </div>
       </section>
 
       <section className="section-head" id="recompra">
         <div>
-          <p className="eyebrow">Recompra</p>
-          <h2>Postventa pensada para mantenimiento y complementos</h2>
+          <p className="eyebrow">Cuidado</p>
+          <h2>Postventa para cuidar la olla y recomendar complementos</h2>
         </div>
         <span>
           <RefreshCw size={18} />
@@ -361,24 +412,23 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="reorder-strip" aria-label="Productos para recompra">
         {reorderProducts.map((product) => (
-          <a
-            href={whatsappLink(product)}
+          <TrackedWhatsAppLink
             key={product.id}
-            rel="noreferrer"
-            target="_blank"
+            placement="reorder_strip"
+            product={product}
           >
             <ClipboardCheck size={20} />
             <span>{product.title}</span>
             <strong>{product.reorderAfterDays} dias</strong>
-          </a>
+          </TrackedWhatsAppLink>
         ))}
       </section>
 
       <section className="section-head" id="catalogo">
         <div>
-          <p className="eyebrow">Catalogo</p>
+          <p className="eyebrow">Catalogo saludable</p>
           <h2>
-            {visibleProducts.length} productos de cocina listos para cotizar
+            {visibleProducts.length} productos reales listos para cotizar
           </h2>
         </div>
         <span>
@@ -400,19 +450,19 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <nav className="mobile-action-bar" aria-label="Acciones rapidas">
-        <a href="#ofertas">
+        <a href="#productos">
           <Flame size={18} />
-          Ofertas
+          Estrella
         </a>
         <a href="#catalogo">
           <PackageSearch size={18} />
           Catalogo
         </a>
         {featured ? (
-          <a href={whatsappLink(featured)} rel="noreferrer" target="_blank">
+          <TrackedWhatsAppLink placement="mobile_bar" product={featured}>
             <MessageCircle size={18} />
             WhatsApp
-          </a>
+          </TrackedWhatsAppLink>
         ) : null}
       </nav>
     </main>

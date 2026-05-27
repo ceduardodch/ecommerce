@@ -9,6 +9,7 @@ Mapa operativo del repo para agentes IA y humanos.
 - `README.md`: guia general.
 - `docker-compose.yml`: stack Coolify del ecommerce.
 - `.env.example`: variables locales esperadas.
+- `data/catalog/eter-niu-products.csv`: catalogo base con productos, links fuente y angulos de contenido.
 
 ## Apps
 
@@ -54,7 +55,7 @@ Responsabilidades:
 - Boton de compra por WhatsApp.
 - Feed Meta proxy.
 - Pagina sandbox de PayPhone.
-- Experiencia cocina-first: ollas, cuchillos, utensilios, combos, recompra y promociones reales.
+- Experiencia cocina saludable-first: ollas y woks de granito, sets MGC, utensilios compatibles, recompra, cuidado y promociones reales.
 
 Archivos clave:
 
@@ -170,7 +171,9 @@ HTTP:
 - `POST /tools/payphone-link`
 - `POST /tools/customers/import`
 - `GET /tools/customers/:phone`
+- `GET /tools/ai-context/customer/:phone`
 - `POST /tools/customer-events`
+- `POST /tools/events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 - `POST /webhooks/payphone`
@@ -185,7 +188,9 @@ MCP:
 - `create_payphone_link`
 - `import_customers`
 - `get_customer`
+- `ai_context`
 - `add_customer_event`
+- `record_event`
 - `due_followups`
 - `dashboard`
 - `meta_post_draft`

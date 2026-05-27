@@ -11,6 +11,7 @@ import {
   payphoneInputSchema,
   payphoneWebhookSchema,
   quoteInputSchema,
+  toolsEventInputSchema,
 } from "./contracts.js"
 
 const config = loadConfig()
@@ -97,6 +98,28 @@ app.get("/tools/customers/:phone", async (request, reply) => {
 app.post("/tools/customer-events", async (request) => {
   const input = customerEventInputSchema.parse(request.body)
   return { customer: await service.addCustomerEvent(input) }
+})
+
+app.post("/tools/events", async (request) => {
+  const input = toolsEventInputSchema.parse({
+    ...(request.body as Record<string, unknown>),
+    userAgent:
+      (request.body as { userAgent?: string } | undefined)?.userAgent ||
+      request.headers["user-agent"],
+    clientIp:
+      (request.body as { clientIp?: string } | undefined)?.clientIp ||
+      request.ip,
+  })
+  return service.recordEvent(input)
+})
+
+app.get("/tools/ai-context/customer/:phone", async (request) => {
+  const params = request.params as { phone: string }
+  const query = request.query as Record<string, string | undefined>
+  return service.aiContext(params.phone, {
+    leadId: query.leadId,
+    sessionId: query.sessionId,
+  })
 })
 
 app.get("/tools/followups/due", async (request) => {

@@ -23,7 +23,11 @@ type AnyB2bCrmService = {
 }
 
 function normalizePhone(phone: string) {
-  return phone.trim().replace(/[^\d+]/g, "")
+  const trimmed = phone.trim()
+  if (/^(lead|session):[a-z0-9:_-]+$/i.test(trimmed)) {
+    return trimmed.toLowerCase()
+  }
+  return trimmed.replace(/[^\d+]/g, "")
 }
 
 function asDate(value?: string) {
@@ -117,6 +121,13 @@ class B2bCrmModuleService extends MedusaService({
     return this.service_().listCrmCustomerProfiles(
       {},
       { take: limit, order: { updated_at: "DESC" } },
+    )
+  }
+
+  async listCustomerEvents(phone: string, limit = 50) {
+    return this.service_().listCrmCustomerEvents(
+      { phone: normalizePhone(phone) },
+      { take: limit, order: { at: "DESC" } },
     )
   }
 
@@ -272,9 +283,18 @@ class B2bCrmModuleService extends MedusaService({
     const leadPhones = new Set(
       events
         .filter((event) =>
-          ["quote_created", "order_created", "reorder_interest"].includes(
-            event.type,
-          ),
+          [
+            "whatsapp_click",
+            "whatsapp_opened",
+            "lead_created",
+            "product_interest",
+            "quote_started",
+            "quote_created",
+            "checkout_started",
+            "order_created",
+            "complement_interest",
+            "reorder_interest",
+          ].includes(event.type),
         )
         .map((event) => event.phone),
     )

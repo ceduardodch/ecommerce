@@ -21,7 +21,11 @@ function customersPath(dataDir: string) {
 }
 
 export function normalizePhone(phone: string) {
-  return phone.trim().replace(/[^\d+]/g, "")
+  const trimmed = phone.trim()
+  if (/^(lead|session):[a-z0-9:_-]+$/i.test(trimmed)) {
+    return trimmed.toLowerCase()
+  }
+  return trimmed.replace(/[^\d+]/g, "")
 }
 
 export async function readOrders(dataDir: string): Promise<OrderRecord[]> {

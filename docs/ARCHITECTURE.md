@@ -1,4 +1,4 @@
-# B2B AI Native Ecommerce Architecture
+# Eter Niu Cocina AI Native Ecommerce Architecture
 
 This project is a conversational kitchen-commerce stack for `shop.b2b.com.ec`.
 

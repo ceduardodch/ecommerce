@@ -16,6 +16,12 @@ export type AppConfig = {
   payphoneStoreId?: string
   payphoneDryRun: boolean
   metaCatalogBrand: string
+  metaApiVersion: string
+  pixelEnabled: boolean
+  metaPixelId?: string
+  metaDatasetId?: string
+  metaAccessToken?: string
+  metaCapiTestEventCode?: string
 }
 
 function bool(value: string | undefined, fallback: boolean) {
@@ -46,6 +52,13 @@ export function loadConfig(env = process.env): AppConfig {
     payphoneToken: env.PAYPHONE_TOKEN,
     payphoneStoreId: env.PAYPHONE_STORE_ID,
     payphoneDryRun: bool(env.PAYPHONE_DRY_RUN, true),
-    metaCatalogBrand: env.META_CATALOG_BRAND || "B2B",
+    metaCatalogBrand: env.META_CATALOG_BRAND || "Eter Niu Cocina",
+    metaApiVersion: env.META_API_VERSION || "v23.0",
+    pixelEnabled: bool(env.PIXEL_ENABLED || env.NEXT_PUBLIC_PIXEL_ENABLED, true),
+    metaPixelId: env.META_PIXEL_ID || env.NEXT_PUBLIC_META_PIXEL_ID,
+    metaDatasetId:
+      env.META_DATASET_ID || env.META_PIXEL_ID || env.NEXT_PUBLIC_META_PIXEL_ID,
+    metaAccessToken: env.META_ACCESS_TOKEN,
+    metaCapiTestEventCode: env.META_CAPI_TEST_EVENT_CODE,
   }
 }

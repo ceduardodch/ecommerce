@@ -1,17 +1,18 @@
 import type { Metadata } from "next"
+import { MetaPixel } from "./components/analytics"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "B2B Cocina | Ollas, cuchillos y combos por WhatsApp",
+  title: "Eter Niu Cocina | Ollas de granito por WhatsApp",
   description:
-    "Catalogo de cocina con ollas, cuchillos, utensilios, combos, cotizacion por WhatsApp y pago por link.",
+    "Ollas, woks y sets de granito para cocinar con menos aceite, limpieza facil, cotizacion por WhatsApp y pago por link.",
   metadataBase: new URL("https://shop.b2b.com.ec"),
   openGraph: {
-    title: "B2B Cocina",
+    title: "Eter Niu Cocina",
     description:
-      "Ollas, cuchillos y combos de cocina con vendedor IA por WhatsApp.",
+      "Ollas y woks de granito con asesor por WhatsApp para elegir segun tu familia y uso diario.",
     url: "https://shop.b2b.com.ec",
-    siteName: "B2B Cocina",
+    siteName: "Eter Niu Cocina",
     type: "website",
   },
 }
@@ -21,7 +22,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+        <MetaPixel />
+      </body>
     </html>
   )
 }

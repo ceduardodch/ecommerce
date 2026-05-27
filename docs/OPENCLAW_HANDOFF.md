@@ -39,7 +39,7 @@ WhatsApp ecommerce
 En la app OpenClaw ecommerce:
 
 ```text
-OPENCLAW_AGENT_NAME=B2B Cocina Seller
+OPENCLAW_AGENT_NAME=Eter Niu Cocina Seller
 OPENCLAW_AGENT_PROMPT_FILE=agents/openclaw-ecommerce-seller.md
 OPENCLAW_SKILLS_DIR=skills
 ECOMMERCE_TOOLS_BASE_URL=http://ecommerce-tools:8787
@@ -95,7 +95,9 @@ Rutas privadas esperadas:
 - `POST /tools/payphone-link`
 - `POST /tools/customers/import`
 - `GET /tools/customers/:phone`
+- `GET /tools/ai-context/customer/:phone`
 - `POST /tools/customer-events`
+- `POST /tools/events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 - `POST /tools/meta-post-draft`
@@ -104,9 +106,9 @@ Rutas privadas esperadas:
 ## Flujo de venta
 
 1. Cliente escribe por WhatsApp.
-2. Si conoce el telefono, OpenClaw consulta `GET /tools/customers/:phone` antes de recomendar.
+2. Si conoce el telefono, OpenClaw consulta `GET /tools/ai-context/customer/:phone` antes de recomendar.
 3. OpenClaw busca productos de cocina antes de decir precio o stock.
-4. OpenClaw recomienda maximo tres opciones segun uso: casa, chef, emprendimiento, regalo, mantenimiento o reposicion.
+4. OpenClaw recomienda maximo tres opciones segun uso: 20 cm, 24 cm, wok 32 cm, set MGC, menos aceite, familia, cuidado o reposicion.
 5. OpenClaw cotiza y queda evento `quote_created` si hay telefono.
 6. Si el cliente acepta, OpenClaw crea orden `pending_payment`.
 7. OpenClaw genera link PayPhone.
@@ -122,6 +124,14 @@ Flujo diario:
 3. Enviar solo si hay consentimiento o conversacion vigente.
 4. Si no, dejar borrador para aprobacion humana/campana permitida.
 5. Registrar `followup_sent`, `reorder_interest`, `no_response`, `conversation_escalated` u `opt_out` con `POST /tools/customer-events`.
+
+## Pixel y contexto IA
+
+- El storefront registra eventos web por `POST /api/events`, que proxy a `POST /tools/events`.
+- Eventos soportados: `page_view`, `product_interest`, `search`, `whatsapp_opened`, `lead_created`, `checkout_started`, `purchase_confirmed`, `campaign_click`, `care_followup_sent` y `complement_interest`.
+- Los CTAs de WhatsApp incluyen `ProductoID`, `Variante`, `SKU`, precio, material, diametro y `Lead` para que OpenClaw pueda unir conversacion con interes previo.
+- Si el mensaje llega con un `Lead`, consultar `GET /tools/ai-context/customer/:phone?leadId=<Lead>` para recuperar producto visto, origen y siguiente accion sugerida.
+- Meta CAPI solo envia eventos si estan configurados `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y existe consentimiento.
 
 ## Limites del agente
 
@@ -148,7 +158,7 @@ Con token:
 
 ```bash
 curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
-  "http://localhost:8787/tools/search-products?query=cuchillos"
+  "http://localhost:8787/tools/search-products?query=wok%2032"
 
 curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
   "http://localhost:8787/tools/followups/due"
@@ -159,7 +169,7 @@ curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
 
 Desde OpenClaw:
 
-- Preguntar: "Tienes ollas y cuchillos para empezar un emprendimiento?"
+- Preguntar: "Quiero una olla de granito para 4 personas, mejor 24 cm o wok 32?"
 - Verificar que llama a `search-products`.
 - Si el telefono esta disponible, verificar que llama a `get_customer`.
 - Pedir cotizacion.

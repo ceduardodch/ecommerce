@@ -15,6 +15,15 @@ import {
   listMedusaDueFollowups,
 } from "./medusa-admin.js"
 import {
+  crmPayloadForEvent,
+  eventIdFor,
+  eventTypeFor,
+  identityForEvent,
+  leadIdentity,
+  sendMetaConversionEvent,
+  sessionIdentity,
+} from "./events.js"
+import {
   addCustomerEvent,
   findCustomer,
   findOrder,
@@ -26,6 +35,7 @@ import {
   upsertOrder,
 } from "./storage.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
+import type { ToolsEventInput } from "./contracts.js"
 import type {
   CustomerEventRecord,
   CustomerInput,
@@ -44,6 +54,83 @@ function nextReorderDays(items: Array<{ reorderAfterDays?: number }>) {
     .map((item) => item.reorderAfterDays)
     .filter((value): value is number => Number.isFinite(value))
   return days.length ? Math.min(...days) : 90
+}
+
+function isPaidStatus(status: string | undefined) {
+  return ["paid", "success", "approved", "2", "3"].includes(
+    String(status || "").toLowerCase(),
+  )
+}
+
+function orderPurchaseEvent(order: OrderRecord): ToolsEventInput {
+  return {
+    eventName: "Purchase",
+    type: "purchase_confirmed",
+    eventId: `purchase:${order.id}`,
+    at: new Date().toISOString(),
+    source: "payphone",
+    consent: order.customer.whatsappConsent,
+    customer: order.customer,
+    products: order.quote.lines.map((line) => ({
+      productId: line.productId,
+      variantId: line.variantId,
+      sku: line.sku,
+      title: line.title,
+      price: line.unitPrice.amount,
+      currency: line.unitPrice.currency,
+      quantity: line.quantity,
+    })),
+    value: order.quote.total.amount,
+    currency: order.quote.currency,
+    metadata: {
+      orderId: order.id,
+      medusaOrderId: order.medusaOrderId,
+      quoteId: order.quote.id,
+    },
+  }
+}
+
+function recentEventsFromCustomer(customer: unknown) {
+  if (!customer || typeof customer !== "object") return []
+  const events = (customer as { events?: unknown }).events
+  return Array.isArray(events) ? events : []
+}
+
+function customerTags(customer: unknown) {
+  if (!customer || typeof customer !== "object") return []
+  const tags = (customer as { tags?: unknown }).tags
+  return Array.isArray(tags) ? tags.filter((tag) => typeof tag === "string") : []
+}
+
+function suggestNextAction(customer: unknown, events: unknown[]) {
+  const eventTypes = events
+    .map((event) =>
+      event && typeof event === "object"
+        ? String((event as { type?: unknown }).type || "")
+        : "",
+    )
+    .filter(Boolean)
+  const tags = customerTags(customer)
+
+  if (eventTypes.includes("checkout_started")) {
+    return "Retomar pago pendiente con link PayPhone y confirmar entrega."
+  }
+  if (
+    eventTypes.includes("whatsapp_click") ||
+    eventTypes.includes("whatsapp_opened") ||
+    eventTypes.includes("product_interest") ||
+    eventTypes.includes("lead_created")
+  ) {
+    return "Responder con contexto del producto visto y pedir uso, presupuesto y ciudad."
+  }
+  if (eventTypes.includes("paid")) {
+    return "Ofrecer complemento, cuidado del producto o recompra segun historial."
+  }
+  if (tags.includes("web-anonymous")) {
+    return "Identificar telefono del lead y asociar la conversacion al producto consultado."
+  }
+
+  return "Consultar necesidad de cocina y recomendar desde catalogo real antes de cotizar."
 }
 
 async function trackCustomerEvent(
@@ -76,6 +163,16 @@ async function trackCustomerEvent(
 }
 
 export function createCommerceService(config: AppConfig) {
+  async function getAnyCustomer(identity: string) {
+    try {
+      return config.crmBackend === "medusa"
+        ? await getMedusaCustomer(config, identity)
+        : await findCustomer(config.dataDir, identity)
+    } catch {
+      return undefined
+    }
+  }
+
   return {
     async products(input: {
       query?: string
@@ -132,7 +229,7 @@ export function createCommerceService(config: AppConfig) {
 
       const now = new Date().toISOString()
       const order: OrderRecord = {
-        id: `B2B-${Date.now().toString(36).toUpperCase()}`,
+        id: `ETN-${Date.now().toString(36).toUpperCase()}`,
         quote,
         customer: input.customer || {},
         status: "pending_payment",
@@ -208,7 +305,15 @@ export function createCommerceService(config: AppConfig) {
 
     async payphoneWebhook(payload: Record<string, unknown>) {
       if (config.crmBackend === "medusa") {
-        return forwardPayphoneWebhook(config, payload)
+        const result = await forwardPayphoneWebhook(config, payload)
+        if (isPaidStatus(result.status) && result.order) {
+          await sendMetaConversionEvent(
+            config,
+            orderPurchaseEvent(result.order),
+            `purchase:${result.order.id}`,
+          )
+        }
+        return result
       }
 
       const clientTransactionId = String(payload.clientTransactionId || "")
@@ -274,6 +379,11 @@ export function createCommerceService(config: AppConfig) {
             nextFollowupAt: addDays(now, suggestedFrequencyDays),
             followupReason: "recompra_o_complemento_cocina",
           },
+        )
+        await sendMetaConversionEvent(
+          config,
+          orderPurchaseEvent(updated),
+          `purchase:${updated.id}`,
         )
       }
       return { matched: true, status: updated.status, order: updated }
@@ -359,6 +469,113 @@ export function createCommerceService(config: AppConfig) {
         },
       )
       return updated
+    },
+
+    async recordEvent(input: ToolsEventInput) {
+      const eventId = eventIdFor(input)
+      const meta = await sendMetaConversionEvent(config, input, eventId)
+      const identity = identityForEvent(input)
+
+      if (!identity) {
+        return {
+          accepted: true,
+          crmStored: false,
+          reason: "missing_identity",
+          eventId,
+          eventName: input.eventName,
+          meta,
+        }
+      }
+
+      const type = eventTypeFor(input)
+      const now = input.at || new Date().toISOString()
+      const payload = crmPayloadForEvent(input, eventId, meta)
+      const tags = input.customer?.tags || [
+        input.customer?.phone ? "web-lead" : "web-anonymous",
+      ]
+      const customerPatch = {
+        whatsappConsent: input.customer?.whatsappConsent,
+        tags,
+      }
+
+      if (config.crmBackend === "medusa") {
+        await addMedusaCustomerEvent(config, {
+          phone: identity,
+          type,
+          at: now,
+          payload,
+          source: input.source || "storefront",
+          whatsappConsent: customerPatch.whatsappConsent,
+          tags: customerPatch.tags,
+        })
+      } else {
+        await upsertCustomer(config.dataDir, {
+          phone: identity,
+          name: input.customer?.name,
+          email: input.customer?.email,
+          whatsappConsent: input.customer?.whatsappConsent,
+          tags,
+        })
+        await addCustomerEvent(
+          config.dataDir,
+          identity,
+          {
+            type,
+            at: now,
+            payload,
+            source: input.source || "storefront",
+          },
+          customerPatch,
+        )
+      }
+
+      return {
+        accepted: true,
+        crmStored: true,
+        identity,
+        eventId,
+        eventName: input.eventName,
+        crmEventType: type,
+        meta,
+      }
+    },
+
+    async aiContext(
+      phone: string,
+      input: { leadId?: string; sessionId?: string } = {},
+    ) {
+      const identities = [
+        phone,
+        input.leadId ? leadIdentity(input.leadId) : undefined,
+        input.sessionId ? sessionIdentity(input.sessionId) : undefined,
+      ].filter((value): value is string => Boolean(value))
+
+      const records = await Promise.all(identities.map(getAnyCustomer))
+      const customer = records[0]
+      const linkedRecords = records.filter(Boolean)
+      const recentEvents = linkedRecords.flatMap(recentEventsFromCustomer)
+      const webSignals = recentEvents.filter((event) => {
+        if (!event || typeof event !== "object") return false
+        return [
+          "page_view",
+          "view_content",
+          "product_interest",
+          "search",
+          "whatsapp_click",
+          "whatsapp_opened",
+          "lead_created",
+          "campaign_click",
+        ].includes(String((event as { type?: unknown }).type || ""))
+      })
+
+      return {
+        customer,
+        linkedIdentities: identities,
+        linkedRecords,
+        recentEvents,
+        webSignals,
+        recommendedNextAction: suggestNextAction(customer, recentEvents),
+      }
     },
 
     async dueFollowups(input: { asOf?: string; limit?: number }) {

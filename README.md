@@ -1,6 +1,6 @@
-# B2B Cocina AI Native Ecommerce
+# Eter Niu Cocina AI Native Ecommerce
 
-Conversational kitchen-commerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
+Conversational healthy kitchen-commerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
 
 ## Apps
 
@@ -56,7 +56,9 @@ The seller agent should call `services/ecommerce-tools`:
 - `POST /tools/payphone-link`
 - `POST /tools/customers/import`
 - `GET /tools/customers/:phone`
+- `GET /tools/ai-context/customer/:phone`
 - `POST /tools/customer-events`
+- `POST /tools/events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 - `POST /tools/meta-post-draft`
@@ -87,13 +89,44 @@ Para cargar una base inicial de cocina despues del seed principal:
 npm --workspace apps/backend run seed:kitchen
 ```
 
+El catalogo base trazado a los posts de referencia queda en:
+
+- `data/catalog/eter-niu-products.csv`
+- `apps/backend/src/migration-scripts/kitchen-catalog-seed.ts`
+- `services/ecommerce-tools/src/demo-catalog.ts`
+
+Productos estrella iniciales:
+
+- `Wok de granito 32 cm con tapa`
+- `Olla de granito 20 cm`
+- `Olla de granito 24 cm familiar`
+- `Set MGC ollas y sartenes de granito`
+- `Sarten wok granito para recetas rapidas`
+- `Utensilios compatibles para granito`
+
 Productos Medusa deben llevar metadata:
 
 - `material`
+- `coating`
+- `teflonFree`
+- `pfoaFree`
+- `pfasFree`
+- `ptfeFree`
+- `capacity`
+- `diameterCm`
+- `pieces`
+- `stoveCompatibility`
 - `tipoCocina`
 - `nivel`
 - `bundleUseCase`
 - `careTips`
+- `healthAngle`
+- `warrantyText`
+- `instagramSourceUrl`
+- `sourceUrls`
+- `contentAngles`
+- `certificationStatus`
+- `claimNote`
 - `reorderAfterDays`
 
 El CRM WhatsApp vive en el modulo Medusa `b2bCrm`:

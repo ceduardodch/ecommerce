@@ -58,16 +58,33 @@ El servicio `ecommerce-tools` permite:
 - `ecommerce-tools` intenta leer productos desde Medusa por `/store/products`.
 - En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no responde o no tiene productos, no se muestra catalogo demo.
 - El fallback de cocina queda solo para desarrollo/pruebas con `ALLOW_DEMO_CATALOG=true`.
-- La orientacion actual es nicho cocina: ollas, cuchillos, tablas, utensilios, sartenes, combos y reposicion.
+- La orientacion actual es nicho cocina saludable: ollas y woks de granito, set MGC, utensilios compatibles, cuidado, recompra y promociones reales.
 - Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.
+- Catalogo fuente trazado a posts: `data/catalog/eter-niu-products.csv`.
 
 Metadata recomendada por producto:
 
 - `material`
+- `coating`
+- `teflonFree`
+- `pfoaFree`
+- `pfasFree`
+- `ptfeFree`
+- `capacity`
+- `diameterCm`
+- `pieces`
+- `stoveCompatibility`
 - `tipoCocina`
 - `nivel`
 - `bundleUseCase`
 - `careTips`
+- `healthAngle`
+- `warrantyText`
+- `instagramSourceUrl`
+- `sourceUrls`
+- `contentAngles`
+- `certificationStatus`
+- `claimNote`
 - `reorderAfterDays`
 
 ## CRM WhatsApp
@@ -93,7 +110,9 @@ Endpoints:
 
 - `POST /tools/customers/import`
 - `GET /tools/customers/:phone`
+- `GET /tools/ai-context/customer/:phone`
 - `POST /tools/customer-events`
+- `POST /tools/events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 
@@ -110,6 +129,8 @@ Endpoints:
 
 - Feed Meta disponible en `/feeds/meta/catalog.csv`.
 - Drafts organicos disponibles por `/tools/meta-post-draft`.
+- Pixel/CAPI v1 disponible con `NEXT_PUBLIC_META_PIXEL_ID`, `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y `PIXEL_ENABLED`.
+- Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material y diametro para que OpenClaw una interes web con conversacion.
 - Marketplace en v1 es asistido: la IA prepara titulo, copy, precio, fotos/checklist; humano confirma/publica.
 - No automatizar gasto publicitario ni publicar sin confirmacion explicita.
 
@@ -146,7 +167,7 @@ Actualizacion cocina/CRM del 2026-05-27:
 - `npm run tools:test`: OK, 4 tests pasaron.
 - `npm --workspace @b2b/storefront run build`: OK.
 - `git diff --check`: OK.
-- `docker compose config`: OK con `META_CATALOG_BRAND=B2B Cocina` y CORS para `adminshop.b2b.com.ec`.
+- `docker compose config`: OK con `META_CATALOG_BRAND=Eter Niu Cocina` y CORS para `adminshop.b2b.com.ec`.
 - Browser desktop/mobile local: OK, solo catalogo de cocina, CTA WhatsApp y barra mobile visibles.
 - Tools local: OK para `search-products`, `catalog.csv`, `customers/import`, `customers/:phone`, `followups/due` y `dashboard`.
 

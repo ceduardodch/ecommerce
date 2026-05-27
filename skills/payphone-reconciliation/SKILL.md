@@ -1,6 +1,6 @@
 ---
 name: payphone-reconciliation
-description: PayPhone payment-link reconciliation workflow for the B2B ecommerce stack. Use when an agent must verify a PayPhone payment notification, match a clientTransactionId to an ecommerce order, update payment status, explain pending-payment states, or prepare a human-review reconciliation summary.
+description: PayPhone payment-link reconciliation workflow for the Eter Niu Cocina ecommerce stack. Use when an agent must verify a PayPhone payment notification, match a clientTransactionId to an ecommerce order, update payment status, explain pending-payment states, or prepare a human-review reconciliation summary.
 ---
 
 # Payphone Reconciliation

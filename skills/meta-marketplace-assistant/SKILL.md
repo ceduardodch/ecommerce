@@ -1,6 +1,6 @@
 ---
 name: meta-marketplace-assistant
-description: Meta and Facebook Marketplace assistant for the B2B Cocina ecommerce stack. Use when an agent must generate Facebook, Instagram, Meta catalog, or Marketplace kitchen product drafts from ollas, cuchillos, combos and accesorios, prepare assisted Marketplace publishing checklists, or keep publishing behind explicit human confirmation.
+description: Meta and Facebook Marketplace assistant for the Eter Niu Cocina ecommerce stack. Use when an agent must generate Facebook, Instagram, Meta catalog, or Marketplace drafts from granite pots, granite woks, MGC sets and compatible utensils, prepare assisted Marketplace publishing checklists, or keep publishing behind explicit human confirmation.
 ---
 
 # Meta Marketplace Assistant
@@ -20,7 +20,7 @@ Use this skill to promote kitchen products while preserving the channel boundary
 ## Copy Rules
 
 - Facebook: local, conversational, problem/solution framing around kitchen use.
-- Instagram: shorter, visual, one idea per post: set, material, combo, cuidado or recompra.
+- Instagram: shorter, visual, one idea per post: wok 32 cm, olla 20 cm, olla 24 cm, set MGC, menos aceite, no-stick use, cuidado or recompra.
 - Marketplace: factual title, price, condition, stock, delivery/payment terms.
 - Avoid unsupported guarantees, fake scarcity, unverifiable discounts, and claims not present in product data.
 - Always keep WhatsApp as the conversion path for v1.
@@ -34,8 +34,8 @@ Draft endpoint:
 ```json
 POST /tools/meta-post-draft
 {
-  "productIds": ["prod-cuchillos-chef-6"],
-  "angle": "cuchillos para empezar un emprendimiento de comida",
+  "productIds": ["prod-wok-granito-32"],
+  "angle": "wok 32 cm para recetas con menos aceite",
   "includeMarketplace": true
 }
 ```

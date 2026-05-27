@@ -19,10 +19,26 @@ export type Product = {
   bundleEligible?: boolean
   deliveryBadge?: string
   material?: string
+  coating?: string
+  teflonFree?: boolean
+  pfoaFree?: boolean
+  pfasFree?: boolean
+  ptfeFree?: boolean
+  capacity?: string
+  diameterCm?: number
+  pieces?: number
+  stoveCompatibility?: string
   tipoCocina?: string
   nivel?: string
   bundleUseCase?: string
   careTips?: string
+  healthAngle?: string
+  warrantyText?: string
+  instagramSourceUrl?: string
+  sourceUrls?: string[]
+  contentAngles?: string[]
+  certificationStatus?: string
+  claimNote?: string
   reorderAfterDays?: number
   stock: number
   imageUrl: string
@@ -60,13 +76,26 @@ export type CustomerInput = {
 }
 
 export type CustomerEventType =
+  | "page_view"
+  | "view_content"
+  | "product_interest"
+  | "search"
+  | "whatsapp_click"
+  | "whatsapp_opened"
+  | "lead_created"
+  | "quote_started"
+  | "checkout_started"
+  | "purchase_confirmed"
+  | "campaign_click"
   | "quote_created"
   | "order_created"
   | "paid"
   | "delivered"
   | "followup_due"
   | "followup_sent"
+  | "care_followup_sent"
   | "reorder_interest"
+  | "complement_interest"
   | "opt_out"
   | "no_response"
   | "conversation_escalated"

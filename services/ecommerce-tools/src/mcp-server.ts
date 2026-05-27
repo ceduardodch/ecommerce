@@ -13,6 +13,7 @@ import {
   orderInputSchema,
   payphoneInputSchema,
   quoteInputSchema,
+  toolsEventInputSchema,
 } from "./contracts.js"
 
 const config = loadConfig()
@@ -118,7 +119,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "add_customer_event",
       description:
-        "Registra evento CRM: recompra, no respuesta, escalamiento u opt-out.",
+        "Registra evento CRM: interes producto, WhatsApp abierto, recompra, cuidado, no respuesta, escalamiento u opt-out.",
       inputSchema: {
         type: "object",
         properties: {
@@ -130,6 +131,47 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           followupReason: { type: "string" },
         },
         required: ["phone", "type"],
+      },
+    },
+    {
+      name: "record_event",
+      description:
+        "Registra un evento web/social/WhatsApp en CRM y, si aplica, lo envia a Meta CAPI.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          eventName: { type: "string" },
+          eventId: { type: "string" },
+          at: { type: "string" },
+          sessionId: { type: "string" },
+          leadId: { type: "string" },
+          source: { type: "string" },
+          pageUrl: { type: "string" },
+          searchString: { type: "string" },
+          cta: { type: "string" },
+          placement: { type: "string" },
+          customer: { type: "object" },
+          product: { type: "object" },
+          products: { type: "array" },
+          value: { type: "number" },
+          currency: { type: "string" },
+          attribution: { type: "object" },
+        },
+        required: ["eventName"],
+      },
+    },
+    {
+      name: "ai_context",
+      description:
+        "Devuelve contexto comercial del cliente para OpenClaw, incluyendo eventos web y recomendacion de siguiente accion.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          phone: { type: "string" },
+          leadId: { type: "string" },
+          sessionId: { type: "string" },
+        },
+        required: ["phone"],
       },
     },
     {
@@ -228,6 +270,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     )
     return {
       content: [{ type: "text", text: JSON.stringify(customer, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "record_event") {
+    const event = await service.recordEvent(toolsEventInputSchema.parse(args))
+    return {
+      content: [{ type: "text", text: JSON.stringify(event, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "ai_context") {
+    const input = args as { phone?: string; leadId?: string; sessionId?: string }
+    if (!input.phone) throw new Error("phone requerido")
+    const context = await service.aiContext(input.phone, {
+      leadId: input.leadId,
+      sessionId: input.sessionId,
+    })
+    return {
+      content: [{ type: "text", text: JSON.stringify(context, null, 2) }],
     }
   }
 

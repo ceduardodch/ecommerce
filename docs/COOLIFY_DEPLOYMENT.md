@@ -33,6 +33,12 @@ Set these in Coolify environment variables, not in Git:
 - `CRM_BACKEND=medusa`
 - `ALLOW_DEMO_CATALOG=false`
 - `STOREFRONT_PORT_MAPPING`, default `127.0.0.1:18214:3000`
+- `NEXT_PUBLIC_PIXEL_ENABLED=false` until Meta Events Manager is ready
+- `PIXEL_ENABLED=false` until CAPI credentials are validated
+- `NEXT_PUBLIC_META_PIXEL_ID`, `META_PIXEL_ID` or `META_DATASET_ID`
+- `META_ACCESS_TOKEN`
+- `META_CAPI_TEST_EVENT_CODE` for Events Manager test mode
+- `NEXT_PUBLIC_PIXEL_CONSENT_MODE=banner`
 
 The compose file intentionally fails if the required core secrets are missing.
 

@@ -1,3 +1,5 @@
+export { whatsappLink } from "./whatsapp"
+
 export type Product = {
   id: string
   variantId: string
@@ -14,10 +16,26 @@ export type Product = {
   bundleEligible?: boolean
   deliveryBadge?: string
   material?: string
+  coating?: string
+  teflonFree?: boolean
+  pfoaFree?: boolean
+  pfasFree?: boolean
+  ptfeFree?: boolean
+  capacity?: string
+  diameterCm?: number
+  pieces?: number
+  stoveCompatibility?: string
   tipoCocina?: string
   nivel?: string
   bundleUseCase?: string
   careTips?: string
+  healthAngle?: string
+  warrantyText?: string
+  instagramSourceUrl?: string
+  sourceUrls?: string[]
+  contentAngles?: string[]
+  certificationStatus?: string
+  claimNote?: string
   reorderAfterDays?: number
   stock: number
   imageUrl: string
@@ -27,267 +45,410 @@ export type Product = {
 
 export const fallbackProducts: Product[] = [
   {
-    id: "prod-bateria-ollas-7",
-    variantId: "var-bateria-ollas-7",
-    sku: "COC-OLLAS-7PZ",
-    title: "Bateria de ollas acero 7 piezas",
+    id: "prod-wok-granito-32",
+    variantId: "var-wok-granito-32",
+    sku: "MGC-WOK-GRANITO-32",
+    title: "Wok de granito 32 cm con tapa",
     description:
-      "Set de ollas en acero inoxidable para cocina diaria, emprendimientos y regalos familiares.",
-    category: "Ollas",
-    brand: "B2B Cocina",
-    price: { amount: 119, currency: "USD" },
-    originalPrice: { amount: 149, currency: "USD" },
+      "Wok amplio para recetas diarias, salteados, huevos y preparaciones con menos aceite.",
+    category: "Woks granito",
+    brand: "Eter Niu Cocina",
+    price: { amount: 150, currency: "USD" },
+    originalPrice: { amount: 179, currency: "USD" },
+    discountPercent: 16,
+    promoLabel: "Producto estrella",
+    stockSignal: "8 woks listos para entrega",
+    bundleEligible: true,
+    deliveryBadge: "Envio coordinado Ecuador",
+    material: "Granito antiadherente",
+    coating: "Granito",
+    teflonFree: true,
+    capacity: "Porciones familiares",
+    diameterCm: 32,
+    pieces: 2,
+    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    tipoCocina: "Familia y recetas",
+    nivel: "Uso diario",
+    bundleUseCase: "Shakshuka, arroz, salteados y huevos con menos aceite",
+    careTips:
+      "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
+    healthAngle: "Opcion sin teflon para cocinar con menos aceite.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    instagramSourceUrl: "https://www.instagram.com/p/DUhZTX2FSeo/",
+    sourceUrls: [
+      "https://www.instagram.com/p/DYdciw8oTmW/",
+      "https://www.instagram.com/p/DV7N5cXmICF/",
+      "https://www.instagram.com/p/DVXbLrPiHnd/",
+      "https://www.instagram.com/p/DUhZTX2FSeo/",
+      "https://www.instagram.com/p/DSIitliCMDg/",
+    ],
+    contentAngles: [
+      "6 anos usando el wok",
+      "huevo con menos aceite",
+      "shakshuka en wok 32 cm",
+      "tapa de vidrio templado",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote:
+      "Publicar PFOA, PFAS o PTFE solo si el proveedor entrega certificacion.",
+    reorderAfterDays: 180,
+    stock: 8,
+    imageUrl:
+      "https://placehold.co/1200x900/efe7db/1d3b2f?text=Wok+granito+32+cm",
+    productUrl: "https://shop.b2b.com.ec/products/wok-granito-32cm-tapa",
+    tags: [
+      "wok",
+      "granito",
+      "32cm",
+      "menos aceite",
+      "no se pega",
+      "shakshuka",
+      "producto estrella",
+    ],
+  },
+  {
+    id: "prod-olla-granito-20",
+    variantId: "var-olla-granito-20",
+    sku: "MGC-OLLA-GRANITO-20",
+    title: "Olla de granito 20 cm",
+    description:
+      "Olla compacta para el dia a dia, porciones pequenas y pruebas de no pega con limpieza facil.",
+    category: "Ollas granito",
+    brand: "Eter Niu Cocina",
+    price: { amount: 95, currency: "USD" },
+    originalPrice: { amount: 119, currency: "USD" },
     discountPercent: 20,
-    promoLabel: "Set para empezar",
-    stockSignal: "12 sets listos para entrega",
+    promoLabel: "No se pega",
+    stockSignal: "10 ollas disponibles",
     bundleEligible: true,
-    deliveryBadge: "Entrega Quito 24-48h",
-    material: "Acero inoxidable",
-    tipoCocina: "Casa y negocio",
-    nivel: "Uso diario",
-    bundleUseCase: "Base para cocina nueva",
-    careTips: "Lavar con esponja suave y secar para conservar brillo.",
-    reorderAfterDays: 365,
-    stock: 12,
-    imageUrl:
-      "https://images.unsplash.com/photo-1584990347449-a96e3d2398b2?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/bateria-ollas-acero-7-piezas",
-    tags: ["ollas", "acero", "set", "cocina", "emprendimiento"],
-  },
-  {
-    id: "prod-cuchillos-chef-6",
-    variantId: "var-cuchillos-chef-6",
-    sku: "COC-CUCH-6PZ",
-    title: "Juego de cuchillos chef 6 piezas",
-    description:
-      "Cuchillos para preparar carnes, vegetales y mise en place con mejor control de corte.",
-    category: "Cuchillos",
-    brand: "B2B Cocina",
-    price: { amount: 49, currency: "USD" },
-    originalPrice: { amount: 65, currency: "USD" },
-    discountPercent: 25,
-    promoLabel: "Mas pedido por WhatsApp",
-    stockSignal: "18 juegos disponibles",
-    bundleEligible: true,
-    deliveryBadge: "Despacho inmediato",
-    material: "Acero inoxidable",
-    tipoCocina: "Chef/casa",
-    nivel: "Intermedio",
-    bundleUseCase: "Primer kit de preparacion",
-    careTips: "Secar despues de lavar y afilar antes de jornadas largas.",
+    deliveryBadge: "Entrega 24-48h segun ciudad",
+    material: "Granito antiadherente",
+    coating: "Granito",
+    teflonFree: true,
+    capacity: "1 a 3 personas",
+    diameterCm: 20,
+    pieces: 1,
+    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    tipoCocina: "Diario ligero",
+    nivel: "Inicio saludable",
+    bundleUseCase: "Salsas, huevos, queso, avena y porciones pequenas",
+    careTips:
+      "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
+    healthAngle: "Alternativa a antiadherentes tradicionales para uso diario.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    instagramSourceUrl: "https://www.instagram.com/p/DWfKOWXhvJs/",
+    sourceUrls: ["https://www.instagram.com/p/DWfKOWXhvJs/"],
+    contentAngles: [
+      "prueba queso y huevo",
+      "no se pega",
+      "limpieza facil en olla 20 cm",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote:
+      "Mantener copy educativo; no publicar claims medicos absolutos.",
     reorderAfterDays: 180,
-    stock: 18,
+    stock: 10,
     imageUrl:
-      "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=1000&q=80",
-    productUrl:
-      "https://shop.b2b.com.ec/products/juego-cuchillos-chef-6-piezas",
-    tags: ["cuchillos", "chef", "corte", "acero", "preparacion"],
+      "https://placehold.co/1200x900/f3eadc/1d3b2f?text=Olla+granito+20+cm",
+    productUrl: "https://shop.b2b.com.ec/products/olla-granito-20cm",
+    tags: [
+      "olla",
+      "granito",
+      "20cm",
+      "no se pega",
+      "queso",
+      "limpieza facil",
+      "menos aceite",
+    ],
   },
   {
-    id: "prod-tabla-corte-doble",
-    variantId: "var-tabla-corte-doble",
-    sku: "COC-TABLA-DOBLE",
-    title: "Tabla de corte doble cara",
+    id: "prod-olla-granito-24",
+    variantId: "var-olla-granito-24",
+    sku: "MGC-OLLA-GRANITO-24",
+    title: "Olla de granito 24 cm familiar",
     description:
-      "Tabla resistente para separar preparacion de carnes, vegetales y servicio diario.",
-    category: "Tablas",
-    brand: "B2B Cocina",
-    price: { amount: 18, currency: "USD" },
-    originalPrice: { amount: 24, currency: "USD" },
-    discountPercent: 25,
-    promoLabel: "Agrega al combo",
-    stockSignal: "34 unidades disponibles",
-    bundleEligible: true,
-    deliveryBadge: "Entrega junto al set",
-    material: "Polipropileno grado cocina",
-    tipoCocina: "Casa/restaurante",
-    nivel: "Uso diario",
-    bundleUseCase: "Complemento de cuchillos",
-    careTips: "Usar una cara por tipo de alimento y lavar despues de cada uso.",
-    reorderAfterDays: 180,
-    stock: 34,
-    imageUrl:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/tabla-corte-doble-cara",
-    tags: ["tabla", "corte", "cuchillos", "higiene", "prep"],
-  },
-  {
-    id: "prod-utensilios-silicona-10",
-    variantId: "var-utensilios-silicona-10",
-    sku: "COC-UTEN-10PZ",
-    title: "Set utensilios silicona 10 piezas",
-    description:
-      "Utensilios de silicona para cocinar sin rayar ollas ni sartenes antiadherentes.",
-    category: "Utensilios",
-    brand: "B2B Cocina",
-    price: { amount: 32, currency: "USD" },
-    originalPrice: { amount: 39, currency: "USD" },
+      "Olla familiar para porciones grandes, sopas, guisos y cocina diaria con acabado granito.",
+    category: "Ollas granito",
+    brand: "Eter Niu Cocina",
+    price: { amount: 130, currency: "USD" },
+    originalPrice: { amount: 159, currency: "USD" },
     discountPercent: 18,
-    promoLabel: "Cuidado de ollas",
-    stockSignal: "22 sets disponibles",
-    bundleEligible: false,
-    deliveryBadge: "Despacho 24h",
-    material: "Silicona resistente al calor",
-    tipoCocina: "Casa",
-    nivel: "Basico",
-    bundleUseCase: "Protege bateria de ollas",
-    careTips: "No apoyar sobre llama directa; lavar antes del primer uso.",
-    reorderAfterDays: 240,
-    stock: 22,
-    imageUrl:
-      "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80",
-    productUrl:
-      "https://shop.b2b.com.ec/products/set-utensilios-silicona-10-piezas",
-    tags: ["utensilios", "silicona", "ollas", "sartenes", "cuidado"],
-  },
-  {
-    id: "prod-sarten-acero-28",
-    variantId: "var-sarten-acero-28",
-    sku: "COC-SARTEN-28",
-    title: "Sarten acero inoxidable 28 cm",
-    description:
-      "Sarten amplio para sellar, saltear y terminar preparaciones con acabado profesional.",
-    category: "Sartenes",
-    brand: "B2B Cocina",
-    price: { amount: 42, currency: "USD" },
-    originalPrice: { amount: 55, currency: "USD" },
-    discountPercent: 24,
-    promoLabel: "Para fuego alto",
-    stockSignal: "9 unidades disponibles",
+    promoLabel: "Familiar",
+    stockSignal: "12 ollas familiares disponibles",
     bundleEligible: true,
     deliveryBadge: "Stock confirmado",
-    material: "Acero inoxidable",
-    tipoCocina: "Chef/emprendimiento",
-    nivel: "Intermedio",
-    bundleUseCase: "Complemento de bateria",
-    careTips: "Precalentar antes de agregar aceite para reducir adherencia.",
-    reorderAfterDays: 365,
-    stock: 9,
+    material: "Granito antiadherente",
+    coating: "Granito",
+    teflonFree: true,
+    capacity: "3 a 5 personas",
+    diameterCm: 24,
+    pieces: 1,
+    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    tipoCocina: "Familia",
+    nivel: "Uso diario",
+    bundleUseCase: "Porciones grandes, sopas, arroz y guisos familiares",
+    careTips:
+      "Cocinar a fuego medio para conservar el recubrimiento por mas tiempo.",
+    healthAngle:
+      "Granito para familias que quieren una opcion practica sin teflon.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    instagramSourceUrl: "https://www.instagram.com/p/DVNNNRsFYj0/",
+    sourceUrls: [
+      "https://www.instagram.com/p/DVewP3viHey/",
+      "https://www.instagram.com/p/DVNNNRsFYj0/",
+    ],
+    contentAngles: [
+      "24 cm para porciones familiares",
+      "menos aceite en olla familiar",
+      "no se pega en uso diario",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote:
+      "Si se menciona libre de PFOA/PFAS/PTFE, pedir certificacion previa.",
+    reorderAfterDays: 180,
+    stock: 12,
     imageUrl:
-      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/sarten-acero-inoxidable-28cm",
-    tags: ["sarten", "acero", "saltear", "chef", "negocio"],
+      "https://placehold.co/1200x900/eee5d8/1d3b2f?text=Olla+granito+24+cm",
+    productUrl: "https://shop.b2b.com.ec/products/olla-granito-24cm-familiar",
+    tags: [
+      "olla",
+      "granito",
+      "24cm",
+      "familia",
+      "porciones grandes",
+      "menos aceite",
+    ],
   },
   {
-    id: "prod-combo-cocina-casa",
-    variantId: "var-combo-cocina-casa",
-    sku: "COC-COMBO-CASA",
-    title: "Combo cocina completa para casa",
+    id: "prod-set-mgc-granito",
+    variantId: "var-set-mgc-granito",
+    sku: "MGC-SET-GRANITO-FAMILIAR",
+    title: "Set MGC ollas y sartenes de granito",
     description:
-      "Bateria de ollas, cuchillos y utensilios para equipar una cocina desde cero.",
-    category: "Combos",
-    brand: "B2B Cocina",
-    price: { amount: 179, currency: "USD" },
-    originalPrice: { amount: 228, currency: "USD" },
-    discountPercent: 21,
-    promoLabel: "Ahorro por combo",
-    stockSignal: "6 combos armados",
+      "Linea MGC para cambiar ollas rayadas por un set de granito de uso diario.",
+    category: "Sets granito",
+    brand: "Eter Niu Cocina",
+    price: { amount: 249, currency: "USD" },
+    originalPrice: { amount: 299, currency: "USD" },
+    discountPercent: 17,
+    promoLabel: "Cambio saludable",
+    stockSignal: "5 sets armados",
     bundleEligible: true,
     deliveryBadge: "Entrega coordinada",
-    material: "Acero + silicona",
-    tipoCocina: "Casa",
-    nivel: "Inicio",
-    bundleUseCase: "Cocina nueva o regalo",
-    careTips: "Incluye recomendaciones de cuidado por WhatsApp.",
+    material: "Granito antiadherente",
+    coating: "Granito",
+    teflonFree: true,
+    capacity: "Cocina completa",
+    pieces: 5,
+    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    tipoCocina: "Casa completa",
+    nivel: "Kit familiar",
+    bundleUseCase: "Reemplazar ollas viejas y equipar la cocina principal",
+    careTips:
+      "Guardar sin raspar piezas entre si y usar protectores si se apilan.",
+    healthAngle:
+      "Set de granito para cocinar todos los dias con menos preocupacion.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    instagramSourceUrl: "https://www.instagram.com/p/DU_bJI4iCTW/",
+    sourceUrls: [
+      "https://www.instagram.com/p/DU_bJI4iCTW/",
+      "https://www.instagram.com/p/DUmeEY_FR2i/",
+      "https://www.instagram.com/p/DSIitliCMDg/",
+    ],
+    contentAngles: [
+      "cambiar ollas viejas o rayadas",
+      "linea MGC granito",
+      "cocina diaria con menos preocupacion",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote:
+      "Set saludable como eleccion informada, sin promesas medicas.",
     reorderAfterDays: 210,
-    stock: 6,
+    stock: 5,
     imageUrl:
-      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/combo-cocina-completa-casa",
-    tags: ["combo", "casa", "ollas", "cuchillos", "utensilios"],
+      "https://placehold.co/1200x900/ece2d2/1d3b2f?text=Set+MGC+granito",
+    productUrl: "https://shop.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
+    tags: [
+      "set",
+      "mgc",
+      "granito",
+      "ollas",
+      "sartenes",
+      "cambio saludable",
+      "cocina completa",
+    ],
   },
   {
-    id: "prod-combo-emprendedor",
-    variantId: "var-combo-emprendedor",
-    sku: "COC-COMBO-EMP",
-    title: "Combo emprendimiento de comida",
+    id: "prod-sarten-wok-granito-28",
+    variantId: "var-sarten-wok-granito-28",
+    sku: "MGC-SARTEN-WOK-GRANITO-28",
+    title: "Sarten wok granito para recetas rapidas",
     description:
-      "Set pensado para produccion pequena: ollas, sarten, cuchillos y tablas de trabajo.",
-    category: "Combos",
-    brand: "B2B Cocina",
-    price: { amount: 249, currency: "USD" },
-    originalPrice: { amount: 305, currency: "USD" },
-    discountPercent: 18,
-    promoLabel: "Para vender mas",
-    stockSignal: "4 combos con entrega prioritaria",
+      "Sarten tipo wok para huevos, vegetales y recetas rapidas con menos aceite.",
+    category: "Sartenes granito",
+    brand: "Eter Niu Cocina",
+    price: { amount: 85, currency: "USD" },
+    originalPrice: { amount: 105, currency: "USD" },
+    discountPercent: 19,
+    promoLabel: "Menos aceite",
+    stockSignal: "14 sartenes disponibles",
     bundleEligible: true,
-    deliveryBadge: "Cotizacion prioritaria",
-    material: "Acero + polipropileno",
-    tipoCocina: "Emprendimiento",
-    nivel: "Intensivo",
-    bundleUseCase: "Produccion para pedidos",
-    careTips: "Separar tablas por alimento y afilar cuchillos semanalmente.",
-    reorderAfterDays: 120,
-    stock: 4,
+    deliveryBadge: "Despacho rapido",
+    material: "Granito antiadherente",
+    coating: "Granito",
+    teflonFree: true,
+    capacity: "1 a 4 personas",
+    diameterCm: 28,
+    pieces: 1,
+    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    tipoCocina: "Recetas rapidas",
+    nivel: "Uso diario",
+    bundleUseCase: "Huevos, vegetales, pollo y salteados de semana",
+    careTips: "Usar fuego medio y evitar aerosoles que saturen la superficie.",
+    healthAngle: "Pensado para cocinar ligero sin depender de mucho aceite.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    instagramSourceUrl: "https://www.instagram.com/p/DV7N5cXmICF/",
+    sourceUrls: [
+      "https://www.instagram.com/p/DV7N5cXmICF/",
+      "https://www.instagram.com/p/DVXbLrPiHnd/",
+    ],
+    contentAngles: [
+      "huevo sin depender de mucho aceite",
+      "recetas rapidas entre semana",
+      "salteados y desayuno",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote:
+      "Hablar de menos aceite como uso culinario, no como tratamiento de salud.",
+    reorderAfterDays: 180,
+    stock: 14,
     imageUrl:
-      "https://images.unsplash.com/photo-1556910096-6f5e72db6803?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/combo-emprendimiento-comida",
-    tags: ["combo", "emprendimiento", "restaurante", "ollas", "cuchillos"],
+      "https://placehold.co/1200x900/f1e4d1/1d3b2f?text=Sarten+wok+granito",
+    productUrl: "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
+    tags: [
+      "sarten",
+      "wok",
+      "granito",
+      "28cm",
+      "huevo sin aceite",
+      "recetas rapidas",
+    ],
   },
   {
-    id: "prod-afilador-cuchillos",
-    variantId: "var-afilador-cuchillos",
-    sku: "COC-AFILADOR-PRO",
-    title: "Afilador de cuchillos profesional",
+    id: "prod-utensilios-granito",
+    variantId: "var-utensilios-granito",
+    sku: "MGC-UTENSILIOS-CUIDADO",
+    title: "Utensilios compatibles para granito",
     description:
-      "Accesorio de reposicion para mantener cortes limpios y extender la vida del set.",
-    category: "Reposicion",
-    brand: "B2B Cocina",
-    price: { amount: 16, currency: "USD" },
-    originalPrice: { amount: 21, currency: "USD" },
-    discountPercent: 24,
-    promoLabel: "Recompra inteligente",
-    stockSignal: "27 unidades disponibles",
-    bundleEligible: false,
-    deliveryBadge: "Ideal para recompra",
-    material: "Carburo y ceramica",
-    tipoCocina: "Casa/chef",
-    nivel: "Mantenimiento",
-    bundleUseCase: "Postventa de cuchillos",
-    careTips: "Usar con pasadas suaves y limpiar residuos despues de afilar.",
-    reorderAfterDays: 90,
-    stock: 27,
+      "Kit de utensilios suaves para cuidar ollas y sartenes de granito sin rayarlas.",
+    category: "Complementos",
+    brand: "Eter Niu Cocina",
+    price: { amount: 28, currency: "USD" },
+    originalPrice: { amount: 35, currency: "USD" },
+    discountPercent: 20,
+    promoLabel: "Cuida tu olla",
+    stockSignal: "20 kits disponibles",
+    bundleEligible: true,
+    deliveryBadge: "Agregar al pedido",
+    material: "Silicona y madera",
+    capacity: "Kit de cuidado",
+    pieces: 4,
+    tipoCocina: "Complemento",
+    nivel: "Cuidado",
+    bundleUseCase: "Evitar rayones y alargar la vida del recubrimiento",
+    careTips: "No apoyar sobre llama directa y lavar despues de cada uso.",
+    healthAngle:
+      "Complemento para mantener el antiadherente sin usar utensilios metalicos.",
+    warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+    sourceUrls: [
+      "https://www.facebook.com/infintyimportsec/photos",
+      "https://www.instagram.com/stories/highlights/18046750105530201/",
+    ],
+    contentAngles: [
+      "cuidado del recubrimiento",
+      "utensilios suaves para no rayar",
+      "complemento recomendado tras compra",
+    ],
+    certificationStatus: "No aplica",
+    claimNote:
+      "Complemento operativo para cuidado; no usarlo como claim de salud.",
+    reorderAfterDays: 120,
+    stock: 20,
     imageUrl:
-      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=1000&q=80",
-    productUrl:
-      "https://shop.b2b.com.ec/products/afilador-cuchillos-profesional",
-    tags: ["afilador", "recompra", "cuchillos", "mantenimiento"],
+      "https://placehold.co/1200x900/f4eadb/1d3b2f?text=Utensilios+para+granito",
+    productUrl: "https://shop.b2b.com.ec/products/utensilios-compatibles-granito",
+    tags: [
+      "utensilios",
+      "granito",
+      "silicona",
+      "madera",
+      "cuidado",
+      "complemento",
+    ],
   },
 ]
+
+function placeholderForProduct(product: Product) {
+  if (product.imageUrl) return product.imageUrl
+  const text = encodeURIComponent(product.category || "Cocina granito")
+  return `https://placehold.co/1200x900/efe7db/1d3b2f?text=${text}`
+}
 
 const kitchenTerms = [
   "cocina",
   "olla",
   "ollas",
-  "cuchillo",
-  "cuchillos",
-  "tabla",
-  "tablas",
-  "utensilio",
-  "utensilios",
+  "wok",
+  "woks",
   "sarten",
   "sartenes",
-  "combo",
-  "reposicion",
-  "chef",
-  "emprendimiento",
+  "set",
+  "granito",
+  "mgc",
+  "teflon",
+  "pfoa",
+  "pfas",
+  "ptfe",
+  "menos aceite",
+  "no se pega",
+  "familia",
+  "utensilio",
+  "utensilios",
+  "complemento",
+  "cuchillo",
+  "cuchillos",
 ]
 
 function isKitchenProduct(product: Product) {
-  if (product.sku.startsWith("COC-")) return true
+  if (product.sku.startsWith("COC-") || product.sku.startsWith("MGC-")) {
+    return true
+  }
   const haystack = [
     product.title,
     product.description,
     product.category,
     product.brand,
     product.material || "",
+    product.coating || "",
     product.tipoCocina || "",
     product.bundleUseCase || "",
+    product.healthAngle || "",
+    ...(product.sourceUrls || []),
+    ...(product.contentAngles || []),
     ...product.tags,
   ]
     .join(" ")
     .toLowerCase()
   return kitchenTerms.some((term) => haystack.includes(term))
+}
+
+function normalizeProduct(product: Product): Product {
+  return {
+    ...product,
+    brand: product.brand || "Eter Niu Cocina",
+    imageUrl: placeholderForProduct(product),
+    tags: product.tags || [],
+  }
 }
 
 export async function getProducts() {
@@ -306,7 +467,9 @@ export async function getProducts() {
     })
     if (!response.ok) throw new Error("tools unavailable")
     const data = (await response.json()) as { products?: Product[] }
-    const kitchenProducts = (data.products || []).filter(isKitchenProduct)
+    const kitchenProducts = (data.products || [])
+      .map(normalizeProduct)
+      .filter(isKitchenProduct)
     return kitchenProducts.length
       ? kitchenProducts
       : allowDemoCatalog
@@ -315,12 +478,4 @@ export async function getProducts() {
   } catch {
     return allowDemoCatalog ? fallbackProducts : []
   }
-}
-
-export function whatsappLink(product: Product) {
-  const seller =
-    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
-  const promo = product.promoLabel ? ` Promo: ${product.promoLabel}.` : ""
-  const text = `Hola, quiero cotizar para cocina: ${product.title} (${product.sku}) por $${product.price.amount.toFixed(2)}.${promo} Me puedes confirmar stock, entrega y si combina con otros productos?`
-  return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
 }

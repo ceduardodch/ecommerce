@@ -1,6 +1,6 @@
 ---
 name: ecommerce-sales
-description: Conversational kitchen ecommerce sales workflow for the B2B Medusa/OpenClaw stack. Use when an agent must answer WhatsApp buyer questions, search products, use CRM context, recommend ollas/cuchillos/combos, create quotes, create pending-payment orders, generate PayPhone links, schedule followups, or prepare a human handoff for shop.b2b.com.ec.
+description: Conversational healthy kitchen ecommerce sales workflow for the Medusa/OpenClaw stack. Use when an agent must answer WhatsApp buyer questions, search products, use CRM context, recommend granite pots/woks/sets, create quotes, create pending-payment orders, generate PayPhone links, schedule followups, or prepare a human handoff for shop.b2b.com.ec.
 ---
 
 # Ecommerce Sales
@@ -11,7 +11,7 @@ Use this skill to sell kitchen products through the ecommerce tool layer without
 
 ## Workflow
 
-1. Identify the buyer intent and product constraints: home, chef, emprendimiento, gift, replacement, material, budget, quantity, urgency, delivery city, and invoice needs.
+1. Identify the buyer intent and product constraints: family size, 20 cm vs 24 cm vs wok 32 cm, less oil, no-stick use, replacement, material, budget, quantity, urgency, delivery city, and invoice needs.
 2. If the phone is known, call `GET /tools/customers/:phone` before recommending.
 3. Call `GET /tools/search-products` with the strongest kitchen terms. If results are broad, recommend up to three options.
 4. Call `POST /tools/quote` before giving totals. Include customer phone when available so CRM records `quote_created`.
@@ -52,7 +52,7 @@ Minimal quote body:
 {
   "items": [
     {
-      "productId": "prod-cuchillos-chef-6",
+      "productId": "prod-wok-granito-32",
       "quantity": 1
     }
   ]
@@ -65,7 +65,7 @@ Minimal order body:
 {
   "items": [
     {
-      "productId": "prod-cuchillos-chef-6",
+      "productId": "prod-wok-granito-32",
       "quantity": 1
     }
   ],

@@ -39,6 +39,30 @@ function stringFromMetadata(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined
 }
 
+function stringArrayFromMetadata(value: unknown) {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter(Boolean)
+  }
+  if (typeof value === "string" && value.trim()) {
+    return value
+      .split("|")
+      .map((item) => item.trim())
+      .filter(Boolean)
+  }
+  return undefined
+}
+
+function booleanFromMetadata(value: unknown) {
+  return value === true || value === "true"
+}
+
+function placeholderForCategory(category: string) {
+  const text = encodeURIComponent(category || "Cocina granito")
+  return `https://placehold.co/1200x900/efe7db/1d3b2f?text=${text}`
+}
+
 function normalizeMedusaProduct(
   config: AppConfig,
   product: MedusaProduct,
@@ -57,16 +81,18 @@ function normalizeMedusaProduct(
       ? Math.round(((originalAmount - priceAmount) / originalAmount) * 100)
       : undefined)
 
+  const category =
+    product.categories?.[0]?.name ||
+    product.collection?.title ||
+    String(product.metadata?.category || "Catalogo")
+
   return {
     id: product.id,
     variantId: variant?.id || product.id,
     sku: variant?.sku || product.id,
     title: product.title,
     description: product.description || "",
-    category:
-      product.categories?.[0]?.name ||
-      product.collection?.title ||
-      String(product.metadata?.category || "Catalogo"),
+    category,
     brand: String(product.metadata?.brand || config.metaCatalogBrand),
     price: { amount: priceAmount, currency: "USD" },
     originalPrice: originalAmount
@@ -80,22 +106,49 @@ function normalizeMedusaProduct(
       product.metadata?.bundleEligible === "true",
     deliveryBadge: stringFromMetadata(product.metadata?.deliveryBadge),
     material: stringFromMetadata(product.metadata?.material),
+    coating: stringFromMetadata(product.metadata?.coating),
+    teflonFree: booleanFromMetadata(product.metadata?.teflonFree),
+    pfoaFree: booleanFromMetadata(product.metadata?.pfoaFree),
+    pfasFree: booleanFromMetadata(product.metadata?.pfasFree),
+    ptfeFree: booleanFromMetadata(product.metadata?.ptfeFree),
+    capacity: stringFromMetadata(product.metadata?.capacity),
+    diameterCm: numberFromMetadata(product.metadata?.diameterCm),
+    pieces: numberFromMetadata(product.metadata?.pieces),
+    stoveCompatibility: stringFromMetadata(
+      product.metadata?.stoveCompatibility,
+    ),
     tipoCocina: stringFromMetadata(product.metadata?.tipoCocina),
     nivel: stringFromMetadata(product.metadata?.nivel),
     bundleUseCase: stringFromMetadata(product.metadata?.bundleUseCase),
     careTips: stringFromMetadata(product.metadata?.careTips),
+    healthAngle: stringFromMetadata(product.metadata?.healthAngle),
+    warrantyText: stringFromMetadata(product.metadata?.warrantyText),
+    instagramSourceUrl: stringFromMetadata(
+      product.metadata?.instagramSourceUrl,
+    ),
+    sourceUrls: stringArrayFromMetadata(product.metadata?.sourceUrls),
+    contentAngles: stringArrayFromMetadata(product.metadata?.contentAngles),
+    certificationStatus: stringFromMetadata(
+      product.metadata?.certificationStatus,
+    ),
+    claimNote: stringFromMetadata(product.metadata?.claimNote),
     reorderAfterDays: numberFromMetadata(product.metadata?.reorderAfterDays),
     stock: Number(product.metadata?.stock || 0),
-    imageUrl: product.thumbnail || product.images?.[0]?.url || "",
+    imageUrl:
+      product.thumbnail || product.images?.[0]?.url || placeholderForCategory(category),
     productUrl: productUrl(config, product),
     tags: [
       ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
       product.title,
       product.description || "",
       stringFromMetadata(product.metadata?.material) || "",
+      stringFromMetadata(product.metadata?.coating) || "",
       stringFromMetadata(product.metadata?.tipoCocina) || "",
       stringFromMetadata(product.metadata?.nivel) || "",
       stringFromMetadata(product.metadata?.bundleUseCase) || "",
+      stringFromMetadata(product.metadata?.healthAngle) || "",
+      ...(stringArrayFromMetadata(product.metadata?.sourceUrls) || []),
+      ...(stringArrayFromMetadata(product.metadata?.contentAngles) || []),
     ],
   }
 }
@@ -104,6 +157,8 @@ const kitchenTerms = [
   "cocina",
   "olla",
   "ollas",
+  "wok",
+  "woks",
   "cuchillo",
   "cuchillos",
   "tabla",
@@ -114,20 +169,34 @@ const kitchenTerms = [
   "sartenes",
   "combo",
   "reposicion",
+  "granito",
+  "mgc",
+  "teflon",
+  "pfoa",
+  "pfas",
+  "ptfe",
+  "menos aceite",
+  "no se pega",
   "chef",
-  "emprendimiento",
+  "familia",
 ]
 
 function isKitchenProduct(product: Product) {
-  if (product.sku.startsWith("COC-")) return true
+  if (product.sku.startsWith("COC-") || product.sku.startsWith("MGC-")) {
+    return true
+  }
   const haystack = [
     product.title,
     product.description,
     product.category,
     product.brand,
     product.material || "",
+    product.coating || "",
     product.tipoCocina || "",
     product.bundleUseCase || "",
+    product.healthAngle || "",
+    ...(product.sourceUrls || []),
+    ...(product.contentAngles || []),
     ...product.tags,
   ]
     .join(" ")
@@ -201,10 +270,14 @@ export function searchProducts(
         product.brand,
         product.sku,
         product.material || "",
+        product.coating || "",
         product.tipoCocina || "",
         product.nivel || "",
         product.bundleUseCase || "",
         product.careTips || "",
+        product.healthAngle || "",
+        ...(product.sourceUrls || []),
+        ...(product.contentAngles || []),
         ...product.tags,
       ]
         .join(" ")

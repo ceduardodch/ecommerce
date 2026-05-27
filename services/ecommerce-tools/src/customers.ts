@@ -191,8 +191,8 @@ export function buildFollowupDraft(customer: CustomerRecord) {
   const name = customer.name ? ` ${customer.name}` : ""
 
   if (!last) {
-    return `Hola${name}, te escribo de B2B Cocina. Tenemos nuevas opciones de ollas, cuchillos y combos para cocina. Si quieres, te recomiendo algo segun lo que estas usando.`
+    return `Hola${name}, te escribo de Eter Niu Cocina. Tenemos ollas y woks de granito para cocinar con menos aceite y cuidar el antiadherente. Si quieres, te recomiendo segun para cuantas personas cocinas.`
   }
 
-  return `Hola${name}, soy B2B Cocina. Vi que compraste ${last.title}. Te puedo ayudar con mantenimiento, complemento o reposicion para que sigas cocinando sin parar.`
+  return `Hola${name}, soy Eter Niu Cocina. Vi que compraste ${last.title}. Te puedo ayudar con cuidado, utensilios compatibles o una olla de complemento segun tu uso diario.`
 }
