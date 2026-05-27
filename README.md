@@ -10,6 +10,18 @@ Conversational ecommerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw
 - `agents`: OpenClaw seller prompt and example runtime config.
 - `skills`: repo-local skills for sales, Meta/Marketplace drafts, and PayPhone reconciliation.
 
+## AI handoff
+
+For any IA agent retaking this repo, read in this order:
+
+- `AGENTS.md`
+- `AI_HANDOFF.md`
+- `docs/CURRENT_STATE.md`
+- `docs/PROJECT_MAP.md`
+- `docs/OPENCLAW_HANDOFF.md`
+
+Practical rule: `AGENTS.md` governs behavior; `AI_HANDOFF.md` gives project context.
+
 ## Local setup
 
 ```bash
@@ -78,5 +90,8 @@ See:
 - `docs/BRANCH_STRATEGY.md`
 - `docs/CI_BRANCH_PROTECTION.md`
 - `docs/ARCHITECTURE.md`
+- `docs/CURRENT_STATE.md`
+- `docs/PROJECT_MAP.md`
 - `docs/COOLIFY_DEPLOYMENT.md`
+- `docs/OPENCLAW_HANDOFF.md`
 - `docs/OPENCLAW_SELLER_PROMPT.md`

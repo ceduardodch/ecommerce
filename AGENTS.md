@@ -49,4 +49,4 @@ Estas acciones estan prohibidas sin autorizacion explicita:
 - Storefront: Next.js.
 - Tools: `services/ecommerce-tools` para OpenClaw, PayPhone y Meta.
 - Deploy: Coolify con Docker Compose.
-- Ver `README.md`, `docs/ARCHITECTURE.md`, `docs/COOLIFY_DEPLOYMENT.md` y `docs/BRANCH_STRATEGY.md`.
+- Ver `AI_HANDOFF.md`, `docs/CURRENT_STATE.md`, `docs/PROJECT_MAP.md`, `docs/OPENCLAW_HANDOFF.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/COOLIFY_DEPLOYMENT.md` y `docs/BRANCH_STRATEGY.md`.

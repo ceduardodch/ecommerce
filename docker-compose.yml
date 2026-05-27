@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_DB: medusa-store
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in Coolify}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -40,15 +40,15 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/medusa-store
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in Coolify}@postgres:5432/medusa-store
       REDIS_URL: redis://redis:6379
       STORE_CORS: ${STORE_CORS:-http://localhost:3000,https://shop.b2b.com.ec}
       ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,https://shop.b2b.com.ec}
       AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec}
-      JWT_SECRET: ${JWT_SECRET:-change-me}
-      COOKIE_SECRET: ${COOKIE_SECRET:-change-me}
-    ports:
-      - "9000:9000"
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in Coolify}
+      COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in Coolify}
+    expose:
+      - "9000"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:9000/store/b2b/status').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 20s
@@ -67,7 +67,7 @@ services:
       NODE_ENV: production
       PORT: 8787
       TOOLS_DATA_DIR: /data
-      TOOLS_API_TOKEN: ${TOOLS_API_TOKEN:-change-me}
+      TOOLS_API_TOKEN: ${TOOLS_API_TOKEN:?Set TOOLS_API_TOKEN in Coolify}
       STORE_PUBLIC_URL: ${STORE_PUBLIC_URL:-https://shop.b2b.com.ec}
       MEDUSA_STORE_API_URL: http://medusa-api:9000
       MEDUSA_ADMIN_API_URL: http://medusa-api:9000
@@ -82,8 +82,8 @@ services:
       META_CATALOG_BRAND: ${META_CATALOG_BRAND:-B2B}
     volumes:
       - tools-data:/data
-    ports:
-      - "8787:8787"
+    expose:
+      - "8787"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:8787/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 20s
