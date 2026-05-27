@@ -127,7 +127,7 @@ services:
     ports:
       - "${ADMIN_REDIRECT_PORT_MAPPING:-127.0.0.1:18216:80}"
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || test $$? -eq 8"]
+      test: ["CMD-SHELL", "wget -q -S --spider http://127.0.0.1/ 2>&1 | grep -q 'HTTP/1.1 302'"]
       interval: 20s
       timeout: 5s
       retries: 10

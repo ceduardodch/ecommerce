@@ -1,13 +1,11 @@
-FROM node:20-bookworm-slim AS deps
+FROM node:20-bookworm AS deps
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+ENV NPM_CONFIG_AUDIT=false
+ENV NPM_CONFIG_FUND=false
 
 COPY package.json package-lock.json turbo.json ./
 COPY apps/backend/package.json apps/backend/package.json
@@ -22,16 +20,14 @@ WORKDIR /app
 COPY . .
 RUN npm run backend:build
 
-FROM node:20-bookworm-slim AS runner
+FROM node:20-bookworm AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
-
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3 make g++ ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+ENV NPM_CONFIG_AUDIT=false
+ENV NPM_CONFIG_FUND=false
 
 COPY package.json package-lock.json ./
 COPY --from=builder /app/apps/backend/.medusa/server/package.json apps/backend/package.json
