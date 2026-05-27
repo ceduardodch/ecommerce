@@ -13,6 +13,12 @@ export type Product = {
   stockSignal?: string
   bundleEligible?: boolean
   deliveryBadge?: string
+  material?: string
+  tipoCocina?: string
+  nivel?: string
+  bundleUseCase?: string
+  careTips?: string
+  reorderAfterDays?: number
   stock: number
   imageUrl: string
   productUrl: string
@@ -21,72 +27,268 @@ export type Product = {
 
 export const fallbackProducts: Product[] = [
   {
-    id: "prod-cctv-kit-4",
-    variantId: "var-cctv-kit-4",
-    sku: "B2B-CCTV-4CH",
-    title: "Kit CCTV IP 4 camaras",
+    id: "prod-bateria-ollas-7",
+    variantId: "var-bateria-ollas-7",
+    sku: "COC-OLLAS-7PZ",
+    title: "Bateria de ollas acero 7 piezas",
     description:
-      "Videovigilancia para local, oficina o bodega con NVR y soporte de instalacion.",
-    category: "Seguridad",
-    brand: "B2B",
-    price: { amount: 389, currency: "USD" },
-    originalPrice: { amount: 449, currency: "USD" },
-    discountPercent: 13,
-    promoLabel: "Combo instalado",
-    stockSignal: "8 kits listos para agenda",
-    bundleEligible: true,
-    deliveryBadge: "Instalacion coordinada",
-    stock: 8,
-    imageUrl:
-      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/kit-cctv-ip-4-camaras",
-    tags: ["seguridad", "camaras", "cctv"],
-  },
-  {
-    id: "prod-router-wifi6",
-    variantId: "var-router-wifi6",
-    sku: "B2B-NET-WIFI6",
-    title: "Router empresarial WiFi 6",
-    description:
-      "Red estable para negocios con alta concurrencia, invitados y administracion remota.",
-    category: "Redes",
-    brand: "B2B",
-    price: { amount: 169, currency: "USD" },
-    originalPrice: { amount: 199, currency: "USD" },
-    discountPercent: 15,
-    promoLabel: "Oferta oficina",
-    stockSignal: "Stock alto",
-    bundleEligible: true,
-    deliveryBadge: "Entrega 24-48h",
-    stock: 14,
-    imageUrl:
-      "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/router-empresarial-wifi-6",
-    tags: ["wifi", "router", "redes"],
-  },
-  {
-    id: "prod-pos-movil",
-    variantId: "var-pos-movil",
-    sku: "B2B-POS-MOVIL",
-    title: "POS movil para ventas por WhatsApp",
-    description:
-      "Terminal movil para cobros y ventas en campo, recomendado para ventas por chat.",
-    category: "Ventas",
-    brand: "B2B",
+      "Set de ollas en acero inoxidable para cocina diaria, emprendimientos y regalos familiares.",
+    category: "Ollas",
+    brand: "B2B Cocina",
     price: { amount: 119, currency: "USD" },
-    originalPrice: { amount: 139, currency: "USD" },
-    discountPercent: 14,
-    promoLabel: "Mas pedido por WhatsApp",
-    stockSignal: "11 unidades disponibles",
-    bundleEligible: false,
-    deliveryBadge: "Activacion guiada",
-    stock: 11,
+    originalPrice: { amount: 149, currency: "USD" },
+    discountPercent: 20,
+    promoLabel: "Set para empezar",
+    stockSignal: "12 sets listos para entrega",
+    bundleEligible: true,
+    deliveryBadge: "Entrega Quito 24-48h",
+    material: "Acero inoxidable",
+    tipoCocina: "Casa y negocio",
+    nivel: "Uso diario",
+    bundleUseCase: "Base para cocina nueva",
+    careTips: "Lavar con esponja suave y secar para conservar brillo.",
+    reorderAfterDays: 365,
+    stock: 12,
     imageUrl:
-      "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?auto=format&fit=crop&w=1000&q=80",
-    productUrl: "https://shop.b2b.com.ec/products/pos-movil-whatsapp",
-    tags: ["pos", "ventas", "whatsapp"],
+      "https://images.unsplash.com/photo-1584990347449-a96e3d2398b2?auto=format&fit=crop&w=1000&q=80",
+    productUrl: "https://shop.b2b.com.ec/products/bateria-ollas-acero-7-piezas",
+    tags: ["ollas", "acero", "set", "cocina", "emprendimiento"],
+  },
+  {
+    id: "prod-cuchillos-chef-6",
+    variantId: "var-cuchillos-chef-6",
+    sku: "COC-CUCH-6PZ",
+    title: "Juego de cuchillos chef 6 piezas",
+    description:
+      "Cuchillos para preparar carnes, vegetales y mise en place con mejor control de corte.",
+    category: "Cuchillos",
+    brand: "B2B Cocina",
+    price: { amount: 49, currency: "USD" },
+    originalPrice: { amount: 65, currency: "USD" },
+    discountPercent: 25,
+    promoLabel: "Mas pedido por WhatsApp",
+    stockSignal: "18 juegos disponibles",
+    bundleEligible: true,
+    deliveryBadge: "Despacho inmediato",
+    material: "Acero inoxidable",
+    tipoCocina: "Chef/casa",
+    nivel: "Intermedio",
+    bundleUseCase: "Primer kit de preparacion",
+    careTips: "Secar despues de lavar y afilar antes de jornadas largas.",
+    reorderAfterDays: 180,
+    stock: 18,
+    imageUrl:
+      "https://images.unsplash.com/photo-1593618998160-e34014e67546?auto=format&fit=crop&w=1000&q=80",
+    productUrl:
+      "https://shop.b2b.com.ec/products/juego-cuchillos-chef-6-piezas",
+    tags: ["cuchillos", "chef", "corte", "acero", "preparacion"],
+  },
+  {
+    id: "prod-tabla-corte-doble",
+    variantId: "var-tabla-corte-doble",
+    sku: "COC-TABLA-DOBLE",
+    title: "Tabla de corte doble cara",
+    description:
+      "Tabla resistente para separar preparacion de carnes, vegetales y servicio diario.",
+    category: "Tablas",
+    brand: "B2B Cocina",
+    price: { amount: 18, currency: "USD" },
+    originalPrice: { amount: 24, currency: "USD" },
+    discountPercent: 25,
+    promoLabel: "Agrega al combo",
+    stockSignal: "34 unidades disponibles",
+    bundleEligible: true,
+    deliveryBadge: "Entrega junto al set",
+    material: "Polipropileno grado cocina",
+    tipoCocina: "Casa/restaurante",
+    nivel: "Uso diario",
+    bundleUseCase: "Complemento de cuchillos",
+    careTips: "Usar una cara por tipo de alimento y lavar despues de cada uso.",
+    reorderAfterDays: 180,
+    stock: 34,
+    imageUrl:
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1000&q=80",
+    productUrl: "https://shop.b2b.com.ec/products/tabla-corte-doble-cara",
+    tags: ["tabla", "corte", "cuchillos", "higiene", "prep"],
+  },
+  {
+    id: "prod-utensilios-silicona-10",
+    variantId: "var-utensilios-silicona-10",
+    sku: "COC-UTEN-10PZ",
+    title: "Set utensilios silicona 10 piezas",
+    description:
+      "Utensilios de silicona para cocinar sin rayar ollas ni sartenes antiadherentes.",
+    category: "Utensilios",
+    brand: "B2B Cocina",
+    price: { amount: 32, currency: "USD" },
+    originalPrice: { amount: 39, currency: "USD" },
+    discountPercent: 18,
+    promoLabel: "Cuidado de ollas",
+    stockSignal: "22 sets disponibles",
+    bundleEligible: false,
+    deliveryBadge: "Despacho 24h",
+    material: "Silicona resistente al calor",
+    tipoCocina: "Casa",
+    nivel: "Basico",
+    bundleUseCase: "Protege bateria de ollas",
+    careTips: "No apoyar sobre llama directa; lavar antes del primer uso.",
+    reorderAfterDays: 240,
+    stock: 22,
+    imageUrl:
+      "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1000&q=80",
+    productUrl:
+      "https://shop.b2b.com.ec/products/set-utensilios-silicona-10-piezas",
+    tags: ["utensilios", "silicona", "ollas", "sartenes", "cuidado"],
+  },
+  {
+    id: "prod-sarten-acero-28",
+    variantId: "var-sarten-acero-28",
+    sku: "COC-SARTEN-28",
+    title: "Sarten acero inoxidable 28 cm",
+    description:
+      "Sarten amplio para sellar, saltear y terminar preparaciones con acabado profesional.",
+    category: "Sartenes",
+    brand: "B2B Cocina",
+    price: { amount: 42, currency: "USD" },
+    originalPrice: { amount: 55, currency: "USD" },
+    discountPercent: 24,
+    promoLabel: "Para fuego alto",
+    stockSignal: "9 unidades disponibles",
+    bundleEligible: true,
+    deliveryBadge: "Stock confirmado",
+    material: "Acero inoxidable",
+    tipoCocina: "Chef/emprendimiento",
+    nivel: "Intermedio",
+    bundleUseCase: "Complemento de bateria",
+    careTips: "Precalentar antes de agregar aceite para reducir adherencia.",
+    reorderAfterDays: 365,
+    stock: 9,
+    imageUrl:
+      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1000&q=80",
+    productUrl: "https://shop.b2b.com.ec/products/sarten-acero-inoxidable-28cm",
+    tags: ["sarten", "acero", "saltear", "chef", "negocio"],
+  },
+  {
+    id: "prod-combo-cocina-casa",
+    variantId: "var-combo-cocina-casa",
+    sku: "COC-COMBO-CASA",
+    title: "Combo cocina completa para casa",
+    description:
+      "Bateria de ollas, cuchillos y utensilios para equipar una cocina desde cero.",
+    category: "Combos",
+    brand: "B2B Cocina",
+    price: { amount: 179, currency: "USD" },
+    originalPrice: { amount: 228, currency: "USD" },
+    discountPercent: 21,
+    promoLabel: "Ahorro por combo",
+    stockSignal: "6 combos armados",
+    bundleEligible: true,
+    deliveryBadge: "Entrega coordinada",
+    material: "Acero + silicona",
+    tipoCocina: "Casa",
+    nivel: "Inicio",
+    bundleUseCase: "Cocina nueva o regalo",
+    careTips: "Incluye recomendaciones de cuidado por WhatsApp.",
+    reorderAfterDays: 210,
+    stock: 6,
+    imageUrl:
+      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1000&q=80",
+    productUrl: "https://shop.b2b.com.ec/products/combo-cocina-completa-casa",
+    tags: ["combo", "casa", "ollas", "cuchillos", "utensilios"],
+  },
+  {
+    id: "prod-combo-emprendedor",
+    variantId: "var-combo-emprendedor",
+    sku: "COC-COMBO-EMP",
+    title: "Combo emprendimiento de comida",
+    description:
+      "Set pensado para produccion pequena: ollas, sarten, cuchillos y tablas de trabajo.",
+    category: "Combos",
+    brand: "B2B Cocina",
+    price: { amount: 249, currency: "USD" },
+    originalPrice: { amount: 305, currency: "USD" },
+    discountPercent: 18,
+    promoLabel: "Para vender mas",
+    stockSignal: "4 combos con entrega prioritaria",
+    bundleEligible: true,
+    deliveryBadge: "Cotizacion prioritaria",
+    material: "Acero + polipropileno",
+    tipoCocina: "Emprendimiento",
+    nivel: "Intensivo",
+    bundleUseCase: "Produccion para pedidos",
+    careTips: "Separar tablas por alimento y afilar cuchillos semanalmente.",
+    reorderAfterDays: 120,
+    stock: 4,
+    imageUrl:
+      "https://images.unsplash.com/photo-1556910096-6f5e72db6803?auto=format&fit=crop&w=1000&q=80",
+    productUrl: "https://shop.b2b.com.ec/products/combo-emprendimiento-comida",
+    tags: ["combo", "emprendimiento", "restaurante", "ollas", "cuchillos"],
+  },
+  {
+    id: "prod-afilador-cuchillos",
+    variantId: "var-afilador-cuchillos",
+    sku: "COC-AFILADOR-PRO",
+    title: "Afilador de cuchillos profesional",
+    description:
+      "Accesorio de reposicion para mantener cortes limpios y extender la vida del set.",
+    category: "Reposicion",
+    brand: "B2B Cocina",
+    price: { amount: 16, currency: "USD" },
+    originalPrice: { amount: 21, currency: "USD" },
+    discountPercent: 24,
+    promoLabel: "Recompra inteligente",
+    stockSignal: "27 unidades disponibles",
+    bundleEligible: false,
+    deliveryBadge: "Ideal para recompra",
+    material: "Carburo y ceramica",
+    tipoCocina: "Casa/chef",
+    nivel: "Mantenimiento",
+    bundleUseCase: "Postventa de cuchillos",
+    careTips: "Usar con pasadas suaves y limpiar residuos despues de afilar.",
+    reorderAfterDays: 90,
+    stock: 27,
+    imageUrl:
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=1000&q=80",
+    productUrl:
+      "https://shop.b2b.com.ec/products/afilador-cuchillos-profesional",
+    tags: ["afilador", "recompra", "cuchillos", "mantenimiento"],
   },
 ]
+
+const kitchenTerms = [
+  "cocina",
+  "olla",
+  "ollas",
+  "cuchillo",
+  "cuchillos",
+  "tabla",
+  "tablas",
+  "utensilio",
+  "utensilios",
+  "sarten",
+  "sartenes",
+  "combo",
+  "reposicion",
+  "chef",
+  "emprendimiento",
+]
+
+function isKitchenProduct(product: Product) {
+  if (product.sku.startsWith("COC-")) return true
+  const haystack = [
+    product.title,
+    product.description,
+    product.category,
+    product.brand,
+    product.material || "",
+    product.tipoCocina || "",
+    product.bundleUseCase || "",
+    ...product.tags,
+  ]
+    .join(" ")
+    .toLowerCase()
+  return kitchenTerms.some((term) => haystack.includes(term))
+}
 
 export async function getProducts() {
   const toolsUrl =
@@ -96,19 +298,21 @@ export async function getProducts() {
 
   try {
     const response = await fetch(`${toolsUrl}/tools/search-products?limit=12`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     })
     if (!response.ok) throw new Error("tools unavailable")
     const data = (await response.json()) as { products?: Product[] }
-    return data.products?.length ? data.products : fallbackProducts
+    const kitchenProducts = (data.products || []).filter(isKitchenProduct)
+    return kitchenProducts.length ? kitchenProducts : fallbackProducts
   } catch {
     return fallbackProducts
   }
 }
 
 export function whatsappLink(product: Product) {
-  const seller = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
+  const seller =
+    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
   const promo = product.promoLabel ? ` Promo: ${product.promoLabel}.` : ""
-  const text = `Hola, quiero cotizar ${product.title} (${product.sku}) por $${product.price.amount.toFixed(2)}.${promo}`
+  const text = `Hola, quiero cotizar para cocina: ${product.title} (${product.sku}) por $${product.price.amount.toFixed(2)}.${promo} Me puedes confirmar stock, entrega y si combina con otros productos?`
   return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
 }

@@ -1,6 +1,6 @@
-# B2B AI Native Ecommerce
+# B2B Cocina AI Native Ecommerce
 
-Conversational ecommerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw tool endpoints, PayPhone API Link, and Meta catalog export.
+Conversational kitchen-commerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
 
 ## Apps
 
@@ -54,6 +54,11 @@ The seller agent should call `services/ecommerce-tools`:
 - `POST /tools/quote`
 - `POST /tools/orders`
 - `POST /tools/payphone-link`
+- `POST /tools/customers/import`
+- `GET /tools/customers/:phone`
+- `POST /tools/customer-events`
+- `GET /tools/followups/due`
+- `GET /tools/dashboard`
 - `POST /tools/meta-post-draft`
 - `GET /feeds/meta/catalog.csv`
 
@@ -71,6 +76,24 @@ Use the dedicated seller agent and skills:
 - `skills/ecommerce-sales/SKILL.md`
 - `skills/meta-marketplace-assistant/SKILL.md`
 - `skills/payphone-reconciliation/SKILL.md`
+
+## Cocina + CRM
+
+El fallback local ya no es generico: si Medusa no devuelve productos, la tienda muestra catalogo de cocina con ollas, cuchillos, tablas, utensilios, sartenes, combos y reposicion. Para produccion real, cargar productos en Medusa con metadata:
+
+- `material`
+- `tipoCocina`
+- `nivel`
+- `bundleUseCase`
+- `careTips`
+- `reorderAfterDays`
+
+El CRM v1 vive en `ecommerce-tools` sobre `TOOLS_DATA_DIR`:
+
+- `orders.json`: ordenes conversacionales.
+- `customers.json`: telefono, consentimiento WhatsApp, historial, eventos y proximo seguimiento.
+
+OpenClaw debe consultar cliente y catalogo antes de recomendar, registrar eventos comerciales y usar `/tools/followups/due` para recompra con confirmacion humana o canal permitido.
 
 ## Deployment
 

@@ -12,14 +12,14 @@ function formatUsd(amount: number) {
 export function buildQuote(
   config: AppConfig,
   products: Product[],
-  items: Array<{ productId: string; variantId?: string; quantity: number }>
+  items: Array<{ productId: string; variantId?: string; quantity: number }>,
 ): Quote {
   const lines: QuoteLine[] = items.map((item) => {
     const product = products.find(
       (candidate) =>
         candidate.id === item.productId ||
         candidate.variantId === item.variantId ||
-        candidate.sku === item.productId
+        candidate.sku === item.productId,
     )
 
     if (!product) {
@@ -37,11 +37,12 @@ export function buildQuote(
         amount: roundMoney(product.price.amount * item.quantity),
         currency: "USD",
       },
+      reorderAfterDays: product.reorderAfterDays,
     }
   })
 
   const subtotal = roundMoney(
-    lines.reduce((total, line) => total + line.lineTotal.amount, 0)
+    lines.reduce((total, line) => total + line.lineTotal.amount, 0),
   )
   const tax = roundMoney(subtotal * config.taxRate)
   const total = roundMoney(subtotal + tax)
@@ -51,8 +52,8 @@ export function buildQuote(
     .map(
       (line) =>
         `- ${line.quantity} x ${line.title}: ${formatUsd(
-          line.lineTotal.amount
-        )}`
+          line.lineTotal.amount,
+        )}`,
     )
     .join("\n")
 
@@ -69,7 +70,7 @@ export function buildQuote(
       `Subtotal: ${formatUsd(subtotal)}`,
       `Impuestos/configuracion: ${formatUsd(tax)}`,
       `Total: ${formatUsd(total)}`,
-      "Si estas de acuerdo, te envio el link de pago PayPhone.",
+      "Si estas de acuerdo, te envio el link de pago PayPhone y coordinamos entrega por WhatsApp.",
     ].join("\n"),
   }
 }

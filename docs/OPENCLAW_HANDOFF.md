@@ -19,6 +19,7 @@ Motivo:
 WhatsApp ecommerce
   -> OpenClaw app separada
     -> ecommerce-tools:8787
+      -> CRM customers/events/followups
       -> Medusa
       -> PayPhone
       -> Meta drafts/feed
@@ -38,13 +39,14 @@ WhatsApp ecommerce
 En la app OpenClaw ecommerce:
 
 ```text
-OPENCLAW_AGENT_NAME=B2B Ecommerce Seller
+OPENCLAW_AGENT_NAME=B2B Cocina Seller
 OPENCLAW_AGENT_PROMPT_FILE=agents/openclaw-ecommerce-seller.md
 OPENCLAW_SKILLS_DIR=skills
 ECOMMERCE_TOOLS_BASE_URL=http://ecommerce-tools:8787
 ECOMMERCE_TOOLS_TOKEN=<TOOLS_API_TOKEN>
 OPENCLAW_WHATSAPP_DM_POLICY=allowlist
 OPENCLAW_WHATSAPP_ALLOWED_NUMBERS=+593999999999
+OPENCLAW_FOLLOWUP_POLICY=consent_or_human_approval
 ```
 
 En el stack ecommerce:
@@ -91,26 +93,44 @@ Rutas privadas esperadas:
 - `POST /tools/quote`
 - `POST /tools/orders`
 - `POST /tools/payphone-link`
+- `POST /tools/customers/import`
+- `GET /tools/customers/:phone`
+- `POST /tools/customer-events`
+- `GET /tools/followups/due`
+- `GET /tools/dashboard`
 - `POST /tools/meta-post-draft`
 - `POST /webhooks/payphone`
 
 ## Flujo de venta
 
 1. Cliente escribe por WhatsApp.
-2. OpenClaw busca productos antes de decir precio o stock.
-3. OpenClaw cotiza maximo tres opciones salvo que el cliente pida mas.
-4. Si el cliente acepta, OpenClaw crea orden `pending_payment`.
-5. OpenClaw genera link PayPhone.
-6. OpenClaw entrega link y registra el siguiente paso.
-7. Webhook PayPhone o conciliacion humana confirma el pago.
-8. Si entrega, factura, instalacion o garantia no son claras, OpenClaw escala a humano.
+2. Si conoce el telefono, OpenClaw consulta `GET /tools/customers/:phone` antes de recomendar.
+3. OpenClaw busca productos de cocina antes de decir precio o stock.
+4. OpenClaw recomienda maximo tres opciones segun uso: casa, chef, emprendimiento, regalo, mantenimiento o reposicion.
+5. OpenClaw cotiza y queda evento `quote_created` si hay telefono.
+6. Si el cliente acepta, OpenClaw crea orden `pending_payment`.
+7. OpenClaw genera link PayPhone.
+8. Webhook PayPhone o conciliacion humana confirma el pago y agenda recompra si aplica.
+9. Si entrega, factura, instalacion o garantia no son claras, OpenClaw escala a humano.
+
+## Recompra
+
+Flujo diario:
+
+1. Consultar `GET /tools/followups/due` o `GET /tools/dashboard`.
+2. Revisar `suggestedMessage`, producto anterior y consentimiento.
+3. Enviar solo si hay consentimiento o conversacion vigente.
+4. Si no, dejar borrador para aprobacion humana/campana permitida.
+5. Registrar `followup_sent`, `reorder_interest`, `no_response`, `conversation_escalated` u `opt_out` con `POST /tools/customer-events`.
 
 ## Limites del agente
 
 OpenClaw no debe:
 
 - Inventar stock, precio, descuento, estado de pago ni estado de orden.
+- Inventar historial de compra o consentimiento WhatsApp.
 - Pedir datos de tarjeta, claves, tokens o credenciales.
+- Recontactar fuera de una conversacion vigente sin consentimiento o aprobacion humana.
 - Publicar en Marketplace sin confirmacion humana.
 - Ejecutar gasto publicitario sin confirmacion humana.
 - Mezclar este vendedor con agentes de otros proyectos.
@@ -121,20 +141,27 @@ Con `ecommerce-tools` arriba:
 
 ```bash
 curl http://localhost:8787/healthz
-curl http://localhost:8787/tools/search-products?query=wifi
+curl http://localhost:8787/tools/search-products?query=ollas
 ```
 
 Con token:
 
 ```bash
 curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
-  "http://localhost:8787/tools/search-products?query=wifi"
+  "http://localhost:8787/tools/search-products?query=cuchillos"
+
+curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
+  "http://localhost:8787/tools/followups/due"
+
+curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
+  "http://localhost:8787/tools/dashboard"
 ```
 
 Desde OpenClaw:
 
-- Preguntar: "Tienes router wifi para negocio?"
+- Preguntar: "Tienes ollas y cuchillos para empezar un emprendimiento?"
 - Verificar que llama a `search-products`.
+- Si el telefono esta disponible, verificar que llama a `get_customer`.
 - Pedir cotizacion.
 - Verificar que llama a `quote`.
 - Aceptar compra.
@@ -149,5 +176,6 @@ El agente debe dejar rastro corto:
 - Total cotizado.
 - Order id.
 - Link/status PayPhone.
+- Evento CRM y proximo seguimiento.
 - Siguiente accion.
 - Si fue escalado: motivo y datos que faltan.

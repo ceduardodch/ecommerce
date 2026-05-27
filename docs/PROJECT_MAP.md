@@ -50,6 +50,7 @@ Responsabilidades:
 - Boton de compra por WhatsApp.
 - Feed Meta proxy.
 - Pagina sandbox de PayPhone.
+- Experiencia cocina-first: ollas, cuchillos, utensilios, combos, recompra y promociones reales.
 
 Archivos clave:
 
@@ -83,17 +84,19 @@ Responsabilidades:
 - Recibir webhook PayPhone.
 - Exportar feed Meta catalog CSV.
 - Generar drafts para Facebook, Instagram y Marketplace.
+- Guardar CRM minimo de clientes, compras, consentimiento WhatsApp, eventos y followups.
 
 Archivos clave:
 
 - `services/ecommerce-tools/src/index.ts`: HTTP API.
 - `services/ecommerce-tools/src/mcp-server.ts`: MCP server stdio.
 - `services/ecommerce-tools/src/service.ts`: casos de uso principales.
-- `services/ecommerce-tools/src/catalog.ts`: carga de productos desde Medusa con fallback demo.
-- `services/ecommerce-tools/src/demo-catalog.ts`: catalogo demo.
+- `services/ecommerce-tools/src/catalog.ts`: carga de productos desde Medusa con fallback cocina.
+- `services/ecommerce-tools/src/demo-catalog.ts`: catalogo fallback de cocina.
+- `services/ecommerce-tools/src/customers.ts`: importacion CSV/JSON y borradores de recompra.
 - `services/ecommerce-tools/src/payphone.ts`: integracion PayPhone/dry-run.
 - `services/ecommerce-tools/src/meta.ts`: feed y drafts Meta.
-- `services/ecommerce-tools/src/storage.ts`: persistencia de ordenes en `TOOLS_DATA_DIR`.
+- `services/ecommerce-tools/src/storage.ts`: persistencia de ordenes y clientes en `TOOLS_DATA_DIR`.
 - `services/ecommerce-tools/src/auth.ts`: token Bearer para rutas privadas.
 - `services/ecommerce-tools/src/contracts.ts`: schemas Zod.
 - `services/ecommerce-tools/Dockerfile`: build del servicio `ecommerce-tools`.
@@ -160,6 +163,11 @@ HTTP:
 - `POST /tools/quote`
 - `POST /tools/orders`
 - `POST /tools/payphone-link`
+- `POST /tools/customers/import`
+- `GET /tools/customers/:phone`
+- `POST /tools/customer-events`
+- `GET /tools/followups/due`
+- `GET /tools/dashboard`
 - `POST /webhooks/payphone`
 - `GET /feeds/meta/catalog.csv`
 - `POST /tools/meta-post-draft`
@@ -170,6 +178,11 @@ MCP:
 - `quote`
 - `create_order`
 - `create_payphone_link`
+- `import_customers`
+- `get_customer`
+- `add_customer_event`
+- `due_followups`
+- `dashboard`
 - `meta_post_draft`
 
 ## Docker Services

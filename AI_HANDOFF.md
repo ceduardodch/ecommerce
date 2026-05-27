@@ -14,12 +14,12 @@ Este archivo orienta a cualquier agente IA que retome el proyecto. Las reglas de
 
 ## Objetivo del proyecto
 
-Construir `shop.b2b.com.ec` como ecommerce conversacional para Ecuador:
+Construir `shop.b2b.com.ec` como ecommerce conversacional de cocina para Ecuador:
 
 - Medusa v2 maneja catalogo, admin, inventario, clientes y ordenes.
-- Next.js muestra catalogo publico, feed Meta y enlaces a WhatsApp.
-- `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, PayPhone y Meta.
-- OpenClaw opera como vendedor dedicado por WhatsApp, en una app Coolify separada.
+- Next.js muestra catalogo publico de ollas, cuchillos, utensilios, combos, feed Meta y enlaces a WhatsApp.
+- `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, CRM, followups, PayPhone y Meta.
+- OpenClaw opera como vendedor dedicado por WhatsApp, en una app Coolify separada, con contexto de cliente antes de recomendar.
 - PayPhone API Link crea links de pago.
 - Meta se usa para catalogo, posts asistidos y Marketplace asistido.
 
@@ -38,6 +38,7 @@ Construir `shop.b2b.com.ec` como ecommerce conversacional para Ecuador:
 Cliente WhatsApp
   -> OpenClaw ecommerce seller
     -> ecommerce-tools HTTP/MCP
+      -> CRM customers/events/followups
       -> Medusa API
       -> PayPhone API Link
       -> Meta catalog/drafts
@@ -98,12 +99,14 @@ docker compose up --build
 - PayPhone en `PAYPHONE_DRY_RUN=true` no cobra dinero real.
 - Marketplace Facebook en v1 es asistido: generar copy/checklist, no publicar sin confirmacion humana.
 - WhatsApp en v1 lo maneja OpenClaw, no WhatsApp Cloud API desde este repo.
+- Recontacto WhatsApp fuera de conversacion vigente debe ser consentido, aprobado o manual hasta tener canal Cloud API con plantillas.
 
 ## Siguiente trabajo natural
 
 - Configurar remoto GitHub cuando el usuario lo autorice.
 - Conectar Coolify a `release` para staging y `main` para produccion, segun la estrategia aprobada.
 - Levantar OpenClaw ecommerce como app separada con el prompt y skills de este repo.
-- Crear productos reales en Medusa Admin y sustituir catalogo demo/fallback.
+- Crear productos reales de cocina en Medusa Admin y sustituir el fallback local.
+- Importar BD historica de clientes/compras por `/tools/customers/import`.
 - Integrar PayPhone live despues de sandbox y webhook validado.
 - Completar publicacion Meta con confirmacion humana antes de publicar o pautar.

@@ -81,7 +81,7 @@ services:
       PAYPHONE_TOKEN: ${PAYPHONE_TOKEN:-}
       PAYPHONE_STORE_ID: ${PAYPHONE_STORE_ID:-}
       PAYPHONE_DRY_RUN: ${PAYPHONE_DRY_RUN:-true}
-      META_CATALOG_BRAND: ${META_CATALOG_BRAND:-B2B}
+      META_CATALOG_BRAND: "${META_CATALOG_BRAND:-B2B Cocina}"
     volumes:
       - tools-data:/data
     expose:

@@ -37,32 +37,34 @@ export function buildMetaCatalogCsv(products: Product[]) {
   ])
 
   return [columns.join(","), ...rows.map((row) => row.map(csv).join(","))].join(
-    "\n"
+    "\n",
   )
 }
 
 export function buildMetaDraft(products: Product[], angle: string) {
   const names = products.map((product) => product.title).join(", ")
   const priceAnchor = products
-    .map((product) => `${product.title}: $${product.price.amount.toFixed(2)}`)
+    .map((product) => {
+      const material = product.material ? ` (${product.material})` : ""
+      const promo = product.promoLabel ? ` - ${product.promoLabel}` : ""
+      return `${product.title}${material}: $${product.price.amount.toFixed(2)}${promo}`
+    })
     .join("\n")
 
   return {
     facebook:
-      `Tenemos disponible ${names}.\n\n` +
-      `Enfoque: ${angle}. Resolvemos por WhatsApp: recomendacion, cotizacion y link de pago.\n\n` +
+      `Cocina lista para vender y cocinar mejor: ${names}.\n\n` +
+      `Enfoque: ${angle}. Te ayudamos por WhatsApp a escoger olla, cuchillo, combo o reposicion segun tu uso real.\n\n` +
       priceAnchor,
-    instagram:
-      `${names}\n\nVenta por WhatsApp, cotizacion rapida y pago con link. Escribenos para confirmar stock.`,
+    instagram: `${names}\n\nCombos de cocina, promociones reales y cotizacion por WhatsApp. Escribenos para confirmar stock y entrega.`,
     marketplace: products.map((product) => ({
       title: product.title.slice(0, 80),
       price: product.price.amount,
-      description:
-        `${product.description}\n\nStock: ${product.stock}. Pago por link PayPhone. Entrega y factura se confirman por WhatsApp.`,
+      description: `${product.description}\n\nMaterial: ${product.material || "Por confirmar"}.\nUso recomendado: ${product.tipoCocina || "cocina diaria"}.\nStock: ${product.stock}. Pago por link PayPhone. Entrega y factura se confirman por WhatsApp.`,
       checklist: [
         "Confirmar stock antes de publicar",
-        "Usar fotos reales si el producto ya esta en bodega",
-        "Revisar categoria y ubicacion en Facebook Marketplace",
+        "Usar fotos reales del producto en bodega",
+        "Revisar categoria hogar/cocina y ubicacion en Facebook Marketplace",
         "Publicar manualmente o con navegador supervisado",
       ],
     })),

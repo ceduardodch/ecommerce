@@ -1,14 +1,19 @@
 import {
   BadgeDollarSign,
+  ChefHat,
+  ClipboardCheck,
+  CookingPot,
   Flame,
   MessageCircle,
   PackageSearch,
+  RefreshCw,
   Search,
   ShieldCheck,
-  ShoppingBag,
+  Sparkles,
   Tags,
   Timer,
   Truck,
+  Utensils,
   Zap,
 } from "lucide-react"
 import type { Product } from "../lib/catalog"
@@ -32,7 +37,11 @@ function hasPromo(product: Product) {
   )
 }
 
-function filterProducts(products: Product[], query?: string, category?: string) {
+function filterProducts(
+  products: Product[],
+  query?: string,
+  category?: string,
+) {
   const normalizedQuery = (query || "").trim().toLowerCase()
   return products.filter((product) => {
     if (category && product.category !== category) return false
@@ -45,6 +54,11 @@ function filterProducts(products: Product[], query?: string, category?: string) 
       product.sku,
       product.promoLabel || "",
       product.deliveryBadge || "",
+      product.material || "",
+      product.tipoCocina || "",
+      product.nivel || "",
+      product.bundleUseCase || "",
+      product.careTips || "",
       ...product.tags,
     ]
       .join(" ")
@@ -83,6 +97,11 @@ function ProductCard({
           <span>{product.sku}</span>
         </div>
         <p className="description">{product.description}</p>
+        <div className="product-specs">
+          {product.material ? <span>{product.material}</span> : null}
+          {product.tipoCocina ? <span>{product.tipoCocina}</span> : null}
+          {product.nivel ? <span>{product.nivel}</span> : null}
+        </div>
         <div className="signal-row">
           <span>
             <Truck size={15} />
@@ -109,7 +128,7 @@ function ProductCard({
             target="_blank"
           >
             <MessageCircle size={18} />
-            Cotizar
+            Cotizar por WhatsApp
           </a>
         </div>
       </div>
@@ -127,7 +146,14 @@ export default async function Home({ searchParams }: HomeProps) {
   const promoProducts = products.filter(hasPromo)
   const deals = (promoProducts.length ? promoProducts : products).slice(0, 4)
   const bundleProducts = products.filter((product) => product.bundleEligible)
-  const bundles = (bundleProducts.length ? bundleProducts : products).slice(0, 3)
+  const bundles = (bundleProducts.length ? bundleProducts : products).slice(
+    0,
+    3,
+  )
+  const reorderProducts = products
+    .filter((product) => product.reorderAfterDays)
+    .sort((a, b) => (a.reorderAfterDays || 999) - (b.reorderAfterDays || 999))
+    .slice(0, 3)
   const whatsappPopular = [...products]
     .sort((a, b) => b.stock - a.stock)
     .slice(0, 3)
@@ -138,20 +164,23 @@ export default async function Home({ searchParams }: HomeProps) {
       <div className="promo-bar">
         <span>
           <Zap size={16} />
-          CUPON B2BHOY
+          COCINAHOY
         </span>
-        <strong>Descuentos activos para cotizaciones cerradas esta semana</strong>
+        <strong>
+          Promos reales en ollas, cuchillos y combos con stock visible
+        </strong>
         <a href="#ofertas">Ver ofertas</a>
       </div>
 
       <header className="topbar">
         <a className="brand-mark" href="/">
-          <ShoppingBag size={22} />
-          <span>B2B Shop</span>
+          <CookingPot size={22} />
+          <span>B2B Cocina</span>
         </a>
         <nav>
           <a href="#ofertas">Ofertas</a>
           <a href="#combos">Combos</a>
+          <a href="#recompra">Recompra</a>
           <a href="#catalogo">Catalogo</a>
         </nav>
         <a className="ghost-button" href="/feeds/meta/catalog.csv">
@@ -160,17 +189,17 @@ export default async function Home({ searchParams }: HomeProps) {
         </a>
       </header>
 
-      <section className="market-hero" aria-label="Catalogo promocional">
+      <section className="market-hero" aria-label="Catalogo de cocina">
         <div className="hero-copy">
-          <p className="eyebrow">Marketplace B2B por WhatsApp</p>
-          <h1>Compra rapido para tu negocio con ofertas listas para cotizar.</h1>
+          <p className="eyebrow">Cocina niche por WhatsApp</p>
+          <h1>Ollas, cuchillos y combos para cocinar mejor y vender mas.</h1>
           <form className="search-box" action="/">
             <Search size={20} />
             <input
-              aria-label="Buscar productos"
+              aria-label="Buscar productos de cocina"
               defaultValue={query}
               name="q"
-              placeholder="Buscar por necesidad: camaras, wifi, cobros..."
+              placeholder="Busca: ollas acero, cuchillos chef, combo emprendedor..."
             />
             {selectedCategory ? (
               <input name="category" type="hidden" value={selectedCategory} />
@@ -204,7 +233,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <div>
               <span>Oferta destacada</span>
               <strong>{featured.title}</strong>
-              <p>{featured.promoLabel || "Cotizacion prioritaria por WhatsApp"}</p>
+              <p>{featured.bundleUseCase || featured.promoLabel}</p>
               <b>{money(featured.price.amount)}</b>
             </div>
           </a>
@@ -214,30 +243,30 @@ export default async function Home({ searchParams }: HomeProps) {
       <section className="trust-strip" aria-label="Condiciones comerciales">
         <div>
           <ShieldCheck size={18} />
-          Compra con factura y revision humana
+          Factura, stock real y revision humana
         </div>
         <div>
           <BadgeDollarSign size={18} />
-          Pago por link PayPhone en modo sandbox
+          Pago por link PayPhone cuando aceptas la cotizacion
         </div>
         <div>
           <MessageCircle size={18} />
-          Atencion prioritaria por WhatsApp
+          Asesor de cocina por WhatsApp
         </div>
       </section>
 
       <section className="section-head" id="ofertas">
         <div>
           <p className="eyebrow">Cierra hoy</p>
-          <h2>Ofertas para negocios que necesitan resolver ya</h2>
+          <h2>Ofertas para equipar cocina sin comprar de mas</h2>
         </div>
         <span>
           <Flame size={18} />
-          Promos con stock visible
+          Stock visible
         </span>
       </section>
 
-      <section className="deal-grid" aria-label="Ofertas para cerrar hoy">
+      <section className="deal-grid" aria-label="Ofertas de cocina">
         {deals.map((product) => (
           <ProductCard compact key={product.id} product={product} />
         ))}
@@ -248,7 +277,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="section-head compact-head">
             <div>
               <p className="eyebrow">Combos</p>
-              <h2>Paquetes para implementar mas rapido</h2>
+              <h2>Paquetes para casa, chef y emprendimiento</h2>
             </div>
           </div>
           <div className="mini-list">
@@ -291,10 +320,61 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
+      <section className="use-grid" aria-label="Guias por uso">
+        <div>
+          <ChefHat size={26} />
+          <h2>Chef o cocina intensa</h2>
+          <p>
+            Cuchillos, sartenes y tablas para preparar rapido sin perder
+            control.
+          </p>
+        </div>
+        <div>
+          <Utensils size={26} />
+          <h2>Casa bien equipada</h2>
+          <p>Sets para empezar con ollas, utensilios y cuidado simple.</p>
+        </div>
+        <div>
+          <Sparkles size={26} />
+          <h2>Regalo util</h2>
+          <p>
+            Combos de alto uso que se sienten premium sin inflar el presupuesto.
+          </p>
+        </div>
+      </section>
+
+      <section className="section-head" id="recompra">
+        <div>
+          <p className="eyebrow">Recompra</p>
+          <h2>Postventa pensada para mantenimiento y complementos</h2>
+        </div>
+        <span>
+          <RefreshCw size={18} />
+          CRM WhatsApp
+        </span>
+      </section>
+
+      <section className="reorder-strip" aria-label="Productos para recompra">
+        {reorderProducts.map((product) => (
+          <a
+            href={whatsappLink(product)}
+            key={product.id}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <ClipboardCheck size={20} />
+            <span>{product.title}</span>
+            <strong>{product.reorderAfterDays} dias</strong>
+          </a>
+        ))}
+      </section>
+
       <section className="section-head" id="catalogo">
         <div>
           <p className="eyebrow">Catalogo</p>
-          <h2>{visibleProducts.length} productos listos para cotizar</h2>
+          <h2>
+            {visibleProducts.length} productos de cocina listos para cotizar
+          </h2>
         </div>
         <span>
           <PackageSearch size={18} />

@@ -7,6 +7,8 @@ import {
 import { loadConfig } from "./config.js"
 import { createCommerceService } from "./service.js"
 import {
+  customerEventInputSchema,
+  customerImportSchema,
   metaDraftInputSchema,
   orderInputSchema,
   payphoneInputSchema,
@@ -18,14 +20,15 @@ const service = createCommerceService(config)
 
 const server = new Server(
   { name: "b2b-ecommerce-tools", version: "0.1.0" },
-  { capabilities: { tools: {} } }
+  { capabilities: { tools: {} } },
 )
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     {
       name: "search_products",
-      description: "Busca productos por intencion, categoria y rango de precio.",
+      description:
+        "Busca productos por intencion, categoria y rango de precio.",
       inputSchema: {
         type: "object",
         properties: {
@@ -39,7 +42,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "quote",
-      description: "Crea una cotizacion para WhatsApp.",
+      description:
+        "Crea una cotizacion para WhatsApp y registra evento CRM si hay telefono.",
       inputSchema: {
         type: "object",
         properties: {
@@ -51,7 +55,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "create_order",
-      description: "Crea una orden conversacional pendiente de pago.",
+      description:
+        "Crea una orden conversacional pendiente de pago y registra evento CRM.",
       inputSchema: {
         type: "object",
         properties: {
@@ -88,6 +93,68 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         required: ["productIds"],
       },
     },
+    {
+      name: "import_customers",
+      description: "Importa clientes/compras historicas desde CSV o JSON.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          csv: { type: "string" },
+          customers: { type: "array" },
+        },
+      },
+    },
+    {
+      name: "get_customer",
+      description: "Busca cliente por telefono para contexto de recompra.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          phone: { type: "string" },
+        },
+        required: ["phone"],
+      },
+    },
+    {
+      name: "add_customer_event",
+      description:
+        "Registra evento CRM: recompra, no respuesta, escalamiento u opt-out.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          phone: { type: "string" },
+          type: { type: "string" },
+          at: { type: "string" },
+          payload: { type: "object" },
+          nextFollowupAt: { type: "string" },
+          followupReason: { type: "string" },
+        },
+        required: ["phone", "type"],
+      },
+    },
+    {
+      name: "due_followups",
+      description:
+        "Lista clientes con recompra/seguimiento vencido y mensaje sugerido.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          asOf: { type: "string" },
+          limit: { type: "number" },
+        },
+      },
+    },
+    {
+      name: "dashboard",
+      description:
+        "Resume leads, ordenes pendientes, pagos y followups vencidos.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          asOf: { type: "string" },
+        },
+      },
+    },
   ],
 }))
 
@@ -103,28 +170,81 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       limit?: number
     }
     const products = await service.products(input)
-    return { content: [{ type: "text", text: JSON.stringify({ products }, null, 2) }] }
+    return {
+      content: [{ type: "text", text: JSON.stringify({ products }, null, 2) }],
+    }
   }
 
   if (request.params.name === "quote") {
     const quote = await service.quote(quoteInputSchema.parse(args))
-    return { content: [{ type: "text", text: JSON.stringify(quote, null, 2) }] }
+    return {
+      content: [{ type: "text", text: JSON.stringify(quote, null, 2) }],
+    }
   }
 
   if (request.params.name === "create_order") {
     const order = await service.createOrder(orderInputSchema.parse(args))
-    return { content: [{ type: "text", text: JSON.stringify(order, null, 2) }] }
+    return {
+      content: [{ type: "text", text: JSON.stringify(order, null, 2) }],
+    }
   }
 
   if (request.params.name === "create_payphone_link") {
     const input = payphoneInputSchema.parse(args)
     const order = await service.createPaymentLink(input.orderId)
-    return { content: [{ type: "text", text: JSON.stringify(order, null, 2) }] }
+    return {
+      content: [{ type: "text", text: JSON.stringify(order, null, 2) }],
+    }
   }
 
   if (request.params.name === "meta_post_draft") {
     const draft = await service.metaDraft(metaDraftInputSchema.parse(args))
-    return { content: [{ type: "text", text: JSON.stringify(draft, null, 2) }] }
+    return {
+      content: [{ type: "text", text: JSON.stringify(draft, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "import_customers") {
+    const result = await service.importCustomers(
+      customerImportSchema.parse(args),
+    )
+    return {
+      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "get_customer") {
+    const input = args as { phone?: string }
+    if (!input.phone) throw new Error("phone requerido")
+    const customer = await service.getCustomer(input.phone)
+    return {
+      content: [{ type: "text", text: JSON.stringify({ customer }, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "add_customer_event") {
+    const customer = await service.addCustomerEvent(
+      customerEventInputSchema.parse(args),
+    )
+    return {
+      content: [{ type: "text", text: JSON.stringify(customer, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "due_followups") {
+    const input = args as { asOf?: string; limit?: number }
+    const customers = await service.dueFollowups(input)
+    return {
+      content: [{ type: "text", text: JSON.stringify({ customers }, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "dashboard") {
+    const input = args as { asOf?: string }
+    const dashboard = await service.dashboard(input)
+    return {
+      content: [{ type: "text", text: JSON.stringify(dashboard, null, 2) }],
+    }
   }
 
   throw new Error(`Tool not found: ${request.params.name}`)

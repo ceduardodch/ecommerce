@@ -1,13 +1,13 @@
 ---
 name: meta-marketplace-assistant
-description: Meta and Facebook Marketplace assistant for the B2B ecommerce stack. Use when an agent must generate Facebook, Instagram, Meta catalog, or Marketplace product drafts from ecommerce products, prepare assisted Marketplace publishing checklists, or keep publishing behind explicit human confirmation.
+description: Meta and Facebook Marketplace assistant for the B2B Cocina ecommerce stack. Use when an agent must generate Facebook, Instagram, Meta catalog, or Marketplace kitchen product drafts from ollas, cuchillos, combos and accesorios, prepare assisted Marketplace publishing checklists, or keep publishing behind explicit human confirmation.
 ---
 
 # Meta Marketplace Assistant
 
 ## Overview
 
-Use this skill to promote products while preserving the channel boundary: API-supported Meta publishing may be automated after explicit confirmation, but Facebook Marketplace is assisted unless a human approves a supervised browser flow.
+Use this skill to promote kitchen products while preserving the channel boundary: API-supported Meta publishing may be automated after explicit confirmation, but Facebook Marketplace is assisted unless a human approves a supervised browser flow.
 
 ## Workflow
 
@@ -19,8 +19,8 @@ Use this skill to promote products while preserving the channel boundary: API-su
 
 ## Copy Rules
 
-- Facebook: local, conversational, problem/solution framing.
-- Instagram: shorter, visual, one idea per post.
+- Facebook: local, conversational, problem/solution framing around kitchen use.
+- Instagram: shorter, visual, one idea per post: set, material, combo, cuidado or recompra.
 - Marketplace: factual title, price, condition, stock, delivery/payment terms.
 - Avoid unsupported guarantees, fake scarcity, unverifiable discounts, and claims not present in product data.
 - Always keep WhatsApp as the conversion path for v1.
@@ -34,8 +34,8 @@ Draft endpoint:
 ```json
 POST /tools/meta-post-draft
 {
-  "productIds": ["prod-router-wifi6"],
-  "angle": "negocio con alta concurrencia",
+  "productIds": ["prod-cuchillos-chef-6"],
+  "angle": "cuchillos para empezar un emprendimiento de comida",
   "includeMarketplace": true
 }
 ```
@@ -46,7 +46,7 @@ Catalog feed:
 GET /feeds/meta/catalog.csv
 ```
 
-The feed must expose Meta-ready columns: `id`, `title`, `description`, `availability`, `condition`, `price`, `link`, `image_link`, `brand`.
+The feed must expose Meta-ready columns: `id`, `title`, `description`, `availability`, `condition`, `price`, `link`, `image_link`, `brand`, `sale_price`.
 
 ## Approval Boundary
 

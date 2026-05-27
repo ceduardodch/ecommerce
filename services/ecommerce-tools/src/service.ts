@@ -1,10 +1,50 @@
 import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
+import { buildFollowupDraft, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
 import { createPayPhoneLink } from "./payphone.js"
-import { findOrder, findOrderByClientTransaction, upsertOrder } from "./storage.js"
+import {
+  addCustomerEvent,
+  findCustomer,
+  findOrder,
+  findOrderByClientTransaction,
+  listDueFollowups,
+  readCustomers,
+  readOrders,
+  upsertCustomer,
+  upsertOrder,
+} from "./storage.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
-import type { CustomerInput, OrderRecord } from "./types.js"
+import type {
+  CustomerEventRecord,
+  CustomerInput,
+  OrderRecord,
+  PurchasedProduct,
+} from "./types.js"
+
+function addDays(iso: string, days: number) {
+  const date = new Date(iso)
+  date.setDate(date.getDate() + days)
+  return date.toISOString()
+}
+
+function nextReorderDays(items: Array<{ reorderAfterDays?: number }>) {
+  const days = items
+    .map((item) => item.reorderAfterDays)
+    .filter((value): value is number => Number.isFinite(value))
+  return days.length ? Math.min(...days) : 90
+}
+
+async function trackCustomerEvent(
+  config: AppConfig,
+  customer: CustomerInput | undefined,
+  event: CustomerEventRecord,
+  patch: Parameters<typeof addCustomerEvent>[3] = {},
+) {
+  if (!customer?.phone) return undefined
+  await upsertCustomer(config.dataDir, customer)
+  return addCustomerEvent(config.dataDir, customer.phone, event, patch)
+}
 
 export function createCommerceService(config: AppConfig) {
   return {
@@ -21,9 +61,26 @@ export function createCommerceService(config: AppConfig) {
 
     async quote(input: {
       items: Array<{ productId: string; variantId?: string; quantity: number }>
+      customer?: CustomerInput
     }) {
       const products = await loadProducts(config)
-      return buildQuote(config, products, input.items)
+      const quote = buildQuote(config, products, input.items)
+      const now = new Date().toISOString()
+      await trackCustomerEvent(config, input.customer, {
+        type: "quote_created",
+        at: now,
+        quoteId: quote.id,
+        source: "whatsapp",
+        payload: {
+          total: quote.total,
+          items: quote.lines.map((line) => ({
+            sku: line.sku,
+            title: line.title,
+            quantity: line.quantity,
+          })),
+        },
+      })
+      return quote
     },
 
     async createOrder(input: {
@@ -58,7 +115,20 @@ export function createCommerceService(config: AppConfig) {
         ],
       }
 
-      return upsertOrder(config.dataDir, order)
+      const saved = await upsertOrder(config.dataDir, order)
+      await trackCustomerEvent(config, input.customer, {
+        type: "order_created",
+        at: now,
+        orderId: saved.id,
+        quoteId: quote.id,
+        source: input.source || "whatsapp",
+        payload: {
+          status: saved.status,
+          total: quote.total,
+          notes: input.notes,
+        },
+      })
+      return saved
     },
 
     async createPaymentLink(orderId: string) {
@@ -88,7 +158,10 @@ export function createCommerceService(config: AppConfig) {
     async payphoneWebhook(payload: Record<string, unknown>) {
       const clientTransactionId = String(payload.clientTransactionId || "")
       const order = clientTransactionId
-        ? await findOrderByClientTransaction(config.dataDir, clientTransactionId)
+        ? await findOrderByClientTransaction(
+            config.dataDir,
+            clientTransactionId,
+          )
         : undefined
 
       if (!order) {
@@ -97,7 +170,7 @@ export function createCommerceService(config: AppConfig) {
 
       const rawStatus = String(payload.status || payload.statusCode || "")
       const paid = ["2", "3", "approved", "success", "paid"].includes(
-        rawStatus.toLowerCase()
+        rawStatus.toLowerCase(),
       )
       const now = new Date().toISOString()
       const updated: OrderRecord = {
@@ -115,6 +188,39 @@ export function createCommerceService(config: AppConfig) {
       }
 
       await upsertOrder(config.dataDir, updated)
+      if (updated.customer.phone && paid) {
+        const suggestedFrequencyDays = nextReorderDays(updated.quote.lines)
+        const purchasedProducts: PurchasedProduct[] = updated.quote.lines.map(
+          (line) => ({
+            productId: line.productId,
+            sku: line.sku,
+            title: line.title,
+            quantity: line.quantity,
+            purchasedAt: now,
+            reorderAfterDays: line.reorderAfterDays,
+          }),
+        )
+
+        await trackCustomerEvent(
+          config,
+          updated.customer,
+          {
+            type: "paid",
+            at: now,
+            orderId: updated.id,
+            quoteId: updated.quote.id,
+            source: "payphone",
+            payload,
+          },
+          {
+            lastPurchaseAt: now,
+            purchasedProducts,
+            suggestedFrequencyDays,
+            nextFollowupAt: addDays(now, suggestedFrequencyDays),
+            followupReason: "recompra_o_complemento_cocina",
+          },
+        )
+      }
       return { matched: true, status: updated.status, order: updated }
     },
 
@@ -126,10 +232,123 @@ export function createCommerceService(config: AppConfig) {
     async metaDraft(input: { productIds: string[]; angle: string }) {
       const products = await loadProducts(config)
       const selected = products.filter((product) =>
-        input.productIds.includes(product.id)
+        input.productIds.includes(product.id),
       )
       if (!selected.length) throw new Error("No se encontraron productos")
       return buildMetaDraft(selected, input.angle)
+    },
+
+    async importCustomers(input: Parameters<typeof parseCustomerImport>[0]) {
+      const customers = parseCustomerImport(input)
+      const imported = []
+      for (const customer of customers) {
+        if (!customer.phone) continue
+        imported.push(await upsertCustomer(config.dataDir, customer))
+      }
+      return { imported: imported.length, customers: imported }
+    },
+
+    async getCustomer(phone: string) {
+      return findCustomer(config.dataDir, phone)
+    },
+
+    async addCustomerEvent(input: {
+      phone: string
+      type: CustomerEventRecord["type"]
+      at?: string
+      payload?: unknown
+      orderId?: string
+      quoteId?: string
+      source?: string
+      nextFollowupAt?: string
+      followupReason?: string
+      whatsappConsent?: boolean
+      tags?: string[]
+    }) {
+      const at = input.at || new Date().toISOString()
+      const customer = await upsertCustomer(config.dataDir, {
+        phone: input.phone,
+        whatsappConsent: input.whatsappConsent,
+        tags: input.tags,
+      })
+      const updated = await addCustomerEvent(
+        config.dataDir,
+        customer.phone,
+        {
+          type: input.type,
+          at,
+          payload: input.payload,
+          orderId: input.orderId,
+          quoteId: input.quoteId,
+          source: input.source || "manual",
+        },
+        {
+          whatsappConsent:
+            input.type === "opt_out" ? false : input.whatsappConsent,
+          nextFollowupAt: input.nextFollowupAt,
+          followupReason: input.followupReason,
+          tags: input.tags,
+        },
+      )
+      return updated
+    },
+
+    async dueFollowups(input: { asOf?: string; limit?: number }) {
+      const customers = await listDueFollowups(
+        config.dataDir,
+        input.asOf || new Date().toISOString(),
+        input.limit,
+      )
+      return customers.map((customer) => ({
+        ...customer,
+        suggestedMessage: buildFollowupDraft(customer),
+      }))
+    },
+
+    async dashboard(input: { asOf?: string }) {
+      const asOf = input.asOf || new Date().toISOString()
+      const [orders, customers, dueFollowups] = await Promise.all([
+        readOrders(config.dataDir),
+        readCustomers(config.dataDir),
+        listDueFollowups(config.dataDir, asOf, 25),
+      ])
+      const pendingOrders = orders.filter(
+        (order) => order.status === "pending_payment",
+      )
+      const paidOrders = orders.filter((order) => order.status === "paid")
+      const leadCustomers = customers.filter((customer) =>
+        customer.events.some((event) =>
+          ["quote_created", "order_created", "reorder_interest"].includes(
+            event.type,
+          ),
+        ),
+      )
+
+      return {
+        asOf,
+        counts: {
+          leads: leadCustomers.length,
+          pendingOrders: pendingOrders.length,
+          paidOrders: paidOrders.length,
+          dueFollowups: dueFollowups.length,
+          customers: customers.length,
+        },
+        pendingOrders,
+        paidOrders: paidOrders.slice(-10),
+        dueFollowups: dueFollowups.map((customer) => ({
+          ...customer,
+          suggestedMessage: buildFollowupDraft(customer),
+        })),
+        campaignDraftQueue: dueFollowups
+          .filter((customer) => customer.whatsappConsent)
+          .map((customer) => ({
+            phone: customer.phone,
+            name: customer.name,
+            reason: customer.followupReason,
+            nextFollowupAt: customer.nextFollowupAt,
+            suggestedMessage: buildFollowupDraft(customer),
+          })),
+      }
     },
   }
 }

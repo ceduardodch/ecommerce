@@ -4,6 +4,8 @@ import { loadConfig } from "./config.js"
 import { createCommerceService } from "./service.js"
 import { authHook } from "./auth.js"
 import {
+  customerEventInputSchema,
+  customerImportSchema,
   metaDraftInputSchema,
   orderInputSchema,
   payphoneInputSchema,
@@ -75,6 +77,38 @@ app.get("/feeds/meta/catalog.csv", async (_request, reply) => {
 app.post("/tools/meta-post-draft", async (request) => {
   const input = metaDraftInputSchema.parse(request.body)
   return service.metaDraft(input)
+})
+
+app.post("/tools/customers/import", async (request) => {
+  const input = customerImportSchema.parse(request.body)
+  return service.importCustomers(input)
+})
+
+app.get("/tools/customers/:phone", async (request, reply) => {
+  const params = request.params as { phone: string }
+  const customer = await service.getCustomer(params.phone)
+  if (!customer) return reply.code(404).send({ error: "customer_not_found" })
+  return { customer }
+})
+
+app.post("/tools/customer-events", async (request) => {
+  const input = customerEventInputSchema.parse(request.body)
+  return { customer: await service.addCustomerEvent(input) }
+})
+
+app.get("/tools/followups/due", async (request) => {
+  const query = request.query as Record<string, string | undefined>
+  return {
+    customers: await service.dueFollowups({
+      asOf: query.asOf,
+      limit: query.limit ? Number(query.limit) : undefined,
+    }),
+  }
+})
+
+app.get("/tools/dashboard", async (request) => {
+  const query = request.query as Record<string, string | undefined>
+  return service.dashboard({ asOf: query.asOf })
 })
 
 try {

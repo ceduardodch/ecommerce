@@ -39,7 +39,10 @@ function stringFromMetadata(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined
 }
 
-function normalizeMedusaProduct(config: AppConfig, product: MedusaProduct): Product {
+function normalizeMedusaProduct(
+  config: AppConfig,
+  product: MedusaProduct,
+): Product {
   const variant = product.variants?.[0]
   const rawPrice =
     variant?.calculated_price?.calculated_amount ??
@@ -76,6 +79,12 @@ function normalizeMedusaProduct(config: AppConfig, product: MedusaProduct): Prod
       product.metadata?.bundleEligible === true ||
       product.metadata?.bundleEligible === "true",
     deliveryBadge: stringFromMetadata(product.metadata?.deliveryBadge),
+    material: stringFromMetadata(product.metadata?.material),
+    tipoCocina: stringFromMetadata(product.metadata?.tipoCocina),
+    nivel: stringFromMetadata(product.metadata?.nivel),
+    bundleUseCase: stringFromMetadata(product.metadata?.bundleUseCase),
+    careTips: stringFromMetadata(product.metadata?.careTips),
+    reorderAfterDays: numberFromMetadata(product.metadata?.reorderAfterDays),
     stock: Number(product.metadata?.stock || 0),
     imageUrl: product.thumbnail || product.images?.[0]?.url || "",
     productUrl: productUrl(config, product),
@@ -83,8 +92,47 @@ function normalizeMedusaProduct(config: AppConfig, product: MedusaProduct): Prod
       ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
       product.title,
       product.description || "",
+      stringFromMetadata(product.metadata?.material) || "",
+      stringFromMetadata(product.metadata?.tipoCocina) || "",
+      stringFromMetadata(product.metadata?.nivel) || "",
+      stringFromMetadata(product.metadata?.bundleUseCase) || "",
     ],
   }
+}
+
+const kitchenTerms = [
+  "cocina",
+  "olla",
+  "ollas",
+  "cuchillo",
+  "cuchillos",
+  "tabla",
+  "tablas",
+  "utensilio",
+  "utensilios",
+  "sarten",
+  "sartenes",
+  "combo",
+  "reposicion",
+  "chef",
+  "emprendimiento",
+]
+
+function isKitchenProduct(product: Product) {
+  if (product.sku.startsWith("COC-")) return true
+  const haystack = [
+    product.title,
+    product.description,
+    product.category,
+    product.brand,
+    product.material || "",
+    product.tipoCocina || "",
+    product.bundleUseCase || "",
+    ...product.tags,
+  ]
+    .join(" ")
+    .toLowerCase()
+  return kitchenTerms.some((term) => haystack.includes(term))
 }
 
 export async function loadProducts(config: AppConfig): Promise<Product[]> {
@@ -104,9 +152,10 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
     }
     const body = (await response.json()) as { products?: MedusaProduct[] }
     const products = (body.products || []).map((product) =>
-      normalizeMedusaProduct(config, product)
+      normalizeMedusaProduct(config, product),
     )
-    return products.length ? products : demoCatalog
+    const kitchenProducts = products.filter(isKitchenProduct)
+    return kitchenProducts.length ? kitchenProducts : demoCatalog
   } catch {
     return demoCatalog
   }
@@ -120,20 +169,23 @@ export function searchProducts(
     minPrice?: number
     maxPrice?: number
     limit?: number
-  }
+  },
 ) {
-  const terms = (input.query || "")
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
+  const terms = (input.query || "").toLowerCase().split(/\s+/).filter(Boolean)
 
   return products
     .filter((product) => {
       if (input.category && product.category !== input.category) return false
-      if (input.minPrice !== undefined && product.price.amount < input.minPrice) {
+      if (
+        input.minPrice !== undefined &&
+        product.price.amount < input.minPrice
+      ) {
         return false
       }
-      if (input.maxPrice !== undefined && product.price.amount > input.maxPrice) {
+      if (
+        input.maxPrice !== undefined &&
+        product.price.amount > input.maxPrice
+      ) {
         return false
       }
       if (!terms.length) return true
@@ -144,6 +196,11 @@ export function searchProducts(
         product.category,
         product.brand,
         product.sku,
+        product.material || "",
+        product.tipoCocina || "",
+        product.nivel || "",
+        product.bundleUseCase || "",
+        product.careTips || "",
         ...product.tags,
       ]
         .join(" ")

@@ -47,13 +47,49 @@ El servicio `ecommerce-tools` permite:
 - Recibir webhook PayPhone y marcar pago como `paid` o `payment_review`.
 - Exportar feed Meta CSV.
 - Generar draft para Facebook, Instagram y Marketplace.
+- Importar clientes/compras historicas para CRM WhatsApp.
+- Consultar cliente por telefono.
+- Registrar eventos comerciales: cotizacion, orden, pago, entrega, recompra, no respuesta, escalamiento y opt-out.
+- Listar followups vencidos con mensaje sugerido para recompra.
+- Consultar dashboard operativo JSON de leads, ordenes pendientes, pagos y followups.
 
 ## Catalogo
 
 - `ecommerce-tools` intenta leer productos desde Medusa por `/store/products`.
-- Si Medusa no responde o no tiene productos, usa `services/ecommerce-tools/src/demo-catalog.ts`.
-- `storefront` tambien tiene fallback de productos en `apps/storefront/lib/catalog.ts`.
-- Antes de produccion hay que cargar productos reales desde Medusa Admin o import CSV.
+- Si Medusa no responde o no tiene productos, usa fallback de cocina en `services/ecommerce-tools/src/demo-catalog.ts`.
+- `storefront` tambien tiene fallback de cocina en `apps/storefront/lib/catalog.ts`.
+- La orientacion actual es nicho cocina: ollas, cuchillos, tablas, utensilios, sartenes, combos y reposicion.
+- Antes de produccion final hay que cargar productos reales desde Medusa Admin o import CSV y reemplazar fotos por fotos propias cuando existan.
+
+Metadata recomendada por producto:
+
+- `material`
+- `tipoCocina`
+- `nivel`
+- `bundleUseCase`
+- `careTips`
+- `reorderAfterDays`
+
+## CRM WhatsApp
+
+`ecommerce-tools` guarda `customers.json` en `TOOLS_DATA_DIR` con:
+
+- Telefono normalizado.
+- Nombre, email y consentimiento WhatsApp.
+- Productos comprados.
+- Frecuencia sugerida.
+- Proximo seguimiento.
+- Eventos comerciales.
+
+Endpoints:
+
+- `POST /tools/customers/import`
+- `GET /tools/customers/:phone`
+- `POST /tools/customer-events`
+- `GET /tools/followups/due`
+- `GET /tools/dashboard`
+
+OpenClaw debe consultar cliente y catalogo antes de recomendar. Recontacto fuera de conversacion vigente debe ser consentido, aprobado o manual hasta tener WhatsApp Cloud API y plantillas.
 
 ## Pagos
 
@@ -96,6 +132,16 @@ Resultado:
 - `npm run tools:test`: OK, 3 tests pasaron.
 - Compose hardening: `medusa-api` y `ecommerce-tools` quedan con `expose`; solo `storefront` conserva `ports` limitado a `127.0.0.1:18214`.
 
+Actualizacion cocina/CRM del 2026-05-27:
+
+- `npm run build`: OK, 3 paquetes exitosos.
+- `npm run tools:test`: OK, 4 tests pasaron.
+- `npm --workspace @b2b/storefront run build`: OK.
+- `git diff --check`: OK.
+- `docker compose config`: OK con `META_CATALOG_BRAND=B2B Cocina` y CORS para `adminshop.b2b.com.ec`.
+- Browser desktop/mobile local: OK, solo catalogo de cocina, CTA WhatsApp y barra mobile visibles.
+- Tools local: OK para `search-products`, `catalog.csv`, `customers/import`, `customers/:phone`, `followups/due` y `dashboard`.
+
 ## Validaciones recomendadas
 
 Ejecutar antes de reportar listo:
@@ -123,5 +169,6 @@ curl http://localhost:8787/feeds/meta/catalog.csv
 - Crear productos reales en Medusa.
 - Validar PayPhone sandbox y webhook.
 - Levantar OpenClaw ecommerce separado y vincular WhatsApp vendedor.
+- Importar BD historica de clientes/compras y verificar consentimiento.
 - Probar end-to-end WhatsApp -> cotizacion -> orden -> link -> pago -> despacho.
 - Definir politica operativa de facturacion, entrega, garantia e instalacion.

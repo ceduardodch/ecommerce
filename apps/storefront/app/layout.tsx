@@ -2,15 +2,16 @@ import type { Metadata } from "next"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "B2B Shop | Ecommerce conversacional",
+  title: "B2B Cocina | Ollas, cuchillos y combos por WhatsApp",
   description:
-    "Catalogo B2B con atencion por WhatsApp, cotizacion asistida por IA y pago por link.",
+    "Catalogo de cocina con ollas, cuchillos, utensilios, combos, cotizacion por WhatsApp y pago por link.",
   metadataBase: new URL("https://shop.b2b.com.ec"),
   openGraph: {
-    title: "B2B Shop",
-    description: "Catalogo conversacional con vendedor IA por WhatsApp.",
+    title: "B2B Cocina",
+    description:
+      "Ollas, cuchillos y combos de cocina con vendedor IA por WhatsApp.",
     url: "https://shop.b2b.com.ec",
-    siteName: "B2B Shop",
+    siteName: "B2B Cocina",
     type: "website",
   },
 }
