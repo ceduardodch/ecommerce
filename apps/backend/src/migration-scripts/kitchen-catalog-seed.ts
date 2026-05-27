@@ -6,6 +6,7 @@ import {
 import {
   createProductCategoriesWorkflow,
   createProductsWorkflow,
+  updateProductsWorkflow,
 } from "@medusajs/medusa/core-flows"
 
 type KitchenProduct = {
@@ -32,8 +33,7 @@ const products: KitchenProduct[] = [
     price: 150,
     originalPrice: 179,
     stock: 8,
-    image:
-      "https://placehold.co/1200x900/efe7db/1d3b2f?text=Wok+granito+32+cm",
+    image: "https://shop.b2b.com.ec/media/photo-receta-wok.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -72,10 +72,10 @@ const products: KitchenProduct[] = [
       deliveryBadge: "Envio coordinado Ecuador",
       stockSignal: "8 woks listos para entrega",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 150,
-        stock: 8,
-        originalPrice: 179,
+      brand: "Eter Niu Cocina",
+      price: 150,
+      stock: 8,
+      originalPrice: 179,
     },
   },
   {
@@ -88,8 +88,7 @@ const products: KitchenProduct[] = [
     price: 95,
     originalPrice: 119,
     stock: 10,
-    image:
-      "https://placehold.co/1200x900/f3eadc/1d3b2f?text=Olla+granito+20+cm",
+    image: "https://shop.b2b.com.ec/media/photo-product-olla-20.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -103,7 +102,8 @@ const products: KitchenProduct[] = [
       bundleUseCase: "Salsas, huevos, queso, avena y porciones pequenas",
       careTips:
         "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
-      healthAngle: "Alternativa a antiadherentes tradicionales para uso diario.",
+      healthAngle:
+        "Alternativa a antiadherentes tradicionales para uso diario.",
       warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
       instagramSourceUrl: "https://www.instagram.com/p/DWfKOWXhvJs/",
       sourceUrls: ["https://www.instagram.com/p/DWfKOWXhvJs/"],
@@ -121,10 +121,10 @@ const products: KitchenProduct[] = [
       deliveryBadge: "Entrega 24-48h segun ciudad",
       stockSignal: "10 ollas disponibles",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 95,
-        stock: 10,
-        originalPrice: 119,
+      brand: "Eter Niu Cocina",
+      price: 95,
+      stock: 10,
+      originalPrice: 119,
     },
   },
   {
@@ -137,8 +137,7 @@ const products: KitchenProduct[] = [
     price: 130,
     originalPrice: 159,
     stock: 12,
-    image:
-      "https://placehold.co/1200x900/eee5d8/1d3b2f?text=Olla+granito+24+cm",
+    image: "https://shop.b2b.com.ec/media/photo-product-olla-24.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -174,10 +173,10 @@ const products: KitchenProduct[] = [
       deliveryBadge: "Stock confirmado",
       stockSignal: "12 ollas familiares disponibles",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 130,
-        stock: 12,
-        originalPrice: 159,
+      brand: "Eter Niu Cocina",
+      price: 130,
+      stock: 12,
+      originalPrice: 159,
     },
   },
   {
@@ -190,8 +189,7 @@ const products: KitchenProduct[] = [
     price: 249,
     originalPrice: 299,
     stock: 5,
-    image:
-      "https://placehold.co/1200x900/ece2d2/1d3b2f?text=Set+MGC+granito",
+    image: "https://shop.b2b.com.ec/media/photo-product-set-granito.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -219,18 +217,17 @@ const products: KitchenProduct[] = [
         "cocina diaria con menos preocupacion",
       ],
       certificationStatus: "Proveedor por confirmar",
-      claimNote:
-        "Set saludable como eleccion informada, sin promesas medicas.",
+      claimNote: "Set saludable como eleccion informada, sin promesas medicas.",
       reorderAfterDays: 210,
       promoLabel: "Cambio saludable",
       discountPercent: 17,
       deliveryBadge: "Entrega coordinada",
       stockSignal: "5 sets armados",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 249,
-        stock: 5,
-        originalPrice: 299,
+      brand: "Eter Niu Cocina",
+      price: 249,
+      stock: 5,
+      originalPrice: 299,
     },
   },
   {
@@ -243,8 +240,7 @@ const products: KitchenProduct[] = [
     price: 85,
     originalPrice: 105,
     stock: 14,
-    image:
-      "https://placehold.co/1200x900/f1e4d1/1d3b2f?text=Sarten+wok+granito",
+    image: "https://shop.b2b.com.ec/media/photo-prueba-huevo.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -256,7 +252,8 @@ const products: KitchenProduct[] = [
       tipoCocina: "Recetas rapidas",
       nivel: "Uso diario",
       bundleUseCase: "Huevos, vegetales, pollo y salteados de semana",
-      careTips: "Usar fuego medio y evitar aerosoles que saturen la superficie.",
+      careTips:
+        "Usar fuego medio y evitar aerosoles que saturen la superficie.",
       healthAngle: "Pensado para cocinar ligero sin depender de mucho aceite.",
       warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
       instagramSourceUrl: "https://www.instagram.com/p/DV7N5cXmICF/",
@@ -278,10 +275,10 @@ const products: KitchenProduct[] = [
       deliveryBadge: "Despacho rapido",
       stockSignal: "14 sartenes disponibles",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 85,
-        stock: 14,
-        originalPrice: 105,
+      brand: "Eter Niu Cocina",
+      price: 85,
+      stock: 14,
+      originalPrice: 105,
     },
   },
   {
@@ -294,8 +291,7 @@ const products: KitchenProduct[] = [
     price: 28,
     originalPrice: 35,
     stock: 20,
-    image:
-      "https://placehold.co/1200x900/f4eadb/1d3b2f?text=Utensilios+para+granito",
+    image: "https://shop.b2b.com.ec/media/photo-product-utensilios.jpg",
     metadata: {
       material: "Silicona y madera",
       capacity: "Kit de cuidado",
@@ -325,17 +321,19 @@ const products: KitchenProduct[] = [
       deliveryBadge: "Agregar al pedido",
       stockSignal: "20 kits disponibles",
       bundleEligible: true,
-        brand: "Eter Niu Cocina",
-        price: 28,
-        stock: 20,
-        originalPrice: 35,
+      brand: "Eter Niu Cocina",
+      price: 28,
+      stock: 20,
+      originalPrice: 35,
     },
   },
 ]
 
 async function ensureCategories(container: MedusaContainer) {
   const query = container.resolve(ContainerRegistrationKeys.QUERY)
-  const categoryNames = [...new Set(products.map((product) => product.category))]
+  const categoryNames = [
+    ...new Set(products.map((product) => product.category)),
+  ]
   const { data: existingCategories } = await query.graph({
     entity: "product_category",
     fields: ["id", "name"],
@@ -391,17 +389,50 @@ export default async function kitchenCatalogSeed({
 
   const { data: existingProducts } = await query.graph({
     entity: "product",
-    fields: ["id", "handle"],
+    fields: ["id", "handle", "metadata"],
     pagination: { take: 500 },
   })
   const categories = await ensureCategories(container)
+  const existingByHandle = new Map(
+    existingProducts.map((product) => [product.handle, product]),
+  )
+  const existingKitchenProducts = products.flatMap((product) => {
+    const existing = existingByHandle.get(product.handle)
+    return existing ? [{ seed: product, existing }] : []
+  })
   const missingProducts = products.filter(
-    (product) =>
-      !existingProducts.some((existing) => existing.handle === product.handle),
+    (product) => !existingByHandle.has(product.handle),
   )
 
+  if (existingKitchenProducts.length) {
+    await updateProductsWorkflow(container).run({
+      input: {
+        products: existingKitchenProducts.map(({ seed, existing }) => ({
+          id: existing.id,
+          title: seed.title,
+          handle: seed.handle,
+          description: seed.description,
+          status: ProductStatus.PUBLISHED,
+          thumbnail: seed.image,
+          images: [{ url: seed.image }],
+          metadata: {
+            ...(existing.metadata || {}),
+            ...seed.metadata,
+            category: seed.category,
+          },
+        })),
+      },
+    })
+
+    logger.info(
+      `Kitchen catalog seed synced ${existingKitchenProducts.length} existing products.`,
+    )
+  }
+
   if (!missingProducts.length) {
-    logger.info("Kitchen catalog seed skipped: products already exist.")
+    logger.info(
+      "Kitchen catalog seed skipped creation: products already exist.",
+    )
     return
   }
 
@@ -441,5 +472,7 @@ export default async function kitchenCatalogSeed({
     },
   })
 
-  logger.info(`Kitchen catalog seed created ${missingProducts.length} products.`)
+  logger.info(
+    `Kitchen catalog seed created ${missingProducts.length} products.`,
+  )
 }

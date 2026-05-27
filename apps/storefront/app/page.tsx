@@ -62,7 +62,7 @@ const mediaSlots: MediaSlot[] = [
     id: "hero-cocina",
     title: "Cocina rico con menos aceite",
     label: "Hero video",
-    poster: "/media/poster-hero.svg",
+    poster: "/media/photo-hero-cocina.jpg",
     video: "hero-cocina.mp4",
     metric: "Granito para el dia a dia",
   },
@@ -70,7 +70,7 @@ const mediaSlots: MediaSlot[] = [
     id: "prueba-huevo",
     title: "Huevo, queso y nada pegado",
     label: "Prueba real",
-    poster: "/media/poster-huevo.svg",
+    poster: "/media/photo-prueba-huevo.jpg",
     video: "prueba-huevo.mp4",
     metric: "No se pega",
   },
@@ -78,7 +78,7 @@ const mediaSlots: MediaSlot[] = [
     id: "limpieza-rapida",
     title: "Se limpia en minutos",
     label: "Despues de cocinar",
-    poster: "/media/poster-limpieza.svg",
+    poster: "/media/photo-limpieza-rapida.jpg",
     video: "limpieza-rapida.mp4",
     metric: "Limpieza facil",
   },
@@ -86,7 +86,7 @@ const mediaSlots: MediaSlot[] = [
     id: "receta-wok",
     title: "Cena completa en wok 32 cm",
     label: "Receta",
-    poster: "/media/poster-receta.svg",
+    poster: "/media/photo-receta-wok.jpg",
     video: "receta-wok.mp4",
     metric: "Wok 32 cm",
   },
@@ -98,7 +98,7 @@ const editorialTiles: EditorialTile[] = [
     eyebrow: "Para todos los dias",
     title: "La olla que se queda en la cocina, no guardada.",
     text: "Bonita para dejarla afuera, practica para huevos, arroz, guisos y salteados.",
-    poster: "/media/editorial-mesa.svg",
+    poster: "/media/photo-editorial-mesa.jpg",
     cta: "Ver recomendacion",
   },
   {
@@ -106,7 +106,7 @@ const editorialTiles: EditorialTile[] = [
     eyebrow: "Bundle inteligente",
     title: "Arma tu cambio de cocina por piezas, no por impulso.",
     text: "Te recomendamos wok, olla o set segun cuantas personas comen en casa.",
-    poster: "/media/editorial-set.svg",
+    poster: "/media/photo-product-set-granito.jpg",
     cta: "Armar combo",
   },
   {
@@ -114,7 +114,7 @@ const editorialTiles: EditorialTile[] = [
     eyebrow: "Postventa",
     title: "Cuidado simple para que el granito dure mas.",
     text: "Utensilios suaves, fuego medio, limpieza correcta y recordatorio por WhatsApp.",
-    poster: "/media/editorial-cuidado.svg",
+    poster: "/media/photo-product-utensilios.jpg",
     cta: "Recibir guia",
   },
 ]
@@ -233,7 +233,9 @@ function ProductCard({
           {product.capacity ? <span>{product.capacity}</span> : null}
           {product.teflonFree ? <span>Opcion sin teflon</span> : null}
         </div>
-        <p className="description">{product.bundleUseCase || product.description}</p>
+        <p className="description">
+          {product.bundleUseCase || product.description}
+        </p>
         <div className="surface-row" aria-label="Materiales y estilo">
           <span style={{ "--swatch": "#1c1d19" } as CSSProperties} />
           <span style={{ "--swatch": "#c9bca7" } as CSSProperties} />
@@ -310,7 +312,13 @@ function EditorialTileCard({
   )
 }
 
-function VideoSlot({ slot, featured }: { slot: MediaSlot; featured?: Product }) {
+function VideoSlot({
+  slot,
+  featured,
+}: {
+  slot: MediaSlot
+  featured?: Product
+}) {
   const video = mediaPath(slot.video)
 
   return (
@@ -339,7 +347,10 @@ function VideoSlot({ slot, featured }: { slot: MediaSlot; featured?: Product }) 
         <strong>{slot.title}</strong>
         <p>{slot.metric}</p>
         {featured ? (
-          <TrackedWhatsAppLink placement={`video_${slot.id}`} product={featured}>
+          <TrackedWhatsAppLink
+            placement={`video_${slot.id}`}
+            product={featured}
+          >
             Preguntar por WhatsApp
           </TrackedWhatsAppLink>
         ) : null}
@@ -377,7 +388,8 @@ export default async function Home({ searchParams }: HomeProps) {
   )
   const approvedStories = approvedTestimonials.filter((item) => item.approved)
   const heroSavings =
-    featured?.originalPrice && featured.originalPrice.amount > featured.price.amount
+    featured?.originalPrice &&
+    featured.originalPrice.amount > featured.price.amount
       ? featured.originalPrice.amount - featured.price.amount
       : 0
 
@@ -464,7 +476,9 @@ export default async function Home({ searchParams }: HomeProps) {
                 </p>
               </div>
               <div>
-                {heroSavings > 0 ? <span>Ahorra {money(heroSavings)}</span> : null}
+                {heroSavings > 0 ? (
+                  <span>Ahorra {money(heroSavings)}</span>
+                ) : null}
                 <strong>{money(featured.price.amount)}</strong>
               </div>
             </div>
@@ -720,8 +734,8 @@ export default async function Home({ searchParams }: HomeProps) {
         ))}
         {!visibleProducts.length ? (
           <div className="empty-state">
-            No hay productos disponibles para este filtro. Revisa Medusa Admin
-            o intenta otra busqueda.
+            No hay productos disponibles para este filtro. Revisa Medusa Admin o
+            intenta otra busqueda.
           </div>
         ) : null}
       </section>

@@ -30,8 +30,16 @@ body {
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(circle at top left, rgba(216, 59, 36, 0.13), transparent 34rem),
-    radial-gradient(circle at 80% 12%, rgba(23, 107, 73, 0.14), transparent 30rem),
+    radial-gradient(
+      circle at top left,
+      rgba(216, 59, 36, 0.13),
+      transparent 34rem
+    ),
+    radial-gradient(
+      circle at 80% 12%,
+      rgba(23, 107, 73, 0.14),
+      transparent 30rem
+    ),
     linear-gradient(135deg, rgba(255, 209, 102, 0.14), transparent 42rem),
     var(--bg);
   color: var(--ink);
@@ -240,9 +248,21 @@ video {
   gap: 20px;
   padding: 48px;
   background:
-    radial-gradient(circle at 76% 18%, rgba(245, 164, 93, 0.38), transparent 19rem),
-    radial-gradient(circle at 16% 88%, rgba(159, 184, 140, 0.42), transparent 22rem),
-    linear-gradient(135deg, rgba(255, 253, 246, 0.99), rgba(247, 232, 208, 0.92));
+    radial-gradient(
+      circle at 76% 18%,
+      rgba(245, 164, 93, 0.38),
+      transparent 19rem
+    ),
+    radial-gradient(
+      circle at 16% 88%,
+      rgba(159, 184, 140, 0.42),
+      transparent 22rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.99),
+      rgba(247, 232, 208, 0.92)
+    );
   background-position: center;
   background-size: cover;
 }
@@ -894,7 +914,7 @@ h1 {
   border-radius: 8px;
   background:
     linear-gradient(135deg, rgba(17, 24, 19, 0.92), rgba(13, 61, 43, 0.84)),
-    url("/media/editorial-cuidado.svg");
+    url("/media/photo-product-utensilios.jpg");
   background-position: center;
   background-size: cover;
   padding: 26px;
@@ -1177,8 +1197,12 @@ h1 {
   gap: 16px;
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.94), rgba(231, 244, 231, 0.9)),
-    url("/media/editorial-mesa.svg");
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.94),
+      rgba(231, 244, 231, 0.9)
+    ),
+    url("/media/photo-editorial-mesa.jpg");
   background-position: center;
   background-size: cover;
   padding: 36px;
@@ -1338,9 +1362,16 @@ h1 {
   }
 
   .topbar nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     width: 100%;
-    overflow-x: auto;
-    justify-content: space-between;
+    overflow: visible;
+  }
+
+  .topbar nav a {
+    padding: 9px 6px;
+    font-size: 0.84rem;
+    white-space: nowrap;
   }
 
   .ghost-button {

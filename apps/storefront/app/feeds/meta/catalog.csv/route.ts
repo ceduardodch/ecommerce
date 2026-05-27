@@ -9,6 +9,15 @@ function csv(value: string | number) {
   return text
 }
 
+function absoluteImageLink(imageUrl: string) {
+  if (!imageUrl.startsWith("/")) return imageUrl
+  const storeUrl =
+    process.env.NEXT_PUBLIC_STORE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://shop.b2b.com.ec"
+  return `${storeUrl.replace(/\/$/, "")}${imageUrl}`
+}
+
 function fallbackCsv() {
   const columns = [
     "id",
@@ -32,7 +41,7 @@ function fallbackCsv() {
       ? `${product.originalPrice.amount.toFixed(2)} USD`
       : `${product.price.amount.toFixed(2)} USD`,
     product.productUrl,
-    product.imageUrl,
+    absoluteImageLink(product.imageUrl),
     product.brand,
     product.originalPrice && product.originalPrice.amount > product.price.amount
       ? `${product.price.amount.toFixed(2)} USD`
@@ -40,7 +49,7 @@ function fallbackCsv() {
   ])
 
   return [columns.join(","), ...rows.map((row) => row.map(csv).join(","))].join(
-    "\n"
+    "\n",
   )
 }
 

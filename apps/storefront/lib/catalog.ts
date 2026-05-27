@@ -93,8 +93,7 @@ export const fallbackProducts: Product[] = [
       "Publicar PFOA, PFAS o PTFE solo si el proveedor entrega certificacion.",
     reorderAfterDays: 180,
     stock: 8,
-    imageUrl:
-      "https://placehold.co/1200x900/efe7db/1d3b2f?text=Wok+granito+32+cm",
+    imageUrl: "/media/photo-receta-wok.jpg",
     productUrl: "https://shop.b2b.com.ec/products/wok-granito-32cm-tapa",
     tags: [
       "wok",
@@ -144,12 +143,10 @@ export const fallbackProducts: Product[] = [
       "limpieza facil en olla 20 cm",
     ],
     certificationStatus: "Proveedor por confirmar",
-    claimNote:
-      "Mantener copy educativo; no publicar claims medicos absolutos.",
+    claimNote: "Mantener copy educativo; no publicar claims medicos absolutos.",
     reorderAfterDays: 180,
     stock: 10,
-    imageUrl:
-      "https://placehold.co/1200x900/f3eadc/1d3b2f?text=Olla+granito+20+cm",
+    imageUrl: "/media/photo-product-olla-20.jpg",
     productUrl: "https://shop.b2b.com.ec/products/olla-granito-20cm",
     tags: [
       "olla",
@@ -207,8 +204,7 @@ export const fallbackProducts: Product[] = [
       "Si se menciona libre de PFOA/PFAS/PTFE, pedir certificacion previa.",
     reorderAfterDays: 180,
     stock: 12,
-    imageUrl:
-      "https://placehold.co/1200x900/eee5d8/1d3b2f?text=Olla+granito+24+cm",
+    imageUrl: "/media/photo-product-olla-24.jpg",
     productUrl: "https://shop.b2b.com.ec/products/olla-granito-24cm-familiar",
     tags: [
       "olla",
@@ -261,13 +257,12 @@ export const fallbackProducts: Product[] = [
       "cocina diaria con menos preocupacion",
     ],
     certificationStatus: "Proveedor por confirmar",
-    claimNote:
-      "Set saludable como eleccion informada, sin promesas medicas.",
+    claimNote: "Set saludable como eleccion informada, sin promesas medicas.",
     reorderAfterDays: 210,
     stock: 5,
-    imageUrl:
-      "https://placehold.co/1200x900/ece2d2/1d3b2f?text=Set+MGC+granito",
-    productUrl: "https://shop.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
+    imageUrl: "/media/photo-product-set-granito.jpg",
+    productUrl:
+      "https://shop.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
     tags: [
       "set",
       "mgc",
@@ -322,9 +317,9 @@ export const fallbackProducts: Product[] = [
       "Hablar de menos aceite como uso culinario, no como tratamiento de salud.",
     reorderAfterDays: 180,
     stock: 14,
-    imageUrl:
-      "https://placehold.co/1200x900/f1e4d1/1d3b2f?text=Sarten+wok+granito",
-    productUrl: "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
+    imageUrl: "/media/photo-prueba-huevo.jpg",
+    productUrl:
+      "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
     tags: [
       "sarten",
       "wok",
@@ -374,9 +369,9 @@ export const fallbackProducts: Product[] = [
       "Complemento operativo para cuidado; no usarlo como claim de salud.",
     reorderAfterDays: 120,
     stock: 20,
-    imageUrl:
-      "https://placehold.co/1200x900/f4eadb/1d3b2f?text=Utensilios+para+granito",
-    productUrl: "https://shop.b2b.com.ec/products/utensilios-compatibles-granito",
+    imageUrl: "/media/photo-product-utensilios.jpg",
+    productUrl:
+      "https://shop.b2b.com.ec/products/utensilios-compatibles-granito",
     tags: [
       "utensilios",
       "granito",
@@ -388,10 +383,39 @@ export const fallbackProducts: Product[] = [
   },
 ]
 
+function isGeneratedPlaceholder(url?: string) {
+  return !url || url.includes("placehold.co")
+}
+
+function generatedImageForProduct(product: Product) {
+  const haystack = `${product.sku} ${product.title} ${product.category}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+  if (haystack.includes("utensilio")) {
+    return "/media/photo-product-utensilios.jpg"
+  }
+  if (haystack.includes("set")) {
+    return "/media/photo-product-set-granito.jpg"
+  }
+  if (haystack.includes("24")) {
+    return "/media/photo-product-olla-24.jpg"
+  }
+  if (haystack.includes("20")) {
+    return "/media/photo-product-olla-20.jpg"
+  }
+  if (haystack.includes("sarten")) {
+    return "/media/photo-prueba-huevo.jpg"
+  }
+  if (haystack.includes("wok")) {
+    return "/media/photo-receta-wok.jpg"
+  }
+  return "/media/photo-hero-cocina.jpg"
+}
+
 function placeholderForProduct(product: Product) {
-  if (product.imageUrl) return product.imageUrl
-  const text = encodeURIComponent(product.category || "Cocina granito")
-  return `https://placehold.co/1200x900/efe7db/1d3b2f?text=${text}`
+  if (!isGeneratedPlaceholder(product.imageUrl)) return product.imageUrl
+  return generatedImageForProduct(product)
 }
 
 const kitchenTerms = [

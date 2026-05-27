@@ -59,9 +59,58 @@ function booleanFromMetadata(value: unknown) {
   return value === true || value === "true"
 }
 
-function placeholderForCategory(category: string) {
-  const text = encodeURIComponent(category || "Cocina granito")
-  return `https://placehold.co/1200x900/efe7db/1d3b2f?text=${text}`
+function publicMediaUrl(config: AppConfig, file: string) {
+  return `${config.storePublicUrl.replace(/\/$/, "")}/media/${file}`
+}
+
+function isGeneratedPlaceholder(url?: string) {
+  return !url || url.includes("placehold.co")
+}
+
+function generatedImageForProduct(
+  config: AppConfig,
+  input: { sku?: string; title?: string; category?: string },
+) {
+  const haystack =
+    `${input.sku || ""} ${input.title || ""} ${input.category || ""}`
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+  if (haystack.includes("utensilio")) {
+    return publicMediaUrl(config, "photo-product-utensilios.jpg")
+  }
+  if (haystack.includes("set")) {
+    return publicMediaUrl(config, "photo-product-set-granito.jpg")
+  }
+  if (haystack.includes("24")) {
+    return publicMediaUrl(config, "photo-product-olla-24.jpg")
+  }
+  if (haystack.includes("20")) {
+    return publicMediaUrl(config, "photo-product-olla-20.jpg")
+  }
+  if (haystack.includes("sarten")) {
+    return publicMediaUrl(config, "photo-prueba-huevo.jpg")
+  }
+  if (haystack.includes("wok")) {
+    return publicMediaUrl(config, "photo-receta-wok.jpg")
+  }
+  return publicMediaUrl(config, "photo-hero-cocina.jpg")
+}
+
+function imageForProduct(
+  config: AppConfig,
+  input: { sku?: string; title?: string; category?: string },
+  imageUrl?: string,
+) {
+  if (!isGeneratedPlaceholder(imageUrl)) return imageUrl!
+  return generatedImageForProduct(config, input)
+}
+
+function withGeneratedImages(config: AppConfig, products: Product[]) {
+  return products.map((product) => ({
+    ...product,
+    imageUrl: imageForProduct(config, product, product.imageUrl),
+  }))
 }
 
 function normalizeMedusaProduct(
@@ -139,8 +188,11 @@ function normalizeMedusaProduct(
     claimNote: stringFromMetadata(product.metadata?.claimNote),
     reorderAfterDays: numberFromMetadata(product.metadata?.reorderAfterDays),
     stock: Number(product.metadata?.stock || variant?.metadata?.stock || 0),
-    imageUrl:
-      product.thumbnail || product.images?.[0]?.url || placeholderForCategory(category),
+    imageUrl: imageForProduct(
+      config,
+      { sku: variant?.sku || product.id, title: product.title, category },
+      product.thumbnail || product.images?.[0]?.url,
+    ),
     productUrl: productUrl(config, product),
     tags: [
       ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
@@ -212,7 +264,10 @@ function isKitchenProduct(product: Product) {
 export async function loadProducts(config: AppConfig): Promise<Product[]> {
   const url = new URL("/store/products", config.medusaStoreApiUrl)
   url.searchParams.set("limit", "100")
-  url.searchParams.set("fields", "*variants,*images,*categories,*tags,+metadata")
+  url.searchParams.set(
+    "fields",
+    "*variants,*images,*categories,*tags,+metadata",
+  )
 
   const headers: Record<string, string> = {}
   if (config.medusaPublishableKey) {
@@ -232,10 +287,12 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
     return kitchenProducts.length
       ? kitchenProducts
       : config.allowDemoCatalog
-        ? demoCatalog
+        ? withGeneratedImages(config, demoCatalog)
         : []
   } catch {
-    return config.allowDemoCatalog ? demoCatalog : []
+    return config.allowDemoCatalog
+      ? withGeneratedImages(config, demoCatalog)
+      : []
   }
 }
 
