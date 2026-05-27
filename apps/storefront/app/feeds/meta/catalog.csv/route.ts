@@ -49,6 +49,10 @@ export async function GET() {
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
     "http://localhost:8787"
+  const allowDemoCatalog =
+    process.env.ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NODE_ENV !== "production"
 
   try {
     const response = await fetch(`${toolsUrl}/feeds/meta/catalog.csv`, {
@@ -63,6 +67,14 @@ export async function GET() {
       },
     })
   } catch {
+    if (!allowDemoCatalog) {
+      return new Response(fallbackCsv().split("\n")[0] + "\n", {
+        headers: {
+          "content-type": "text/csv; charset=utf-8",
+        },
+      })
+    }
+
     return new Response(fallbackCsv(), {
       headers: {
         "content-type": "text/csv; charset=utf-8",

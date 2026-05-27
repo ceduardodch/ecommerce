@@ -69,6 +69,8 @@ services:
       NODE_ENV: production
       PORT: 8787
       TOOLS_DATA_DIR: /data
+      CRM_BACKEND: ${CRM_BACKEND:-medusa}
+      ALLOW_DEMO_CATALOG: ${ALLOW_DEMO_CATALOG:-false}
       TOOLS_API_TOKEN: ${TOOLS_API_TOKEN:?Set TOOLS_API_TOKEN in Coolify}
       STORE_PUBLIC_URL: ${STORE_PUBLIC_URL:-https://shop.b2b.com.ec}
       MEDUSA_STORE_API_URL: http://medusa-api:9000
@@ -137,6 +139,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      ALLOW_DEMO_CATALOG: ${ALLOW_DEMO_CATALOG:-false}
       NEXT_PUBLIC_TOOLS_API_URL: ${NEXT_PUBLIC_TOOLS_API_URL:-https://shop.b2b.com.ec}
       NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://shop.b2b.com.ec}
       TOOLS_API_INTERNAL_URL: http://ecommerce-tools:8787

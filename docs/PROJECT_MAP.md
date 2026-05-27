@@ -21,7 +21,7 @@ Responsabilidades:
 - Commerce core.
 - Admin Medusa.
 - Catalogo, inventario, clientes y ordenes.
-- Punto de extension futuro para workflows y modulos Medusa.
+- Modulo CRM WhatsApp `b2bCrm` para clientes, eventos, followups y ordenes conversacionales.
 
 Archivos clave:
 
@@ -29,6 +29,10 @@ Archivos clave:
 - `apps/backend/Dockerfile`: build del servicio `medusa-api`.
 - `apps/backend/src/api/store/b2b/status/route.ts`: healthcheck custom usado por Docker.
 - `apps/backend/src/migration-scripts/initial-data-seed.ts`: seed inicial de Medusa.
+- `apps/backend/src/migration-scripts/kitchen-catalog-seed.ts`: seed idempotente de catalogo cocina.
+- `apps/backend/src/modules/b2b-crm`: modelos, servicio y migracion CRM WhatsApp.
+- `apps/backend/src/api/admin/b2b`: API interna/admin para CRM y ordenes OpenClaw.
+- `apps/backend/src/admin/routes/crm-whatsapp/page.tsx`: vista CRM en Medusa Admin.
 
 Scripts:
 
@@ -56,7 +60,7 @@ Archivos clave:
 
 - `apps/storefront/app/page.tsx`: pantalla principal.
 - `apps/storefront/app/globals.css`: estilos globales.
-- `apps/storefront/lib/catalog.ts`: lectura de catalogo desde `ecommerce-tools` con fallback local.
+- `apps/storefront/lib/catalog.ts`: lectura de catalogo desde `ecommerce-tools`; fallback solo si `ALLOW_DEMO_CATALOG=true`.
 - `apps/storefront/app/feeds/meta/catalog.csv/route.ts`: proxy del feed Meta.
 - `apps/storefront/app/payphone/sandbox/[clientTransactionId]/page.tsx`: pagina local de pago sandbox.
 - `apps/storefront/Dockerfile`: build del servicio `storefront`.
@@ -84,15 +88,16 @@ Responsabilidades:
 - Recibir webhook PayPhone.
 - Exportar feed Meta catalog CSV.
 - Generar drafts para Facebook, Instagram y Marketplace.
-- Guardar CRM minimo de clientes, compras, consentimiento WhatsApp, eventos y followups.
+- En produccion delega CRM, followups y ordenes conversacionales al modulo Medusa `b2bCrm`.
 
 Archivos clave:
 
 - `services/ecommerce-tools/src/index.ts`: HTTP API.
 - `services/ecommerce-tools/src/mcp-server.ts`: MCP server stdio.
 - `services/ecommerce-tools/src/service.ts`: casos de uso principales.
-- `services/ecommerce-tools/src/catalog.ts`: carga de productos desde Medusa con fallback cocina.
-- `services/ecommerce-tools/src/demo-catalog.ts`: catalogo fallback de cocina.
+- `services/ecommerce-tools/src/catalog.ts`: carga de productos desde Medusa; fallback cocina solo desarrollo.
+- `services/ecommerce-tools/src/demo-catalog.ts`: catalogo fallback de desarrollo/test.
+- `services/ecommerce-tools/src/medusa-admin.ts`: cliente admin para CRM/ordenes Medusa con secret key.
 - `services/ecommerce-tools/src/customers.ts`: importacion CSV/JSON y borradores de recompra.
 - `services/ecommerce-tools/src/payphone.ts`: integracion PayPhone/dry-run.
 - `services/ecommerce-tools/src/meta.ts`: feed y drafts Meta.

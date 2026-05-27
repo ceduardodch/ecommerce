@@ -295,6 +295,10 @@ export async function getProducts() {
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
     "http://localhost:8787"
+  const allowDemoCatalog =
+    process.env.ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NODE_ENV !== "production"
 
   try {
     const response = await fetch(`${toolsUrl}/tools/search-products?limit=12`, {
@@ -303,9 +307,13 @@ export async function getProducts() {
     if (!response.ok) throw new Error("tools unavailable")
     const data = (await response.json()) as { products?: Product[] }
     const kitchenProducts = (data.products || []).filter(isKitchenProduct)
-    return kitchenProducts.length ? kitchenProducts : fallbackProducts
+    return kitchenProducts.length
+      ? kitchenProducts
+      : allowDemoCatalog
+        ? fallbackProducts
+        : []
   } catch {
-    return fallbackProducts
+    return allowDemoCatalog ? fallbackProducts : []
   }
 }
 

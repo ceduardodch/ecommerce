@@ -56,10 +56,10 @@ El servicio `ecommerce-tools` permite:
 ## Catalogo
 
 - `ecommerce-tools` intenta leer productos desde Medusa por `/store/products`.
-- Si Medusa no responde o no tiene productos, usa fallback de cocina en `services/ecommerce-tools/src/demo-catalog.ts`.
-- `storefront` tambien tiene fallback de cocina en `apps/storefront/lib/catalog.ts`.
+- En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no responde o no tiene productos, no se muestra catalogo demo.
+- El fallback de cocina queda solo para desarrollo/pruebas con `ALLOW_DEMO_CATALOG=true`.
 - La orientacion actual es nicho cocina: ollas, cuchillos, tablas, utensilios, sartenes, combos y reposicion.
-- Antes de produccion final hay que cargar productos reales desde Medusa Admin o import CSV y reemplazar fotos por fotos propias cuando existan.
+- Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.
 
 Metadata recomendada por producto:
 
@@ -72,7 +72,7 @@ Metadata recomendada por producto:
 
 ## CRM WhatsApp
 
-`ecommerce-tools` guarda `customers.json` en `TOOLS_DATA_DIR` con:
+CRM real vive en Medusa, modulo `b2bCrm`, con:
 
 - Telefono normalizado.
 - Nombre, email y consentimiento WhatsApp.
@@ -80,6 +80,14 @@ Metadata recomendada por producto:
 - Frecuencia sugerida.
 - Proximo seguimiento.
 - Eventos comerciales.
+- Orden conversacional vinculada a draft order Medusa.
+
+Admin:
+
+- `/app/crm-whatsapp`
+- `/admin/b2b/crm/dashboard`
+- `/admin/b2b/crm/followups/due`
+- `/admin/b2b/orders`
 
 Endpoints:
 
@@ -89,7 +97,7 @@ Endpoints:
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 
-OpenClaw debe consultar cliente y catalogo antes de recomendar. Recontacto fuera de conversacion vigente debe ser consentido, aprobado o manual hasta tener WhatsApp Cloud API y plantillas.
+`ecommerce-tools` usa `CRM_BACKEND=medusa` en produccion. El modo JSON queda como fallback local de desarrollo y tests.
 
 ## Pagos
 

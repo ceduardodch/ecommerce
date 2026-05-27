@@ -29,7 +29,9 @@ Set these in Coolify environment variables, not in Git:
 - `PAYPHONE_TOKEN` when `PAYPHONE_DRY_RUN=false`
 - `PAYPHONE_STORE_ID` when `PAYPHONE_DRY_RUN=false`
 - `MEDUSA_PUBLISHABLE_KEY` after Medusa seed/admin setup
-- `MEDUSA_ADMIN_API_KEY` when production order sync is enabled
+- `MEDUSA_ADMIN_API_KEY` secret key `sk_...` for production CRM/order sync
+- `CRM_BACKEND=medusa`
+- `ALLOW_DEMO_CATALOG=false`
 - `STOREFRONT_PORT_MAPPING`, default `127.0.0.1:18214:3000`
 
 The compose file intentionally fails if the required core secrets are missing.
@@ -38,10 +40,11 @@ The compose file intentionally fails if the required core secrets are missing.
 
 1. Deploy the compose app.
 2. Open Medusa Admin on the internal or temporary exposed Medusa URL.
-3. Run migrations and seed from the Medusa container if needed:
+3. Migrations run on `medusa-api` startup. Seed base data and kitchen catalog from the Medusa container if needed:
 
 ```bash
 npm run backend:seed
+npm --workspace apps/backend run seed:kitchen
 ```
 
 4. Copy the generated publishable key to `MEDUSA_PUBLISHABLE_KEY`.

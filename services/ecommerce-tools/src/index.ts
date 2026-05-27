@@ -27,6 +27,9 @@ app.get("/healthz", async () => ({
   ok: true,
   service: "b2b-ecommerce-tools",
   medusaStoreApiUrl: config.medusaStoreApiUrl,
+  crmBackend: config.crmBackend,
+  allowDemoCatalog: config.allowDemoCatalog,
+  medusaAdminApiKeyConfigured: Boolean(config.medusaAdminApiKey),
   payphoneMode: config.payphoneDryRun ? "dry-run" : "live",
 }))
 

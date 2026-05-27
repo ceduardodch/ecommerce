@@ -107,6 +107,8 @@ export type CustomerRecord = {
 
 export type OrderRecord = {
   id: string
+  medusaOrderId?: string
+  medusaDraftOrderId?: string
   quote: Quote
   customer: CustomerInput
   status: "pending_payment" | "paid" | "payment_review" | "cancelled"

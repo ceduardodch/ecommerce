@@ -366,6 +366,16 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.empty-state {
+  grid-column: 1 / -1;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 24px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
 .product-card {
   display: grid;
   overflow: hidden;

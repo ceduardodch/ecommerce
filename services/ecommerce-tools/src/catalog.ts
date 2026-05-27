@@ -155,9 +155,13 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
       normalizeMedusaProduct(config, product),
     )
     const kitchenProducts = products.filter(isKitchenProduct)
-    return kitchenProducts.length ? kitchenProducts : demoCatalog
+    return kitchenProducts.length
+      ? kitchenProducts
+      : config.allowDemoCatalog
+        ? demoCatalog
+        : []
   } catch {
-    return demoCatalog
+    return config.allowDemoCatalog ? demoCatalog : []
   }
 }
 

@@ -18,7 +18,7 @@ Construir `shop.b2b.com.ec` como ecommerce conversacional de cocina para Ecuador
 
 - Medusa v2 maneja catalogo, admin, inventario, clientes y ordenes.
 - Next.js muestra catalogo publico de ollas, cuchillos, utensilios, combos, feed Meta y enlaces a WhatsApp.
-- `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, CRM, followups, PayPhone y Meta.
+- `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, followups, PayPhone y Meta; en produccion delega CRM y ordenes al modulo Medusa `b2bCrm`.
 - OpenClaw opera como vendedor dedicado por WhatsApp, en una app Coolify separada, con contexto de cliente antes de recomendar.
 - PayPhone API Link crea links de pago.
 - Meta se usa para catalogo, posts asistidos y Marketplace asistido.
@@ -106,7 +106,8 @@ docker compose up --build
 - Configurar remoto GitHub cuando el usuario lo autorice.
 - Conectar Coolify a `release` para staging y `main` para produccion, segun la estrategia aprobada.
 - Levantar OpenClaw ecommerce como app separada con el prompt y skills de este repo.
-- Crear productos reales de cocina en Medusa Admin y sustituir el fallback local.
+- Cargar productos reales de cocina en Medusa Admin o ejecutar `npm --workspace apps/backend run seed:kitchen`.
+- Mantener `ALLOW_DEMO_CATALOG=false` en produccion para que no aparezca catalogo demo si Medusa falla.
 - Importar BD historica de clientes/compras por `/tools/customers/import`.
 - Integrar PayPhone live despues de sandbox y webhook validado.
 - Completar publicacion Meta con confirmacion humana antes de publicar o pautar.

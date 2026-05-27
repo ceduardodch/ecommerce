@@ -1,6 +1,8 @@
 export type AppConfig = {
   port: number
   dataDir: string
+  allowDemoCatalog: boolean
+  crmBackend: "medusa" | "json"
   toolsApiToken?: string
   storePublicUrl: string
   medusaStoreApiUrl: string
@@ -22,9 +24,14 @@ function bool(value: string | undefined, fallback: boolean) {
 }
 
 export function loadConfig(env = process.env): AppConfig {
+  const nodeEnv = env.NODE_ENV || "development"
+  const crmBackend = env.CRM_BACKEND || (nodeEnv === "production" ? "medusa" : "json")
+
   return {
     port: Number(env.PORT || env.TOOLS_PORT || 8787),
     dataDir: env.TOOLS_DATA_DIR || "./data",
+    allowDemoCatalog: bool(env.ALLOW_DEMO_CATALOG, nodeEnv !== "production"),
+    crmBackend: crmBackend === "json" ? "json" : "medusa",
     toolsApiToken: env.TOOLS_API_TOKEN,
     storePublicUrl: env.STORE_PUBLIC_URL || "https://shop.b2b.com.ec",
     medusaStoreApiUrl: env.MEDUSA_STORE_API_URL || "http://localhost:9000",

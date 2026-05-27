@@ -270,6 +270,11 @@ export default async function Home({ searchParams }: HomeProps) {
         {deals.map((product) => (
           <ProductCard compact key={product.id} product={product} />
         ))}
+        {!deals.length ? (
+          <div className="empty-state">
+            El catalogo Medusa aun no tiene productos de cocina publicados.
+          </div>
+        ) : null}
       </section>
 
       <section className="split-sections">
@@ -386,6 +391,12 @@ export default async function Home({ searchParams }: HomeProps) {
         {visibleProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+        {!visibleProducts.length ? (
+          <div className="empty-state">
+            No hay productos disponibles para este filtro. Revisa Medusa Admin
+            o intenta otra busqueda.
+          </div>
+        ) : null}
       </section>
 
       <nav className="mobile-action-bar" aria-label="Acciones rapidas">

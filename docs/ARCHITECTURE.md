@@ -6,18 +6,19 @@ This project is a conversational kitchen-commerce stack for `shop.b2b.com.ec`.
 
 - `apps/backend`: Medusa v2 commerce core for catalog, admin, inventory, orders, customers, and future commerce workflows.
 - `apps/storefront`: Next.js public catalog optimized for WhatsApp-first kitchen purchase intent.
-- `services/ecommerce-tools`: HTTP and MCP tool layer consumed by OpenClaw. It searches products, quotes, creates conversational orders, stores CRM customer events, creates PayPhone links, receives payment notifications, emits Meta catalog CSV, and drafts Meta/Marketplace copy.
+- `services/ecommerce-tools`: HTTP and MCP tool layer consumed by OpenClaw. It searches Medusa products, quotes, creates Medusa-backed conversational orders, creates PayPhone links, receives payment notifications, emits Meta catalog CSV, and drafts Meta/Marketplace copy.
+- `apps/backend/src/modules/b2b-crm`: Medusa CRM module for WhatsApp customer profiles, events, due followups, and conversational order traceability.
 - `docker-compose.yml`: Coolify-ready stack with PostgreSQL, Redis, Medusa, storefront, and tools service.
 
 ## Request flow
 
 1. A buyer asks about a product in WhatsApp.
 2. OpenClaw looks up the customer by phone and searches kitchen products before recommending.
-3. OpenClaw creates a quote; the quote event is recorded in CRM when a phone exists.
-4. If the buyer agrees, OpenClaw creates a conversational order and asks `ecommerce-tools` for a PayPhone link.
-5. Payment confirmation is recorded through `/webhooks/payphone` if external notification is enabled, or by manual reconciliation from PayPhone Business.
-6. The paid order updates customer purchase history and schedules a consent-based recompra/followup.
-7. The order stays traceable through the tools event log and is ready to be mirrored into Medusa workflows as the integration matures.
+3. OpenClaw creates a quote; the quote event is recorded in Medusa CRM when a phone exists.
+4. If the buyer agrees, `ecommerce-tools` asks Medusa to create a draft order plus a linked conversational order record.
+5. PayPhone link generation stores transaction data on the Medusa CRM order record.
+6. Payment confirmation updates the conversational order, records a paid CRM event, and schedules consent-based recompra/followup.
+7. Medusa Admin exposes `/app/crm-whatsapp` for leads, pending orders and due followups.
 
 ## Channel boundaries
 

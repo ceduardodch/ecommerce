@@ -79,7 +79,15 @@ Use the dedicated seller agent and skills:
 
 ## Cocina + CRM
 
-El fallback local ya no es generico: si Medusa no devuelve productos, la tienda muestra catalogo de cocina con ollas, cuchillos, tablas, utensilios, sartenes, combos y reposicion. Para produccion real, cargar productos en Medusa con metadata:
+Medusa es la fuente de verdad para catalogo, precios, stock y ordenes. En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no devuelve productos de cocina, la tienda muestra estado vacio administrable y el feed Meta queda solo con cabecera.
+
+Para cargar una base inicial de cocina despues del seed principal:
+
+```bash
+npm --workspace apps/backend run seed:kitchen
+```
+
+Productos Medusa deben llevar metadata:
 
 - `material`
 - `tipoCocina`
@@ -88,12 +96,13 @@ El fallback local ya no es generico: si Medusa no devuelve productos, la tienda 
 - `careTips`
 - `reorderAfterDays`
 
-El CRM v1 vive en `ecommerce-tools` sobre `TOOLS_DATA_DIR`:
+El CRM WhatsApp vive en el modulo Medusa `b2bCrm`:
 
-- `orders.json`: ordenes conversacionales.
-- `customers.json`: telefono, consentimiento WhatsApp, historial, eventos y proximo seguimiento.
+- Admin route: `/app/crm-whatsapp`.
+- API admin: `/admin/b2b/crm/*` y `/admin/b2b/orders/*`.
+- Tablas: `crm_customer_profile`, `crm_customer_event`, `conversational_order`.
 
-OpenClaw debe consultar cliente y catalogo antes de recomendar, registrar eventos comerciales y usar `/tools/followups/due` para recompra con confirmacion humana o canal permitido.
+`ecommerce-tools` queda como fachada para OpenClaw/PayPhone/Meta. En produccion usar `CRM_BACKEND=medusa` y `MEDUSA_ADMIN_API_KEY` con secret key `sk_...`.
 
 ## Deployment
 

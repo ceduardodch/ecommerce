@@ -4,6 +4,17 @@ import { buildFollowupDraft, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
 import { createPayPhoneLink } from "./payphone.js"
 import {
+  addMedusaCustomerEvent,
+  attachMedusaPaymentLink,
+  createMedusaOrder,
+  forwardPayphoneWebhook,
+  getMedusaCustomer,
+  getMedusaDashboard,
+  getMedusaOrder,
+  importMedusaCustomers,
+  listMedusaDueFollowups,
+} from "./medusa-admin.js"
+import {
   addCustomerEvent,
   findCustomer,
   findOrder,
@@ -42,6 +53,24 @@ async function trackCustomerEvent(
   patch: Parameters<typeof addCustomerEvent>[3] = {},
 ) {
   if (!customer?.phone) return undefined
+
+  if (config.crmBackend === "medusa") {
+    return addMedusaCustomerEvent(config, {
+      phone: customer.phone,
+      type: event.type,
+      at: event.at,
+      payload: event.payload,
+      orderId: event.orderId,
+      quoteId: event.quoteId,
+      source: event.source,
+      nextFollowupAt: patch.nextFollowupAt,
+      followupReason: patch.followupReason,
+      whatsappConsent:
+        event.type === "opt_out" ? false : patch.whatsappConsent,
+      tags: patch.tags,
+    })
+  }
+
   await upsertCustomer(config.dataDir, customer)
   return addCustomerEvent(config.dataDir, customer.phone, event, patch)
 }
@@ -91,6 +120,16 @@ export function createCommerceService(config: AppConfig) {
     }) {
       const products = await loadProducts(config)
       const quote = buildQuote(config, products, input.items)
+
+      if (config.crmBackend === "medusa") {
+        return createMedusaOrder(config, {
+          quote,
+          customer: input.customer,
+          source: input.source || "whatsapp",
+          notes: input.notes,
+        })
+      }
+
       const now = new Date().toISOString()
       const order: OrderRecord = {
         id: `B2B-${Date.now().toString(36).toUpperCase()}`,
@@ -132,10 +171,22 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async createPaymentLink(orderId: string) {
-      const order = await findOrder(config.dataDir, orderId)
+      const order =
+        config.crmBackend === "medusa"
+          ? await getMedusaOrder(config, orderId)
+          : await findOrder(config.dataDir, orderId)
       if (!order) throw new Error(`Orden no encontrada: ${orderId}`)
 
       const link = await createPayPhoneLink(config, order)
+
+      if (config.crmBackend === "medusa") {
+        return attachMedusaPaymentLink(config, orderId, {
+          paymentLink: link.url,
+          clientTransactionId: link.clientTransactionId,
+          payload: link,
+        })
+      }
+
       const now = new Date().toISOString()
       const updated: OrderRecord = {
         ...order,
@@ -156,6 +207,10 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async payphoneWebhook(payload: Record<string, unknown>) {
+      if (config.crmBackend === "medusa") {
+        return forwardPayphoneWebhook(config, payload)
+      }
+
       const clientTransactionId = String(payload.clientTransactionId || "")
       const order = clientTransactionId
         ? await findOrderByClientTransaction(
@@ -240,6 +295,11 @@ export function createCommerceService(config: AppConfig) {
 
     async importCustomers(input: Parameters<typeof parseCustomerImport>[0]) {
       const customers = parseCustomerImport(input)
+
+      if (config.crmBackend === "medusa") {
+        return importMedusaCustomers(config, customers)
+      }
+
       const imported = []
       for (const customer of customers) {
         if (!customer.phone) continue
@@ -249,6 +309,10 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async getCustomer(phone: string) {
+      if (config.crmBackend === "medusa") {
+        return getMedusaCustomer(config, phone)
+      }
+
       return findCustomer(config.dataDir, phone)
     },
 
@@ -265,6 +329,10 @@ export function createCommerceService(config: AppConfig) {
       whatsappConsent?: boolean
       tags?: string[]
     }) {
+      if (config.crmBackend === "medusa") {
+        return addMedusaCustomerEvent(config, input)
+      }
+
       const at = input.at || new Date().toISOString()
       const customer = await upsertCustomer(config.dataDir, {
         phone: input.phone,
@@ -294,6 +362,10 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async dueFollowups(input: { asOf?: string; limit?: number }) {
+      if (config.crmBackend === "medusa") {
+        return listMedusaDueFollowups(config, input)
+      }
+
       const customers = await listDueFollowups(
         config.dataDir,
         input.asOf || new Date().toISOString(),
@@ -306,6 +378,10 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async dashboard(input: { asOf?: string }) {
+      if (config.crmBackend === "medusa") {
+        return getMedusaDashboard(config, input)
+      }
+
       const asOf = input.asOf || new Date().toISOString()
       const [orders, customers, dueFollowups] = await Promise.all([
         readOrders(config.dataDir),
