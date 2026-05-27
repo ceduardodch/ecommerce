@@ -16,4 +16,4 @@ RUN npm run tools:build
 
 EXPOSE 8787
 
-CMD ["npm", "run", "tools:start"]
+CMD ["sh", "-c", "cd services/ecommerce-tools && npm run start"]

@@ -21,4 +21,4 @@ RUN npm run storefront:build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "storefront:start"]
+CMD ["sh", "-c", "cd apps/storefront && npm run start"]
