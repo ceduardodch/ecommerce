@@ -95,8 +95,25 @@ services:
   admin-redirect:
     image: nginx:1.27-alpine
     restart: unless-stopped
-    volumes:
-      - ./infra/admin-redirect/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cat > /etc/nginx/conf.d/default.conf <<'NGINX'
+        server {
+          listen 80;
+          server_name _;
+
+          location = / {
+            return 302 /app;
+          }
+
+          location / {
+            return 404;
+          }
+        }
+        NGINX
+        nginx -g 'daemon off;'
     ports:
       - "${ADMIN_REDIRECT_PORT_MAPPING:-127.0.0.1:18216:80}"
     healthcheck:
