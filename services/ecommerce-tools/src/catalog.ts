@@ -20,6 +20,7 @@ type MedusaProduct = {
       currency_code?: string
     }
     prices?: Array<{ amount?: number; currency_code?: string }>
+    metadata?: Record<string, unknown>
   }>
   tags?: Array<{ value?: string }>
   metadata?: Record<string, unknown>
@@ -71,10 +72,14 @@ function normalizeMedusaProduct(
   const rawPrice =
     variant?.calculated_price?.calculated_amount ??
     variant?.prices?.find((price) => price.currency_code === "usd")?.amount ??
+    numberFromMetadata(variant?.metadata?.price) ??
+    numberFromMetadata(product.metadata?.price) ??
     0
 
   const priceAmount = Number(rawPrice)
-  const originalAmount = numberFromMetadata(product.metadata?.originalPrice)
+  const originalAmount =
+    numberFromMetadata(product.metadata?.originalPrice) ||
+    numberFromMetadata(variant?.metadata?.originalPrice)
   const discountPercent =
     numberFromMetadata(product.metadata?.discountPercent) ||
     (originalAmount && originalAmount > priceAmount
@@ -133,7 +138,7 @@ function normalizeMedusaProduct(
     ),
     claimNote: stringFromMetadata(product.metadata?.claimNote),
     reorderAfterDays: numberFromMetadata(product.metadata?.reorderAfterDays),
-    stock: Number(product.metadata?.stock || 0),
+    stock: Number(product.metadata?.stock || variant?.metadata?.stock || 0),
     imageUrl:
       product.thumbnail || product.images?.[0]?.url || placeholderForCategory(category),
     productUrl: productUrl(config, product),
@@ -207,7 +212,7 @@ function isKitchenProduct(product: Product) {
 export async function loadProducts(config: AppConfig): Promise<Product[]> {
   const url = new URL("/store/products", config.medusaStoreApiUrl)
   url.searchParams.set("limit", "100")
-  url.searchParams.set("fields", "*variants,*images,*categories,*tags")
+  url.searchParams.set("fields", "*variants,*images,*categories,*tags,+metadata")
 
   const headers: Record<string, string> = {}
   if (config.medusaPublishableKey) {

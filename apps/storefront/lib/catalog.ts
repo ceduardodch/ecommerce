@@ -462,8 +462,14 @@ export async function getProducts() {
     process.env.NODE_ENV !== "production"
 
   try {
+    const headers: Record<string, string> = {}
+    if (process.env.TOOLS_API_TOKEN) {
+      headers.authorization = `Bearer ${process.env.TOOLS_API_TOKEN}`
+    }
+
     const response = await fetch(`${toolsUrl}/tools/search-products?limit=12`, {
       cache: "no-store",
+      headers,
     })
     if (!response.ok) throw new Error("tools unavailable")
     const data = (await response.json()) as { products?: Product[] }

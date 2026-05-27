@@ -63,6 +63,7 @@ export async function GET() {
     const csv = await response.text()
     return new Response(csv, {
       headers: {
+        "cache-control": "no-store, no-cache, must-revalidate",
         "content-type": "text/csv; charset=utf-8",
       },
     })
@@ -70,6 +71,7 @@ export async function GET() {
     if (!allowDemoCatalog) {
       return new Response(fallbackCsv().split("\n")[0] + "\n", {
         headers: {
+          "cache-control": "no-store, no-cache, must-revalidate",
           "content-type": "text/csv; charset=utf-8",
         },
       })
@@ -77,6 +79,7 @@ export async function GET() {
 
     return new Response(fallbackCsv(), {
       headers: {
+        "cache-control": "no-store, no-cache, must-revalidate",
         "content-type": "text/csv; charset=utf-8",
       },
     })
