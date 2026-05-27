@@ -92,6 +92,19 @@ services:
       timeout: 5s
       retries: 10
 
+  admin-redirect:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    volumes:
+      - ./infra/admin-redirect/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "${ADMIN_REDIRECT_PORT_MAPPING:-127.0.0.1:18216:80}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || test $$? -eq 8"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+
   storefront:
     build:
       context: .

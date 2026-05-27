@@ -7,6 +7,8 @@ Create one Docker Compose application in Coolify from this repository and use `d
 Public routing:
 
 - `shop.b2b.com.ec` -> `storefront:3000`
+- `adminshop.b2b.com.ec/` -> `admin-redirect:80` or host port `127.0.0.1:18216` for the root redirect to `/app`
+- `adminshop.b2b.com.ec/app` and `/app/*` -> Medusa Admin on `medusa-api:9000` or host port `127.0.0.1:18215`
 - `medusa-api:9000` and `ecommerce-tools:8787` are internal-only through Docker `expose`.
 - Do not publish `medusa-api` or `ecommerce-tools` directly to the host unless a specific webhook route is being protected and reviewed.
 - Default host bind for the public storefront is `127.0.0.1:18214:3000` through `STOREFRONT_PORT_MAPPING`.
