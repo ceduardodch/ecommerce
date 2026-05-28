@@ -24,7 +24,15 @@ import {
   Video,
 } from "lucide-react"
 import type { Product } from "../lib/catalog"
-import { getProducts } from "../lib/catalog"
+import { getProducts, productPath } from "../lib/catalog"
+import {
+  approvedTestimonials,
+  editorialTiles,
+  mediaSlots,
+  starProductSkus,
+  type EditorialTile,
+  type MediaSlot,
+} from "../lib/content"
 import { LeadCaptureForm } from "./components/lead-capture-form"
 import {
   PageAnalytics,
@@ -38,100 +46,6 @@ type HomeProps = {
     category?: string
   }>
 }
-
-type MediaSlot = {
-  id: string
-  title: string
-  label: string
-  poster: string
-  video: string
-  metric: string
-}
-
-type EditorialTile = {
-  id: string
-  eyebrow: string
-  title: string
-  text: string
-  poster: string
-  cta: string
-}
-
-const mediaSlots: MediaSlot[] = [
-  {
-    id: "hero-cocina",
-    title: "Cocina rico con menos aceite",
-    label: "Hero video",
-    poster: "/media/photo-hero-cocina.jpg",
-    video: "hero-cocina.mp4",
-    metric: "Granito para el dia a dia",
-  },
-  {
-    id: "prueba-huevo",
-    title: "Huevo, queso y nada pegado",
-    label: "Prueba real",
-    poster: "/media/photo-prueba-huevo.jpg",
-    video: "prueba-huevo.mp4",
-    metric: "No se pega",
-  },
-  {
-    id: "limpieza-rapida",
-    title: "Se limpia en minutos",
-    label: "Despues de cocinar",
-    poster: "/media/photo-limpieza-rapida.jpg",
-    video: "limpieza-rapida.mp4",
-    metric: "Limpieza facil",
-  },
-  {
-    id: "receta-wok",
-    title: "Cena completa en wok 32 cm",
-    label: "Receta",
-    poster: "/media/photo-receta-wok.jpg",
-    video: "receta-wok.mp4",
-    metric: "Wok 32 cm",
-  },
-]
-
-const editorialTiles: EditorialTile[] = [
-  {
-    id: "mesa-diaria",
-    eyebrow: "Para todos los dias",
-    title: "La olla que se queda en la cocina, no guardada.",
-    text: "Bonita para dejarla afuera, practica para huevos, arroz, guisos y salteados.",
-    poster: "/media/photo-editorial-mesa.jpg",
-    cta: "Ver recomendacion",
-  },
-  {
-    id: "combo-familiar",
-    eyebrow: "Bundle inteligente",
-    title: "Arma tu cambio de cocina por piezas, no por impulso.",
-    text: "Te recomendamos wok, olla o set segun cuantas personas comen en casa.",
-    poster: "/media/photo-product-set-granito.jpg",
-    cta: "Armar combo",
-  },
-  {
-    id: "cuidado",
-    eyebrow: "Postventa",
-    title: "Cuidado simple para que el granito dure mas.",
-    text: "Utensilios suaves, fuego medio, limpieza correcta y recordatorio por WhatsApp.",
-    poster: "/media/photo-product-utensilios.jpg",
-    cta: "Recibir guia",
-  },
-]
-
-const approvedTestimonials: Array<{
-  name: string
-  city: string
-  quote: string
-  approved: boolean
-}> = []
-
-const starProductSkus = [
-  "MGC-WOK-GRANITO-32",
-  "MGC-OLLA-GRANITO-20",
-  "MGC-OLLA-GRANITO-24",
-  "MGC-SET-MGC-GRANITO",
-]
 
 function money(amount: number) {
   return `$${amount.toFixed(2)}`
@@ -167,6 +81,10 @@ function starRank(product: Product) {
 
 function isStarProduct(product: Product) {
   return starRank(product) < 99
+}
+
+function productForSkus(products: Product[], skus: string[], fallback?: Product) {
+  return products.find((product) => skus.includes(product.sku)) || fallback
 }
 
 function filterProducts(
@@ -261,14 +179,19 @@ function ProductCard({
             ) : null}
             <strong>{money(product.price.amount)}</strong>
           </div>
-          <TrackedWhatsAppLink
-            className="primary-button"
-            placement={compact ? "social_deal_card" : "catalog_card"}
-            product={product}
-          >
-            <MessageCircle size={18} />
-            Cotizar
-          </TrackedWhatsAppLink>
+          <div className="product-card-actions">
+            <a className="detail-link" href={productPath(product)}>
+              Ver ficha
+            </a>
+            <TrackedWhatsAppLink
+              className="primary-button"
+              placement={compact ? "social_deal_card" : "catalog_card"}
+              product={product}
+            >
+              <MessageCircle size={18} />
+              Cotizar
+            </TrackedWhatsAppLink>
+          </div>
         </div>
       </div>
     </article>
@@ -290,13 +213,18 @@ function EditorialTileCard({
         <h2>{tile.title}</h2>
         <p>{tile.text}</p>
         {product ? (
-          <TrackedWhatsAppLink
-            className="text-link"
-            placement={`editorial_${tile.id}`}
-            product={product}
-          >
-            {tile.cta}
-          </TrackedWhatsAppLink>
+          <div className="inline-actions">
+            <a className="text-link" href={productPath(product)}>
+              Ver ficha
+            </a>
+            <TrackedWhatsAppLink
+              className="text-link accent"
+              placement={`editorial_${tile.id}`}
+              product={product}
+            >
+              {tile.cta}
+            </TrackedWhatsAppLink>
+          </div>
         ) : (
           <TrackedEventLink
             className="text-link"
@@ -346,13 +274,23 @@ function VideoSlot({
       <div>
         <strong>{slot.title}</strong>
         <p>{slot.metric}</p>
+        <div className="video-proof-row">
+          {slot.proofPoints.map((point) => (
+            <span key={point}>{point}</span>
+          ))}
+        </div>
         {featured ? (
-          <TrackedWhatsAppLink
-            placement={`video_${slot.id}`}
-            product={featured}
-          >
-            Preguntar por WhatsApp
-          </TrackedWhatsAppLink>
+          <div className="inline-actions">
+            <a href={productPath(featured)}>Ver ficha</a>
+            <TrackedWhatsAppLink
+              eventType={slot.eventType}
+              cta={`video_${slot.id}_whatsapp`}
+              placement={`video_${slot.id}`}
+              product={featured}
+            >
+              {slot.cta}
+            </TrackedWhatsAppLink>
+          </div>
         ) : null}
       </div>
     </article>
@@ -438,21 +376,29 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
         <div className="hero-copy">
           <p className="eyebrow">Eter Niu Cocina</p>
-          <h1>Cocina rico. Lava facil. Usa menos aceite.</h1>
+          <h1>Granito que se ve rico antes de cotizar.</h1>
           <p className="hero-subcopy">
-            Ollas y woks de granito para cambiar antiadherentes viejos por una
-            cocina mas bonita, practica y asesorada por WhatsApp.
+            Mira la prueba, elige tamano y te asesoramos por WhatsApp sin vueltas:
+            20 cm, 24 cm, wok 32 cm o set familiar.
           </p>
           <div className="hero-actions">
             {featured ? (
-              <TrackedWhatsAppLink
-                className="primary-button hero-cta"
-                placement="hero_primary"
-                product={featured}
-              >
-                <MessageCircle size={19} />
-                Quiero mi recomendacion
-              </TrackedWhatsAppLink>
+              <>
+                <TrackedWhatsAppLink
+                  className="primary-button hero-cta"
+                  eventType="video_interest"
+                  cta="hero_video_whatsapp"
+                  placement="hero_primary"
+                  product={featured}
+                >
+                  <MessageCircle size={19} />
+                  Quiero mi recomendacion
+                </TrackedWhatsAppLink>
+                <a className="secondary-button" href={productPath(featured)}>
+                  <PlayCircle size={18} />
+                  Ver ficha
+                </a>
+              </>
             ) : null}
             <TrackedEventLink
               className="secondary-button"
@@ -486,11 +432,11 @@ export default async function Home({ searchParams }: HomeProps) {
           <div className="hero-proof">
             <span>
               <Leaf size={17} />
-              Alternativa sin teflon
+              Opcion sin teflon
             </span>
             <span>
               <BadgeDollarSign size={17} />
-              Gama media
+              Desde $95 a $249
             </span>
             <span>
               <ShieldCheck size={17} />
@@ -556,10 +502,10 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <section className="editorial-grid" aria-label="Momentos de cocina">
-        {editorialTiles.map((tile, index) => (
+        {editorialTiles.map((tile) => (
           <EditorialTileCard
             key={tile.id}
-            product={socialProducts[index] || featured}
+            product={productForSkus(products, tile.productSkus, featured)}
             tile={tile}
           />
         ))}
@@ -577,13 +523,36 @@ export default async function Home({ searchParams }: HomeProps) {
       </section>
 
       <section className="video-grid" aria-label="Videos de cocina">
-        {mediaSlots.slice(1).map((slot, index) => (
+        {mediaSlots.slice(1).map((slot) => (
           <VideoSlot
-            featured={socialProducts[index] || featured}
+            featured={productForSkus(products, slot.productSkus, featured)}
             key={slot.id}
             slot={slot}
           />
         ))}
+      </section>
+
+      <section className="proof-lab" aria-label="Pruebas del producto">
+        <article>
+          <span>01</span>
+          <strong>Antiadherencia visible</strong>
+          <p>Huevo y queso muestran mejor que cualquier parrafo si la olla sirve para el dia a dia.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <strong>Limpieza sin pelear</strong>
+          <p>La prueba clave para recompra: cocinar, lavar rapido y volver a usar.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <strong>Tamano correcto</strong>
+          <p>20 cm para poco, 24 cm para familia, wok 32 cm para recetas completas.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <strong>Material explicado simple</strong>
+          <p>Opcion sin teflon y cuidado basico, sin promesas medicas ni miedo.</p>
+        </article>
       </section>
 
       <section className="section-head" id="productos">
@@ -616,13 +585,20 @@ export default async function Home({ searchParams }: HomeProps) {
               <span>Reel {index + 1}</span>
               <h2>{product.contentAngles?.[0] || product.title}</h2>
               <p>{product.healthAngle || product.bundleUseCase}</p>
-              <TrackedWhatsAppLink
-                className="text-link"
-                placement={`social_reel_${index + 1}`}
-                product={product}
-              >
-                Pedir este producto
-              </TrackedWhatsAppLink>
+              <div className="inline-actions">
+                <a className="text-link" href={productPath(product)}>
+                  Ver ficha
+                </a>
+                <TrackedWhatsAppLink
+                  className="text-link accent"
+                  eventType="video_interest"
+                  cta={`social_reel_${index + 1}_whatsapp`}
+                  placement={`social_reel_${index + 1}`}
+                  product={product}
+                >
+                  Pedir este producto
+                </TrackedWhatsAppLink>
+              </div>
             </div>
           </article>
         ))}

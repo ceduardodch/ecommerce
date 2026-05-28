@@ -23,3 +23,6 @@ Do not copy third-party brand media into this folder unless the business has
 usage rights. These JPG files are AI-generated temporary assets for preview and
 should be replaced with real Eter Niu videos/photos once approved material is
 uploaded.
+
+See `docs/CONTENT_MATRIX.md` for the section, product, CTA and CRM event mapped
+to each media slot.

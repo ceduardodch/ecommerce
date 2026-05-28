@@ -375,7 +375,7 @@ export function PageAnalytics({
       fired.current.add(`view:${featured.id}`)
       trackStorefrontEvent({
         eventName: "ViewContent",
-        type: "product_interest",
+        type: "view_content",
         product: featured,
         value: featured.price.amount,
       })
@@ -400,11 +400,15 @@ export function TrackedWhatsAppLink({
   placement,
   className,
   children,
+  cta = "cotizar_whatsapp",
+  eventType = "whatsapp_opened",
 }: {
   product: TrackingProduct
   placement: string
   className?: string
   children: ReactNode
+  cta?: string
+  eventType?: "whatsapp_opened" | "video_interest" | "product_interest"
 }) {
   const fallbackHref = useMemo(
     () =>
@@ -426,10 +430,10 @@ export function TrackedWhatsAppLink({
         const leadId = randomId("lead")
         const result = trackStorefrontEvent({
           eventName: "Lead",
-          type: "whatsapp_opened",
+          type: eventType,
           product,
           value: product.price.amount,
-          cta: "cotizar_whatsapp",
+          cta,
           placement,
           leadId,
         })

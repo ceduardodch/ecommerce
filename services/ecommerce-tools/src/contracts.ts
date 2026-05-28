@@ -71,6 +71,7 @@ export const customerEventInputSchema = z.object({
   type: z.enum([
     "page_view",
     "view_content",
+    "video_interest",
     "product_interest",
     "search",
     "whatsapp_click",
@@ -146,6 +147,7 @@ export const toolsEventInputSchema = z.object({
     .enum([
       "page_view",
       "view_content",
+      "video_interest",
       "product_interest",
       "search",
       "whatsapp_click",

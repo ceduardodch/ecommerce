@@ -9,7 +9,7 @@ type MetaSendResult =
 
 const metaEventToCrm: Record<ToolsEventInput["eventName"], CustomerEventType> = {
   PageView: "page_view",
-  ViewContent: "product_interest",
+  ViewContent: "view_content",
   Search: "search",
   Contact: "whatsapp_opened",
   Lead: "whatsapp_opened",

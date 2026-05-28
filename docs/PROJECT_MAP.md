@@ -63,7 +63,9 @@ Archivos clave:
 
 - `apps/storefront/app/page.tsx`: pantalla principal.
 - `apps/storefront/app/guias`: guias publicas de cocina saludable.
+- `apps/storefront/app/products/[slug]`: fichas publicas de productos estrella.
 - `apps/storefront/app/components/lead-capture-form.tsx`: formulario Club Cocina Saludable que registra `lead_created`.
+- `apps/storefront/lib/content.ts`: matriz operativa de videos/fotos, productos, CTAs y eventos CRM.
 - `apps/storefront/app/globals.css`: estilos globales.
 - `apps/storefront/public/media`: posters locales y slots para MP4 aprobados.
 - `apps/storefront/lib/catalog.ts`: lectura de catalogo desde `ecommerce-tools`; fallback solo si `ALLOW_DEMO_CATALOG=true`.
@@ -166,6 +168,7 @@ Configuracion ejemplo para servicios externos.
 - `docs/OPENCLAW_SELLER_PROMPT.md`: puntero al prompt canonico.
 - `docs/OPENCLAW_HANDOFF.md`: retoma operativa de OpenClaw.
 - `docs/VICKY_BOT.md`: runbook de Vicky, URL, Coolify, variables y validacion.
+- `docs/CONTENT_MATRIX.md`: material pendiente de videos/fotos y reglas de publicacion.
 - `docs/CURRENT_STATE.md`: estado del proyecto.
 - `docs/PROJECT_MAP.md`: este mapa.
 

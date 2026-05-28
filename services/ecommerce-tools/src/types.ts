@@ -78,6 +78,7 @@ export type CustomerInput = {
 export type CustomerEventType =
   | "page_view"
   | "view_content"
+  | "video_interest"
   | "product_interest"
   | "search"
   | "whatsapp_click"

@@ -118,6 +118,7 @@ function suggestNextAction(customer: unknown, events: unknown[]) {
   if (
     eventTypes.includes("whatsapp_click") ||
     eventTypes.includes("whatsapp_opened") ||
+    eventTypes.includes("video_interest") ||
     eventTypes.includes("product_interest") ||
     eventTypes.includes("lead_created")
   ) {
@@ -559,6 +560,7 @@ export function createCommerceService(config: AppConfig) {
         return [
           "page_view",
           "view_content",
+          "video_interest",
           "product_interest",
           "search",
           "whatsapp_click",
@@ -613,7 +615,7 @@ export function createCommerceService(config: AppConfig) {
         customer.events.some((event) =>
           ["quote_created", "order_created", "reorder_interest"].includes(
             event.type,
-          ),
+          ) || event.type === "video_interest",
         ),
       )
 

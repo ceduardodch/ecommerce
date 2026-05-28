@@ -286,6 +286,7 @@ class B2bCrmModuleService extends MedusaService({
           [
             "whatsapp_click",
             "whatsapp_opened",
+            "video_interest",
             "lead_created",
             "product_interest",
             "quote_started",

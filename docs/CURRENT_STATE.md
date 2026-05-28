@@ -60,6 +60,8 @@ El servicio `ecommerce-tools` permite:
 - El fallback de cocina queda solo para desarrollo/pruebas con `ALLOW_DEMO_CATALOG=true`.
 - La orientacion actual es nicho cocina saludable: ollas y woks de granito, set MGC, utensilios compatibles, cuidado, recompra y promociones reales.
 - El storefront ahora esta orientado a social-commerce: hero de video local, prueba visual de producto, seccion "Visto en redes", guias publicas y captura "Club Cocina Saludable".
+- Las fichas publicas de productos viven en `/products/[slug]` y deben ser el destino principal del feed Meta y de los CTAs de catalogo.
+- La matriz de contenido vive en `apps/storefront/lib/content.ts` y `docs/CONTENT_MATRIX.md`; mapea video/foto, producto, placement, CTA y evento CRM.
 - Los videos reales se colocan en `apps/storefront/public/media` como `hero-cocina.mp4`, `prueba-huevo.mp4`, `limpieza-rapida.mp4` y `receta-wok.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
 - Las guias publicas viven en `/guias` y `/guias/teflon-pfas`. El copy de salud evita diagnosticos, causalidad medica y claims PFOA/PFAS/PTFE sin certificacion del proveedor.
 - Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.

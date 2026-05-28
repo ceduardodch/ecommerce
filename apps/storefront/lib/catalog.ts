@@ -43,6 +43,32 @@ export type Product = {
   tags: string[]
 }
 
+function slugify(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+}
+
+export function productSlug(product: Product) {
+  try {
+    const url = new URL(product.productUrl)
+    const [, slug] = url.pathname.match(/\/products\/([^/?#]+)/) || []
+    if (slug) return decodeURIComponent(slug)
+  } catch {
+    const [, slug] = product.productUrl.match(/\/products\/([^/?#]+)/) || []
+    if (slug) return decodeURIComponent(slug)
+  }
+
+  return slugify(product.title || product.sku || product.id)
+}
+
+export function productPath(product: Product) {
+  return `/products/${productSlug(product)}`
+}
+
 export const fallbackProducts: Product[] = [
   {
     id: "prod-wok-granito-32",
@@ -508,4 +534,10 @@ export async function getProducts() {
   } catch {
     return allowDemoCatalog ? fallbackProducts : []
   }
+}
+
+export async function getProductBySlug(slug: string) {
+  const products = await getProducts()
+  const normalizedSlug = decodeURIComponent(slug)
+  return products.find((product) => productSlug(product) === normalizedSlug)
 }
