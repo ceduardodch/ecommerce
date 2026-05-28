@@ -2,12 +2,22 @@ import { readFile, writeFile } from "node:fs/promises"
 import { resolve } from "node:path"
 
 const marker = "eterNiuAdminChunkReloadInstalled"
+const patchStart = "<!-- eter-niu-admin-chunk-reload:start -->"
+const patchEnd = "<!-- eter-niu-admin-chunk-reload:end -->"
 const adminIndexPath = resolve(
   process.cwd(),
   ".medusa/server/public/admin/index.html"
 )
 
-const reloadScript = `<script>
+const existingPatchPattern = new RegExp(
+  `${patchStart.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*` +
+    `<script>\\s*\\(\\(\\) => \\{\\s*if \\(window\\.__${marker}\\)[\\s\\S]*?\\}\\)\\(\\);\\s*</script>` +
+    `\\s*${patchEnd.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}` +
+    `|<script>\\s*\\(\\(\\) => \\{\\s*if \\(window\\.__${marker}\\)[\\s\\S]*?\\}\\)\\(\\);\\s*</script>`
+)
+
+const reloadScript = `${patchStart}
+<script>
 (() => {
   if (window.__${marker}) {
     return;
@@ -17,11 +27,16 @@ const reloadScript = `<script>
 
   const storageKey = "eter_niu_admin_chunk_reload_at";
   const staleChunkPatterns = [
-    "Failed to fetch dynamically imported module",
-    "Importing a module script failed",
+    "failed to fetch dynamically imported module",
+    "importing a module script failed",
     "error loading dynamically imported module",
     "dynamically imported module",
   ];
+
+  const isStaleChunkError = (message) => {
+    const normalized = String(message || "").toLowerCase();
+    return staleChunkPatterns.some((pattern) => normalized.includes(pattern));
+  };
 
   const getMessage = (event) => {
     const reason = event?.reason;
@@ -39,10 +54,8 @@ const reloadScript = `<script>
       .join(" ");
   };
 
-  const reloadOnce = (event) => {
-    const message = getMessage(event);
-
-    if (!staleChunkPatterns.some((pattern) => message.includes(pattern))) {
+  const reloadOnce = (message) => {
+    if (!isStaleChunkError(message)) {
       return;
     }
 
@@ -57,15 +70,48 @@ const reloadScript = `<script>
     window.location.replace("/app/?reload=" + now);
   };
 
-  window.addEventListener("unhandledrejection", reloadOnce);
-  window.addEventListener("error", reloadOnce, true);
+  const reloadFromEvent = (event) => reloadOnce(getMessage(event));
+
+  window.addEventListener("unhandledrejection", reloadFromEvent);
+  window.addEventListener("error", reloadFromEvent, true);
+
+  // Medusa Admin can catch lazy import failures inside React and render the
+  // error instead of letting it bubble to window. Watch the page briefly so a
+  // stale chunk screen still self-recovers after deploys.
+  const watchRenderedErrors = () => {
+    const scan = () => reloadOnce(document.body?.innerText || "");
+
+    scan();
+
+    if (!window.MutationObserver || !document.body) {
+      const interval = window.setInterval(scan, 1000);
+      window.setTimeout(() => window.clearInterval(interval), 15000);
+      return;
+    }
+
+    const observer = new MutationObserver(scan);
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.setTimeout(() => observer.disconnect(), 15000);
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", watchRenderedErrors, { once: true });
+  } else {
+    watchRenderedErrors();
+  }
 })();
-</script>`
+</script>
+${patchEnd}`
 
 const html = await readFile(adminIndexPath, "utf8")
 
 if (html.includes(marker)) {
-  console.log("Medusa Admin stale chunk reload patch already present.")
+  if (!existingPatchPattern.test(html)) {
+    throw new Error(`Cannot update Medusa Admin stale chunk patch in ${adminIndexPath}`)
+  }
+
+  await writeFile(adminIndexPath, html.replace(existingPatchPattern, reloadScript))
+  console.log("Updated Medusa Admin stale chunk reload recovery.")
   process.exit(0)
 }
 
