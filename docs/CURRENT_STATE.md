@@ -141,6 +141,11 @@ Endpoints:
 
 - Prompt canonico: `agents/openclaw-ecommerce-seller.md`.
 - Env ejemplo: `infra/openclaw-ecommerce.env.example`.
+- Bot dedicado recomendado: `Vicky`.
+- Prompt de Vicky: `agents/vicky-sales-bot.md`.
+- URL recomendada para Vicky: `https://vicky.b2b.com.ec`.
+- Env Coolify de Vicky: `infra/vicky-coolify.env.example`.
+- Runbook de Vicky: `docs/VICKY_BOT.md`.
 - Skills: `skills/ecommerce-sales`, `skills/meta-marketplace-assistant`, `skills/payphone-reconciliation`.
 - Base URL esperada desde OpenClaw: `http://ecommerce-tools:8787`.
 - Token esperado: `ECOMMERCE_TOOLS_TOKEN` debe coincidir con `TOOLS_API_TOKEN`.

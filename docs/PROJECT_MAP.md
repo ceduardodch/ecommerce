@@ -133,6 +133,8 @@ Archivos clave:
 
 - `agents/openclaw-ecommerce-seller.md`: prompt canonico del vendedor ecommerce.
 - `agents/openclaw-ecommerce-config.example.env`: variables ejemplo para la app OpenClaw.
+- `agents/vicky-sales-bot.md`: prompt de Vicky, bot dedicado de ventas WhatsApp.
+- `agents/vicky-openclaw-config.example.env`: variables ejemplo para Vicky.
 
 ## Skills
 
@@ -153,6 +155,7 @@ Cada skill incluye `agents/openai.yaml` como descriptor.
 Configuracion ejemplo para servicios externos.
 
 - `infra/openclaw-ecommerce.env.example`: env base para OpenClaw ecommerce.
+- `infra/vicky-coolify.env.example`: env base para el despliegue Coolify de Vicky.
 
 ## Docs
 
@@ -162,6 +165,7 @@ Configuracion ejemplo para servicios externos.
 - `docs/COOLIFY_DEPLOYMENT.md`: despliegue Coolify.
 - `docs/OPENCLAW_SELLER_PROMPT.md`: puntero al prompt canonico.
 - `docs/OPENCLAW_HANDOFF.md`: retoma operativa de OpenClaw.
+- `docs/VICKY_BOT.md`: runbook de Vicky, URL, Coolify, variables y validacion.
 - `docs/CURRENT_STATE.md`: estado del proyecto.
 - `docs/PROJECT_MAP.md`: este mapa.
 

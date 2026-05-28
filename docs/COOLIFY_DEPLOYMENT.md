@@ -66,6 +66,15 @@ curl http://ecommerce-tools:8787/feeds/meta/catalog.csv
 
 Create a separate OpenClaw Coolify app and volume for ecommerce sales. Do not reuse Cody or Bruno state.
 
+Recommended production bot:
+
+- Name: `Vicky`
+- Coolify service: `vicky-sales-bot`
+- Public URL: `https://vicky.b2b.com.ec`
+- Prompt: `agents/vicky-sales-bot.md`
+- Env example: `infra/vicky-coolify.env.example`
+- Runbook: `docs/VICKY_BOT.md`
+
 Configure the agent to call the tools service over the internal network:
 
 ```text
