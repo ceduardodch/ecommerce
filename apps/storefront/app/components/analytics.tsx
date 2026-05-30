@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import type { ReactNode } from "react"
 import { whatsappLink } from "../../lib/whatsapp"
 import type { Product } from "../../lib/catalog"
+import { commercialInfo } from "../../lib/commercial"
 
 type MetaEventName =
   | "PageView"
@@ -29,6 +30,10 @@ type TrackingProduct = Pick<
   | "diameterCm"
   | "stockSignal"
   | "deliveryBadge"
+  | "freeShipping"
+  | "paymentMethods"
+  | "couponCode"
+  | "stoveCompatibility"
 >
 
 type TrackingPayload = {
@@ -51,6 +56,21 @@ type TrackingPayload = {
   currency?: string
   leadId?: string
   metadata?: Record<string, unknown>
+}
+
+type WhatsappTrackingContext = {
+  recommendation?: string
+  city?: string
+  householdPeople?: string
+  useCase?: string
+  budget?: string
+  recommendedSku?: string
+  journeyStage?: string
+  videoSlot?: string
+  couponCode?: string
+  freeShipping?: boolean
+  paymentMethods?: string[]
+  stoveCompatibility?: string
 }
 
 declare global {
@@ -229,6 +249,10 @@ export function trackStorefrontEvent(payload: TrackingPayload) {
           promoLabel: product.promoLabel,
           stockSignal: product.stockSignal,
           deliveryBadge: product.deliveryBadge,
+          freeShipping: product.freeShipping,
+          paymentMethods: product.paymentMethods,
+          couponCode: product.couponCode,
+          stoveCompatibility: product.stoveCompatibility,
         }
       : undefined,
     products: products?.map((item) => ({
@@ -245,6 +269,10 @@ export function trackStorefrontEvent(payload: TrackingPayload) {
       promoLabel: item.promoLabel,
       stockSignal: item.stockSignal,
       deliveryBadge: item.deliveryBadge,
+      freeShipping: item.freeShipping,
+      paymentMethods: item.paymentMethods,
+      couponCode: item.couponCode,
+      stoveCompatibility: item.stoveCompatibility,
     })),
   }
 
@@ -402,6 +430,9 @@ export function TrackedWhatsAppLink({
   children,
   cta = "cotizar_whatsapp",
   eventType = "whatsapp_opened",
+  leadId,
+  metadata,
+  whatsappContext,
 }: {
   product: TrackingProduct
   placement: string
@@ -409,15 +440,20 @@ export function TrackedWhatsAppLink({
   children: ReactNode
   cta?: string
   eventType?: "whatsapp_opened" | "video_interest" | "product_interest"
+  leadId?: string
+  metadata?: Record<string, unknown>
+  whatsappContext?: WhatsappTrackingContext
 }) {
+  const commerce = commercialInfo(product)
   const fallbackHref = useMemo(
     () =>
       whatsappLink(product, {
-        leadId: `lead_${product.id}_${placement}`,
+        ...whatsappContext,
+        leadId: leadId || `lead_${product.id}_${placement}`,
         source: "storefront",
         placement,
       }),
-    [placement, product],
+    [leadId, placement, product, whatsappContext],
   )
 
   return (
@@ -427,7 +463,7 @@ export function TrackedWhatsAppLink({
       rel="noreferrer"
       target="_blank"
       onClick={(event) => {
-        const leadId = randomId("lead")
+        const activeLeadId = leadId || randomId("lead")
         const result = trackStorefrontEvent({
           eventName: "Lead",
           type: eventType,
@@ -435,10 +471,26 @@ export function TrackedWhatsAppLink({
           value: product.price.amount,
           cta,
           placement,
-          leadId,
+          leadId: activeLeadId,
+          metadata: {
+            couponClaimed: true,
+            couponCode: commerce.couponCode,
+            paymentMethodsShown: true,
+            paymentMethods: commerce.paymentMethods,
+            paymentMethodsLabel: commerce.paymentMethodsLabel,
+            freeShippingShown: commerce.freeShipping,
+            freeShipping: commerce.freeShipping,
+            stoveCompatibilityShown: true,
+            stoveCompatibility: commerce.stoveCompatibility,
+            ...metadata,
+            ...whatsappContext,
+            productInterestSku:
+              metadata?.productInterestSku || whatsappContext?.recommendedSku || product.sku,
+          },
         })
         const href = whatsappLink(product, {
-          leadId,
+          ...whatsappContext,
+          leadId: activeLeadId,
           sessionId: result?.sessionId,
           source: "storefront",
           placement,

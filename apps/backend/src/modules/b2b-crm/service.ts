@@ -57,6 +57,14 @@ function nextReorderDays(items: PurchasedProduct[]) {
   return days.length ? Math.min(...days) : 90
 }
 
+function eventMetadata(payload: unknown) {
+  if (!payload || typeof payload !== "object") return {}
+  const metadata = (payload as { metadata?: unknown }).metadata
+  return metadata && typeof metadata === "object"
+    ? (metadata as Record<string, unknown>)
+    : {}
+}
+
 class B2bCrmModuleService extends MedusaService({
   ConversationalOrder,
   CrmCustomerEvent,
@@ -133,13 +141,19 @@ class B2bCrmModuleService extends MedusaService({
 
   async addCustomerEvent(input: CrmCustomerEventInput) {
     const phone = normalizePhone(input.phone)
+    const metadata = eventMetadata(input.payload)
     await this.upsertCustomer({
       phone,
       whatsappConsent:
         input.type === "opt_out" ? false : input.whatsappConsent,
       tags: input.tags,
       nextFollowupAt: input.nextFollowupAt,
-      followupReason: input.followupReason,
+      followupReason:
+        input.followupReason ||
+        (typeof metadata.journeyStage === "string"
+          ? metadata.journeyStage
+          : undefined),
+      metadata,
     })
 
     return this.service_().createCrmCustomerEvents({
@@ -288,17 +302,40 @@ class B2bCrmModuleService extends MedusaService({
             "whatsapp_opened",
             "video_interest",
             "lead_created",
+            "quiz_completed",
+            "guide_downloaded",
             "product_interest",
             "quote_started",
             "quote_created",
             "checkout_started",
             "order_created",
+            "payment_proof_received",
             "complement_interest",
             "reorder_interest",
           ].includes(event.type),
         )
         .map((event) => event.phone),
     )
+    const paidPhones = new Set(
+      events.filter((event) => event.type === "paid").map((event) => event.phone),
+    )
+    const optOutPhones = new Set(
+      events
+        .filter((event) => event.type === "opt_out")
+        .map((event) => event.phone),
+    )
+    const customerByPhone = new Map(
+      customers.map((customer) => [customer.phone, customer]),
+    )
+    const hotLeads = [...leadPhones]
+      .filter((phone) => !paidPhones.has(phone) && !optOutPhones.has(phone))
+      .map((phone) => customerByPhone.get(phone))
+      .filter(Boolean)
+      .slice(0, 25)
+    const reasonIncludes = (customer: any, values: string[]) => {
+      const reason = String(customer.followup_reason || customer.metadata?.journeyStage || "")
+      return values.some((value) => reason.includes(value))
+    }
 
     return {
       asOf: asOfIso,
@@ -313,6 +350,17 @@ class B2bCrmModuleService extends MedusaService({
       pendingOrders,
       paidOrders: paidOrders.slice(-10),
       dueFollowups,
+      hotLeads,
+      careFollowups: dueFollowups.filter((customer) =>
+        reasonIncludes(customer, ["cuidado", "care"]),
+      ),
+      complementFollowups: dueFollowups.filter((customer) =>
+        reasonIncludes(customer, ["complemento", "complement"]),
+      ),
+      reorderFollowups: dueFollowups.filter((customer) =>
+        reasonIncludes(customer, ["recompra", "reorder"]),
+      ),
+      optOuts: customers.filter((customer) => optOutPhones.has(customer.phone)),
       recentEvents: events.slice(-25).reverse(),
     }
   }

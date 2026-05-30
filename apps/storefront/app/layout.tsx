@@ -5,7 +5,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
   description:
-    "Ollas, woks y sets de granito para cocinar con menos aceite, videos de uso, guias de cuidado, cotizacion por WhatsApp y CRM de recompra.",
+    "Ollas, woks y sets de granito para cocinar con menos aceite, videos de uso, guias de cuidado y cotizacion por WhatsApp.",
   metadataBase: new URL("https://shop.b2b.com.ec"),
   openGraph: {
     title: "Eter Niu Cocina",

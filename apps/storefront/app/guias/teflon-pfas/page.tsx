@@ -128,8 +128,18 @@ export default async function TeflonPfasGuidePage() {
             cta="pfas_guide_club"
             href="/#club"
             placement="pfas_guide_aside"
-            type="lead_created"
-            metadata={{ leadMagnet: "guia_pfas" }}
+            type="guide_downloaded"
+            metadata={{
+              journeyStage: "lead_nuevo",
+              leadMagnet: "guia_pfas",
+              followupSequence: [
+                "dia_0_guia",
+                "dia_2_tamano",
+                "dia_7_cuidado",
+                "dia_30_complemento",
+                "dia_90_recompra",
+              ],
+            }}
           >
             <BookOpen size={18} />
             Recibir guia + cupon

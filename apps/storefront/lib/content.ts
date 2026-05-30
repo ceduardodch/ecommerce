@@ -32,6 +32,8 @@ export type ContentMatrixItem = {
     | "product_interest"
     | "whatsapp_opened"
     | "lead_created"
+    | "quiz_completed"
+    | "guide_downloaded"
 }
 
 export const starProductSkus = [
@@ -147,12 +149,20 @@ export const contentMatrix: ContentMatrixItem[] = [
     crmEventType: "product_interest" as const,
   })),
   {
+    asset: "olla-ideal-quiz",
+    fallbackPoster: "/media/photo-product-olla-24.jpg",
+    section: "olla_ideal_quiz",
+    productSkus: starProductSkus,
+    cta: "Ver recomendacion",
+    crmEventType: "quiz_completed",
+  },
+  {
     asset: "club-cocina-saludable",
     fallbackPoster: "/media/photo-product-utensilios.jpg",
     section: "club_cocina_saludable",
     productSkus: starProductSkus,
-    cta: "Descargar guia + cupon",
-    crmEventType: "lead_created",
+    cta: "Guia + cupon + recordatorios",
+    crmEventType: "guide_downloaded",
   },
 ]
 

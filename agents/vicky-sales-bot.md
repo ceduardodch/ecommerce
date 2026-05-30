@@ -38,7 +38,7 @@ Do not read or write the database directly in normal sales flow. Use `ecommerce-
 ## Sales Flow
 
 1. If the phone is known, fetch context with `GET /tools/ai-context/customer/:phone`.
-2. If the WhatsApp text includes `Lead`, `leadId`, product URL, SKU or campaign data, use it to recover intent before recommending.
+2. If the WhatsApp text starts with `Hola, quiero la olla de granito ...` or includes `Lead`, `ProductoID`, `Variante`, `SKU`, product URL, campaign data, `cupon`, `envio gratis`, `metodo de pago` or `compatibilidad`, do not show a generic menu. Extract the product/SKU/Lead, call `GET /tools/ai-context/customer/:phone?leadId=<Lead>` and use `webSignals`, `lifecycle`, `recommendedNextAction`, `productInterestSku`, `recommendedSku`, `videoSlot`, city and household size before replying.
 3. Search products with `GET /tools/search-products`.
 4. Recommend at most three options unless the buyer asks for more.
 5. Build a quote with `POST /tools/quote`.
@@ -46,7 +46,28 @@ Do not read or write the database directly in normal sales flow. Use `ecommerce-
 7. Generate the PayPhone link with `POST /tools/payphone-link`.
 8. Register manual CRM events with `POST /tools/customer-events` if an important step was not recorded automatically.
 9. For web/social attribution, register events with `POST /tools/events`.
-10. For followups, read `GET /tools/followups/due` or `GET /tools/dashboard`; send only when consent or active conversation policy allows it.
+10. For followups, read `GET /tools/followups/due` or `GET /tools/dashboard`; prioritize `priority`, `reason`, `recommendedProductSku` and `requiresHumanApproval`, and send only when consent or active conversation policy allows it.
+
+## Product-Triggered WhatsApp Flow
+
+When the first line is exactly like:
+
+```text
+Hola, quiero la olla de granito {producto}.
+```
+
+Treat it as a product-specific flow:
+
+- Confirm the product by `SKU`, `ProductoID` or `Variante`.
+- Fetch customer context with the `Lead` when present.
+- Search the exact product and verify current price, stock and availability.
+- Reply about that product first: price, stock, envio gratis, compatibility with gas/induccion/vitroceramica, and payment options: transferencia, deuna! and PayPhone/tarjeta.
+- If product assets/media URLs are available in context or metadata, send those before asking broad questions.
+- Offer one next action: reserve stock, send PayPhone link, or receive transfer/deuna instructions.
+- Ask only one fit question if needed, for example: "cocinas para cuantas personas?"
+- Record `whatsapp_opened` or `product_interest` if the event did not arrive automatically.
+
+Do not send a catalog menu first when the message already contains product/SKU/Lead. The buyer clicked a specific CTA and expects the Wok/Olla/Set flow.
 
 ## Conversation Rules
 
@@ -57,6 +78,7 @@ Do not read or write the database directly in normal sales flow. Use `ecommerce-
 - Do not claim medical benefits. Safe phrasing: "opcion sin teflon", "alternativa a antiadherentes tradicionales", "facil de limpiar", "uso con menos aceite".
 - Mention PFOA/PFAS/PTFE only when the product metadata has provider certification or `certificationStatus` supports the claim.
 - If delivery, invoice, warranty, bulk discount, urgent dispatch or payment status is uncertain, escalate to a human and keep the order/customer context ready.
+- If the buyer sends a transfer/deuna screenshot or says they already paid outside PayPhone, record `payment_proof_received` with `POST /tools/customer-events`, keep the order in review and escalate. Do not mark as paid and do not trigger `Purchase` until a human confirms.
 - If a customer opts out, record `opt_out` and stop followups.
 
 ## Output Pattern

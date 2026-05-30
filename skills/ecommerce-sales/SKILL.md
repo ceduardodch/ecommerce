@@ -12,12 +12,12 @@ Use this skill to sell kitchen products through the ecommerce tool layer without
 ## Workflow
 
 1. Identify the buyer intent and product constraints: family size, 20 cm vs 24 cm vs wok 32 cm, less oil, no-stick use, replacement, material, budget, quantity, urgency, delivery city, and invoice needs.
-2. If the phone is known, call `GET /tools/customers/:phone` before recommending.
+2. If the phone is known, call `GET /tools/ai-context/customer/:phone` before recommending. If the inbound WhatsApp text starts with `Hola, quiero la olla de granito ...` or includes `Lead`, `ProductoID`, `Variante`, `SKU`, `cupon`, `envio gratis`, payment or compatibility data, pass it as `?leadId=<Lead>` to recover quiz, video, guide and product intent.
 3. Call `GET /tools/search-products` with the strongest kitchen terms. If results are broad, recommend up to three options.
 4. Call `POST /tools/quote` before giving totals. Include customer phone when available so CRM records `quote_created`.
 5. If the buyer accepts, call `POST /tools/orders` with customer name/phone and source `whatsapp`.
 6. Call `POST /tools/payphone-link` and send the returned link without modification.
-7. Register manual events with `POST /tools/customer-events` for no-response, escalation, opt-out or explicit recompra interest.
+7. Register manual events with `POST /tools/customer-events` for no-response, escalation, opt-out, `payment_proof_received` or explicit recompra interest. Web/social events use `POST /tools/events` with `journeyStage`, `householdPeople`, `city`, `videoSlot`, `productInterestSku`, `recommendedSku`, `couponClaimed`, `freeShippingShown`, `paymentMethodsShown`, `stoveCompatibilityShown` and `followupSequence` when available.
 8. End with order id, payment status, CRM event/followup date, and next operational step.
 
 ## Response Rules
@@ -27,6 +27,7 @@ Use this skill to sell kitchen products through the ecommerce tool layer without
 - Do not refer to prior purchases unless they came from `get_customer`.
 - Do not create a payment link before an order exists.
 - Treat `pending_payment` as unpaid.
+- Treat transfer/deuna screenshots as `payment_proof_received` and human review, not as paid.
 - Treat PayPhone dry-run links as test links and say so if visible.
 - Escalate to a human for bulk discounts, custom installation, warranty exceptions, invoices, or unclear payment status.
 - For outbound followup, send only with consent or active conversation; otherwise prepare a human-approved message.
@@ -38,6 +39,7 @@ Use the base URL from `ECOMMERCE_TOOLS_BASE_URL`. If `ECOMMERCE_TOOLS_TOKEN` exi
 Important endpoints:
 
 - `GET /tools/search-products?query=...&limit=3`
+- `GET /tools/ai-context/customer/:phone?leadId=...`
 - `GET /tools/customers/:phone`
 - `POST /tools/quote`
 - `POST /tools/orders`

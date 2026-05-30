@@ -1,6 +1,19 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { useEffect, useState } from "react"
 
+type CrmCustomerRow = {
+  phone: string
+  name?: string
+  lastPurchaseAt?: string
+  nextFollowupAt?: string
+  followupReason?: string
+  suggestedMessage?: string
+  reason?: string
+  priority?: string
+  recommendedProductSku?: string
+  requiresHumanApproval?: boolean
+}
+
 type Dashboard = {
   counts: {
     leads: number
@@ -9,14 +22,12 @@ type Dashboard = {
     dueFollowups: number
     customers: number
   }
-  dueFollowups: Array<{
-    phone: string
-    name?: string
-    lastPurchaseAt?: string
-    nextFollowupAt?: string
-    followupReason?: string
-    suggestedMessage?: string
-  }>
+  dueFollowups: CrmCustomerRow[]
+  hotLeads: CrmCustomerRow[]
+  careFollowups: CrmCustomerRow[]
+  complementFollowups: CrmCustomerRow[]
+  reorderFollowups: CrmCustomerRow[]
+  optOuts: CrmCustomerRow[]
   pendingOrders: Array<{
     id: string
     medusaDraftOrderId?: string
@@ -66,6 +77,63 @@ const cellStyle = {
   padding: "10px 8px",
   textAlign: "left" as const,
   verticalAlign: "top" as const,
+}
+
+function renderCustomerQueue(
+  title: string,
+  customers: CrmCustomerRow[],
+  emptyText: string,
+) {
+  return (
+    <section style={cardStyle}>
+      <h2 style={{ marginTop: 0 }}>{title}</h2>
+      <table style={tableStyle}>
+        <thead>
+          <tr>
+            <th style={cellStyle}>Cliente</th>
+            <th style={cellStyle}>Prioridad</th>
+            <th style={cellStyle}>Producto</th>
+            <th style={cellStyle}>Mensaje sugerido</th>
+          </tr>
+        </thead>
+        <tbody>
+          {customers.map((customer) => (
+            <tr key={`${title}-${customer.phone}`}>
+              <td style={cellStyle}>
+                <strong>{customer.name || customer.phone}</strong>
+                <br />
+                <span>{customer.phone}</span>
+                <br />
+                <small>{formatDate(customer.nextFollowupAt)}</small>
+              </td>
+              <td style={cellStyle}>
+                <strong>{customer.priority || "medium"}</strong>
+                <br />
+                <span>{customer.reason || customer.followupReason || "-"}</span>
+                {customer.requiresHumanApproval ? (
+                  <>
+                    <br />
+                    <small>requiere aprobacion</small>
+                  </>
+                ) : null}
+              </td>
+              <td style={cellStyle}>
+                {customer.recommendedProductSku || "-"}
+              </td>
+              <td style={cellStyle}>{customer.suggestedMessage || "-"}</td>
+            </tr>
+          ))}
+          {!customers.length ? (
+            <tr>
+              <td colSpan={4} style={cellStyle}>
+                {emptyText}
+              </td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+    </section>
+  )
 }
 
 function CrmWhatsappPage() {
@@ -140,42 +208,38 @@ function CrmWhatsappPage() {
         ))}
       </section>
 
-      <section style={cardStyle}>
-        <h2 style={{ marginTop: 0 }}>Clientes para recompra</h2>
-        <table style={tableStyle}>
-          <thead>
-            <tr>
-              <th style={cellStyle}>Cliente</th>
-              <th style={cellStyle}>Proximo contacto</th>
-              <th style={cellStyle}>Mensaje sugerido</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dashboard.dueFollowups.map((customer) => (
-              <tr key={customer.phone}>
-                <td style={cellStyle}>
-                  <strong>{customer.name || customer.phone}</strong>
-                  <br />
-                  <span>{customer.phone}</span>
-                </td>
-                <td style={cellStyle}>
-                  {formatDate(customer.nextFollowupAt)}
-                  <br />
-                  <span>{customer.followupReason || "recompra"}</span>
-                </td>
-                <td style={cellStyle}>{customer.suggestedMessage}</td>
-              </tr>
-            ))}
-            {!dashboard.dueFollowups.length ? (
-              <tr>
-                <td colSpan={3} style={cellStyle}>
-                  No hay followups vencidos.
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
+      <section
+        style={{
+          display: "grid",
+          gap: 12,
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        }}
+      >
+        {[
+          ["Leads calientes", dashboard.hotLeads?.length || 0],
+          ["Cuidado 7d", dashboard.careFollowups?.length || 0],
+          ["Complemento 30d", dashboard.complementFollowups?.length || 0],
+          ["Recompra 90d", dashboard.reorderFollowups?.length || 0],
+          ["Opt-outs", dashboard.optOuts?.length || 0],
+        ].map(([label, value]) => (
+          <article key={label} style={cardStyle}>
+            <p style={{ color: "var(--fg-subtle)", margin: 0 }}>{label}</p>
+            <strong style={{ fontSize: 24 }}>{value}</strong>
+          </article>
+        ))}
       </section>
+
+      {renderCustomerQueue(
+        "Leads calientes",
+        dashboard.hotLeads || [],
+        "No hay leads calientes.",
+      )}
+
+      {renderCustomerQueue(
+        "Clientes para cuidado, complemento o recompra",
+        dashboard.dueFollowups,
+        "No hay followups vencidos.",
+      )}
 
       <section style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Ordenes pendientes de pago</h2>

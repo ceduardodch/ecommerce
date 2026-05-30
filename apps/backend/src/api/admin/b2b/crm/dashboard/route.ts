@@ -16,6 +16,11 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     pendingOrders: dashboard.pendingOrders.map(serializeOrder),
     paidOrders: dashboard.paidOrders.map(serializeOrder),
     dueFollowups: dashboard.dueFollowups.map(serializeCustomer),
+    hotLeads: dashboard.hotLeads.map(serializeCustomer),
+    careFollowups: dashboard.careFollowups.map(serializeCustomer),
+    complementFollowups: dashboard.complementFollowups.map(serializeCustomer),
+    reorderFollowups: dashboard.reorderFollowups.map(serializeCustomer),
+    optOuts: dashboard.optOuts.map(serializeCustomer),
     recentEvents: dashboard.recentEvents.map(serializeEvent),
     campaignDraftQueue: dashboard.dueFollowups.map((customer: any) =>
       serializeCustomer(customer),

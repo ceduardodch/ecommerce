@@ -112,6 +112,8 @@ video {
 .primary-button,
 .secondary-button,
 .hero-proof span,
+.commerce-badges span,
+.commerce-badges strong,
 .proof-strip div,
 .section-head > span,
 .product-specs span,
@@ -334,6 +336,51 @@ h1 {
   color: var(--green-dark);
   font-size: 0.82rem;
   font-weight: 850;
+}
+
+.commerce-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 760px;
+}
+
+.commerce-badges span,
+.commerce-badges strong {
+  min-height: 32px;
+  border: 1px solid rgba(13, 61, 43, 0.15);
+  border-radius: 999px;
+  background: rgba(255, 253, 246, 0.86);
+  padding: 7px 9px;
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.commerce-badges strong {
+  border-color: rgba(216, 59, 36, 0.22);
+  background: #fff0e7;
+  color: var(--tomato-dark);
+}
+
+.commerce-badges.compact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.commerce-badges.compact span,
+.commerce-badges.compact strong {
+  justify-content: flex-start;
+  min-height: 30px;
+  border-radius: 7px;
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.detail-commerce-badges {
+  max-width: none;
 }
 
 .hero-commerce-card {
@@ -583,6 +630,242 @@ h1 {
   color: var(--muted);
   font-size: 0.86rem;
   line-height: 1.36;
+}
+
+.prequal-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: 14px;
+  align-items: stretch;
+  margin: 0 0 28px;
+  border: 1px solid rgba(13, 61, 43, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(255, 240, 231, 0.9)),
+    url("/media/photo-editorial-mesa.jpg");
+  background-position: center;
+  background-size: cover;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.prequal-copy {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.9);
+  padding: 18px;
+}
+
+.prequal-copy h2 {
+  max-width: 560px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.2rem;
+  line-height: 1.04;
+}
+
+.prequal-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 760;
+  line-height: 1.45;
+}
+
+.prequal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.prequal-grid article {
+  display: grid;
+  gap: 10px;
+  min-height: 170px;
+  align-content: space-between;
+  border: 1px solid rgba(13, 61, 43, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.92);
+  padding: 15px;
+}
+
+.prequal-grid svg {
+  color: var(--tomato);
+}
+
+.prequal-grid strong {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.3rem;
+  line-height: 1.04;
+}
+
+.prequal-grid span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 760;
+  line-height: 1.38;
+}
+
+.quiz-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 18px;
+  align-items: stretch;
+  margin: 0 0 30px;
+  border: 1px solid rgba(13, 61, 43, 0.16);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(231, 244, 231, 0.92)),
+    url("/media/photo-product-olla-24.jpg");
+  background-position: center;
+  background-size: cover;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-copy,
+.quiz-form,
+.quiz-result {
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.88);
+  padding: 18px;
+}
+
+.quiz-copy {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.quiz-copy h2 {
+  max-width: 560px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.45rem;
+  line-height: 1.02;
+}
+
+.quiz-copy p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 760;
+  line-height: 1.5;
+}
+
+.quiz-form {
+  display: grid;
+  gap: 14px;
+  border: 1px solid rgba(13, 61, 43, 0.13);
+}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.quiz-grid label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.quiz-grid span {
+  color: var(--green-dark);
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.quiz-grid input,
+.quiz-grid select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #ffffff;
+  padding: 0 11px;
+  color: var(--ink);
+  outline: 0;
+}
+
+.quiz-grid input:focus,
+.quiz-grid select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(23, 107, 73, 0.13);
+}
+
+.quiz-wide {
+  grid-column: 1 / -1;
+}
+
+.quiz-form button,
+.quiz-result .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--tomato);
+  color: #ffffff;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.quiz-result {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid rgba(13, 61, 43, 0.16);
+}
+
+.quiz-result span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--green);
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.quiz-result h3 {
+  margin: 7px 0 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  line-height: 1.05;
+}
+
+.quiz-result p {
+  max-width: 680px;
+  margin: 0 0 8px;
+  color: var(--muted);
+  line-height: 1.42;
+}
+
+.quiz-result-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.quiz-result-benefits span {
+  border: 1px solid rgba(13, 61, 43, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 253, 246, 0.88);
+  padding: 6px 8px;
+  color: var(--green-dark);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.quiz-result strong {
+  color: var(--tomato-dark);
+  font-size: 1.5rem;
 }
 
 .editorial-grid {
@@ -1218,10 +1501,57 @@ h1 {
   display: none;
 }
 
+.floating-whatsapp-cta {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.floating-whatsapp-cta.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.floating-whatsapp-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(340px, calc(100vw - 44px));
+  min-height: 58px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: var(--green);
+  padding: 10px 16px;
+  color: #ffffff;
+  box-shadow: 0 18px 42px rgba(23, 32, 27, 0.24);
+}
+
+.floating-whatsapp-button span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.floating-whatsapp-button small {
+  color: rgba(255, 253, 246, 0.82);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
 .cookie-banner {
   position: fixed;
   right: 18px;
-  bottom: 18px;
+  bottom: 96px;
   z-index: 40;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1608,6 +1938,8 @@ h1 {
 
 @media (max-width: 1080px) {
   .social-hero,
+  .quiz-section,
+  .prequal-section,
   .product-detail-hero,
   .guide-band,
   .club-section,
@@ -1764,7 +2096,9 @@ h1 {
   }
 
   .proof-strip,
+  .prequal-grid,
   .proof-lab,
+  .quiz-grid,
   .editorial-grid,
   .video-grid,
   .deal-grid,
@@ -1779,8 +2113,23 @@ h1 {
   }
 
   .club-section,
+  .quiz-section,
+  .prequal-section,
   .guide-band {
     padding: 16px;
+  }
+
+  .quiz-copy h2 {
+    font-size: 1.92rem;
+  }
+
+  .quiz-result {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .quiz-result .primary-button {
+    width: 100%;
   }
 
   .mobile-action-bar {
@@ -1797,6 +2146,10 @@ h1 {
     background: rgba(255, 253, 246, 0.96);
     padding: 8px;
     box-shadow: 0 16px 38px rgba(23, 32, 27, 0.22);
+  }
+
+  .floating-whatsapp-cta {
+    display: none;
   }
 
   .mobile-action-bar a {

@@ -1,6 +1,9 @@
 import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
-import { buildFollowupDraft, parseCustomerImport } from "./customers.js"
+import {
+  buildFollowupAction,
+  parseCustomerImport,
+} from "./customers.js"
 import { buildQuote } from "./quote.js"
 import { createPayPhoneLink } from "./payphone.js"
 import {
@@ -102,29 +105,68 @@ function customerTags(customer: unknown) {
   return Array.isArray(tags) ? tags.filter((tag) => typeof tag === "string") : []
 }
 
-function suggestNextAction(customer: unknown, events: unknown[]) {
-  const eventTypes = events
+function eventTypes(events: unknown[]) {
+  return events
     .map((event) =>
       event && typeof event === "object"
         ? String((event as { type?: unknown }).type || "")
         : "",
     )
     .filter(Boolean)
+}
+
+function suggestNextAction(customer: unknown, events: unknown[]) {
+  const types = eventTypes(events)
   const tags = customerTags(customer)
 
-  if (eventTypes.includes("checkout_started")) {
+  if (types.includes("opt_out")) {
+    return "No contactar por WhatsApp. Mantener opt-out y pedir revision humana."
+  }
+  if (types.includes("payment_proof_received")) {
+    return "Revisar comprobante de transferencia/deuna con humano antes de marcar pagado."
+  }
+  if (
+    types.includes("checkout_started") ||
+    types.includes("order_created") ||
+    types.includes("cotizacion_pendiente")
+  ) {
     return "Retomar pago pendiente con link PayPhone y confirmar entrega."
   }
   if (
-    eventTypes.includes("whatsapp_click") ||
-    eventTypes.includes("whatsapp_opened") ||
-    eventTypes.includes("video_interest") ||
-    eventTypes.includes("product_interest") ||
-    eventTypes.includes("lead_created")
+    types.includes("care_followup_due") ||
+    types.includes("care_followup_sent") ||
+    types.includes("cuidado_postventa")
+  ) {
+    return "Enviar cuidado postventa: fuego medio, utensilios suaves y limpieza correcta."
+  }
+  if (
+    types.includes("complement_due") ||
+    types.includes("complemento_30d") ||
+    types.includes("complement_interest")
+  ) {
+    return "Recomendar complemento compatible segun la pieza comprada o vista."
+  }
+  if (
+    types.includes("reorder_due") ||
+    types.includes("recompra_90d") ||
+    types.includes("reorder_interest")
+  ) {
+    return "Proponer recompra, regalo o combo familiar con aprobacion humana."
+  }
+  if (
+    types.includes("quiz_completed") ||
+    types.includes("guide_downloaded") ||
+    types.includes("whatsapp_click") ||
+    types.includes("whatsapp_opened") ||
+    types.includes("video_interest") ||
+    types.includes("interes_video") ||
+    types.includes("product_interest") ||
+    types.includes("lead_created") ||
+    types.includes("lead_nuevo")
   ) {
     return "Responder con contexto del producto visto y pedir uso, presupuesto y ciudad."
   }
-  if (eventTypes.includes("paid")) {
+  if (types.includes("paid") || types.includes("cliente_pagado")) {
     return "Ofrecer complemento, cuidado del producto o recompra segun historial."
   }
   if (tags.includes("web-anonymous")) {
@@ -132,6 +174,62 @@ function suggestNextAction(customer: unknown, events: unknown[]) {
   }
 
   return "Consultar necesidad de cocina y recomendar desde catalogo real antes de cotizar."
+}
+
+function payloadObject(event: unknown) {
+  if (!event || typeof event !== "object") return {}
+  const payload = (event as { payload?: unknown }).payload
+  return payload && typeof payload === "object"
+    ? (payload as Record<string, unknown>)
+    : {}
+}
+
+function customerLifecycleSummary(events: unknown[]) {
+  const latest = [...events].reverse()
+  const types = eventTypes(events)
+  const latestProduct = latest
+    .map((event) => {
+      const payload = payloadObject(event)
+      const metadata =
+        payload.metadata && typeof payload.metadata === "object"
+          ? (payload.metadata as Record<string, unknown>)
+          : {}
+      const product =
+        payload.product && typeof payload.product === "object"
+          ? (payload.product as Record<string, unknown>)
+          : {}
+      return {
+        sku:
+          metadata.recommendedSku ||
+          metadata.productInterestSku ||
+          product.sku,
+        videoSlot: metadata.videoSlot,
+        city: metadata.city,
+        householdPeople: metadata.householdPeople,
+        journeyStage: metadata.journeyStage,
+      }
+    })
+    .find((signal) => Object.values(signal).some(Boolean))
+
+  return {
+    journeyStage:
+      latestProduct?.journeyStage ||
+      (types.includes("paid")
+        ? "cliente_pagado"
+        : types.includes("payment_proof_received")
+          ? "pago_en_revision"
+          : types.includes("checkout_started")
+          ? "cotizacion_pendiente"
+          : types.includes("video_interest")
+            ? "interes_video"
+            : types.includes("quiz_completed")
+              ? "lead_nuevo"
+              : undefined),
+    productInterestSku: latestProduct?.sku,
+    videoSlot: latestProduct?.videoSlot,
+    city: latestProduct?.city,
+    householdPeople: latestProduct?.householdPeople,
+  }
 }
 
 async function trackCustomerEvent(
@@ -566,7 +664,12 @@ export function createCommerceService(config: AppConfig) {
           "whatsapp_click",
           "whatsapp_opened",
           "lead_created",
+          "quiz_completed",
+          "guide_downloaded",
+          "interes_video",
+          "lead_nuevo",
           "campaign_click",
+          "payment_proof_received",
         ].includes(String((event as { type?: unknown }).type || ""))
       })
 
@@ -576,6 +679,7 @@ export function createCommerceService(config: AppConfig) {
         linkedRecords,
         recentEvents,
         webSignals,
+        lifecycle: customerLifecycleSummary(recentEvents),
         recommendedNextAction: suggestNextAction(customer, recentEvents),
       }
     },
@@ -590,10 +694,7 @@ export function createCommerceService(config: AppConfig) {
         input.asOf || new Date().toISOString(),
         input.limit,
       )
-      return customers.map((customer) => ({
-        ...customer,
-        suggestedMessage: buildFollowupDraft(customer),
-      }))
+      return customers.map(buildFollowupAction)
     },
 
     async dashboard(input: { asOf?: string }) {
@@ -613,11 +714,31 @@ export function createCommerceService(config: AppConfig) {
       const paidOrders = orders.filter((order) => order.status === "paid")
       const leadCustomers = customers.filter((customer) =>
         customer.events.some((event) =>
-          ["quote_created", "order_created", "reorder_interest"].includes(
-            event.type,
-          ) || event.type === "video_interest",
+          [
+            "quiz_completed",
+            "guide_downloaded",
+            "quote_created",
+            "order_created",
+            "reorder_interest",
+            "video_interest",
+            "product_interest",
+            "whatsapp_opened",
+            "payment_proof_received",
+          ].includes(event.type),
         ),
       )
+      const enrichedDueFollowups = dueFollowups.map(buildFollowupAction)
+      const hotLeads = leadCustomers.filter(
+        (customer) =>
+          !customer.events.some((event) =>
+            ["paid", "opt_out"].includes(event.type),
+          ),
+      )
+      const optOuts = customers.filter((customer) =>
+        customer.events.some((event) => event.type === "opt_out"),
+      )
+      const reasonIncludes = (customer: { reason?: string }, values: string[]) =>
+        values.some((value) => customer.reason?.includes(value))
 
       return {
         asOf,
@@ -630,18 +751,29 @@ export function createCommerceService(config: AppConfig) {
         },
         pendingOrders,
         paidOrders: paidOrders.slice(-10),
-        dueFollowups: dueFollowups.map((customer) => ({
-          ...customer,
-          suggestedMessage: buildFollowupDraft(customer),
-        })),
-        campaignDraftQueue: dueFollowups
+        hotLeads: hotLeads.slice(0, 25),
+        careFollowups: enrichedDueFollowups.filter((customer) =>
+          reasonIncludes(customer, ["cuidado", "care"]),
+        ),
+        complementFollowups: enrichedDueFollowups.filter((customer) =>
+          reasonIncludes(customer, ["complemento", "complement"]),
+        ),
+        reorderFollowups: enrichedDueFollowups.filter((customer) =>
+          reasonIncludes(customer, ["recompra", "reorder"]),
+        ),
+        optOuts,
+        dueFollowups: enrichedDueFollowups,
+        campaignDraftQueue: enrichedDueFollowups
           .filter((customer) => customer.whatsappConsent)
           .map((customer) => ({
             phone: customer.phone,
             name: customer.name,
-            reason: customer.followupReason,
+            reason: customer.reason,
+            priority: customer.priority,
+            recommendedProductSku: customer.recommendedProductSku,
+            requiresHumanApproval: customer.requiresHumanApproval,
             nextFollowupAt: customer.nextFollowupAt,
-            suggestedMessage: buildFollowupDraft(customer),
+            suggestedMessage: customer.suggestedMessage,
           })),
       }
     },

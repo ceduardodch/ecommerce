@@ -52,6 +52,7 @@ Responsabilidades:
 
 - Catalogo publico para `shop.b2b.com.ec`.
 - Home social-commerce con slots locales de video, prueba de producto y catalogo visual.
+- Selector "Elige tu olla ideal" que genera recomendacion y evento `quiz_completed`.
 - Cards de producto con CTA WhatsApp y tracking de lead.
 - Guias publicas de valor para cocina saludable y PFAS/PFOA/PTFE.
 - Captura "Club Cocina Saludable" para email/WhatsApp, cupon y recompra.
@@ -64,7 +65,8 @@ Archivos clave:
 - `apps/storefront/app/page.tsx`: pantalla principal.
 - `apps/storefront/app/guias`: guias publicas de cocina saludable.
 - `apps/storefront/app/products/[slug]`: fichas publicas de productos estrella.
-- `apps/storefront/app/components/lead-capture-form.tsx`: formulario Club Cocina Saludable que registra `lead_created`.
+- `apps/storefront/app/components/pot-recommendation-quiz.tsx`: selector de olla ideal y CTA WhatsApp con contexto.
+- `apps/storefront/app/components/lead-capture-form.tsx`: formulario Club Cocina Saludable que registra `guide_downloaded`.
 - `apps/storefront/lib/content.ts`: matriz operativa de videos/fotos, productos, CTAs y eventos CRM.
 - `apps/storefront/app/globals.css`: estilos globales.
 - `apps/storefront/public/media`: posters locales y slots para MP4 aprobados.
@@ -97,6 +99,7 @@ Responsabilidades:
 - Exportar feed Meta catalog CSV.
 - Generar drafts para Facebook, Instagram y Marketplace.
 - En produccion delega CRM, followups y ordenes conversacionales al modulo Medusa `b2bCrm`.
+- Normaliza eventos de video/quiz/guia/WhatsApp y devuelve contexto enriquecido para Vicky/OpenClaw.
 
 Archivos clave:
 

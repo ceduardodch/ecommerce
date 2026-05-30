@@ -18,6 +18,9 @@ export type Product = {
   stockSignal?: string
   bundleEligible?: boolean
   deliveryBadge?: string
+  freeShipping?: boolean
+  paymentMethods?: string[]
+  couponCode?: string
   material?: string
   coating?: string
   teflonFree?: boolean
@@ -84,6 +87,8 @@ export type CustomerEventType =
   | "whatsapp_click"
   | "whatsapp_opened"
   | "lead_created"
+  | "quiz_completed"
+  | "guide_downloaded"
   | "quote_started"
   | "checkout_started"
   | "purchase_confirmed"
@@ -91,12 +96,23 @@ export type CustomerEventType =
   | "quote_created"
   | "order_created"
   | "paid"
+  | "payment_proof_received"
   | "delivered"
   | "followup_due"
   | "followup_sent"
+  | "care_followup_due"
   | "care_followup_sent"
+  | "complement_due"
+  | "reorder_due"
   | "reorder_interest"
   | "complement_interest"
+  | "lead_nuevo"
+  | "interes_video"
+  | "cotizacion_pendiente"
+  | "cliente_pagado"
+  | "cuidado_postventa"
+  | "complemento_30d"
+  | "recompra_90d"
   | "opt_out"
   | "no_response"
   | "conversation_escalated"

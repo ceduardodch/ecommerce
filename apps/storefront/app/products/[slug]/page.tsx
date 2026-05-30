@@ -4,10 +4,12 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import {
   ArrowLeft,
+  BadgeDollarSign,
   BookOpen,
   CheckCircle2,
   ChefHat,
   ClipboardCheck,
+  CookingPot,
   Leaf,
   MessageCircle,
   PlayCircle,
@@ -23,6 +25,7 @@ import {
   productSlug,
   type Product,
 } from "../../../lib/catalog"
+import { commercialInfo } from "../../../lib/commercial"
 import { mediaSlotForSku } from "../../../lib/content"
 import {
   PageAnalytics,
@@ -79,6 +82,31 @@ function productUseCases(product: Product) {
   ].filter(Boolean) as string[]
 
   return useCases.length ? useCases : [product.description]
+}
+
+function DetailCommerceBadges({ product }: { product: Product }) {
+  const commerce = commercialInfo(product)
+
+  return (
+    <div className="commerce-badges detail-commerce-badges">
+      <span>
+        <Truck size={15} />
+        {commerce.freeShippingLabel}
+      </span>
+      <span>
+        <BadgeDollarSign size={15} />
+        {commerce.paymentMethodsLabel}
+      </span>
+      <span>
+        <CookingPot size={15} />
+        {commerce.stoveCompatibility}
+      </span>
+      <strong>
+        <Sparkles size={15} />
+        Cupon {commerce.couponCode}
+      </strong>
+    </div>
+  )
 }
 
 export async function generateMetadata({
@@ -181,13 +209,29 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             <TrackedWhatsAppLink
               className="primary-button hero-cta"
               cta="product_detail_whatsapp"
+              eventType="product_interest"
+              metadata={{
+                journeyStage: "cotizacion_pendiente",
+                productInterestSku: product.sku,
+                recommendedSku: product.sku,
+                videoSlot: slot?.id,
+              }}
               placement="product_detail_hero"
               product={product}
+              whatsappContext={{
+                recommendation:
+                  product.bundleUseCase || product.healthAngle || product.title,
+                recommendedSku: product.sku,
+                journeyStage: "cotizacion_pendiente",
+                videoSlot: slot?.id,
+              }}
             >
               <MessageCircle size={19} />
-              Cotizar por WhatsApp
+              Reclamar cupon y consultar stock
             </TrackedWhatsAppLink>
           </div>
+
+          <DetailCommerceBadges product={product} />
 
           <div className="detail-spec-grid">
             {product.material ? (
@@ -210,7 +254,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             ) : null}
             <span>
               <Truck size={17} />
-              {product.deliveryBadge || "Entrega coordinada"}
+              {commercialInfo(product).freeShippingLabel}
+            </span>
+            <span>
+              <BadgeDollarSign size={17} />
+              {commercialInfo(product).paymentMethodsLabel}
+            </span>
+            <span>
+              <CookingPot size={17} />
+              {commercialInfo(product).stoveCompatibility}
             </span>
             <span>
               <Timer size={17} />
@@ -300,10 +352,22 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <div className="inline-actions">
                     <a href={productPath(item)}>Ver ficha</a>
                     <TrackedWhatsAppLink
+                      eventType="product_interest"
+                      metadata={{
+                        journeyStage: "cotizacion_pendiente",
+                        productInterestSku: item.sku,
+                        recommendedSku: item.sku,
+                      }}
                       placement="product_detail_related"
                       product={item}
+                      whatsappContext={{
+                        recommendation:
+                          item.bundleUseCase || "producto relacionado",
+                        recommendedSku: item.sku,
+                        journeyStage: "cotizacion_pendiente",
+                      }}
                     >
-                      WhatsApp
+                      Ver promo por WhatsApp
                     </TrackedWhatsAppLink>
                   </div>
                 </div>

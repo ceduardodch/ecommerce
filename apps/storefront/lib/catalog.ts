@@ -1,3 +1,10 @@
+import {
+  defaultCouponCode,
+  defaultPaymentMethods,
+  defaultStoveCompatibility,
+  defaultFreeShippingLabel,
+} from "./commercial"
+
 export { whatsappLink } from "./whatsapp"
 
 export type Product = {
@@ -15,6 +22,9 @@ export type Product = {
   stockSignal?: string
   bundleEligible?: boolean
   deliveryBadge?: string
+  freeShipping?: boolean
+  paymentMethods?: string[]
+  couponCode?: string
   material?: string
   coating?: string
   teflonFree?: boolean
@@ -85,14 +95,14 @@ export const fallbackProducts: Product[] = [
     promoLabel: "Producto estrella",
     stockSignal: "8 woks listos para entrega",
     bundleEligible: true,
-    deliveryBadge: "Envio coordinado Ecuador",
+    deliveryBadge: "Envio gratis Ecuador",
     material: "Granito antiadherente",
     coating: "Granito",
     teflonFree: true,
     capacity: "Porciones familiares",
     diameterCm: 32,
     pieces: 2,
-    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Familia y recetas",
     nivel: "Uso diario",
     bundleUseCase: "Shakshuka, arroz, salteados y huevos con menos aceite",
@@ -146,14 +156,14 @@ export const fallbackProducts: Product[] = [
     promoLabel: "No se pega",
     stockSignal: "10 ollas disponibles",
     bundleEligible: true,
-    deliveryBadge: "Entrega 24-48h segun ciudad",
+    deliveryBadge: "Envio gratis 24-48h segun ciudad",
     material: "Granito antiadherente",
     coating: "Granito",
     teflonFree: true,
     capacity: "1 a 3 personas",
     diameterCm: 20,
     pieces: 1,
-    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Diario ligero",
     nivel: "Inicio saludable",
     bundleUseCase: "Salsas, huevos, queso, avena y porciones pequenas",
@@ -199,14 +209,14 @@ export const fallbackProducts: Product[] = [
     promoLabel: "Familiar",
     stockSignal: "12 ollas familiares disponibles",
     bundleEligible: true,
-    deliveryBadge: "Stock confirmado",
+    deliveryBadge: "Envio gratis con stock confirmado",
     material: "Granito antiadherente",
     coating: "Granito",
     teflonFree: true,
     capacity: "3 a 5 personas",
     diameterCm: 24,
     pieces: 1,
-    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Familia",
     nivel: "Uso diario",
     bundleUseCase: "Porciones grandes, sopas, arroz y guisos familiares",
@@ -256,13 +266,13 @@ export const fallbackProducts: Product[] = [
     promoLabel: "Cambio saludable",
     stockSignal: "5 sets armados",
     bundleEligible: true,
-    deliveryBadge: "Entrega coordinada",
+    deliveryBadge: "Envio gratis coordinado",
     material: "Granito antiadherente",
     coating: "Granito",
     teflonFree: true,
     capacity: "Cocina completa",
     pieces: 5,
-    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Casa completa",
     nivel: "Kit familiar",
     bundleUseCase: "Reemplazar ollas viejas y equipar la cocina principal",
@@ -314,14 +324,14 @@ export const fallbackProducts: Product[] = [
     promoLabel: "Menos aceite",
     stockSignal: "14 sartenes disponibles",
     bundleEligible: true,
-    deliveryBadge: "Despacho rapido",
+    deliveryBadge: "Envio gratis con despacho rapido",
     material: "Granito antiadherente",
     coating: "Granito",
     teflonFree: true,
     capacity: "1 a 4 personas",
     diameterCm: 28,
     pieces: 1,
-    stoveCompatibility: "Gas, electrica y vitro segun proveedor",
+    stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Recetas rapidas",
     nivel: "Uso diario",
     bundleUseCase: "Huevos, vegetales, pollo y salteados de semana",
@@ -370,7 +380,7 @@ export const fallbackProducts: Product[] = [
     promoLabel: "Cuida tu olla",
     stockSignal: "20 kits disponibles",
     bundleEligible: true,
-    deliveryBadge: "Agregar al pedido",
+    deliveryBadge: "Agregar al pedido con envio gratis",
     material: "Silicona y madera",
     capacity: "Kit de cuidado",
     pieces: 4,
@@ -493,10 +503,21 @@ function isKitchenProduct(product: Product) {
 }
 
 function normalizeProduct(product: Product): Product {
+  const isComplement = product.category.toLowerCase().includes("complement")
+
   return {
     ...product,
     brand: product.brand || "Eter Niu Cocina",
     imageUrl: placeholderForProduct(product),
+    deliveryBadge: product.deliveryBadge || defaultFreeShippingLabel,
+    freeShipping: product.freeShipping ?? true,
+    paymentMethods: product.paymentMethods?.length
+      ? product.paymentMethods
+      : defaultPaymentMethods,
+    couponCode: product.couponCode || defaultCouponCode,
+    stoveCompatibility:
+      product.stoveCompatibility ||
+      (isComplement ? "No aplica; cuida ollas de granito" : defaultStoveCompatibility),
     tags: product.tags || [],
   }
 }
@@ -529,10 +550,10 @@ export async function getProducts() {
     return kitchenProducts.length
       ? kitchenProducts
       : allowDemoCatalog
-        ? fallbackProducts
+        ? fallbackProducts.map(normalizeProduct)
         : []
   } catch {
-    return allowDemoCatalog ? fallbackProducts : []
+    return allowDemoCatalog ? fallbackProducts.map(normalizeProduct) : []
   }
 }
 

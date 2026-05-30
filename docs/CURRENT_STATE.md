@@ -60,6 +60,7 @@ El servicio `ecommerce-tools` permite:
 - El fallback de cocina queda solo para desarrollo/pruebas con `ALLOW_DEMO_CATALOG=true`.
 - La orientacion actual es nicho cocina saludable: ollas y woks de granito, set MGC, utensilios compatibles, cuidado, recompra y promociones reales.
 - El storefront ahora esta orientado a social-commerce: hero de video local, prueba visual de producto, seccion "Visto en redes", guias publicas y captura "Club Cocina Saludable".
+- Home incluye el selector "Elige tu olla ideal"; registra `quiz_completed` con ciudad, personas en casa, uso, presupuesto, SKU visto, SKU recomendado y secuencia de seguimiento para que Vicky responda con contexto.
 - Las fichas publicas de productos viven en `/products/[slug]` y deben ser el destino principal del feed Meta y de los CTAs de catalogo.
 - La matriz de contenido vive en `apps/storefront/lib/content.ts` y `docs/CONTENT_MATRIX.md`; mapea video/foto, producto, placement, CTA y evento CRM.
 - Los videos reales se colocan en `apps/storefront/public/media` como `hero-cocina.mp4`, `prueba-huevo.mp4`, `limpieza-rapida.mp4` y `receta-wok.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
@@ -121,6 +122,25 @@ Endpoints:
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 
+Eventos CRM normalizados para IA/recompra:
+
+- `quiz_completed`
+- `guide_downloaded`
+- `video_interest`
+- `whatsapp_opened`
+- `quote_created`
+- `order_created`
+- `paid`
+- `care_followup_due`
+- `care_followup_sent`
+- `complement_due`
+- `reorder_due`
+- `opt_out`
+
+Metadata estandar esperada desde storefront: `journeyStage`, `householdPeople`, `city`, `videoSlot`, `productInterestSku`, `recommendedSku` y `followupSequence`.
+
+`GET /tools/followups/due` devuelve `suggestedMessage`, `reason`, `priority`, `recommendedProductSku` y `requiresHumanApproval`.
+
 `ecommerce-tools` usa `CRM_BACKEND=medusa` en produccion. El modo JSON queda como fallback local de desarrollo y tests.
 
 ## Pagos
@@ -135,7 +155,9 @@ Endpoints:
 - Feed Meta disponible en `/feeds/meta/catalog.csv`.
 - Drafts organicos disponibles por `/tools/meta-post-draft`.
 - Pixel/CAPI v1 disponible con `NEXT_PUBLIC_META_PIXEL_ID`, `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y `PIXEL_ENABLED`.
-- Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material y diametro para que OpenClaw una interes web con conversacion.
+- Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened`, videos `video_interest`, quiz `quiz_completed`, guia `guide_downloaded` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material, diametro, placement y recomendacion para que OpenClaw una interes web con conversacion.
+- WhatsApp CTA v2: home, cards, fichas y quiz muestran cupon `GRANITOHOY`, envio gratis, transferencia/deuna!/PayPhone y compatibilidad gas/induccion/vitroceramica. El mensaje empieza con `Hola, quiero la olla de granito {producto}.` y agrega campos estructurados para Vicky.
+- `payment_proof_received` existe como evento CRM/manual para comprobantes de transferencia/deuna; no dispara `Purchase` CAPI hasta confirmacion humana o webhook de pago.
 - Marketplace en v1 es asistido: la IA prepara titulo, copy, precio, fotos/checklist; humano confirma/publica.
 - No automatizar gasto publicitario ni publicar sin confirmacion explicita.
 

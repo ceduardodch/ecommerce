@@ -122,6 +122,12 @@ export async function sendMetaConversionEvent(
   input: ToolsEventInput,
   eventId: string,
 ): Promise<MetaSendResult> {
+  if (input.type === "payment_proof_received") {
+    return {
+      sent: false,
+      reason: "payment_proof_requires_human_confirmation",
+    }
+  }
   if (!config.pixelEnabled) return { sent: false, reason: "pixel_disabled" }
   if (input.consent === false) return { sent: false, reason: "no_consent" }
   if (!config.metaAccessToken) {

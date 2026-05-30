@@ -78,12 +78,19 @@ describe("commerce tools", () => {
         asOf: "2026-08-01T00:00:00.000Z",
       })
       expect(due[0]?.suggestedMessage).toContain("compraste")
+      expect(due[0]?.reason).toBe("recompra_90d")
+      expect(due[0]?.priority).toBe("high")
+      expect(due[0]?.recommendedProductSku).toBe("MGC-OLLA-GRANITO-24")
+      expect(due[0]?.requiresHumanApproval).toBe(true)
 
       const dashboard = await service.dashboard({
         asOf: "2026-08-01T00:00:00.000Z",
       })
       expect(dashboard.counts.dueFollowups).toBe(1)
       expect(dashboard.campaignDraftQueue[0]?.phone).toBe("+593991112222")
+      expect(dashboard.reorderFollowups[0]?.recommendedProductSku).toBe(
+        "MGC-OLLA-GRANITO-24",
+      )
     } finally {
       await rm(dataDir, { recursive: true, force: true })
     }
@@ -100,7 +107,7 @@ describe("commerce tools", () => {
 
       const result = await service.recordEvent({
         eventName: "Lead",
-        type: "whatsapp_opened",
+        type: "quiz_completed",
         leadId: "Lead Cocina 123",
         source: "storefront",
         consent: false,
@@ -118,6 +125,15 @@ describe("commerce tools", () => {
         },
         value: 150,
         currency: "USD",
+        metadata: {
+          journeyStage: "lead_nuevo",
+          householdPeople: "3-4",
+          city: "Quito",
+          videoSlot: "prueba-huevo",
+          productInterestSku: "COC-OLLA-GRANITO",
+          recommendedSku: "COC-OLLA-GRANITO",
+          followupSequence: ["dia_0_guia", "dia_30_complemento"],
+        },
       })
 
       expect(result.crmStored).toBe(true)
@@ -130,10 +146,71 @@ describe("commerce tools", () => {
 
       expect(context.webSignals).toHaveLength(1)
       expect(context.webSignals[0]).toMatchObject({
-        type: "whatsapp_opened",
+        type: "quiz_completed",
         source: "storefront",
       })
+      expect(context.lifecycle).toMatchObject({
+        journeyStage: "lead_nuevo",
+        productInterestSku: "COC-OLLA-GRANITO",
+        city: "Quito",
+      })
       expect(context.recommendedNextAction).toContain("producto visto")
+    } finally {
+      await rm(dataDir, { recursive: true, force: true })
+    }
+  })
+
+  it("keeps transfer payment proof in CRM review instead of sending Purchase CAPI", async () => {
+    const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-proof-"))
+    try {
+      const config = loadConfig({
+        TOOLS_DATA_DIR: dataDir,
+        PIXEL_ENABLED: "true",
+        META_ACCESS_TOKEN: "test-token",
+        META_DATASET_ID: "test-dataset",
+      })
+      const service = createCommerceService(config)
+
+      const result = await service.recordEvent({
+        eventName: "Purchase",
+        type: "payment_proof_received",
+        leadId: "Lead Pago 456",
+        source: "whatsapp",
+        consent: true,
+        product: {
+          productId: "prod-wok-granito-32",
+          variantId: "var-wok-granito-32",
+          sku: "MGC-WOK-GRANITO-32",
+          title: "Wok de granito 32 cm con tapa",
+          category: "Woks granito",
+          brand: "Eter Niu Cocina",
+          price: 150,
+          currency: "USD",
+          freeShipping: true,
+          paymentMethods: ["transferencia", "deuna", "payphone"],
+          couponCode: "GRANITOHOY",
+          stoveCompatibility: "Gas, induccion y vitroceramica",
+        },
+        value: 150,
+        currency: "USD",
+        metadata: {
+          paymentMethod: "transferencia",
+          requiresHumanApproval: true,
+        },
+      })
+
+      expect(result.crmStored).toBe(true)
+      expect(result.crmEventType).toBe("payment_proof_received")
+      expect(result.meta).toEqual({
+        sent: false,
+        reason: "payment_proof_requires_human_confirmation",
+      })
+
+      const context = await service.aiContext("+593999111222", {
+        leadId: "Lead Pago 456",
+      })
+      expect(context.lifecycle.journeyStage).toBe("pago_en_revision")
+      expect(context.recommendedNextAction).toContain("Revisar comprobante")
     } finally {
       await rm(dataDir, { recursive: true, force: true })
     }

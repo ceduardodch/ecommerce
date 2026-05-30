@@ -9,7 +9,6 @@ import {
   CookingPot,
   Flame,
   HeartHandshake,
-  Leaf,
   MessageCircle,
   PackageSearch,
   PlayCircle,
@@ -25,6 +24,7 @@ import {
 } from "lucide-react"
 import type { Product } from "../lib/catalog"
 import { getProducts, productPath } from "../lib/catalog"
+import { commercialInfo } from "../lib/commercial"
 import {
   approvedTestimonials,
   editorialTiles,
@@ -34,6 +34,8 @@ import {
   type MediaSlot,
 } from "../lib/content"
 import { LeadCaptureForm } from "./components/lead-capture-form"
+import { FloatingWhatsAppCta } from "./components/floating-whatsapp-cta"
+import { PotRecommendationQuiz } from "./components/pot-recommendation-quiz"
 import {
   PageAnalytics,
   TrackedEventLink,
@@ -85,6 +87,97 @@ function isStarProduct(product: Product) {
 
 function productForSkus(products: Product[], skus: string[], fallback?: Product) {
   return products.find((product) => skus.includes(product.sku)) || fallback
+}
+
+const mainCouponCta =
+  "Reclamar mi cupon de descuento y consultar stock por WhatsApp"
+
+function CommerceBadges({
+  product,
+  compact = false,
+}: {
+  product?: Product
+  compact?: boolean
+}) {
+  const commerce = commercialInfo(product)
+
+  return (
+    <div className={compact ? "commerce-badges compact" : "commerce-badges"}>
+      <span>
+        <Truck size={15} />
+        {commerce.freeShippingLabel}
+      </span>
+      <span>
+        <BadgeDollarSign size={15} />
+        {commerce.paymentMethodsLabel}
+      </span>
+      <span>
+        <CookingPot size={15} />
+        {commerce.stoveCompatibility}
+      </span>
+      <strong>
+        <Sparkles size={15} />
+        Cupon {commerce.couponCode}
+      </strong>
+    </div>
+  )
+}
+
+function PrequalificationBlock({ featured }: { featured?: Product }) {
+  const commerce = commercialInfo(featured)
+
+  return (
+    <section className="prequal-section" aria-label="Pagos envio y compatibilidad">
+      <div className="prequal-copy">
+        <p className="eyebrow">Antes de escribir</p>
+        <h2>Ya sabes lo importante: envio, pago y cocina compatible.</h2>
+        <p>
+          El boton de WhatsApp reclama el cupon, manda el producto exacto a
+          Vicky y evita preguntas basicas antes de confirmar stock.
+        </p>
+        {featured ? (
+          <TrackedWhatsAppLink
+            className="primary-button"
+            cta="prequal_coupon_whatsapp"
+            eventType="whatsapp_opened"
+            metadata={{
+              journeyStage: "lead_nuevo",
+              productInterestSku: featured.sku,
+              recommendedSku: featured.sku,
+              prequalified: true,
+            }}
+            placement="prequalification_block"
+            product={featured}
+            whatsappContext={{
+              recommendation: "cupon con envio gratis y pagos disponibles",
+              recommendedSku: featured.sku,
+              journeyStage: "lead_nuevo",
+            }}
+          >
+            <MessageCircle size={18} />
+            Reclamar cupon y stock
+          </TrackedWhatsAppLink>
+        ) : null}
+      </div>
+      <div className="prequal-grid">
+        <article>
+          <Truck size={24} />
+          <strong>{commerce.freeShippingLabel}</strong>
+          <span>Se confirma cobertura y tiempo de entrega por ciudad.</span>
+        </article>
+        <article>
+          <BadgeDollarSign size={24} />
+          <strong>{commerce.paymentMethodsLabel}</strong>
+          <span>Transferencia, deuna! o link PayPhone/tarjeta.</span>
+        </article>
+        <article>
+          <CookingPot size={24} />
+          <strong>{commerce.stoveCompatibility}</strong>
+          <span>Aclara compatibilidad antes de pasar al chat.</span>
+        </article>
+      </div>
+    </section>
+  )
 }
 
 function filterProducts(
@@ -163,13 +256,14 @@ function ProductCard({
         <div className="signal-row">
           <span>
             <Truck size={15} />
-            {product.deliveryBadge || "Entrega coordinada"}
+            {commercialInfo(product).freeShippingLabel}
           </span>
           <span>
             <Timer size={15} />
             {product.stockSignal || `${product.stock} disponibles`}
           </span>
         </div>
+        <CommerceBadges compact product={product} />
         <div className="price-row">
           <div>
             {promo ? (
@@ -185,11 +279,23 @@ function ProductCard({
             </a>
             <TrackedWhatsAppLink
               className="primary-button"
+              eventType="product_interest"
+              metadata={{
+                journeyStage: "cotizacion_pendiente",
+                productInterestSku: product.sku,
+                recommendedSku: product.sku,
+              }}
               placement={compact ? "social_deal_card" : "catalog_card"}
               product={product}
+              whatsappContext={{
+                recommendation:
+                  product.bundleUseCase || product.healthAngle || product.title,
+                recommendedSku: product.sku,
+                journeyStage: "cotizacion_pendiente",
+              }}
             >
               <MessageCircle size={18} />
-              Cotizar
+              Reclamar cupon
             </TrackedWhatsAppLink>
           </div>
         </div>
@@ -285,8 +391,28 @@ function VideoSlot({
             <TrackedWhatsAppLink
               eventType={slot.eventType}
               cta={`video_${slot.id}_whatsapp`}
+              metadata={{
+                journeyStage: "interes_video",
+                videoSlot: slot.id,
+                productInterestSku: featured.sku,
+                recommendedSku: featured.sku,
+                needType: slot.proofPoints.join(", "),
+                followupSequence: [
+                  "dia_0_video",
+                  "dia_2_recomendacion",
+                  "dia_7_cuidado",
+                  "dia_30_complemento",
+                  "dia_90_recompra",
+                ],
+              }}
               placement={`video_${slot.id}`}
               product={featured}
+              whatsappContext={{
+                recommendation: slot.metric,
+                recommendedSku: featured.sku,
+                journeyStage: "interes_video",
+                videoSlot: slot.id,
+              }}
             >
               {slot.cta}
             </TrackedWhatsAppLink>
@@ -349,7 +475,7 @@ export default async function Home({ searchParams }: HomeProps) {
           href="#club"
           placement="promo_bar"
         >
-          Descargar
+          Reclamar
         </TrackedEventLink>
       </div>
 
@@ -364,9 +490,9 @@ export default async function Home({ searchParams }: HomeProps) {
           <a href="#productos">Comprar</a>
           <a href="#guias">Guias</a>
         </nav>
-        <a className="ghost-button" href="/feeds/meta/catalog.csv">
-          <PackageSearch size={18} />
-          Feed Meta
+        <a className="ghost-button" href="#club">
+          <BookOpen size={18} />
+          Guia gratis
         </a>
       </header>
 
@@ -379,7 +505,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <h1>Granito que se ve rico antes de cotizar.</h1>
           <p className="hero-subcopy">
             Mira la prueba, elige tamano y te asesoramos por WhatsApp sin vueltas:
-            20 cm, 24 cm, wok 32 cm o set familiar.
+            cupon, envio gratis, pagos claros y compatibilidad confirmada.
           </p>
           <div className="hero-actions">
             {featured ? (
@@ -388,11 +514,30 @@ export default async function Home({ searchParams }: HomeProps) {
                   className="primary-button hero-cta"
                   eventType="video_interest"
                   cta="hero_video_whatsapp"
+                  metadata={{
+                    journeyStage: "interes_video",
+                    videoSlot: "hero-cocina",
+                    productInterestSku: featured.sku,
+                    recommendedSku: featured.sku,
+                    followupSequence: [
+                      "dia_0_video",
+                      "dia_2_recomendacion",
+                      "dia_7_cuidado",
+                      "dia_30_complemento",
+                      "dia_90_recompra",
+                    ],
+                  }}
                   placement="hero_primary"
                   product={featured}
+                  whatsappContext={{
+                    recommendation: "video principal de cocina saludable",
+                    recommendedSku: featured.sku,
+                    journeyStage: "interes_video",
+                    videoSlot: "hero-cocina",
+                  }}
                 >
                   <MessageCircle size={19} />
-                  Quiero mi recomendacion
+                  {mainCouponCta}
                 </TrackedWhatsAppLink>
                 <a className="secondary-button" href={productPath(featured)}>
                   <PlayCircle size={18} />
@@ -431,18 +576,19 @@ export default async function Home({ searchParams }: HomeProps) {
           ) : null}
           <div className="hero-proof">
             <span>
-              <Leaf size={17} />
-              Opcion sin teflon
+              <Truck size={17} />
+              {commercialInfo(featured).freeShippingLabel}
             </span>
             <span>
               <BadgeDollarSign size={17} />
-              Desde $95 a $249
+              {commercialInfo(featured).paymentMethodsLabel}
             </span>
             <span>
-              <ShieldCheck size={17} />
-              Compra guiada
+              <CookingPot size={17} />
+              {commercialInfo(featured).stoveCompatibility}
             </span>
           </div>
+          <CommerceBadges product={featured} />
         </div>
       </section>
 
@@ -490,9 +636,13 @@ export default async function Home({ searchParams }: HomeProps) {
         <div>
           <HeartHandshake size={22} />
           <strong>Seguimiento real</strong>
-          <span>Guia, cuidado y complemento quedan en CRM.</span>
+          <span>Guia, cuidado y complemento con permiso por WhatsApp.</span>
         </div>
       </section>
+
+      <PrequalificationBlock featured={featured} />
+
+      <PotRecommendationQuiz products={starProducts.length ? starProducts : products} />
 
       <section className="section-head" id="momentos">
         <div>
@@ -572,7 +722,7 @@ export default async function Home({ searchParams }: HomeProps) {
         ))}
         {!deals.length ? (
           <div className="empty-state">
-            El catalogo Medusa aun no tiene productos de cocina publicados.
+            Estamos preparando los productos estrella de cocina.
           </div>
         ) : null}
       </section>
@@ -593,10 +743,23 @@ export default async function Home({ searchParams }: HomeProps) {
                   className="text-link accent"
                   eventType="video_interest"
                   cta={`social_reel_${index + 1}_whatsapp`}
+                  metadata={{
+                    journeyStage: "interes_video",
+                    videoSlot: `social_reel_${index + 1}`,
+                    productInterestSku: product.sku,
+                    recommendedSku: product.sku,
+                  }}
                   placement={`social_reel_${index + 1}`}
                   product={product}
+                  whatsappContext={{
+                    recommendation:
+                      product.contentAngles?.[0] || "producto visto en redes",
+                    recommendedSku: product.sku,
+                    journeyStage: "interes_video",
+                    videoSlot: `social_reel_${index + 1}`,
+                  }}
                 >
-                  Pedir este producto
+                  Ver promo por WhatsApp
                 </TrackedWhatsAppLink>
               </div>
             </div>
@@ -658,12 +821,13 @@ export default async function Home({ searchParams }: HomeProps) {
         {guideProducts.map((product) => (
           <TrackedWhatsAppLink
             key={product.id}
+            cta="size_chooser_coupon_whatsapp"
             placement="size_chooser"
             product={product}
           >
             <Tags size={18} />
             <span>{product.title}</span>
-            <strong>{product.capacity || money(product.price.amount)}</strong>
+            <strong>Cupon {commercialInfo(product).couponCode}</strong>
           </TrackedWhatsAppLink>
         ))}
       </section>
@@ -674,7 +838,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <h2>Guia, cupon y recordatorios sin llenar tu WhatsApp.</h2>
           <p>
             Te enviamos ayuda segun tu cocina: tamano de familia, producto de
-            interes y ciudad. La IA usa ese contexto para recomendar mejor.
+            interes y ciudad. Asi recibes recomendaciones mas utiles.
           </p>
           <div className="followup-flow">
             <span>Dia 0 guia</span>
@@ -695,12 +859,12 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <section className="section-head" id="catalogo">
         <div>
-          <p className="eyebrow">Catalogo conectado a Medusa</p>
+          <p className="eyebrow">Catalogo de cocina</p>
           <h2>{visibleProducts.length} productos listos para cotizar</h2>
         </div>
         <span>
           <PackageSearch size={18} />
-          Feed Meta activo
+          Stock por WhatsApp
         </span>
       </section>
 
@@ -710,11 +874,13 @@ export default async function Home({ searchParams }: HomeProps) {
         ))}
         {!visibleProducts.length ? (
           <div className="empty-state">
-            No hay productos disponibles para este filtro. Revisa Medusa Admin o
-            intenta otra busqueda.
+            No hay productos disponibles para este filtro. Intenta otra
+            busqueda o escribenos por WhatsApp.
           </div>
         ) : null}
       </section>
+
+      {featured ? <FloatingWhatsAppCta product={featured} /> : null}
 
       <nav className="mobile-action-bar" aria-label="Acciones rapidas">
         <a href="#videos">
@@ -726,9 +892,13 @@ export default async function Home({ searchParams }: HomeProps) {
           Estrella
         </a>
         {featured ? (
-          <TrackedWhatsAppLink placement="mobile_bar" product={featured}>
+          <TrackedWhatsAppLink
+            cta="mobile_coupon_whatsapp"
+            placement="mobile_bar"
+            product={featured}
+          >
             <MessageCircle size={18} />
-            WhatsApp
+            Cupon
           </TrackedWhatsAppLink>
         ) : null}
       </nav>

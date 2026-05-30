@@ -64,6 +64,7 @@ function iso(value?: Date | string | null) {
 
 export function serializeCustomer(customer: any) {
   if (!customer) return undefined
+  const reason = followupReason(customer)
 
   return {
     phone: customer.phone,
@@ -80,6 +81,10 @@ export function serializeCustomer(customer: any) {
     createdAt: iso(customer.created_at),
     updatedAt: iso(customer.updated_at),
     suggestedMessage: buildFollowupDraft(customer),
+    reason,
+    priority: followupPriority(reason),
+    recommendedProductSku: recommendedProductSku(customer),
+    requiresHumanApproval: true,
   }
 }
 
@@ -125,6 +130,46 @@ export function buildFollowupDraft(customer: any) {
   }
 
   return `${greeting}, tenemos nuevas opciones de ollas, cuchillos y combos de cocina. Te preparo una cotizacion corta por WhatsApp?`
+}
+
+export function recommendedProductSku(customer: any) {
+  const products = customer.purchased_products || []
+  const lastProduct = products[products.length - 1]
+  if (lastProduct?.sku) return lastProduct.sku
+
+  const metadata = customer.metadata || {}
+  return metadata.recommendedSku || metadata.productInterestSku
+}
+
+export function followupReason(customer: any) {
+  if (customer.followup_reason) return customer.followup_reason
+  const metadata = customer.metadata || {}
+  if (metadata.journeyStage) return metadata.journeyStage
+  if (customer.last_purchase_at) return "recompra_90d"
+  if ((customer.tags || []).includes("lead-magnet")) return "lead_nuevo"
+  return "seguimiento_comercial"
+}
+
+export function followupPriority(reason: string) {
+  if (
+    [
+      "pago_pendiente",
+      "pago_en_revision",
+      "cotizacion_pendiente",
+      "recompra_90d",
+      "reorder_due",
+    ].some((value) => reason.includes(value))
+  ) {
+    return "high"
+  }
+  if (
+    ["complemento_30d", "complement_due", "interes_video", "lead_nuevo"].some(
+      (value) => reason.includes(value),
+    )
+  ) {
+    return "medium"
+  }
+  return "low"
 }
 
 function generatedEmail(phone?: string) {

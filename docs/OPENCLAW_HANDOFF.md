@@ -106,7 +106,7 @@ Rutas privadas esperadas:
 ## Flujo de venta
 
 1. Cliente escribe por WhatsApp.
-2. Si conoce el telefono, OpenClaw consulta `GET /tools/ai-context/customer/:phone` antes de recomendar.
+2. Si conoce el telefono, OpenClaw/Vicky consulta `GET /tools/ai-context/customer/:phone` antes de recomendar. Si el mensaje de WhatsApp trae `Lead`, `ProductoID`, `Variante`, `SKU`, cupon, pagos, compatibilidad o empieza con `Hola, quiero la olla de granito ...`, consulta `GET /tools/ai-context/customer/:phone?leadId=<Lead>` y responde el flujo de ese producto, no un menu generico.
 3. OpenClaw busca productos de cocina antes de decir precio o stock.
 4. OpenClaw recomienda maximo tres opciones segun uso: 20 cm, 24 cm, wok 32 cm, set MGC, menos aceite, familia, cuidado o reposicion.
 5. OpenClaw cotiza y queda evento `quote_created` si hay telefono.
@@ -114,13 +114,14 @@ Rutas privadas esperadas:
 7. OpenClaw genera link PayPhone.
 8. Webhook PayPhone o conciliacion humana confirma el pago y agenda recompra si aplica.
 9. Si entrega, factura, instalacion o garantia no son claras, OpenClaw escala a humano.
+10. Si el cliente envia comprobante de transferencia/deuna, registrar `payment_proof_received`; queda en revision humana y no se marca `paid` ni `Purchase`.
 
 ## Recompra
 
 Flujo diario:
 
 1. Consultar `GET /tools/followups/due` o `GET /tools/dashboard`.
-2. Revisar `suggestedMessage`, producto anterior y consentimiento.
+2. Revisar `suggestedMessage`, `reason`, `priority`, `recommendedProductSku`, `requiresHumanApproval`, producto anterior y consentimiento.
 3. Enviar solo si hay consentimiento o conversacion vigente.
 4. Si no, dejar borrador para aprobacion humana/campana permitida.
 5. Registrar `followup_sent`, `reorder_interest`, `no_response`, `conversation_escalated` u `opt_out` con `POST /tools/customer-events`.
@@ -128,11 +129,12 @@ Flujo diario:
 ## Pixel y contexto IA
 
 - El storefront registra eventos web por `POST /api/events`, que proxy a `POST /tools/events`.
-- Eventos soportados: `page_view`, `product_interest`, `search`, `whatsapp_opened`, `lead_created`, `checkout_started`, `purchase_confirmed`, `campaign_click`, `care_followup_sent` y `complement_interest`.
-- El formulario "Club Cocina Saludable" registra `lead_created` con tags `newsletter` y `guia-cupon`, mas metadata como ciudad, personas en casa, producto de interes, cupon y plan de followup.
+- Eventos soportados: `page_view`, `view_content`, `search`, `video_interest`, `product_interest`, `whatsapp_opened`, `quiz_completed`, `guide_downloaded`, `quote_created`, `order_created`, `paid`, `payment_proof_received`, `care_followup_due`, `care_followup_sent`, `complement_due`, `reorder_due`, `campaign_click`, `opt_out`.
+- El selector "Elige tu olla ideal" registra `quiz_completed` con `journeyStage`, ciudad, personas en casa, uso, presupuesto, `productInterestSku`, `recommendedSku` y `followupSequence`.
+- El formulario "Club Cocina Saludable" registra `guide_downloaded` con tags `lead-magnet`, `guia-cupon` y `recompra`, mas metadata como ciudad, personas en casa, producto de interes, cupon y secuencia de followup.
 - Las guias `/guias` y `/guias/teflon-pfas` generan contexto de campana. Si el lead viene de guia PFAS, responder con educacion segura, sin diagnosticos ni afirmaciones medicas absolutas.
-- Los CTAs de WhatsApp incluyen `ProductoID`, `Variante`, `SKU`, precio, material, diametro y `Lead` para que OpenClaw pueda unir conversacion con interes previo.
-- Si el mensaje llega con un `Lead`, consultar `GET /tools/ai-context/customer/:phone?leadId=<Lead>` para recuperar producto visto, origen y siguiente accion sugerida.
+- Los CTAs de WhatsApp incluyen `ProductoID`, `Variante`, `SKU`, precio, material, diametro, `Lead`, cupon `GRANITOHOY`, envio gratis, pagos disponibles y compatibilidad para que OpenClaw pueda unir conversacion con interes previo y responder directo por producto.
+- Si el mensaje llega con un `Lead`, consultar `GET /tools/ai-context/customer/:phone?leadId=<Lead>` para recuperar producto visto, video/guia/quiz de origen, etapa del cliente y siguiente accion sugerida.
 - Meta CAPI solo envia eventos si estan configurados `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y existe consentimiento.
 
 ## Limites del agente

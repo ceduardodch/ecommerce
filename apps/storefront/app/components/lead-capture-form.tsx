@@ -20,6 +20,10 @@ function randomLeadId() {
   return `lead_${id}`
 }
 
+function skuFromInterest(value: string) {
+  return value.split(":")[0] || undefined
+}
+
 export function LeadCaptureForm({
   products,
 }: {
@@ -49,6 +53,7 @@ export function LeadCaptureForm({
         const city = String(form.get("city") || "").trim()
         const people = String(form.get("people") || "").trim()
         const productInterest = String(form.get("productInterest") || "").trim()
+        const productInterestSku = skuFromInterest(productInterest)
         const whatsappConsent = form.get("whatsappConsent") === "on"
 
         if (!email && !phone) {
@@ -60,7 +65,7 @@ export function LeadCaptureForm({
         try {
           trackStorefrontEvent({
             eventName: "Lead",
-            type: "lead_created",
+            type: "guide_downloaded",
             leadId: randomLeadId(),
             cta: "guia_cupon",
             placement: "club_cocina_saludable",
@@ -69,20 +74,31 @@ export function LeadCaptureForm({
               email: email || undefined,
               phone: phone || undefined,
               whatsappConsent,
-              tags: ["newsletter", "guia-cupon"],
+              tags: ["lead-magnet", "guia-cupon", "recompra"],
             },
             metadata: {
               source: "club_cocina_saludable",
               leadMagnet: "guia_cocina_saludable",
               coupon: "GRANITOHOY",
+              journeyStage: "lead_nuevo",
               city: city || undefined,
               householdPeople: people || undefined,
               productInterest: productInterest || undefined,
-              followupPlan: ["dia_0_guia", "dia_2_tamano", "dia_7_cuidado", "dia_30_complemento", "dia_90_recompra"],
+              productInterestSku,
+              recommendedSku: productInterestSku,
+              followupSequence: [
+                "dia_0_guia",
+                "dia_2_tamano",
+                "dia_7_cuidado",
+                "dia_30_complemento",
+                "dia_90_recompra",
+              ],
             },
           })
           setState("success")
-          setMessage("Listo. Tu guia queda asociada al CRM y el cupon es GRANITOHOY.")
+          setMessage(
+            "Listo. Te enviaremos la guia, el cupon y recordatorios utiles.",
+          )
           event.currentTarget.reset()
         } catch (error) {
           setState("error")
@@ -152,7 +168,8 @@ export function LeadCaptureForm({
         <input name="whatsappConsent" type="checkbox" />
         <span>
           Acepto que Eter Niu Cocina me escriba por WhatsApp con la guia,
-          cupon y recomendaciones de cocina. Puedo pedir que no me contacten.
+          cupon, recordatorios de cuidado y recomendaciones. Puedo pedir que no
+          me contacten.
         </span>
       </label>
       <button disabled={state === "submitting"} type="submit">
@@ -161,7 +178,7 @@ export function LeadCaptureForm({
         ) : (
           <>
             <Mail size={18} />
-            Descargar guia + cupon
+            Activar guia + cupon + recordatorios
           </>
         )}
       </button>

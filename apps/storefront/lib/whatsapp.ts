@@ -1,3 +1,5 @@
+import { commercialInfo } from "./commercial"
+
 export type WhatsappProduct = {
   id: string
   variantId?: string
@@ -9,8 +11,12 @@ export type WhatsappProduct = {
   promoLabel?: string
   stockSignal?: string
   deliveryBadge?: string
+  freeShipping?: boolean
+  paymentMethods?: string[]
+  couponCode?: string
   material?: string
   diameterCm?: number
+  stoveCompatibility?: string
 }
 
 type WhatsappContext = {
@@ -18,22 +24,52 @@ type WhatsappContext = {
   sessionId?: string
   source?: string
   placement?: string
+  recommendation?: string
+  city?: string
+  householdPeople?: string
+  useCase?: string
+  budget?: string
+  recommendedSku?: string
+  journeyStage?: string
+  videoSlot?: string
+  couponCode?: string
+  freeShipping?: boolean
+  paymentMethods?: string[]
+  stoveCompatibility?: string
 }
 
 export function whatsappLink(
   product: WhatsappProduct,
   context: WhatsappContext = {},
 ) {
+  const commerce = commercialInfo({
+    ...product,
+    couponCode: context.couponCode || product.couponCode,
+    freeShipping: context.freeShipping ?? product.freeShipping,
+    paymentMethods: context.paymentMethods || product.paymentMethods,
+    stoveCompatibility:
+      context.stoveCompatibility || product.stoveCompatibility,
+  })
   const seller =
     process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
   const details = [
     `SKU: ${product.sku}`,
     `Precio: $${product.price.amount.toFixed(2)}`,
+    `Cupon: ${commerce.couponCode}`,
     product.material ? `Material: ${product.material}` : undefined,
     product.diameterCm ? `Diametro: ${product.diameterCm} cm` : undefined,
     product.stockSignal ? `Stock: ${product.stockSignal}` : undefined,
-    product.deliveryBadge ? `Entrega: ${product.deliveryBadge}` : undefined,
+    `Envio: ${commerce.freeShippingLabel}`,
+    `Pago: ${commerce.paymentMethodsLabel}`,
+    `Compatibilidad: ${commerce.stoveCompatibility}`,
     product.promoLabel ? `Promo: ${product.promoLabel}` : undefined,
+    context.recommendation ? `Recomendacion: ${context.recommendation}` : undefined,
+    context.city ? `Ciudad: ${context.city}` : undefined,
+    context.householdPeople
+      ? `Personas en casa: ${context.householdPeople}`
+      : undefined,
+    context.useCase ? `Uso: ${context.useCase}` : undefined,
+    context.budget ? `Presupuesto: ${context.budget}` : undefined,
   ]
     .filter(Boolean)
     .join(" | ")
@@ -42,17 +78,25 @@ export function whatsappLink(
     product.variantId ? `Variante: ${product.variantId}` : undefined,
     `SKU: ${product.sku}`,
     `Precio: ${product.price.amount.toFixed(2)} ${product.price.currency}`,
+    `Cupon: ${commerce.couponCode}`,
     product.material ? `Material: ${product.material}` : undefined,
     product.diameterCm ? `Diametro: ${product.diameterCm} cm` : undefined,
+    `Envio gratis: ${commerce.freeShipping ? "si" : "no"}`,
+    `Metodos de pago: ${commerce.paymentMethodsLabel}`,
+    `Compatibilidad: ${commerce.stoveCompatibility}`,
     context.leadId ? `Lead: ${context.leadId}` : undefined,
     context.sessionId ? `Sesion: ${context.sessionId}` : undefined,
     context.source ? `Fuente: ${context.source}` : undefined,
     context.placement ? `Ubicacion: ${context.placement}` : undefined,
+    context.recommendedSku ? `SKU recomendado: ${context.recommendedSku}` : undefined,
+    context.journeyStage ? `Etapa: ${context.journeyStage}` : undefined,
+    context.videoSlot ? `Video: ${context.videoSlot}` : undefined,
   ]
     .filter(Boolean)
     .join(" | ")
   const text =
-    `Hola, quiero la olla de granito ${product.title}. Cocino para __ personas. Me confirmas stock y entrega?` +
+    `Hola, quiero la olla de granito ${product.title}.` +
+    `\nCocino para __ personas. Me confirmas stock y entrega?` +
     `\n\n${details}` +
     `\n\n${tracking}`
 

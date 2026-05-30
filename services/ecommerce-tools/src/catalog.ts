@@ -2,6 +2,11 @@ import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
 
+const defaultPaymentMethods = ["transferencia", "deuna", "payphone"]
+const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
+const defaultCouponCode = "GRANITOHOY"
+const defaultDeliveryBadge = "Envio gratis"
+
 type MedusaProduct = {
   id: string
   title: string
@@ -110,6 +115,17 @@ function withGeneratedImages(config: AppConfig, products: Product[]) {
   return products.map((product) => ({
     ...product,
     imageUrl: imageForProduct(config, product, product.imageUrl),
+    deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
+    freeShipping: product.freeShipping ?? true,
+    paymentMethods: product.paymentMethods?.length
+      ? product.paymentMethods
+      : defaultPaymentMethods,
+    couponCode: product.couponCode || defaultCouponCode,
+    stoveCompatibility:
+      product.stoveCompatibility ||
+      (product.category.toLowerCase().includes("complement")
+        ? "No aplica; cuida ollas de granito"
+        : defaultStoveCompatibility),
   }))
 }
 
@@ -158,7 +174,18 @@ function normalizeMedusaProduct(
     bundleEligible:
       product.metadata?.bundleEligible === true ||
       product.metadata?.bundleEligible === "true",
-    deliveryBadge: stringFromMetadata(product.metadata?.deliveryBadge),
+    deliveryBadge:
+      stringFromMetadata(product.metadata?.deliveryBadge) ||
+      defaultDeliveryBadge,
+    freeShipping:
+      product.metadata?.freeShipping === undefined
+        ? true
+        : booleanFromMetadata(product.metadata?.freeShipping),
+    paymentMethods:
+      stringArrayFromMetadata(product.metadata?.paymentMethods) ||
+      defaultPaymentMethods,
+    couponCode:
+      stringFromMetadata(product.metadata?.couponCode) || defaultCouponCode,
     material: stringFromMetadata(product.metadata?.material),
     coating: stringFromMetadata(product.metadata?.coating),
     teflonFree: booleanFromMetadata(product.metadata?.teflonFree),
@@ -168,9 +195,11 @@ function normalizeMedusaProduct(
     capacity: stringFromMetadata(product.metadata?.capacity),
     diameterCm: numberFromMetadata(product.metadata?.diameterCm),
     pieces: numberFromMetadata(product.metadata?.pieces),
-    stoveCompatibility: stringFromMetadata(
-      product.metadata?.stoveCompatibility,
-    ),
+    stoveCompatibility:
+      stringFromMetadata(product.metadata?.stoveCompatibility) ||
+      (category.toLowerCase().includes("complement")
+        ? "No aplica; cuida ollas de granito"
+        : defaultStoveCompatibility),
     tipoCocina: stringFromMetadata(product.metadata?.tipoCocina),
     nivel: stringFromMetadata(product.metadata?.nivel),
     bundleUseCase: stringFromMetadata(product.metadata?.bundleUseCase),

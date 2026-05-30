@@ -4,6 +4,17 @@ import type {
   PurchasedProduct,
 } from "./types.js"
 
+type CustomerEventPayload = {
+  product?: { sku?: string }
+  products?: Array<{ sku?: string }>
+  metadata?: {
+    productInterestSku?: string
+    recommendedSku?: string
+    journeyStage?: string
+    followupSequence?: string[]
+  }
+}
+
 type ImportCustomer = CustomerInput & {
   phone: string
   lastPurchaseAt?: string
@@ -195,4 +206,83 @@ export function buildFollowupDraft(customer: CustomerRecord) {
   }
 
   return `Hola${name}, soy Eter Niu Cocina. Vi que compraste ${last.title}. Te puedo ayudar con cuidado, utensilios compatibles o una olla de complemento segun tu uso diario.`
+}
+
+function payloadObject(payload: unknown): CustomerEventPayload {
+  return payload && typeof payload === "object"
+    ? (payload as CustomerEventPayload)
+    : {}
+}
+
+export function recommendedProductSku(customer: CustomerRecord) {
+  const last = customer.purchasedProducts.at(-1)
+  if (last?.sku) return last.sku
+
+  const events = [...customer.events].reverse()
+  for (const event of events) {
+    const payload = payloadObject(event.payload)
+    const metadata = payload.metadata || {}
+    const sku =
+      metadata.recommendedSku ||
+      metadata.productInterestSku ||
+      payload.product?.sku ||
+      payload.products?.find((product) => product.sku)?.sku
+    if (sku) return sku
+  }
+
+  return undefined
+}
+
+export function followupReason(customer: CustomerRecord) {
+  if (customer.followupReason) return customer.followupReason
+
+  const eventTypes = customer.events.map((event) => event.type)
+  if (eventTypes.includes("opt_out")) return "opt_out"
+  if (eventTypes.includes("payment_proof_received")) return "pago_en_revision"
+  if (eventTypes.includes("checkout_started") || eventTypes.includes("order_created")) {
+    return "pago_pendiente"
+  }
+  if (eventTypes.includes("paid") || customer.lastPurchaseAt) {
+    return "recompra_90d"
+  }
+  if (eventTypes.includes("quiz_completed") || eventTypes.includes("guide_downloaded")) {
+    return "lead_nuevo"
+  }
+  if (eventTypes.includes("video_interest")) return "interes_video"
+
+  return "seguimiento_comercial"
+}
+
+export function followupPriority(reason: string) {
+  if (
+    [
+      "pago_pendiente",
+      "pago_en_revision",
+      "cotizacion_pendiente",
+      "recompra_90d",
+      "reorder_due",
+    ].some((value) => reason.includes(value))
+  ) {
+    return "high"
+  }
+  if (
+    ["complemento_30d", "complement_due", "interes_video", "lead_nuevo"].some(
+      (value) => reason.includes(value),
+    )
+  ) {
+    return "medium"
+  }
+  return "low"
+}
+
+export function buildFollowupAction(customer: CustomerRecord) {
+  const reason = followupReason(customer)
+  return {
+    ...customer,
+    suggestedMessage: buildFollowupDraft(customer),
+    reason,
+    priority: followupPriority(reason),
+    recommendedProductSku: recommendedProductSku(customer),
+    requiresHumanApproval: true,
+  }
 }
