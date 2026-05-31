@@ -23,7 +23,8 @@
     "tools:dev": "turbo dev --filter=@b2b/ecommerce-tools",
     "tools:build": "turbo build --filter=@b2b/ecommerce-tools",
     "tools:start": "turbo start --filter=@b2b/ecommerce-tools",
-    "tools:test": "turbo test --filter=@b2b/ecommerce-tools"
+    "tools:test": "turbo test --filter=@b2b/ecommerce-tools",
+    "biblioteca:metadata": "node scripts/generate-biblioteca-metadata.mjs"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

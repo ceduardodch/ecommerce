@@ -129,7 +129,7 @@ describe("commerce tools", () => {
           journeyStage: "lead_nuevo",
           householdPeople: "3-4",
           city: "Quito",
-          videoSlot: "prueba-huevo",
+          videoSlot: "detalle-wok",
           productInterestSku: "COC-OLLA-GRANITO",
           recommendedSku: "COC-OLLA-GRANITO",
           followupSequence: ["dia_0_guia", "dia_30_complemento"],

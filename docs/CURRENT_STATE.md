@@ -63,7 +63,7 @@ El servicio `ecommerce-tools` permite:
 - Home incluye el selector "Elige tu olla ideal"; registra `quiz_completed` con ciudad, personas en casa, uso, presupuesto, SKU visto, SKU recomendado y secuencia de seguimiento para que Vicky responda con contexto.
 - Las fichas publicas de productos viven en `/products/[slug]` y deben ser el destino principal del feed Meta y de los CTAs de catalogo.
 - La matriz de contenido vive en `apps/storefront/lib/content.ts` y `docs/CONTENT_MATRIX.md`; mapea video/foto, producto, placement, CTA y evento CRM.
-- Los videos reales se colocan en `apps/storefront/public/media` como `hero-cocina.mp4`, `prueba-huevo.mp4`, `limpieza-rapida.mp4` y `receta-wok.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
+- Los videos reales aprobados para cocina viven en `apps/storefront/public/media` como `hero-cocina.mp4`, `detalle-wok.mp4`, `receta-wok.mp4`, `uso-diario-gas.mp4` y `set-mgc.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
 - Las guias publicas viven en `/guias` y `/guias/teflon-pfas`. El copy de salud evita diagnosticos, causalidad medica y claims PFOA/PFAS/PTFE sin certificacion del proveedor.
 - Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.
 - Catalogo fuente trazado a posts: `data/catalog/eter-niu-products.csv`.

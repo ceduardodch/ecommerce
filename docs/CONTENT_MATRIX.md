@@ -1,27 +1,39 @@
 # Content Matrix - Eter Niu Cocina
 
-Esta matriz define que material real debe reemplazar los placeholders y como alimenta ventas, Pixel/CRM y WhatsApp.
+Esta matriz define que material real de cocina queda aprobado para la web, como alimenta ventas, Pixel/CRM y WhatsApp, y que material queda fuera para una futura campana separada.
 
-## Videos Prioritarios
+## Assets Aprobados Para Cocina
 
-| Archivo | Seccion | Producto | Objetivo | Evento CRM |
-| --- | --- | --- | --- | --- |
-| `hero-cocina.mp4` | Hero | Wok 32 cm / Set MGC | Mostrar cocina real y deseo de compra | `video_interest` |
-| `prueba-huevo.mp4` | Visto en redes | Olla 20 cm / Sarten wok 28 cm | Probar que no se pega | `video_interest` |
-| `limpieza-rapida.mp4` | Visto en redes | Olla 24 cm / Utensilios | Probar limpieza y cuidado | `video_interest` |
-| `receta-wok.mp4` | Visto en redes | Wok 32 cm | Mostrar receta familiar completa | `video_interest` |
-| `olla-ideal-quiz` | Home | Productos estrella | Recomendar por personas, ciudad, uso y presupuesto | `quiz_completed` |
-| `club-cocina-saludable` | Home / guia | Productos estrella | Guia, cupon y recordatorios de cuidado/recompra | `guide_downloaded` |
+| Source original | Archivo publicado | Seccion | Producto | Angulo comercial | Evento CRM |
+| --- | --- | --- | --- | --- | --- |
+| `data/biblioteca/Contenido eter niu 2/VID_20260517_170202_268_bsl.mp4` | `apps/storefront/public/media/hero-cocina.mp4` + `photo-hero-cocina.jpg` | Hero | Wok 32 cm / Set MGC | Producto real en cocina real; presenter con wok y CTA a cupon | `video_interest` |
+| `data/biblioteca/Contenido eter niu 2/VID_20260517_174632_892_bsl.mp4` | `apps/storefront/public/media/detalle-wok.mp4` + `photo-detalle-wok.jpg` | Visto en redes / ficha wok | Wok 32 cm / Sarten wok 28 cm | Tapa, interior granito, base y marca MGC visibles | `video_interest` |
+| `data/biblioteca/Contenido eter niu 2/VID_20260520_133153_246_bsl.mp4` | `apps/storefront/public/media/receta-wok.mp4` + `photo-receta-wok.jpg` | Visto en redes / ficha wok | Wok 32 cm | Salteado de vegetales y uso familiar con menos aceite | `video_interest` |
+| `data/biblioteca/Contenido eter niu 2/VID-20260304-WA0022.mp4` | `apps/storefront/public/media/uso-diario-gas.mp4` + `photo-uso-diario-gas.jpg` + `photo-product-olla-24.jpg` | Visto en redes / ficha olla 24 | Olla 24 cm familiar | Olla trabajando en hornilla de gas y contexto de uso diario | `video_interest` |
+| `data/biblioteca/Contenido eter niu 3/VID_20260307_165921_101_bsl.mp4` | `apps/storefront/public/media/set-mgc.mp4` + `photo-product-set-granito.jpg` + `photo-editorial-mesa.jpg` | Combos / ficha set | Set MGC granito | Set completo sobre mesa, piezas visibles y oportunidad de combo | `video_interest` |
+| `olla-ideal-quiz` | `photo-product-olla-24.jpg` | Home | Productos estrella | Recomendar por personas, ciudad, uso y presupuesto | `quiz_completed` |
+| `club-cocina-saludable` | `photo-product-utensilios.jpg` | Home / guia | Productos estrella | Guia, cupon y recordatorios de cuidado/recompra | `guide_downloaded` |
 
-## Fotos Prioritarias
+## Fotos De Producto
 
-| Archivo sugerido | Uso | Requisito |
+| Archivo publicado | Uso | Nota |
 | --- | --- | --- |
-| `photo-hero-cocina.jpg` | Hero y fallback | Cocina real, producto visible, comida fresca |
-| `photo-product-olla-20.jpg` | Ficha y feed Meta | Olla 20 cm completa, sin recortes raros |
-| `photo-product-olla-24.jpg` | Ficha y feed Meta | Olla 24 cm con escala familiar |
-| `photo-product-set-granito.jpg` | Ficha y combos | Set completo sobre mesa limpia |
-| `photo-receta-wok.jpg` | Wok 32 cm | Wok en uso con receta apetecible |
+| `photo-hero-cocina.jpg` | Hero y fallback de video | Poster real del video de cocina con presenter y wok. |
+| `photo-receta-wok.jpg` | Wok 32 cm, receta y feed Meta | Frame real del salteado. |
+| `photo-product-set-granito.jpg` | Set MGC, combos y feed Meta | Frame real del set sobre mesa. |
+| `photo-product-olla-24.jpg` | Olla 24 cm y feed Meta | Stills de olla MGC en uso; no afirmar tamano visual si no se confirma en foto. |
+| `photo-product-olla-20.jpg` | Olla 20 cm y feed Meta | Stills de producto MGC; no afirmar tamano visual si no se confirma en foto. |
+| `photo-detalle-wok.jpg` | Sarten/wok y detalle material | Reemplaza el antiguo placeholder de huevo hasta tener prueba real. |
+| `photo-uso-diario-gas.jpg` | Uso diario en hornilla | Reemplaza el antiguo placeholder de limpieza hasta tener video real de limpieza. |
+
+## Excluidos De Esta Web
+
+| Tipo de asset | Estado | Motivo |
+| --- | --- | --- |
+| Yoga / wellness / accesorios no cocina | `future_wellness_site` | No mezclar con la promesa central de cocina saludable. |
+| Decoracion / lifestyle sin producto de cocina | `future_wellness_site` | Puede servir para otra landing, pero baja claridad comercial en esta tienda. |
+| Botellas, bowls y productos no relacionados | `future_wellness_site` | Reservar para categoria/campana separada si se decide venderlos. |
+| Pruebas de huevo/queso o limpieza no disponibles | `pending_real_asset` | No publicar copy ni slot que prometa una demostracion no mostrada por el asset real. |
 
 ## Reglas De Publicacion
 

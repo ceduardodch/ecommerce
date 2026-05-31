@@ -29,6 +29,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  overflow-x: hidden;
   background:
     radial-gradient(
       circle at top left,
@@ -90,6 +91,10 @@ video {
   width: min(1240px, calc(100% - 32px));
   margin: 0 auto;
   padding: 16px 0 46px;
+}
+
+.social-shell {
+  overflow-x: clip;
 }
 
 .promo-bar {
@@ -435,6 +440,8 @@ h1 {
 
 .video-slot {
   display: grid;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
   overflow: hidden;
   border-radius: 8px;
@@ -444,6 +451,8 @@ h1 {
 
 .video-frame {
   position: relative;
+  width: 100%;
+  max-width: 100%;
   min-height: 0;
   aspect-ratio: 9 / 16;
   overflow: hidden;
@@ -460,6 +469,7 @@ h1 {
 .video-frame img,
 .video-frame video {
   width: 100%;
+  max-width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
@@ -475,6 +485,32 @@ h1 {
   color: #ffffff;
   font-size: 0.78rem;
   font-weight: 900;
+}
+
+.video-caption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: grid;
+  gap: 3px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(17, 24, 19, 0.1), rgba(17, 24, 19, 0.86));
+  padding: 42px 12px 12px;
+  color: #fffdf6;
+  pointer-events: none;
+}
+
+.video-caption strong {
+  color: var(--yellow);
+  font-size: 1rem;
+  line-height: 1.05;
+}
+
+.video-caption small {
+  color: rgba(255, 253, 246, 0.86);
+  font-weight: 850;
+  line-height: 1.22;
 }
 
 .video-slot > div:last-child {
@@ -1998,10 +2034,30 @@ h1 {
 
   .promo-bar {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .promo-bar strong {
+    display: none;
+  }
+
+  .promo-bar span,
+  .promo-bar a {
+    justify-content: center;
+    padding: 8px;
   }
 
   .topbar {
     align-items: stretch;
+    gap: 10px;
+  }
+
+  .topbar .ghost-button {
+    display: none;
   }
 
   .topbar nav {
@@ -2023,6 +2079,10 @@ h1 {
 
   .social-hero {
     min-height: auto;
+    width: 100%;
+    max-width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
   }
 
   .detail-nav {
@@ -2032,6 +2092,9 @@ h1 {
   .hero-media {
     min-height: auto;
     padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .detail-media {
@@ -2041,13 +2104,43 @@ h1 {
 
   .hero-media .video-frame {
     aspect-ratio: 4 / 5;
+    height: auto;
+    max-height: min(520px, 72vh);
+  }
+
+  .video-grid .video-frame {
+    aspect-ratio: 1 / 1;
+    max-height: min(380px, 58vh);
+  }
+
+  .video-slot > div:last-child {
+    padding: 12px;
+  }
+
+  .video-slot p {
+    font-size: 0.84rem;
+  }
+
+  .video-caption {
+    right: 9px;
+    bottom: 9px;
+    left: 9px;
+    padding: 34px 10px 10px;
+  }
+
+  .video-caption strong {
+    font-size: 0.94rem;
   }
 
   .hero-copy,
   .detail-copy,
   .guide-hero,
   .article-hero {
-    padding: 22px;
+    padding: 16px;
+  }
+
+  .hero-copy {
+    gap: 12px;
   }
 
   h1,
@@ -2061,11 +2154,20 @@ h1 {
     font-size: 0.98rem;
   }
 
+  .hero-proof,
+  .hero-copy > .commerce-badges {
+    display: none;
+  }
+
   .hero-actions,
   .hero-actions a,
   .secondary-button,
   .primary-button {
     width: 100%;
+  }
+
+  .hero-actions .secondary-button {
+    display: none;
   }
 
   .hero-commerce-card {
@@ -2085,6 +2187,10 @@ h1 {
   .guide-band h2,
   .club-copy h2 {
     font-size: 1.72rem;
+  }
+
+  .section-head {
+    margin: 22px 0 10px;
   }
 
   .search-box {
@@ -2112,6 +2218,16 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .video-grid,
+  .deal-grid,
+  .club-section,
+  .quiz-section,
+  .prequal-section {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
   .club-section,
   .quiz-section,
   .prequal-section,
@@ -2119,8 +2235,105 @@ h1 {
     padding: 16px;
   }
 
+  .prequal-section,
+  .quiz-section {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .prequal-copy {
+    display: none;
+  }
+
+  .prequal-grid {
+    gap: 8px;
+  }
+
+  .prequal-grid article {
+    min-height: 0;
+    gap: 6px;
+    padding: 12px;
+  }
+
+  .prequal-grid strong {
+    font-size: 1.05rem;
+  }
+
+  .prequal-grid span {
+    font-size: 0.8rem;
+  }
+
+  .prequal-copy,
+  .quiz-copy,
+  .quiz-form,
+  .quiz-result,
+  .club-copy,
+  .club-form,
+  .product-card,
+  .video-slot {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .product-card.compact .description {
+    min-height: 0;
+  }
+
+  .product-card.compact .surface-row {
+    display: none;
+  }
+
   .quiz-copy h2 {
-    font-size: 1.92rem;
+    font-size: 1.68rem;
+  }
+
+  .quiz-copy p {
+    display: none;
+  }
+
+  .quiz-grid {
+    gap: 8px;
+  }
+
+  .quiz-grid input,
+  .quiz-grid select {
+    min-height: 38px;
+  }
+
+  .quiz-form,
+  .quiz-copy,
+  .quiz-result {
+    padding: 14px;
+  }
+
+  .product-card.compact .product-image {
+    aspect-ratio: 16 / 10;
+  }
+
+  .product-card.compact .description,
+  .product-card.compact .surface-row,
+  .product-card.compact .commerce-badges,
+  .product-card.compact .signal-row,
+  .product-card.compact .detail-link {
+    display: none;
+  }
+
+  .product-card.compact .product-body {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .product-card.compact .product-specs span:nth-child(n + 3) {
+    display: none;
+  }
+
+  .product-card.compact .price-row {
+    align-items: center;
+  }
+
+  .product-card.compact .primary-button {
+    min-height: 42px;
   }
 
   .quiz-result {
@@ -2130,6 +2343,14 @@ h1 {
 
   .quiz-result .primary-button {
     width: 100%;
+  }
+
+  .club-section {
+    gap: 10px;
+  }
+
+  .club-copy .followup-flow {
+    display: none;
   }
 
   .mobile-action-bar {

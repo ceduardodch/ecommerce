@@ -62,7 +62,7 @@ export function buildMetaDraft(products: Product[], angle: string) {
   const names = products.map((product) => product.title).join(", ")
   const safeAngle =
     angle ||
-    "cocina diaria con granito, menos aceite y limpieza facil"
+    "cocina diaria con granito, producto real y asesoria por WhatsApp"
   const priceAnchor = products
     .map((product) => {
       const material = product.material ? ` (${product.material})` : ""
@@ -80,7 +80,7 @@ export function buildMetaDraft(products: Product[], angle: string) {
         return "Wok 32 cm: receta completa, shakshuka, salteados y prueba de uso diario."
       }
       if (product.id.includes("olla-granito-20")) {
-        return "Olla 20 cm: prueba queso/huevo, no se pega y se limpia rapido."
+        return "Olla 20 cm: tamano compacto para cocina diaria y porciones pequenas."
       }
       if (product.id.includes("olla-granito-24")) {
         return "Olla 24 cm: porciones familiares y cocina con menos aceite."
@@ -98,7 +98,7 @@ export function buildMetaDraft(products: Product[], angle: string) {
       `Enfoque: ${safeAngle}. Te ayudamos por WhatsApp a escoger 20 cm, 24 cm o wok 32 cm segun cuantas personas cocinan y que recetas haces.\n\n` +
       `${sourceAngles}\n\n${priceAnchor}`,
     instagram:
-      `${names}\n\nMenos aceite, no se pega y limpieza facil con uso correcto. ` +
+      `${names}\n\nMira el granito, el tamano y el uso real antes de comprar. ` +
       "Escribenos por WhatsApp para confirmar stock, entrega y que tamano te conviene.",
     marketplace: products.map((product) => ({
       title: product.title.slice(0, 80),

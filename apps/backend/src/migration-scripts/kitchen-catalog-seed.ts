@@ -35,7 +35,7 @@ const products: KitchenProduct[] = [
     sku: "MGC-WOK-GRANITO-32",
     category: "Woks granito",
     description:
-      "Wok amplio para recetas diarias, salteados, huevos y preparaciones con menos aceite.",
+      "Wok amplio para recetas diarias, salteados y preparaciones familiares con menos aceite.",
     price: 150,
     originalPrice: 179,
     stock: 8,
@@ -50,7 +50,7 @@ const products: KitchenProduct[] = [
       stoveCompatibility: "Gas, induccion y vitroceramica",
       tipoCocina: "Familia y recetas",
       nivel: "Uso diario",
-      bundleUseCase: "Shakshuka, arroz, salteados y huevos con menos aceite",
+      bundleUseCase: "Shakshuka, arroz, salteados y vegetales con menos aceite",
       careTips:
         "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
       healthAngle: "Opcion sin teflon para cocinar con menos aceite.",
@@ -65,7 +65,7 @@ const products: KitchenProduct[] = [
       ],
       contentAngles: [
         "6 anos usando el wok",
-        "huevo con menos aceite",
+        "granito y tapa visibles",
         "shakshuka en wok 32 cm",
         "tapa de vidrio templado",
       ],
@@ -90,7 +90,7 @@ const products: KitchenProduct[] = [
     sku: "MGC-OLLA-GRANITO-20",
     category: "Ollas granito",
     description:
-      "Olla compacta para el dia a dia, porciones pequenas y pruebas de no pega con limpieza facil.",
+      "Olla compacta para el dia a dia, porciones pequenas y cocina practica en casa.",
     price: 95,
     originalPrice: 119,
     stock: 10,
@@ -105,7 +105,7 @@ const products: KitchenProduct[] = [
       stoveCompatibility: "Gas, induccion y vitroceramica",
       tipoCocina: "Diario ligero",
       nivel: "Inicio saludable",
-      bundleUseCase: "Salsas, huevos, queso, avena y porciones pequenas",
+      bundleUseCase: "Salsas, avena, guarniciones y porciones pequenas",
       careTips:
         "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
       healthAngle:
@@ -114,15 +114,15 @@ const products: KitchenProduct[] = [
       instagramSourceUrl: "https://www.instagram.com/p/DWfKOWXhvJs/",
       sourceUrls: ["https://www.instagram.com/p/DWfKOWXhvJs/"],
       contentAngles: [
-        "prueba queso y huevo",
-        "no se pega",
-        "limpieza facil en olla 20 cm",
+        "tamano compacto para porciones pequenas",
+        "granito visible en olla 20 cm",
+        "uso diario en cocina real",
       ],
       certificationStatus: "Proveedor por confirmar",
       claimNote:
         "Mantener copy educativo; no publicar claims medicos absolutos.",
       reorderAfterDays: 180,
-      promoLabel: "No se pega",
+      promoLabel: "Uso diario",
       discountPercent: 20,
       deliveryBadge: "Envio gratis 24-48h segun ciudad",
       stockSignal: "10 ollas disponibles",
@@ -168,7 +168,7 @@ const products: KitchenProduct[] = [
       contentAngles: [
         "24 cm para porciones familiares",
         "menos aceite en olla familiar",
-        "no se pega en uso diario",
+        "uso diario en hornilla",
       ],
       certificationStatus: "Proveedor por confirmar",
       claimNote:
@@ -242,11 +242,11 @@ const products: KitchenProduct[] = [
     sku: "MGC-SARTEN-WOK-GRANITO-28",
     category: "Sartenes granito",
     description:
-      "Sarten tipo wok para huevos, vegetales y recetas rapidas con menos aceite.",
+      "Sarten tipo wok para vegetales, pollo y recetas rapidas con menos aceite.",
     price: 85,
     originalPrice: 105,
     stock: 14,
-    image: "https://shop.b2b.com.ec/media/photo-prueba-huevo.jpg",
+    image: "https://shop.b2b.com.ec/media/photo-detalle-wok.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -257,7 +257,7 @@ const products: KitchenProduct[] = [
       stoveCompatibility: "Gas, induccion y vitroceramica",
       tipoCocina: "Recetas rapidas",
       nivel: "Uso diario",
-      bundleUseCase: "Huevos, vegetales, pollo y salteados de semana",
+      bundleUseCase: "Vegetales, pollo y salteados de semana",
       careTips:
         "Usar fuego medio y evitar aerosoles que saturen la superficie.",
       healthAngle: "Pensado para cocinar ligero sin depender de mucho aceite.",
@@ -268,7 +268,7 @@ const products: KitchenProduct[] = [
         "https://www.instagram.com/p/DVXbLrPiHnd/",
       ],
       contentAngles: [
-        "huevo sin depender de mucho aceite",
+        "detalle de granito y uso rapido",
         "recetas rapidas entre semana",
         "salteados y desayuno",
       ],

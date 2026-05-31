@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1600" role="img" aria-labelledby="title desc">
-  <title id="title">Limpieza rapida</title>
-  <desc id="desc">Poster placeholder para video de limpieza de ollas de granito.</desc>
+  <title id="title">Uso diario en cocina</title>
+  <desc id="desc">Poster placeholder para uso diario de ollas de granito.</desc>
   <rect width="900" height="1600" fill="#176b49"/>
   <circle cx="714" cy="246" r="210" fill="#ffd166" opacity="0.9"/>
   <circle cx="240" cy="1180" r="300" fill="#d83b24" opacity="0.72"/>
@@ -9,7 +9,7 @@
   <circle cx="300" cy="692" r="54" fill="#e7f4e7"/>
   <circle cx="450" cy="692" r="54" fill="#e7f4e7"/>
   <circle cx="600" cy="692" r="54" fill="#e7f4e7"/>
-  <text x="78" y="210" fill="#fffdf6" font-family="Arial, sans-serif" font-size="58" font-weight="900">Limpieza facil</text>
-  <text x="78" y="292" fill="#ffd166" font-family="Arial, sans-serif" font-size="82" font-weight="900">Despues de cocinar</text>
+  <text x="78" y="210" fill="#fffdf6" font-family="Arial, sans-serif" font-size="58" font-weight="900">Uso diario</text>
+  <text x="78" y="292" fill="#ffd166" font-family="Arial, sans-serif" font-size="82" font-weight="900">En cocina real</text>
   <text x="78" y="390" fill="#fffdf6" font-family="Arial, sans-serif" font-size="38" font-weight="700">Slot para demostracion</text>
 </svg>

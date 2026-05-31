@@ -86,7 +86,7 @@ export const fallbackProducts: Product[] = [
     sku: "MGC-WOK-GRANITO-32",
     title: "Wok de granito 32 cm con tapa",
     description:
-      "Wok amplio para recetas diarias, salteados, huevos y preparaciones con menos aceite.",
+      "Wok amplio para recetas diarias, salteados y preparaciones familiares con menos aceite.",
     category: "Woks granito",
     brand: "Eter Niu Cocina",
     price: { amount: 150, currency: "USD" },
@@ -105,7 +105,7 @@ export const fallbackProducts: Product[] = [
     stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Familia y recetas",
     nivel: "Uso diario",
-    bundleUseCase: "Shakshuka, arroz, salteados y huevos con menos aceite",
+    bundleUseCase: "Shakshuka, arroz, salteados y vegetales con menos aceite",
     careTips:
       "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
     healthAngle: "Opcion sin teflon para cocinar con menos aceite.",
@@ -120,7 +120,7 @@ export const fallbackProducts: Product[] = [
     ],
     contentAngles: [
       "6 anos usando el wok",
-      "huevo con menos aceite",
+      "granito y tapa visibles",
       "shakshuka en wok 32 cm",
       "tapa de vidrio templado",
     ],
@@ -136,7 +136,7 @@ export const fallbackProducts: Product[] = [
       "granito",
       "32cm",
       "menos aceite",
-      "no se pega",
+      "granito real",
       "shakshuka",
       "producto estrella",
     ],
@@ -147,13 +147,13 @@ export const fallbackProducts: Product[] = [
     sku: "MGC-OLLA-GRANITO-20",
     title: "Olla de granito 20 cm",
     description:
-      "Olla compacta para el dia a dia, porciones pequenas y pruebas de no pega con limpieza facil.",
+      "Olla compacta para el dia a dia, porciones pequenas y cocina practica en casa.",
     category: "Ollas granito",
     brand: "Eter Niu Cocina",
     price: { amount: 95, currency: "USD" },
     originalPrice: { amount: 119, currency: "USD" },
     discountPercent: 20,
-    promoLabel: "No se pega",
+    promoLabel: "Uso diario",
     stockSignal: "10 ollas disponibles",
     bundleEligible: true,
     deliveryBadge: "Envio gratis 24-48h segun ciudad",
@@ -166,7 +166,7 @@ export const fallbackProducts: Product[] = [
     stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Diario ligero",
     nivel: "Inicio saludable",
-    bundleUseCase: "Salsas, huevos, queso, avena y porciones pequenas",
+    bundleUseCase: "Salsas, avena, guarniciones y porciones pequenas",
     careTips:
       "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
     healthAngle: "Alternativa a antiadherentes tradicionales para uso diario.",
@@ -174,9 +174,9 @@ export const fallbackProducts: Product[] = [
     instagramSourceUrl: "https://www.instagram.com/p/DWfKOWXhvJs/",
     sourceUrls: ["https://www.instagram.com/p/DWfKOWXhvJs/"],
     contentAngles: [
-      "prueba queso y huevo",
-      "no se pega",
-      "limpieza facil en olla 20 cm",
+      "tamano compacto para porciones pequenas",
+      "granito visible en olla 20 cm",
+      "uso diario en cocina real",
     ],
     certificationStatus: "Proveedor por confirmar",
     claimNote: "Mantener copy educativo; no publicar claims medicos absolutos.",
@@ -188,9 +188,9 @@ export const fallbackProducts: Product[] = [
       "olla",
       "granito",
       "20cm",
-      "no se pega",
-      "queso",
-      "limpieza facil",
+      "uso diario",
+      "porciones pequenas",
+      "granito visible",
       "menos aceite",
     ],
   },
@@ -233,7 +233,7 @@ export const fallbackProducts: Product[] = [
     contentAngles: [
       "24 cm para porciones familiares",
       "menos aceite en olla familiar",
-      "no se pega en uso diario",
+      "uso diario en hornilla",
     ],
     certificationStatus: "Proveedor por confirmar",
     claimNote:
@@ -315,7 +315,7 @@ export const fallbackProducts: Product[] = [
     sku: "MGC-SARTEN-WOK-GRANITO-28",
     title: "Sarten wok granito para recetas rapidas",
     description:
-      "Sarten tipo wok para huevos, vegetales y recetas rapidas con menos aceite.",
+      "Sarten tipo wok para vegetales, pollo y recetas rapidas con menos aceite.",
     category: "Sartenes granito",
     brand: "Eter Niu Cocina",
     price: { amount: 85, currency: "USD" },
@@ -334,7 +334,7 @@ export const fallbackProducts: Product[] = [
     stoveCompatibility: "Gas, induccion y vitroceramica",
     tipoCocina: "Recetas rapidas",
     nivel: "Uso diario",
-    bundleUseCase: "Huevos, vegetales, pollo y salteados de semana",
+    bundleUseCase: "Vegetales, pollo y salteados de semana",
     careTips: "Usar fuego medio y evitar aerosoles que saturen la superficie.",
     healthAngle: "Pensado para cocinar ligero sin depender de mucho aceite.",
     warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
@@ -344,7 +344,7 @@ export const fallbackProducts: Product[] = [
       "https://www.instagram.com/p/DVXbLrPiHnd/",
     ],
     contentAngles: [
-      "huevo sin depender de mucho aceite",
+      "detalle de granito y uso rapido",
       "recetas rapidas entre semana",
       "salteados y desayuno",
     ],
@@ -353,7 +353,7 @@ export const fallbackProducts: Product[] = [
       "Hablar de menos aceite como uso culinario, no como tratamiento de salud.",
     reorderAfterDays: 180,
     stock: 14,
-    imageUrl: "/media/photo-prueba-huevo.jpg",
+    imageUrl: "/media/photo-detalle-wok.jpg",
     productUrl:
       "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
     tags: [
@@ -361,7 +361,7 @@ export const fallbackProducts: Product[] = [
       "wok",
       "granito",
       "28cm",
-      "huevo sin aceite",
+      "recetas rapidas",
       "recetas rapidas",
     ],
   },
@@ -441,7 +441,7 @@ function generatedImageForProduct(product: Product) {
     return "/media/photo-product-olla-20.jpg"
   }
   if (haystack.includes("sarten")) {
-    return "/media/photo-prueba-huevo.jpg"
+    return "/media/photo-detalle-wok.jpg"
   }
   if (haystack.includes("wok")) {
     return "/media/photo-receta-wok.jpg"
@@ -470,7 +470,7 @@ const kitchenTerms = [
   "pfas",
   "ptfe",
   "menos aceite",
-  "no se pega",
+  "granito real",
   "familia",
   "utensilio",
   "utensilios",

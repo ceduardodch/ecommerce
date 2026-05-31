@@ -94,7 +94,7 @@ function generatedImageForProduct(
     return publicMediaUrl(config, "photo-product-olla-20.jpg")
   }
   if (haystack.includes("sarten")) {
-    return publicMediaUrl(config, "photo-prueba-huevo.jpg")
+    return publicMediaUrl(config, "photo-detalle-wok.jpg")
   }
   if (haystack.includes("wok")) {
     return publicMediaUrl(config, "photo-receta-wok.jpg")
@@ -262,7 +262,7 @@ const kitchenTerms = [
   "pfas",
   "ptfe",
   "menos aceite",
-  "no se pega",
+  "granito real",
   "chef",
   "familia",
 ]
