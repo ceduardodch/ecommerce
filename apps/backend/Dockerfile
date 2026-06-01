@@ -35,7 +35,7 @@ RUN npm ci --legacy-peer-deps --omit=dev --workspace @b2b/medusa-backend --inclu
   && npm cache clean --force
 
 COPY --from=builder /app/apps/backend/.medusa/server apps/backend
-COPY --from=builder /app/apps/backend/src/migration-scripts apps/backend/src/migration-scripts
+RUN node -e "const fs=require('fs'); const p='apps/backend/package.json'; const pkg=JSON.parse(fs.readFileSync(p,'utf8')); for (const k of ['seed','seed:kitchen','seed:wellness']) pkg.scripts[k]=pkg.scripts[k].replace(/\\.ts/g,'.js'); fs.writeFileSync(p, JSON.stringify(pkg,null,2)+'\\n')"
 
 EXPOSE 9000
 
