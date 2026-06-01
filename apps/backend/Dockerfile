@@ -35,6 +35,7 @@ RUN npm ci --legacy-peer-deps --omit=dev --workspace @b2b/medusa-backend --inclu
   && npm cache clean --force
 
 COPY --from=builder /app/apps/backend/.medusa/server apps/backend
+COPY --from=builder /app/apps/backend/src/migration-scripts apps/backend/src/migration-scripts
 
 EXPOSE 9000
 
