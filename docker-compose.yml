@@ -42,9 +42,9 @@ services:
       NODE_ENV: production
       DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in Coolify}@postgres:5432/medusa-store
       REDIS_URL: redis://redis:6379
-      STORE_CORS: ${STORE_CORS:-http://localhost:3000,https://shop.b2b.com.ec}
-      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://adminshop.b2b.com.ec}
-      AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://adminshop.b2b.com.ec}
+      STORE_CORS: ${STORE_CORS:-http://localhost:3000,https://shop.b2b.com.ec,https://cocina.b2b.com.ec,https://bienestar.b2b.com.ec}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://cocina.b2b.com.ec,https://bienestar.b2b.com.ec,https://adminshop.b2b.com.ec}
+      AUTH_CORS: ${AUTH_CORS:-http://localhost:9000,https://shop.b2b.com.ec,https://cocina.b2b.com.ec,https://bienestar.b2b.com.ec,https://adminshop.b2b.com.ec}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in Coolify}
       COOKIE_SECRET: ${COOKIE_SECRET:?Set COOKIE_SECRET in Coolify}
       MEDUSA_RUN_MIGRATIONS_ON_START: ${MEDUSA_RUN_MIGRATIONS_ON_START:-false}
@@ -73,7 +73,9 @@ services:
       CRM_BACKEND: ${CRM_BACKEND:-medusa}
       ALLOW_DEMO_CATALOG: ${ALLOW_DEMO_CATALOG:-false}
       TOOLS_API_TOKEN: ${TOOLS_API_TOKEN:?Set TOOLS_API_TOKEN in Coolify}
-      STORE_PUBLIC_URL: ${STORE_PUBLIC_URL:-https://shop.b2b.com.ec}
+      STORE_PUBLIC_URL: ${STORE_PUBLIC_URL:-https://cocina.b2b.com.ec}
+      COCINA_PUBLIC_URL: ${COCINA_PUBLIC_URL:-https://cocina.b2b.com.ec}
+      BIENESTAR_PUBLIC_URL: ${BIENESTAR_PUBLIC_URL:-https://bienestar.b2b.com.ec}
       MEDUSA_STORE_API_URL: http://medusa-api:9000
       MEDUSA_ADMIN_API_URL: http://medusa-api:9000
       MEDUSA_PUBLISHABLE_KEY: ${MEDUSA_PUBLISHABLE_KEY:-}
@@ -137,8 +139,10 @@ services:
       context: .
       dockerfile: apps/storefront/Dockerfile
       args:
-        NEXT_PUBLIC_TOOLS_API_URL: ${NEXT_PUBLIC_TOOLS_API_URL:-https://shop.b2b.com.ec}
-        NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://shop.b2b.com.ec}
+        NEXT_PUBLIC_TOOLS_API_URL: ${NEXT_PUBLIC_TOOLS_API_URL:-https://cocina.b2b.com.ec}
+        NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://cocina.b2b.com.ec}
+        NEXT_PUBLIC_COCINA_URL: ${NEXT_PUBLIC_COCINA_URL:-https://cocina.b2b.com.ec}
+        NEXT_PUBLIC_BIENESTAR_URL: ${NEXT_PUBLIC_BIENESTAR_URL:-https://bienestar.b2b.com.ec}
         NEXT_PUBLIC_PIXEL_ENABLED: ${NEXT_PUBLIC_PIXEL_ENABLED:-false}
         NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
         NEXT_PUBLIC_PIXEL_CONSENT_MODE: ${NEXT_PUBLIC_PIXEL_CONSENT_MODE:-banner}
@@ -151,8 +155,10 @@ services:
       NODE_ENV: production
       PORT: 3000
       ALLOW_DEMO_CATALOG: ${ALLOW_DEMO_CATALOG:-false}
-      NEXT_PUBLIC_TOOLS_API_URL: ${NEXT_PUBLIC_TOOLS_API_URL:-https://shop.b2b.com.ec}
-      NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://shop.b2b.com.ec}
+      NEXT_PUBLIC_TOOLS_API_URL: ${NEXT_PUBLIC_TOOLS_API_URL:-https://cocina.b2b.com.ec}
+      NEXT_PUBLIC_STORE_URL: ${NEXT_PUBLIC_STORE_URL:-https://cocina.b2b.com.ec}
+      NEXT_PUBLIC_COCINA_URL: ${NEXT_PUBLIC_COCINA_URL:-https://cocina.b2b.com.ec}
+      NEXT_PUBLIC_BIENESTAR_URL: ${NEXT_PUBLIC_BIENESTAR_URL:-https://bienestar.b2b.com.ec}
       NEXT_PUBLIC_PIXEL_ENABLED: ${NEXT_PUBLIC_PIXEL_ENABLED:-false}
       NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID:-}
       NEXT_PUBLIC_PIXEL_CONSENT_MODE: ${NEXT_PUBLIC_PIXEL_CONSENT_MODE:-banner}

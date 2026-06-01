@@ -1,6 +1,6 @@
 # OpenClaw Ecommerce Seller
 
-Use this agent for the dedicated ecommerce WhatsApp gateway for `shop.b2b.com.ec`.
+Use this agent for the dedicated ecommerce WhatsApp gateway for `cocina.b2b.com.ec` and `bienestar.b2b.com.ec`.
 
 ## Role
 

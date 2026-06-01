@@ -5,11 +5,14 @@ Vicky is the dedicated ecommerce sales bot for WhatsApp and web/social leads.
 ## Public URLs
 
 - Bot gateway: `https://vicky.b2b.com.ec`
-- Storefront: `https://shop.b2b.com.ec`
+- Cocina storefront: `https://cocina.b2b.com.ec`
+- Bienestar storefront: `https://bienestar.b2b.com.ec`
+- Legacy storefront: `https://shop.b2b.com.ec`
 - CRM backoffice: `https://adminshop.b2b.com.ec/app/crm-whatsapp`
-- Meta catalog feed: `https://shop.b2b.com.ec/feeds/meta/catalog.csv`
+- Meta catalog cocina: `https://cocina.b2b.com.ec/feeds/meta/catalog.csv`
+- Meta catalog bienestar: `https://bienestar.b2b.com.ec/feeds/meta/catalog.csv`
 
-Keep these URLs in environment variables. If the storefront domain changes later, update `STORE_PUBLIC_URL`, `NEXT_PUBLIC_STORE_URL`, `META_CATALOG_URL` and Meta catalog settings instead of changing code.
+Keep these URLs in environment variables. If a storefront domain changes later, update `STORE_PUBLIC_URL`, `COCINA_PUBLIC_URL`, `BIENESTAR_PUBLIC_URL`, `NEXT_PUBLIC_STORE_URL`, `NEXT_PUBLIC_COCINA_URL`, `NEXT_PUBLIC_BIENESTAR_URL`, `META_CATALOG_URL` and Meta catalog settings instead of changing code.
 
 ## Runtime
 
@@ -44,7 +47,7 @@ infra/vicky-coolify.env.example
 
 Vicky should not query the database directly for normal sales work. Use `ecommerce-tools`:
 
-- `GET /tools/search-products`
+- `GET /tools/search-products?vertical=cocina|bienestar`
 - `GET /tools/ai-context/customer/:phone`
 - `POST /tools/quote`
 - `POST /tools/orders`
@@ -77,8 +80,10 @@ The tools service is responsible for Medusa, CRM WhatsApp, Meta events, PayPhone
 Validate the current ecommerce stack before enabling the bot:
 
 ```bash
-curl -fsS https://shop.b2b.com.ec/ | head
-curl -fsS https://shop.b2b.com.ec/feeds/meta/catalog.csv | head
+curl -fsS https://cocina.b2b.com.ec/ | head
+curl -fsS https://bienestar.b2b.com.ec/ | head
+curl -fsS https://cocina.b2b.com.ec/feeds/meta/catalog.csv | head
+curl -fsS https://bienestar.b2b.com.ec/feeds/meta/catalog.csv | head
 curl -fsS https://adminshop.b2b.com.ec/app/crm-whatsapp | head
 ```
 

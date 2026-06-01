@@ -43,6 +43,10 @@ app.get("/tools/search-products", async (request) => {
       minPrice: query.minPrice ? Number(query.minPrice) : undefined,
       maxPrice: query.maxPrice ? Number(query.maxPrice) : undefined,
       limit: query.limit ? Number(query.limit) : undefined,
+      vertical:
+        query.vertical === "bienestar" || query.vertical === "cocina"
+          ? query.vertical
+          : undefined,
     }),
   }
 })
@@ -73,8 +77,14 @@ app.post("/webhooks/payphone", async (request) => {
   return service.payphoneWebhook(payload)
 })
 
-app.get("/feeds/meta/catalog.csv", async (_request, reply) => {
-  const csv = await service.metaCatalogCsv()
+app.get("/feeds/meta/catalog.csv", async (request, reply) => {
+  const query = request.query as Record<string, string | undefined>
+  const csv = await service.metaCatalogCsv({
+    vertical:
+      query.vertical === "bienestar" || query.vertical === "cocina"
+        ? query.vertical
+        : undefined,
+  })
   return reply.type("text/csv; charset=utf-8").send(csv)
 })
 

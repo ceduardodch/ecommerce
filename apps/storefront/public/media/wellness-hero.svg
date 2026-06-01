@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-label="Rutina de bienestar Eter Niu">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f7e8d0"/>
+      <stop offset="0.55" stop-color="#dbe8d0"/>
+      <stop offset="1" stop-color="#f2b37a"/>
+    </linearGradient>
+    <linearGradient id="mat" x1="0" x2="1">
+      <stop offset="0" stop-color="#174936"/>
+      <stop offset="1" stop-color="#8fb076"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1500" fill="url(#bg)"/>
+  <circle cx="1020" cy="210" r="180" fill="#d83b24" opacity=".18"/>
+  <circle cx="160" cy="1260" r="260" fill="#174936" opacity=".13"/>
+  <path d="M170 1000c250-90 586-105 864-30 42 11 69 53 59 95l-29 122c-10 41-52 66-93 55-240-65-525-54-741 26-43 16-91-7-105-51l-37-116c-14-43 20-86 82-101z" fill="url(#mat)"/>
+  <rect x="350" y="332" width="500" height="650" rx="250" fill="#fffdf6" opacity=".88"/>
+  <path d="M602 488c92 0 164 74 164 168v120c0 93-73 168-164 168s-166-75-166-168V656c0-94 74-168 166-168z" fill="#f2b37a"/>
+  <circle cx="602" cy="618" r="78" fill="#8f5c45" opacity=".9"/>
+  <path d="M470 850c66 62 198 65 263 1" fill="none" stroke="#174936" stroke-width="26" stroke-linecap="round"/>
+  <rect x="170" y="216" width="270" height="390" rx="88" fill="#174936"/>
+  <rect x="203" y="254" width="204" height="312" rx="62" fill="#fffdf6" opacity=".82"/>
+  <path d="M255 322h100M255 384h100M255 446h74" stroke="#d83b24" stroke-width="22" stroke-linecap="round"/>
+  <rect x="790" y="760" width="150" height="360" rx="75" fill="#d83b24"/>
+  <rect x="826" y="650" width="78" height="132" rx="30" fill="#174936"/>
+  <path d="M312 1320h584" stroke="#174936" stroke-width="28" stroke-linecap="round" opacity=".65"/>
+  <text x="88" y="105" fill="#174936" font-family="Georgia,serif" font-size="58" font-weight="700">Eter Niu Bienestar</text>
+  <text x="88" y="175" fill="#613426" font-family="Arial,sans-serif" font-size="34" font-weight="800">rutina diaria + pausa + movimiento</text>
+</svg>

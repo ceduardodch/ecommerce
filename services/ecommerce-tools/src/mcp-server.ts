@@ -38,6 +38,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           minPrice: { type: "number" },
           maxPrice: { type: "number" },
           limit: { type: "number" },
+          vertical: { type: "string", enum: ["cocina", "bienestar"] },
         },
       },
     },
@@ -210,6 +211,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       minPrice?: number
       maxPrice?: number
       limit?: number
+      vertical?: "cocina" | "bienestar"
     }
     const products = await service.products(input)
     return {

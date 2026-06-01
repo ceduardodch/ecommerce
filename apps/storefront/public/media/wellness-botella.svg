@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Botella termica bienestar">
+  <rect width="900" height="1100" fill="#f7e8d0"/>
+  <circle cx="740" cy="180" r="150" fill="#d83b24" opacity=".17"/>
+  <circle cx="160" cy="880" r="210" fill="#8fb076" opacity=".28"/>
+  <rect x="318" y="150" width="264" height="780" rx="132" fill="#174936"/>
+  <rect x="374" y="84" width="152" height="140" rx="42" fill="#d83b24"/>
+  <rect x="366" y="232" width="168" height="586" rx="84" fill="#fffdf6" opacity=".86"/>
+  <path d="M408 344h84M408 430h84M408 516h56" stroke="#f2b37a" stroke-width="26" stroke-linecap="round"/>
+  <path d="M210 930c148-62 323-76 482-24" stroke="#174936" stroke-width="26" stroke-linecap="round" opacity=".55"/>
+</svg>

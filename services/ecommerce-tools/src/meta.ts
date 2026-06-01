@@ -10,7 +10,7 @@ function withUtm(
   url: string,
   source: string,
   medium = "social",
-  campaign = "kitchen_catalog",
+  campaign = "catalog",
 ) {
   try {
     const target = new URL(url)
@@ -60,9 +60,12 @@ export function buildMetaCatalogCsv(products: Product[]) {
 
 export function buildMetaDraft(products: Product[], angle: string) {
   const names = products.map((product) => product.title).join(", ")
+  const isWellness = products.every((product) => product.vertical === "bienestar")
   const safeAngle =
     angle ||
-    "cocina diaria con granito, producto real y asesoria por WhatsApp"
+    (isWellness
+      ? "bienestar diario, producto real y asesoria por WhatsApp"
+      : "cocina diaria con granito, producto real y asesoria por WhatsApp")
   const priceAnchor = products
     .map((product) => {
       const material = product.material ? ` (${product.material})` : ""
@@ -93,24 +96,35 @@ export function buildMetaDraft(products: Product[], angle: string) {
     .join("\n")
 
   return {
-    facebook:
-      `Ollas de granito para cocinar mejor en casa: ${names}.\n\n` +
-      `Enfoque: ${safeAngle}. Te ayudamos por WhatsApp a escoger 20 cm, 24 cm o wok 32 cm segun cuantas personas cocinan y que recetas haces.\n\n` +
-      `${sourceAngles}\n\n${priceAnchor}`,
-    instagram:
-      `${names}\n\nMira el granito, el tamano y el uso real antes de comprar. ` +
-      "Escribenos por WhatsApp para confirmar stock, entrega y que tamano te conviene.",
-    marketplace: products.map((product) => ({
-      title: product.title.slice(0, 80),
-      price: product.price.amount,
-      description: `${product.description}\n\nMaterial: ${product.material || "Por confirmar"}.\nDiametro: ${product.diameterCm ? `${product.diameterCm} cm` : "Por confirmar"}.\nUso recomendado: ${product.tipoCocina || "cocina diaria"}.\nStock: ${product.stock}. Pago por link PayPhone. Entrega y factura se confirman por WhatsApp.\n\nAngulo sugerido: ${(product.contentAngles || [product.healthAngle || "granito para cocina diaria"])[0]}.\nNota: ${product.claimNote || "declaraciones como PFOA, PFAS o PTFE solo se publican si el proveedor entrega certificacion."}\n\nVer producto: ${withUtm(product.productUrl, "marketplace", "organic", "marketplace_kitchen")}`,
-      checklist: [
-        "Confirmar stock antes de publicar",
-        "Usar fotos reales del producto en bodega",
-        "Revisar categoria hogar/cocina y ubicacion en Facebook Marketplace",
-        "No publicar claims medicos ni frases de causalidad sobre enfermedades",
-        "Publicar manualmente o con navegador supervisado",
-      ],
-    })),
+    facebook: isWellness
+      ? `Bienestar diario con productos practicos: ${names}.\n\n` +
+        `Enfoque: ${safeAngle}. Te ayudamos por WhatsApp a elegir el producto segun tu rutina, ciudad y objetivo.\n\n` +
+        `${sourceAngles}\n\n${priceAnchor}`
+      : `Ollas de granito para cocinar mejor en casa: ${names}.\n\n` +
+        `Enfoque: ${safeAngle}. Te ayudamos por WhatsApp a escoger 20 cm, 24 cm o wok 32 cm segun cuantas personas cocinan y que recetas haces.\n\n` +
+        `${sourceAngles}\n\n${priceAnchor}`,
+    instagram: isWellness
+      ? `${names}\n\nRutina simple, producto real y asesoria por WhatsApp para confirmar stock, entrega y promo.`
+      : `${names}\n\nMira el granito, el tamano y el uso real antes de comprar. ` +
+        "Escribenos por WhatsApp para confirmar stock, entrega y que tamano te conviene.",
+    marketplace: products.map((product) => {
+      const productIsWellness = product.vertical === "bienestar"
+      return {
+        title: product.title.slice(0, 80),
+        price: product.price.amount,
+        description: productIsWellness
+          ? `${product.description}\n\nUso recomendado: ${product.bundleUseCase || product.healthAngle || "rutina diaria"}.\nStock: ${product.stock}. Pago por link PayPhone. Entrega y factura se confirman por WhatsApp.\n\nAngulo sugerido: ${(product.contentAngles || [product.healthAngle || "bienestar diario"])[0]}.\nNota: ${product.claimNote || "no publicar promesas medicas ni resultados de salud no certificados."}\n\nVer producto: ${withUtm(product.productUrl, "marketplace", "organic", "marketplace_wellness")}`
+          : `${product.description}\n\nMaterial: ${product.material || "Por confirmar"}.\nDiametro: ${product.diameterCm ? `${product.diameterCm} cm` : "Por confirmar"}.\nUso recomendado: ${product.tipoCocina || "cocina diaria"}.\nStock: ${product.stock}. Pago por link PayPhone. Entrega y factura se confirman por WhatsApp.\n\nAngulo sugerido: ${(product.contentAngles || [product.healthAngle || "granito para cocina diaria"])[0]}.\nNota: ${product.claimNote || "declaraciones como PFOA, PFAS o PTFE solo se publican si el proveedor entrega certificacion."}\n\nVer producto: ${withUtm(product.productUrl, "marketplace", "organic", "marketplace_kitchen")}`,
+        checklist: [
+          "Confirmar stock antes de publicar",
+          "Usar fotos reales del producto en bodega",
+          productIsWellness
+            ? "Revisar categoria hogar/bienestar o accesorios segun producto"
+            : "Revisar categoria hogar/cocina y ubicacion en Facebook Marketplace",
+          "No publicar claims medicos ni frases de causalidad sobre enfermedades",
+          "Publicar manualmente o con navegador supervisado",
+        ],
+      }
+    }),
   }
 }

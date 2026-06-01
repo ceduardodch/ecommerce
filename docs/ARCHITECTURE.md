@@ -1,6 +1,6 @@
 # Eter Niu Cocina AI Native Ecommerce Architecture
 
-This project is a conversational kitchen-commerce stack for `shop.b2b.com.ec`.
+This project is a conversational social-commerce stack for `cocina.b2b.com.ec` and `bienestar.b2b.com.ec`, with `shop.b2b.com.ec` kept as a legacy storefront alias during migration.
 
 ## Runtime shape
 

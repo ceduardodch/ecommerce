@@ -7,6 +7,7 @@ export type Product = {
   id: string
   variantId: string
   sku: string
+  vertical?: "cocina" | "bienestar"
   title: string
   description: string
   category: string

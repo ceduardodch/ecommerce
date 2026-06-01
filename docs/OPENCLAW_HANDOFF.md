@@ -89,7 +89,7 @@ Rutas publicas sin token:
 
 Rutas privadas esperadas:
 
-- `GET /tools/search-products`
+- `GET /tools/search-products?vertical=cocina|bienestar`
 - `POST /tools/quote`
 - `POST /tools/orders`
 - `POST /tools/payphone-link`
@@ -107,7 +107,7 @@ Rutas privadas esperadas:
 
 1. Cliente escribe por WhatsApp.
 2. Si conoce el telefono, OpenClaw/Vicky consulta `GET /tools/ai-context/customer/:phone` antes de recomendar. Si el mensaje de WhatsApp trae `Lead`, `ProductoID`, `Variante`, `SKU`, cupon, pagos, compatibilidad o empieza con `Hola, quiero la olla de granito ...`, consulta `GET /tools/ai-context/customer/:phone?leadId=<Lead>` y responde el flujo de ese producto, no un menu generico.
-3. OpenClaw busca productos de cocina antes de decir precio o stock.
+3. OpenClaw busca productos con el vertical correcto antes de decir precio o stock: `vertical=cocina` para ollas/woks y `vertical=bienestar` para productos no cocina.
 4. OpenClaw recomienda maximo tres opciones segun uso: 20 cm, 24 cm, wok 32 cm, set MGC, menos aceite, familia, cuidado o reposicion.
 5. OpenClaw cotiza y queda evento `quote_created` si hay telefono.
 6. Si el cliente acepta, OpenClaw crea orden `pending_payment`.
@@ -155,14 +155,14 @@ Con `ecommerce-tools` arriba:
 
 ```bash
 curl http://localhost:8787/healthz
-curl http://localhost:8787/tools/search-products?query=ollas
+curl "http://localhost:8787/tools/search-products?vertical=cocina&query=ollas"
 ```
 
 Con token:
 
 ```bash
 curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
-  "http://localhost:8787/tools/search-products?query=wok%2032"
+  "http://localhost:8787/tools/search-products?vertical=cocina&query=wok%2032"
 
 curl -H "Authorization: Bearer <TOOLS_API_TOKEN>" \
   "http://localhost:8787/tools/followups/due"

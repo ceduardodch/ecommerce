@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Kit de aroma bienestar">
+  <rect width="900" height="1100" fill="#f7e8d0"/>
+  <circle cx="690" cy="820" r="210" fill="#174936" opacity=".14"/>
+  <rect x="280" y="555" width="340" height="280" rx="44" fill="#174936"/>
+  <rect x="330" y="487" width="240" height="110" rx="55" fill="#d83b24"/>
+  <path d="M370 387c-46-78 38-116 6-178M458 410c-34-68 58-118 20-206M540 382c-42-78 54-128 18-184" fill="none" stroke="#8fb076" stroke-width="24" stroke-linecap="round"/>
+  <path d="M352 660h196M352 724h142" stroke="#fffdf6" stroke-width="24" stroke-linecap="round" opacity=".84"/>
+  <path d="M230 890h440" stroke="#d83b24" stroke-width="24" stroke-linecap="round" opacity=".7"/>
+</svg>

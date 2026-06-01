@@ -1635,6 +1635,903 @@ h1 {
   color: #ffffff;
 }
 
+.campaign-page {
+  width: min(1120px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 14px 0 118px;
+}
+
+.campaign-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.campaign-topbar-link {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.92);
+  padding: 0 13px;
+  color: var(--green-dark);
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.campaign-hero {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--panel-strong);
+  box-shadow: var(--shadow);
+}
+
+.campaign-video-card {
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  background: #0d120f;
+  color: #fffdf6;
+}
+
+.campaign-video-frame {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(216, 59, 36, 0.32), rgba(23, 107, 73, 0.46)),
+    #1b221b;
+}
+
+.campaign-video-frame img,
+.campaign-video-frame video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.campaign-video-frame > span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  background: rgba(17, 24, 19, 0.78);
+  padding: 7px 10px;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.campaign-video-caption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  display: grid;
+  gap: 3px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(17, 24, 19, 0.1), rgba(17, 24, 19, 0.86));
+  padding: 42px 12px 12px;
+}
+
+.campaign-video-caption strong {
+  color: var(--yellow);
+  font-size: 1rem;
+}
+
+.campaign-video-caption small {
+  color: rgba(255, 253, 246, 0.88);
+  font-weight: 850;
+}
+
+.campaign-video-card > div:last-child {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+}
+
+.campaign-video-card > div:last-child > strong {
+  font-size: 1.05rem;
+  line-height: 1.12;
+}
+
+.campaign-video-card p {
+  margin: 0;
+  color: #d6e0d7;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.34;
+}
+
+.campaign-video-card a {
+  width: fit-content;
+  color: var(--yellow);
+  font-size: 0.9rem;
+  font-weight: 950;
+}
+
+.campaign-hero-copy {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: 42px;
+  background:
+    radial-gradient(circle at 80% 18%, rgba(245, 164, 93, 0.38), transparent 19rem),
+    radial-gradient(circle at 16% 92%, rgba(159, 184, 140, 0.42), transparent 21rem),
+    linear-gradient(135deg, rgba(255, 253, 246, 0.99), rgba(247, 232, 208, 0.92));
+}
+
+.campaign-hero-copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.4rem, 6vw, 5.2rem);
+  line-height: 0.98;
+}
+
+.campaign-hero-copy p {
+  max-width: 620px;
+  margin: 0;
+  color: #2f3c32;
+  font-weight: 760;
+  line-height: 1.48;
+}
+
+.campaign-price-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  border: 1px solid rgba(25, 27, 20, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.78);
+  padding: 14px;
+}
+
+.campaign-price-card > div {
+  display: grid;
+  gap: 2px;
+}
+
+.campaign-price-card strong {
+  color: var(--tomato-dark);
+  font-size: 2.35rem;
+  line-height: 1;
+}
+
+.campaign-price-card small {
+  color: var(--green-dark);
+  font-weight: 950;
+}
+
+.campaign-trust,
+.campaign-proof-grid,
+.campaign-faq {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.campaign-trust {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.campaign-trust article,
+.campaign-faq article,
+.campaign-selector,
+.campaign-empty {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.94);
+  box-shadow: 0 12px 30px rgba(25, 27, 20, 0.08);
+}
+
+.campaign-trust article {
+  display: grid;
+  gap: 9px;
+  min-height: 134px;
+  align-content: space-between;
+  padding: 14px;
+}
+
+.campaign-trust svg,
+.campaign-faq svg {
+  color: var(--tomato);
+}
+
+.campaign-trust strong,
+.campaign-faq h2 {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  line-height: 1.04;
+}
+
+.campaign-trust span,
+.campaign-faq p,
+.campaign-selector p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 740;
+  line-height: 1.42;
+}
+
+.campaign-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 24px 0 12px;
+}
+
+.campaign-section-head h2,
+.campaign-selector h2 {
+  margin-top: 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.15rem;
+  line-height: 1.04;
+}
+
+.campaign-section-head > span {
+  border-radius: 999px;
+  background: #fff4df;
+  padding: 8px 11px;
+  color: #8a341d;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.campaign-proof-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.campaign-video-card.compact {
+  border-radius: 8px;
+}
+
+.campaign-video-card.compact .campaign-video-frame {
+  min-height: 0;
+  aspect-ratio: 4 / 5;
+}
+
+.campaign-selector {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(231, 244, 231, 0.92)),
+    url("/media/photo-product-olla-24.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.campaign-selector > div:first-child,
+.campaign-selector-panel {
+  display: grid;
+  gap: 12px;
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.9);
+  padding: 16px;
+}
+
+.campaign-choice-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.campaign-choice-group button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--green-dark);
+  font-size: 0.84rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.campaign-choice-group button.is-active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #ffffff;
+}
+
+.campaign-select-label {
+  display: grid;
+  gap: 6px;
+}
+
+.campaign-select-label span {
+  color: var(--green-dark);
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.campaign-select-label select {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 0 11px;
+  color: var(--ink);
+}
+
+.campaign-wide-cta {
+  width: 100%;
+}
+
+.campaign-selector-panel small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.campaign-faq {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 10px;
+}
+
+.campaign-faq article {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.campaign-faq h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.campaign-empty {
+  padding: 24px;
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.campaign-sticky-cta {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 35;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  width: min(620px, calc(100% - 32px));
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  background: rgba(17, 24, 19, 0.94);
+  padding: 10px;
+  color: #fffdf6;
+  box-shadow: 0 18px 42px rgba(23, 32, 27, 0.26);
+}
+
+.campaign-sticky-cta div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.campaign-sticky-cta span {
+  color: var(--yellow);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.campaign-sticky-cta strong {
+  overflow: hidden;
+  font-size: 0.92rem;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wellness-page {
+  width: min(1120px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 14px 0 104px;
+}
+
+.wellness-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.wellness-topbar nav {
+  display: flex;
+  gap: 8px;
+}
+
+.wellness-topbar nav a {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  border: 1px solid rgba(23, 73, 54, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.72);
+  padding: 0 12px;
+  color: var(--green-dark);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.wellness-hero,
+.wellness-campaign-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(216, 59, 36, 0.16), transparent 18rem),
+    linear-gradient(135deg, #fffdf6, #dbe8d0);
+  box-shadow: var(--shadow);
+}
+
+.wellness-campaign-hero {
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1fr);
+}
+
+.wellness-hero-copy,
+.wellness-campaign-copy {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: 44px;
+}
+
+.wellness-hero-copy h1,
+.wellness-campaign-copy h1 {
+  max-width: 720px;
+  color: #173b2c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(3.2rem, 6vw, 5.1rem);
+  line-height: 0.98;
+}
+
+.wellness-hero-copy p,
+.wellness-campaign-copy p {
+  max-width: 610px;
+  margin: 0;
+  color: #33473b;
+  font-weight: 760;
+  line-height: 1.5;
+}
+
+.wellness-hero-actions,
+.wellness-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wellness-hero-media,
+.wellness-campaign-media,
+.wellness-product-media {
+  position: relative;
+  overflow: hidden;
+  background: #173b2c;
+}
+
+.wellness-hero-media {
+  min-height: 620px;
+}
+
+.wellness-campaign-media {
+  min-height: 590px;
+}
+
+.wellness-hero-media img,
+.wellness-campaign-media img,
+.wellness-product-media img,
+.wellness-story-grid img,
+.wellness-more-products img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.wellness-hero-media > div {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: grid;
+  gap: 3px;
+  border-radius: 8px;
+  background: rgba(17, 24, 19, 0.82);
+  padding: 14px;
+  color: #fffdf6;
+}
+
+.wellness-hero-media strong {
+  color: var(--yellow);
+}
+
+.wellness-hero-media span {
+  color: rgba(255, 253, 246, 0.86);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.wellness-campaign-media > span,
+.wellness-product-media > span {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  border-radius: 999px;
+  background: rgba(17, 24, 19, 0.78);
+  padding: 7px 10px;
+  color: #fffdf6;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.wellness-rhythm-grid,
+.wellness-product-grid,
+.wellness-proof-grid,
+.wellness-faq,
+.wellness-story-grid,
+.wellness-operating-strip {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.wellness-rhythm-grid,
+.wellness-proof-grid,
+.wellness-operating-strip {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.wellness-product-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.wellness-faq {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.wellness-story-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wellness-rhythm-grid article,
+.wellness-product-card,
+.wellness-proof-grid article,
+.wellness-faq article,
+.wellness-story-grid article,
+.wellness-operating-strip article,
+.wellness-routine,
+.wellness-empty,
+.wellness-more-products {
+  border: 1px solid rgba(23, 73, 54, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.92);
+  box-shadow: 0 14px 32px rgba(25, 27, 20, 0.08);
+}
+
+.wellness-rhythm-grid article,
+.wellness-proof-grid article,
+.wellness-faq article,
+.wellness-operating-strip article {
+  display: grid;
+  gap: 9px;
+  padding: 15px;
+}
+
+.wellness-rhythm-grid svg,
+.wellness-proof-grid svg,
+.wellness-faq svg,
+.wellness-operating-strip svg {
+  color: #d83b24;
+}
+
+.wellness-rhythm-grid strong,
+.wellness-proof-grid strong,
+.wellness-faq h2,
+.wellness-operating-strip strong {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  line-height: 1.05;
+}
+
+.wellness-rhythm-grid span,
+.wellness-proof-grid span,
+.wellness-faq p,
+.wellness-operating-strip span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 760;
+  line-height: 1.38;
+}
+
+.wellness-product-card {
+  display: grid;
+  overflow: hidden;
+}
+
+.wellness-product-media {
+  aspect-ratio: 4 / 5;
+}
+
+.wellness-product-card > div {
+  display: grid;
+  gap: 9px;
+  padding: 13px;
+}
+
+.wellness-product-card p {
+  margin: 0;
+  color: #8a341d;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.wellness-product-card h2 {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.34rem;
+  line-height: 1.04;
+}
+
+.wellness-product-card small {
+  color: var(--muted);
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.wellness-product-meta {
+  display: grid;
+  gap: 5px;
+}
+
+.wellness-product-meta strong {
+  color: var(--tomato-dark);
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.wellness-product-meta span {
+  color: #31453b;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.wellness-card-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.wellness-card-actions .primary-button,
+.wellness-card-actions .secondary-button {
+  width: 100%;
+}
+
+.wellness-routine {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 16px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(219, 232, 208, 0.88)),
+    url("/media/wellness-hero.svg");
+  background-position: center;
+  background-size: cover;
+}
+
+.wellness-routine > div:first-child,
+.wellness-routine-panel {
+  display: grid;
+  gap: 12px;
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.9);
+  padding: 16px;
+}
+
+.wellness-routine h2,
+.wellness-more-products h2 {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  line-height: 1.04;
+}
+
+.wellness-routine p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 760;
+  line-height: 1.42;
+}
+
+.wellness-choice-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.wellness-choice-group button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--green-dark);
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.wellness-choice-group button.is-active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #ffffff;
+}
+
+.wellness-wide-cta {
+  width: 100%;
+}
+
+.wellness-routine-panel small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.wellness-faq article {
+  min-height: 170px;
+}
+
+.wellness-story-grid article {
+  display: grid;
+  overflow: hidden;
+}
+
+.wellness-story-grid img {
+  aspect-ratio: 4 / 3;
+}
+
+.wellness-story-grid strong,
+.wellness-story-grid span {
+  margin: 0 14px;
+}
+
+.wellness-story-grid strong {
+  margin-top: 14px;
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.32rem;
+}
+
+.wellness-story-grid span {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-weight: 780;
+}
+
+.wellness-empty {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 22px;
+}
+
+.wellness-empty h1,
+.wellness-empty h2 {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.wellness-empty p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 780;
+  line-height: 1.45;
+}
+
+.wellness-more-products {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+  gap: 14px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 16px;
+}
+
+.wellness-more-products > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.wellness-more-products a {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(23, 73, 54, 0.12);
+  border-radius: 8px;
+  background: #fffdf6;
+  color: var(--green-dark);
+  font-weight: 900;
+}
+
+.wellness-more-products img {
+  aspect-ratio: 1 / 1;
+}
+
+.wellness-more-products span {
+  padding: 9px;
+  font-size: 0.84rem;
+  line-height: 1.18;
+}
+
+.wellness-sticky-cta {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 36;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  width: min(620px, calc(100% - 32px));
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  background: rgba(23, 59, 44, 0.95);
+  padding: 10px;
+  color: #fffdf6;
+  box-shadow: 0 18px 42px rgba(23, 32, 27, 0.26);
+}
+
+.wellness-sticky-cta div {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.wellness-sticky-cta span {
+  color: var(--yellow);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.wellness-sticky-cta strong {
+  overflow: hidden;
+  font-size: 0.92rem;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .product-detail-page {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
@@ -2017,6 +2914,7 @@ h1 {
   }
 
   .page-shell,
+  .campaign-page,
   .product-detail-page,
   .guide-page,
   .article-page {
@@ -2077,7 +2975,8 @@ h1 {
     width: 100%;
   }
 
-  .social-hero {
+  .social-hero,
+  .campaign-hero {
     min-height: auto;
     width: 100%;
     max-width: 100%;
@@ -2132,6 +3031,7 @@ h1 {
     font-size: 0.94rem;
   }
 
+  .campaign-hero-copy,
   .hero-copy,
   .detail-copy,
   .guide-hero,
@@ -2144,6 +3044,7 @@ h1 {
   }
 
   h1,
+  .campaign-hero-copy h1,
   .guide-hero h1,
   .article-hero h1 {
     font-size: 2.65rem;
@@ -2201,6 +3102,11 @@ h1 {
     grid-column: 1 / -1;
   }
 
+  .campaign-trust,
+  .campaign-proof-grid,
+  .campaign-faq,
+  .campaign-selector,
+  .campaign-choice-group,
   .proof-strip,
   .prequal-grid,
   .proof-lab,
@@ -2218,6 +3124,16 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .campaign-hero,
+  .wellness-hero,
+  .wellness-campaign-hero,
+  .campaign-video-card,
+  .campaign-video-frame,
+  .campaign-proof-grid,
+  .campaign-selector,
+  .wellness-product-card,
+  .wellness-routine,
+  .wellness-story-grid,
   .video-grid,
   .deal-grid,
   .club-section,
@@ -2228,11 +3144,192 @@ h1 {
     overflow: hidden;
   }
 
+  .campaign-selector,
+  .wellness-routine,
   .club-section,
   .quiz-section,
   .prequal-section,
   .guide-band {
     padding: 16px;
+  }
+
+  .campaign-topbar {
+    align-items: stretch;
+  }
+
+  .wellness-topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .wellness-topbar nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .wellness-topbar nav a {
+    justify-content: center;
+    padding: 0 8px;
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
+  .campaign-topbar .brand-mark {
+    justify-content: flex-start;
+  }
+
+  .campaign-video-frame {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    max-height: min(520px, 70vh);
+  }
+
+  .campaign-video-card.compact .campaign-video-frame {
+    aspect-ratio: 1 / 1;
+    max-height: min(360px, 54vh);
+  }
+
+  .campaign-video-card > div:last-child {
+    padding: 12px;
+  }
+
+  .wellness-hero,
+  .wellness-campaign-hero,
+  .wellness-routine,
+  .wellness-more-products {
+    grid-template-columns: 1fr;
+  }
+
+  .wellness-hero-copy,
+  .wellness-campaign-copy {
+    padding: 16px;
+  }
+
+  .wellness-hero-copy h1,
+  .wellness-campaign-copy h1 {
+    font-size: 2.55rem;
+    line-height: 1.02;
+  }
+
+  .wellness-hero-media,
+  .wellness-campaign-media {
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    max-height: min(520px, 70vh);
+    order: -1;
+  }
+
+  .wellness-rhythm-grid,
+  .wellness-product-grid,
+  .wellness-proof-grid,
+  .wellness-faq,
+  .wellness-story-grid,
+  .wellness-operating-strip,
+  .wellness-more-products > div:last-child,
+  .wellness-choice-group {
+    grid-template-columns: 1fr;
+  }
+
+  .wellness-rhythm-grid article,
+  .wellness-proof-grid article,
+  .wellness-faq article,
+  .wellness-operating-strip article {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .wellness-product-media {
+    aspect-ratio: 16 / 12;
+  }
+
+  .wellness-routine {
+    gap: 10px;
+    margin-top: 14px;
+    padding: 16px;
+  }
+
+  .wellness-routine > div:first-child,
+  .wellness-routine-panel {
+    padding: 13px;
+  }
+
+  .wellness-routine h2,
+  .wellness-more-products h2 {
+    font-size: 1.62rem;
+  }
+
+  .wellness-story-grid img,
+  .wellness-more-products img {
+    max-height: 240px;
+  }
+
+  .wellness-sticky-cta {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
+    width: auto;
+    padding: 8px;
+  }
+
+  .wellness-sticky-cta .primary-button {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: 0.82rem;
+  }
+
+  .campaign-price-card {
+    grid-template-columns: 1fr;
+  }
+
+  .campaign-price-card .primary-button {
+    width: 100%;
+  }
+
+  .campaign-trust article,
+  .campaign-faq article {
+    min-height: 0;
+    padding: 12px;
+  }
+
+  .campaign-section-head {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .campaign-section-head h2,
+  .campaign-selector h2 {
+    font-size: 1.62rem;
+  }
+
+  .campaign-selector {
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .campaign-selector > div:first-child,
+  .campaign-selector-panel {
+    padding: 13px;
+  }
+
+  .campaign-choice-group {
+    gap: 7px;
+  }
+
+  .campaign-sticky-cta {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
+    width: auto;
+    padding: 8px;
+  }
+
+  .campaign-sticky-cta .primary-button {
+    min-height: 44px;
+    padding-inline: 10px;
+    font-size: 0.82rem;
   }
 
   .prequal-section,

@@ -279,6 +279,7 @@ export function createCommerceService(config: AppConfig) {
       minPrice?: number
       maxPrice?: number
       limit?: number
+      vertical?: "cocina" | "bienestar"
     }) {
       const products = await loadProducts(config)
       return searchProducts(products, input)
@@ -488,9 +489,11 @@ export function createCommerceService(config: AppConfig) {
       return { matched: true, status: updated.status, order: updated }
     },
 
-    async metaCatalogCsv() {
+    async metaCatalogCsv(input: { vertical?: "cocina" | "bienestar" } = {}) {
       const products = await loadProducts(config)
-      return buildMetaCatalogCsv(products)
+      return buildMetaCatalogCsv(
+        searchProducts(products, { vertical: input.vertical, limit: 100 }),
+      )
     },
 
     async metaDraft(input: { productIds: string[]; angle: string }) {

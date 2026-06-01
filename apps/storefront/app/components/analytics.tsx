@@ -39,6 +39,7 @@ type TrackingProduct = Pick<
 type TrackingPayload = {
   eventName: MetaEventName
   type?: string
+  source?: string
   eventId?: string
   product?: TrackingProduct
   products?: TrackingProduct[]
@@ -59,6 +60,10 @@ type TrackingPayload = {
 }
 
 type WhatsappTrackingContext = {
+  openingLine?: string
+  vertical?: string
+  source?: string
+  campaignSlug?: string
   recommendation?: string
   city?: string
   householdPeople?: string
@@ -71,6 +76,12 @@ type WhatsappTrackingContext = {
   freeShipping?: boolean
   paymentMethods?: string[]
   stoveCompatibility?: string
+  utmSource?: string
+  utmMedium?: string
+  utmCampaign?: string
+  utmContent?: string
+  utmTerm?: string
+  fbclid?: string
 }
 
 declare global {
@@ -227,7 +238,7 @@ export function trackStorefrontEvent(payload: TrackingPayload) {
     at: new Date().toISOString(),
     sessionId: session,
     leadId,
-    source: "storefront",
+    source: payload.source || "storefront",
     pageUrl: window.location.href,
     referrer: document.referrer || undefined,
     fbp: consent ? readCookie("_fbp") : undefined,
@@ -392,11 +403,12 @@ export function PageAnalytics({
     const pageKey = `page:${window.location.pathname}:${window.location.search}`
     if (!fired.current.has(pageKey) && readConsent()) {
       fired.current.add(pageKey)
-      trackStorefrontEvent({
-        eventName: "PageView",
-        type: "page_view",
-        metadata: { category },
-      })
+    trackStorefrontEvent({
+      eventName: "PageView",
+      type: "page_view",
+      source: "storefront",
+      metadata: { category },
+    })
     }
 
     if (featured && !fired.current.has(`view:${featured.id}`) && readConsent()) {
@@ -404,6 +416,7 @@ export function PageAnalytics({
       trackStorefrontEvent({
         eventName: "ViewContent",
         type: "view_content",
+        source: "storefront",
         product: featured,
         value: featured.price.amount,
       })
@@ -414,6 +427,7 @@ export function PageAnalytics({
       trackStorefrontEvent({
         eventName: "Search",
         type: "search",
+        source: "storefront",
         searchString: query,
         metadata: { category },
       })
@@ -433,16 +447,24 @@ export function TrackedWhatsAppLink({
   leadId,
   metadata,
   whatsappContext,
+  source = "storefront",
+  extraEventTypes = [],
 }: {
   product: TrackingProduct
   placement: string
   className?: string
   children: ReactNode
   cta?: string
-  eventType?: "whatsapp_opened" | "video_interest" | "product_interest"
+  eventType?:
+    | "whatsapp_opened"
+    | "video_interest"
+    | "product_interest"
+    | "campaign_cta_click"
   leadId?: string
   metadata?: Record<string, unknown>
   whatsappContext?: WhatsappTrackingContext
+  source?: string
+  extraEventTypes?: string[]
 }) {
   const commerce = commercialInfo(product)
   const fallbackHref = useMemo(
@@ -450,10 +472,10 @@ export function TrackedWhatsAppLink({
       whatsappLink(product, {
         ...whatsappContext,
         leadId: leadId || `lead_${product.id}_${placement}`,
-        source: "storefront",
+        source,
         placement,
       }),
-    [leadId, placement, product, whatsappContext],
+    [leadId, placement, product, source, whatsappContext],
   )
 
   return (
@@ -467,12 +489,14 @@ export function TrackedWhatsAppLink({
         const result = trackStorefrontEvent({
           eventName: "Lead",
           type: eventType,
+          source,
           product,
           value: product.price.amount,
           cta,
           placement,
           leadId: activeLeadId,
           metadata: {
+            source,
             couponClaimed: true,
             couponCode: commerce.couponCode,
             paymentMethodsShown: true,
@@ -488,11 +512,41 @@ export function TrackedWhatsAppLink({
               metadata?.productInterestSku || whatsappContext?.recommendedSku || product.sku,
           },
         })
+        for (const extraEventType of extraEventTypes) {
+          trackStorefrontEvent({
+            eventName: "Lead",
+            type: extraEventType,
+            source,
+            product,
+            value: product.price.amount,
+            cta,
+            placement,
+            leadId: activeLeadId,
+            metadata: {
+              source,
+              couponClaimed: true,
+              couponCode: commerce.couponCode,
+              paymentMethodsShown: true,
+              paymentMethods: commerce.paymentMethods,
+              paymentMethodsLabel: commerce.paymentMethodsLabel,
+              freeShippingShown: commerce.freeShipping,
+              freeShipping: commerce.freeShipping,
+              stoveCompatibilityShown: true,
+              stoveCompatibility: commerce.stoveCompatibility,
+              ...metadata,
+              ...whatsappContext,
+              productInterestSku:
+                metadata?.productInterestSku ||
+                whatsappContext?.recommendedSku ||
+                product.sku,
+            },
+          })
+        }
         const href = whatsappLink(product, {
           ...whatsappContext,
           leadId: activeLeadId,
           sessionId: result?.sessionId,
-          source: "storefront",
+          source,
           placement,
         })
 

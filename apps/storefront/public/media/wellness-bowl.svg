@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Bowl ceramico bienestar">
+  <rect width="900" height="1100" fill="#fffdf6"/>
+  <circle cx="705" cy="230" r="170" fill="#8fb076" opacity=".28"/>
+  <circle cx="170" cy="870" r="230" fill="#f2b37a" opacity=".38"/>
+  <ellipse cx="450" cy="510" rx="310" ry="155" fill="#174936"/>
+  <ellipse cx="450" cy="488" rx="250" ry="98" fill="#f7e8d0"/>
+  <path d="M190 510c34 205 150 330 260 330s226-125 260-330" fill="#d83b24"/>
+  <path d="M286 538c33 126 95 202 164 202s131-76 164-202" fill="#f2b37a" opacity=".6"/>
+  <path d="M344 424c28-38 72-58 106-58s78 20 106 58" fill="none" stroke="#174936" stroke-width="22" stroke-linecap="round"/>
+</svg>

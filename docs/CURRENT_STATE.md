@@ -34,7 +34,7 @@ El compose del ecommerce levanta:
 
 OpenClaw no esta en este compose. Debe desplegarse como app separada en Coolify con volumen propio.
 
-`medusa-api` y `ecommerce-tools` deben quedar internos; el compose usa `expose` para esos servicios. El unico servicio publicado al host es el storefront por `STOREFRONT_PORT_MAPPING`, con default `127.0.0.1:18214:3000`, detras de `shop.b2b.com.ec`.
+`medusa-api` y `ecommerce-tools` deben quedar internos; el compose usa `expose` para esos servicios. El unico servicio publicado al host es el storefront por `STOREFRONT_PORT_MAPPING`, con default `127.0.0.1:18214:3000`, detras de `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` y el legado `shop.b2b.com.ec`.
 
 ## Flujo funcional disponible
 
@@ -65,8 +65,9 @@ El servicio `ecommerce-tools` permite:
 - La matriz de contenido vive en `apps/storefront/lib/content.ts` y `docs/CONTENT_MATRIX.md`; mapea video/foto, producto, placement, CTA y evento CRM.
 - Los videos reales aprobados para cocina viven en `apps/storefront/public/media` como `hero-cocina.mp4`, `detalle-wok.mp4`, `receta-wok.mp4`, `uso-diario-gas.mp4` y `set-mgc.mp4`; si no existen, se muestran posters locales sin pedir archivos faltantes.
 - Las guias publicas viven en `/guias` y `/guias/teflon-pfas`. El copy de salud evita diagnosticos, causalidad medica y claims PFOA/PFAS/PTFE sin certificacion del proveedor.
-- Seed inicial disponible: `npm --workspace apps/backend run seed:kitchen`.
-- Catalogo fuente trazado a posts: `data/catalog/eter-niu-products.csv`.
+- Seed inicial cocina disponible: `npm --workspace apps/backend run seed:kitchen`.
+- Seed inicial bienestar disponible: `npm --workspace apps/backend run seed:wellness`.
+- Catalogos fuente trazados: `data/catalog/eter-niu-products.csv` y `data/catalog/eter-niu-wellness-products.csv`.
 
 Metadata recomendada por producto:
 
@@ -152,7 +153,8 @@ Metadata estandar esperada desde storefront: `journeyStage`, `householdPeople`, 
 
 ## Meta y Marketplace
 
-- Feed Meta disponible en `/feeds/meta/catalog.csv`.
+- Feed Meta disponible en `/feeds/meta/catalog.csv`, separado por host o por `?vertical=cocina|bienestar`.
+- Productos Medusa por vertical deben llevar `metadata.vertical=cocina|bienestar`; `ecommerce-tools` tambien infiere `MGC-*` como cocina y `BIEN-*` como bienestar.
 - Drafts organicos disponibles por `/tools/meta-post-draft`.
 - Pixel/CAPI v1 disponible con `NEXT_PUBLIC_META_PIXEL_ID`, `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y `PIXEL_ENABLED`.
 - Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened`, videos `video_interest`, quiz `quiz_completed`, guia `guide_downloaded` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material, diametro, placement y recomendacion para que OpenClaw una interes web con conversacion.
@@ -219,7 +221,8 @@ Validaciones de API si el stack esta arriba:
 ```bash
 curl http://localhost:8787/healthz
 curl http://localhost:8787/tools/search-products?limit=2
-curl http://localhost:8787/feeds/meta/catalog.csv
+curl "http://localhost:8787/feeds/meta/catalog.csv?vertical=cocina"
+curl "http://localhost:8787/feeds/meta/catalog.csv?vertical=bienestar"
 ```
 
 ## Pendiente antes de produccion

@@ -39,7 +39,7 @@ const products: KitchenProduct[] = [
     price: 150,
     originalPrice: 179,
     stock: 8,
-    image: "https://shop.b2b.com.ec/media/photo-receta-wok.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -94,7 +94,7 @@ const products: KitchenProduct[] = [
     price: 95,
     originalPrice: 119,
     stock: 10,
-    image: "https://shop.b2b.com.ec/media/photo-product-olla-20.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -143,7 +143,7 @@ const products: KitchenProduct[] = [
     price: 130,
     originalPrice: 159,
     stock: 12,
-    image: "https://shop.b2b.com.ec/media/photo-product-olla-24.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-product-olla-24.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -195,7 +195,7 @@ const products: KitchenProduct[] = [
     price: 249,
     originalPrice: 299,
     stock: 5,
-    image: "https://shop.b2b.com.ec/media/photo-product-set-granito.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-product-set-granito.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -246,7 +246,7 @@ const products: KitchenProduct[] = [
     price: 85,
     originalPrice: 105,
     stock: 14,
-    image: "https://shop.b2b.com.ec/media/photo-detalle-wok.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-detalle-wok.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -297,7 +297,7 @@ const products: KitchenProduct[] = [
     price: 28,
     originalPrice: 35,
     stock: 20,
-    image: "https://shop.b2b.com.ec/media/photo-product-utensilios.jpg",
+    image: "https://cocina.b2b.com.ec/media/photo-product-utensilios.jpg",
     metadata: {
       material: "Silicona y madera",
       capacity: "Kit de cuidado",

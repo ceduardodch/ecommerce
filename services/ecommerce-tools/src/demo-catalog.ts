@@ -58,8 +58,8 @@ export const demoCatalog: Product[] = [
       "Publicar PFOA, PFAS o PTFE solo si el proveedor entrega certificacion.",
     reorderAfterDays: 180,
     stock: 8,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-receta-wok.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/wok-granito-32cm-tapa",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
+    productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
     tags: [
       "wok",
       "granito",
@@ -112,8 +112,8 @@ export const demoCatalog: Product[] = [
     claimNote: "Mantener copy educativo; no publicar claims medicos absolutos.",
     reorderAfterDays: 180,
     stock: 10,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-product-olla-20.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/olla-granito-20cm",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
+    productUrl: "https://cocina.b2b.com.ec/products/olla-granito-20cm",
     tags: [
       "olla",
       "granito",
@@ -171,8 +171,8 @@ export const demoCatalog: Product[] = [
       "Si se menciona libre de PFOA/PFAS/PTFE, pedir certificacion previa.",
     reorderAfterDays: 180,
     stock: 12,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-product-olla-24.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/olla-granito-24cm-familiar",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-product-olla-24.jpg",
+    productUrl: "https://cocina.b2b.com.ec/products/olla-granito-24cm-familiar",
     tags: [
       "olla",
       "granito",
@@ -228,9 +228,9 @@ export const demoCatalog: Product[] = [
     claimNote: "Set saludable como eleccion informada, sin promesas medicas.",
     reorderAfterDays: 210,
     stock: 5,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-product-set-granito.jpg",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-product-set-granito.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
+      "https://cocina.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
     tags: [
       "set",
       "mgc",
@@ -286,9 +286,9 @@ export const demoCatalog: Product[] = [
       "Hablar de menos aceite como uso culinario, no como tratamiento de salud.",
     reorderAfterDays: 180,
     stock: 14,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-detalle-wok.jpg",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-detalle-wok.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
+      "https://cocina.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
     tags: [
       "sarten",
       "wok",
@@ -340,9 +340,9 @@ export const demoCatalog: Product[] = [
       "Complemento operativo para cuidado; no usarlo como claim de salud.",
     reorderAfterDays: 120,
     stock: 20,
-    imageUrl: "https://shop.b2b.com.ec/media/photo-product-utensilios.jpg",
+    imageUrl: "https://cocina.b2b.com.ec/media/photo-product-utensilios.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/utensilios-compatibles-granito",
+      "https://cocina.b2b.com.ec/products/utensilios-compatibles-granito",
     tags: [
       "utensilios",
       "granito",

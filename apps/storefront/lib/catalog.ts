@@ -4,6 +4,7 @@ import {
   defaultStoveCompatibility,
   defaultFreeShippingLabel,
 } from "./commercial"
+import { kitchenBaseUrl, wellnessBaseUrl } from "./domains"
 
 export { whatsappLink } from "./whatsapp"
 
@@ -11,6 +12,7 @@ export type Product = {
   id: string
   variantId: string
   sku: string
+  vertical?: "cocina" | "bienestar"
   title: string
   description: string
   category: string
@@ -84,6 +86,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-wok-granito-32",
     variantId: "var-wok-granito-32",
     sku: "MGC-WOK-GRANITO-32",
+    vertical: "cocina",
     title: "Wok de granito 32 cm con tapa",
     description:
       "Wok amplio para recetas diarias, salteados y preparaciones familiares con menos aceite.",
@@ -130,7 +133,7 @@ export const fallbackProducts: Product[] = [
     reorderAfterDays: 180,
     stock: 8,
     imageUrl: "/media/photo-receta-wok.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/wok-granito-32cm-tapa",
+    productUrl: `${kitchenBaseUrl}/products/wok-granito-32cm-tapa`,
     tags: [
       "wok",
       "granito",
@@ -145,6 +148,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-olla-granito-20",
     variantId: "var-olla-granito-20",
     sku: "MGC-OLLA-GRANITO-20",
+    vertical: "cocina",
     title: "Olla de granito 20 cm",
     description:
       "Olla compacta para el dia a dia, porciones pequenas y cocina practica en casa.",
@@ -183,7 +187,7 @@ export const fallbackProducts: Product[] = [
     reorderAfterDays: 180,
     stock: 10,
     imageUrl: "/media/photo-product-olla-20.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/olla-granito-20cm",
+    productUrl: `${kitchenBaseUrl}/products/olla-granito-20cm`,
     tags: [
       "olla",
       "granito",
@@ -198,6 +202,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-olla-granito-24",
     variantId: "var-olla-granito-24",
     sku: "MGC-OLLA-GRANITO-24",
+    vertical: "cocina",
     title: "Olla de granito 24 cm familiar",
     description:
       "Olla familiar para porciones grandes, sopas, guisos y cocina diaria con acabado granito.",
@@ -241,7 +246,7 @@ export const fallbackProducts: Product[] = [
     reorderAfterDays: 180,
     stock: 12,
     imageUrl: "/media/photo-product-olla-24.jpg",
-    productUrl: "https://shop.b2b.com.ec/products/olla-granito-24cm-familiar",
+    productUrl: `${kitchenBaseUrl}/products/olla-granito-24cm-familiar`,
     tags: [
       "olla",
       "granito",
@@ -255,6 +260,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-set-mgc-granito",
     variantId: "var-set-mgc-granito",
     sku: "MGC-SET-GRANITO-FAMILIAR",
+    vertical: "cocina",
     title: "Set MGC ollas y sartenes de granito",
     description:
       "Linea MGC para cambiar ollas rayadas por un set de granito de uso diario.",
@@ -298,7 +304,7 @@ export const fallbackProducts: Product[] = [
     stock: 5,
     imageUrl: "/media/photo-product-set-granito.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/set-mgc-ollas-sartenes-granito",
+      `${kitchenBaseUrl}/products/set-mgc-ollas-sartenes-granito`,
     tags: [
       "set",
       "mgc",
@@ -313,6 +319,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-sarten-wok-granito-28",
     variantId: "var-sarten-wok-granito-28",
     sku: "MGC-SARTEN-WOK-GRANITO-28",
+    vertical: "cocina",
     title: "Sarten wok granito para recetas rapidas",
     description:
       "Sarten tipo wok para vegetales, pollo y recetas rapidas con menos aceite.",
@@ -355,7 +362,7 @@ export const fallbackProducts: Product[] = [
     stock: 14,
     imageUrl: "/media/photo-detalle-wok.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/sarten-wok-granito-recetas-rapidas",
+      `${kitchenBaseUrl}/products/sarten-wok-granito-recetas-rapidas`,
     tags: [
       "sarten",
       "wok",
@@ -369,6 +376,7 @@ export const fallbackProducts: Product[] = [
     id: "prod-utensilios-granito",
     variantId: "var-utensilios-granito",
     sku: "MGC-UTENSILIOS-CUIDADO",
+    vertical: "cocina",
     title: "Utensilios compatibles para granito",
     description:
       "Kit de utensilios suaves para cuidar ollas y sartenes de granito sin rayarlas.",
@@ -407,7 +415,7 @@ export const fallbackProducts: Product[] = [
     stock: 20,
     imageUrl: "/media/photo-product-utensilios.jpg",
     productUrl:
-      "https://shop.b2b.com.ec/products/utensilios-compatibles-granito",
+      `${kitchenBaseUrl}/products/utensilios-compatibles-granito`,
     tags: [
       "utensilios",
       "granito",
@@ -416,6 +424,192 @@ export const fallbackProducts: Product[] = [
       "cuidado",
       "complemento",
     ],
+  },
+]
+
+export const wellnessFallbackProducts: Product[] = [
+  {
+    id: "prod-bien-botella-termica",
+    variantId: "var-bien-botella-termica",
+    sku: "BIEN-BOTELLA-TERMICA-750",
+    vertical: "bienestar",
+    title: "Botella termica para rutina diaria",
+    description:
+      "Botella para hidratarte en casa, oficina o entrenamiento sin depender de envases descartables.",
+    category: "Hidratacion",
+    brand: "Eter Niu Bienestar",
+    price: { amount: 24, currency: "USD" },
+    originalPrice: { amount: 32, currency: "USD" },
+    discountPercent: 25,
+    promoLabel: "Rutina diaria",
+    stockSignal: "Stock por confirmar para campana piloto",
+    bundleEligible: true,
+    deliveryBadge: "Envio gratis Ecuador",
+    freeShipping: true,
+    paymentMethods: defaultPaymentMethods,
+    couponCode: "BIENESTARHOY",
+    material: "Acero inoxidable",
+    capacity: "750 ml",
+    pieces: 1,
+    stoveCompatibility: "No aplica",
+    tipoCocina: "No aplica",
+    nivel: "Uso diario",
+    bundleUseCase: "Agua, infusiones frias y rutina de oficina o gimnasio",
+    careTips: "Lavar a mano, secar abierta y evitar bebidas carbonatadas.",
+    healthAngle:
+      "Ayuda a crear una rutina de hidratacion practica durante el dia.",
+    warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+    contentAngles: [
+      "hidratacion diaria",
+      "oficina y movimiento",
+      "regalo practico de bienestar",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote: "No publicar claims medicos; hablar de rutina y uso practico.",
+    reorderAfterDays: 120,
+    stock: 0,
+    imageUrl: "/media/wellness-botella.svg",
+    productUrl:
+      `${wellnessBaseUrl}/campanas/botella-termica?sku=BIEN-BOTELLA-TERMICA-750`,
+    tags: [
+      "bienestar",
+      "hidratacion",
+      "botella",
+      "rutina",
+      "oficina",
+      "movimiento",
+    ],
+  },
+  {
+    id: "prod-bien-mat-yoga",
+    variantId: "var-bien-mat-yoga",
+    sku: "BIEN-MAT-YOGA-ANTIDESLIZANTE",
+    vertical: "bienestar",
+    title: "Mat antideslizante para movimiento suave",
+    description:
+      "Mat para estiramiento, yoga suave y pausas activas en casa.",
+    category: "Movimiento",
+    brand: "Eter Niu Bienestar",
+    price: { amount: 39, currency: "USD" },
+    originalPrice: { amount: 49, currency: "USD" },
+    discountPercent: 20,
+    promoLabel: "Pausa activa",
+    stockSignal: "Stock por confirmar para campana piloto",
+    bundleEligible: true,
+    deliveryBadge: "Envio gratis Ecuador",
+    freeShipping: true,
+    paymentMethods: defaultPaymentMethods,
+    couponCode: "BIENESTARHOY",
+    material: "Superficie antideslizante",
+    capacity: "Uso personal",
+    pieces: 1,
+    stoveCompatibility: "No aplica",
+    tipoCocina: "No aplica",
+    nivel: "Inicio",
+    bundleUseCase: "Estiramiento, respiracion y movimiento en casa",
+    careTips: "Limpiar con pano humedo y guardar extendido o enrollado suave.",
+    healthAngle:
+      "Producto para acompanar pausas de movimiento, sin promesas terapeuticas.",
+    warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+    contentAngles: [
+      "pausa activa",
+      "movimiento suave",
+      "rutina de casa",
+    ],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote: "No prometer tratamiento fisico ni resultado medico.",
+    reorderAfterDays: 180,
+    stock: 0,
+    imageUrl: "/media/wellness-mat.svg",
+    productUrl:
+      `${wellnessBaseUrl}/campanas/mat-movimiento?sku=BIEN-MAT-YOGA-ANTIDESLIZANTE`,
+    tags: ["bienestar", "yoga", "mat", "movimiento", "pausa activa"],
+  },
+  {
+    id: "prod-bien-bowl-ceramica",
+    variantId: "var-bien-bowl-ceramica",
+    sku: "BIEN-BOWL-CERAMICA-RITUAL",
+    vertical: "bienestar",
+    title: "Bowl ceramico para desayuno consciente",
+    description:
+      "Bowl para desayuno, snacks o rituales de mesa con una estetica tranquila.",
+    category: "Mesa consciente",
+    brand: "Eter Niu Bienestar",
+    price: { amount: 18, currency: "USD" },
+    originalPrice: { amount: 24, currency: "USD" },
+    discountPercent: 25,
+    promoLabel: "Mesa consciente",
+    stockSignal: "Stock por confirmar para campana piloto",
+    bundleEligible: true,
+    deliveryBadge: "Envio gratis Ecuador",
+    freeShipping: true,
+    paymentMethods: defaultPaymentMethods,
+    couponCode: "BIENESTARHOY",
+    material: "Ceramica",
+    capacity: "Desayuno o snack",
+    pieces: 1,
+    stoveCompatibility: "No aplica",
+    tipoCocina: "No aplica",
+    nivel: "Uso diario",
+    bundleUseCase: "Avena, frutas, snacks y mesa visual para redes",
+    careTips: "Lavar con esponja suave y evitar golpes termicos.",
+    healthAngle:
+      "Ayuda a construir momentos de pausa alrededor de la comida diaria.",
+    warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+    contentAngles: [
+      "desayuno consciente",
+      "mesa tranquila",
+      "regalo practico",
+    ],
+    certificationStatus: "No aplica",
+    claimNote: "No prometer beneficios nutricionales.",
+    reorderAfterDays: 180,
+    stock: 0,
+    imageUrl: "/media/wellness-bowl.svg",
+    productUrl:
+      `${wellnessBaseUrl}/campanas/bowl-ceramico?sku=BIEN-BOWL-CERAMICA-RITUAL`,
+    tags: ["bienestar", "bowl", "ceramica", "mesa", "desayuno"],
+  },
+  {
+    id: "prod-bien-kit-aroma",
+    variantId: "var-bien-kit-aroma",
+    sku: "BIEN-KIT-AROMA-CALMA",
+    vertical: "bienestar",
+    title: "Kit de aroma para pausa en casa",
+    description:
+      "Kit para crear una pausa visual y aromatica en escritorio, sala o dormitorio.",
+    category: "Pausa en casa",
+    brand: "Eter Niu Bienestar",
+    price: { amount: 29, currency: "USD" },
+    originalPrice: { amount: 38, currency: "USD" },
+    discountPercent: 24,
+    promoLabel: "Momento calma",
+    stockSignal: "Stock por confirmar para campana piloto",
+    bundleEligible: true,
+    deliveryBadge: "Envio gratis Ecuador",
+    freeShipping: true,
+    paymentMethods: defaultPaymentMethods,
+    couponCode: "BIENESTARHOY",
+    material: "Accesorios decorativos",
+    capacity: "1 ambiente",
+    pieces: 3,
+    stoveCompatibility: "No aplica",
+    tipoCocina: "No aplica",
+    nivel: "Regalo",
+    bundleUseCase: "Escritorio, dormitorio o regalo de autocuidado",
+    careTips: "Usar en superficies estables y lejos de ninos o mascotas.",
+    healthAngle:
+      "Producto decorativo para crear un ritual de pausa, sin claims medicos.",
+    warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+    contentAngles: ["pausa en casa", "regalo", "ambiente tranquilo"],
+    certificationStatus: "Proveedor por confirmar",
+    claimNote: "No prometer relajacion clinica ni efectos terapeuticos.",
+    reorderAfterDays: 90,
+    stock: 0,
+    imageUrl: "/media/wellness-aroma.svg",
+    productUrl:
+      `${wellnessBaseUrl}/campanas/kit-aroma?sku=BIEN-KIT-AROMA-CALMA`,
+    tags: ["bienestar", "aroma", "decoracion", "pausa", "regalo"],
   },
 ]
 
@@ -428,6 +622,25 @@ function generatedImageForProduct(product: Product) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
+  if (
+    product.vertical === "bienestar" ||
+    product.sku.startsWith("BIEN-") ||
+    haystack.includes("bienestar")
+  ) {
+    if (haystack.includes("mat") || haystack.includes("yoga")) {
+      return "/media/wellness-mat.svg"
+    }
+    if (haystack.includes("bowl")) {
+      return "/media/wellness-bowl.svg"
+    }
+    if (haystack.includes("aroma") || haystack.includes("calma")) {
+      return "/media/wellness-aroma.svg"
+    }
+    if (haystack.includes("botella") || haystack.includes("hidrat")) {
+      return "/media/wellness-botella.svg"
+    }
+    return "/media/wellness-hero.svg"
+  }
   if (haystack.includes("utensilio")) {
     return "/media/photo-product-utensilios.jpg"
   }
@@ -480,6 +693,8 @@ const kitchenTerms = [
 ]
 
 function isKitchenProduct(product: Product) {
+  if (product.vertical === "cocina") return true
+  if (product.vertical === "bienestar") return false
   if (product.sku.startsWith("COC-") || product.sku.startsWith("MGC-")) {
     return true
   }
@@ -502,12 +717,58 @@ function isKitchenProduct(product: Product) {
   return kitchenTerms.some((term) => haystack.includes(term))
 }
 
-function normalizeProduct(product: Product): Product {
+const wellnessTerms = [
+  "bienestar",
+  "wellness",
+  "yoga",
+  "mat",
+  "botella",
+  "hidratacion",
+  "bowl",
+  "ceramica",
+  "aroma",
+  "calma",
+  "pausa",
+  "autocuidado",
+  "movimiento",
+  "rutina",
+  "decoracion",
+  "lifestyle",
+]
+
+function isWellnessProduct(product: Product) {
+  if (product.vertical === "bienestar") return true
+  if (product.vertical === "cocina") return false
+  if (product.sku.startsWith("BIEN-")) return true
+  const haystack = [
+    product.title,
+    product.description,
+    product.category,
+    product.brand,
+    product.material || "",
+    product.bundleUseCase || "",
+    product.healthAngle || "",
+    ...(product.sourceUrls || []),
+    ...(product.contentAngles || []),
+    ...product.tags,
+  ]
+    .join(" ")
+    .toLowerCase()
+  return wellnessTerms.some((term) => haystack.includes(term))
+}
+
+function normalizeProduct(
+  product: Product,
+  vertical: "cocina" | "bienestar" = "cocina",
+): Product {
   const isComplement = product.category.toLowerCase().includes("complement")
+  const isWellness = vertical === "bienestar" || product.vertical === "bienestar"
 
   return {
     ...product,
-    brand: product.brand || "Eter Niu Cocina",
+    vertical: product.vertical || vertical,
+    brand:
+      product.brand || (isWellness ? "Eter Niu Bienestar" : "Eter Niu Cocina"),
     imageUrl: placeholderForProduct(product),
     deliveryBadge: product.deliveryBadge || defaultFreeShippingLabel,
     freeShipping: product.freeShipping ?? true,
@@ -517,20 +778,20 @@ function normalizeProduct(product: Product): Product {
     couponCode: product.couponCode || defaultCouponCode,
     stoveCompatibility:
       product.stoveCompatibility ||
-      (isComplement ? "No aplica; cuida ollas de granito" : defaultStoveCompatibility),
+      (isWellness
+        ? "No aplica"
+        : isComplement
+          ? "No aplica; cuida ollas de granito"
+          : defaultStoveCompatibility),
     tags: product.tags || [],
   }
 }
 
-export async function getProducts() {
+async function fetchProducts(vertical?: "cocina" | "bienestar") {
   const toolsUrl =
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
     "http://localhost:8787"
-  const allowDemoCatalog =
-    process.env.ALLOW_DEMO_CATALOG === "true" ||
-    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
-    process.env.NODE_ENV !== "production"
 
   try {
     const headers: Record<string, string> = {}
@@ -538,27 +799,94 @@ export async function getProducts() {
       headers.authorization = `Bearer ${process.env.TOOLS_API_TOKEN}`
     }
 
-    const response = await fetch(`${toolsUrl}/tools/search-products?limit=12`, {
+    const url = new URL("/tools/search-products", toolsUrl)
+    url.searchParams.set("limit", "100")
+    if (vertical) url.searchParams.set("vertical", vertical)
+    const response = await fetch(url, {
       cache: "no-store",
       headers,
     })
     if (!response.ok) throw new Error("tools unavailable")
     const data = (await response.json()) as { products?: Product[] }
-    const kitchenProducts = (data.products || [])
-      .map(normalizeProduct)
-      .filter(isKitchenProduct)
-    return kitchenProducts.length
-      ? kitchenProducts
-      : allowDemoCatalog
-        ? fallbackProducts.map(normalizeProduct)
-        : []
+    return data.products || []
   } catch {
-    return allowDemoCatalog ? fallbackProducts.map(normalizeProduct) : []
+    return undefined
   }
 }
 
+export async function getProductsForVertical(
+  vertical: "cocina" | "bienestar",
+) {
+  const allowDemoCatalog =
+    process.env.ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NODE_ENV !== "production"
+  const fallback =
+    vertical === "bienestar" ? wellnessFallbackProducts : fallbackProducts
+  const products = await fetchProducts(vertical)
+
+  if (products) {
+    const verticalProducts = products
+      .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
+      .map((product) => normalizeProduct(product, vertical))
+    return verticalProducts.length
+      ? verticalProducts
+      : allowDemoCatalog
+        ? fallback.map((product) => normalizeProduct(product, vertical))
+        : []
+  }
+
+  return allowDemoCatalog
+    ? fallback.map((product) => normalizeProduct(product, vertical))
+    : []
+}
+
+export async function getProducts() {
+  return getProductsForVertical("cocina")
+}
+
+export async function getWellnessProducts() {
+  return getProductsForVertical("bienestar")
+}
+
+export async function getAllProducts() {
+  const allowDemoCatalog =
+    process.env.ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NODE_ENV !== "production"
+  const products = await fetchProducts()
+
+  if (products) {
+    const normalized = products.map((product) =>
+      normalizeProduct(
+        product,
+        isWellnessProduct(product) ? "bienestar" : "cocina",
+      ),
+    )
+    return normalized.length
+      ? normalized
+      : allowDemoCatalog
+        ? [
+            ...fallbackProducts.map((product) => normalizeProduct(product)),
+            ...wellnessFallbackProducts.map((product) =>
+              normalizeProduct(product, "bienestar"),
+            ),
+          ]
+        : []
+  }
+
+  return allowDemoCatalog
+    ? [
+        ...fallbackProducts.map((product) => normalizeProduct(product)),
+        ...wellnessFallbackProducts.map((product) =>
+          normalizeProduct(product, "bienestar"),
+        ),
+      ]
+    : []
+}
+
 export async function getProductBySlug(slug: string) {
-  const products = await getProducts()
+  const products = await getAllProducts()
   const normalizedSlug = decodeURIComponent(slug)
   return products.find((product) => productSlug(product) === normalizedSlug)
 }

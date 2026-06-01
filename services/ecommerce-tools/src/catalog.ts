@@ -6,6 +6,7 @@ const defaultPaymentMethods = ["transferencia", "deuna", "payphone"]
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"
+type ProductVertical = "cocina" | "bienestar"
 
 type MedusaProduct = {
   id: string
@@ -31,9 +32,28 @@ type MedusaProduct = {
   metadata?: Record<string, unknown>
 }
 
-function productUrl(config: AppConfig, product: MedusaProduct) {
+function baseUrlForVertical(config: AppConfig, vertical: ProductVertical) {
+  return (
+    vertical === "bienestar" ? config.wellnessPublicUrl : config.kitchenPublicUrl
+  ).replace(/\/$/, "")
+}
+
+function productUrl(
+  config: AppConfig,
+  product: MedusaProduct,
+  vertical: ProductVertical,
+  sku: string,
+) {
   const handle = product.handle || product.id
-  return `${config.storePublicUrl.replace(/\/$/, "")}/products/${handle}`
+  if (vertical === "bienestar") {
+    const url = new URL(
+      `/campanas/${handle}`,
+      baseUrlForVertical(config, vertical),
+    )
+    url.searchParams.set("sku", sku)
+    return url.toString()
+  }
+  return `${baseUrlForVertical(config, vertical)}/products/${handle}`
 }
 
 function numberFromMetadata(value: unknown) {
@@ -64,8 +84,12 @@ function booleanFromMetadata(value: unknown) {
   return value === true || value === "true"
 }
 
-function publicMediaUrl(config: AppConfig, file: string) {
-  return `${config.storePublicUrl.replace(/\/$/, "")}/media/${file}`
+function publicMediaUrl(
+  config: AppConfig,
+  file: string,
+  vertical: ProductVertical = "cocina",
+) {
+  return `${baseUrlForVertical(config, vertical)}/media/${file}`
 }
 
 function isGeneratedPlaceholder(url?: string) {
@@ -74,13 +98,33 @@ function isGeneratedPlaceholder(url?: string) {
 
 function generatedImageForProduct(
   config: AppConfig,
-  input: { sku?: string; title?: string; category?: string },
+  input: {
+    sku?: string
+    title?: string
+    category?: string
+    vertical?: ProductVertical
+  },
 ) {
   const haystack =
     `${input.sku || ""} ${input.title || ""} ${input.category || ""}`
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
+  if (input.vertical === "bienestar") {
+    if (haystack.includes("botella") || haystack.includes("termica")) {
+      return publicMediaUrl(config, "wellness-botella.svg", "bienestar")
+    }
+    if (haystack.includes("mat") || haystack.includes("yoga")) {
+      return publicMediaUrl(config, "wellness-mat.svg", "bienestar")
+    }
+    if (haystack.includes("bowl") || haystack.includes("ceramica")) {
+      return publicMediaUrl(config, "wellness-bowl.svg", "bienestar")
+    }
+    if (haystack.includes("aroma") || haystack.includes("calma")) {
+      return publicMediaUrl(config, "wellness-aroma.svg", "bienestar")
+    }
+    return publicMediaUrl(config, "wellness-hero.svg", "bienestar")
+  }
   if (haystack.includes("utensilio")) {
     return publicMediaUrl(config, "photo-product-utensilios.jpg")
   }
@@ -104,7 +148,12 @@ function generatedImageForProduct(
 
 function imageForProduct(
   config: AppConfig,
-  input: { sku?: string; title?: string; category?: string },
+  input: {
+    sku?: string
+    title?: string
+    category?: string
+    vertical?: ProductVertical
+  },
   imageUrl?: string,
 ) {
   if (!isGeneratedPlaceholder(imageUrl)) return imageUrl!
@@ -112,21 +161,35 @@ function imageForProduct(
 }
 
 function withGeneratedImages(config: AppConfig, products: Product[]) {
-  return products.map((product) => ({
-    ...product,
-    imageUrl: imageForProduct(config, product, product.imageUrl),
-    deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
-    freeShipping: product.freeShipping ?? true,
-    paymentMethods: product.paymentMethods?.length
-      ? product.paymentMethods
-      : defaultPaymentMethods,
-    couponCode: product.couponCode || defaultCouponCode,
-    stoveCompatibility:
-      product.stoveCompatibility ||
-      (product.category.toLowerCase().includes("complement")
-        ? "No aplica; cuida ollas de granito"
-        : defaultStoveCompatibility),
-  }))
+  return products.map((product) => {
+    const vertical = product.vertical || "cocina"
+    return {
+      ...product,
+      vertical,
+      imageUrl: imageForProduct(
+        config,
+        { ...product, vertical },
+        product.imageUrl,
+      ).replace("https://shop.b2b.com.ec", baseUrlForVertical(config, vertical)),
+      productUrl: product.productUrl.replace(
+        "https://shop.b2b.com.ec",
+        baseUrlForVertical(config, vertical),
+      ),
+      deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
+      freeShipping: product.freeShipping ?? true,
+      paymentMethods: product.paymentMethods?.length
+        ? product.paymentMethods
+        : defaultPaymentMethods,
+      couponCode: product.couponCode || defaultCouponCode,
+      stoveCompatibility:
+        product.stoveCompatibility ||
+        (vertical === "bienestar"
+          ? "No aplica"
+          : product.category.toLowerCase().includes("complement")
+            ? "No aplica; cuida ollas de granito"
+            : defaultStoveCompatibility),
+    }
+  })
 }
 
 function normalizeMedusaProduct(
@@ -134,6 +197,7 @@ function normalizeMedusaProduct(
   product: MedusaProduct,
 ): Product {
   const variant = product.variants?.[0]
+  const sku = variant?.sku || product.id
   const rawPrice =
     variant?.calculated_price?.calculated_amount ??
     variant?.prices?.find((price) => price.currency_code === "usd")?.amount ??
@@ -155,11 +219,13 @@ function normalizeMedusaProduct(
     product.categories?.[0]?.name ||
     product.collection?.title ||
     String(product.metadata?.category || "Catalogo")
+  const vertical = inferVertical(product, category, sku)
 
   return {
     id: product.id,
     variantId: variant?.id || product.id,
-    sku: variant?.sku || product.id,
+    sku,
+    vertical,
     title: product.title,
     description: product.description || "",
     category,
@@ -219,10 +285,10 @@ function normalizeMedusaProduct(
     stock: Number(product.metadata?.stock || variant?.metadata?.stock || 0),
     imageUrl: imageForProduct(
       config,
-      { sku: variant?.sku || product.id, title: product.title, category },
+      { sku, title: product.title, category, vertical },
       product.thumbnail || product.images?.[0]?.url,
     ),
-    productUrl: productUrl(config, product),
+    productUrl: productUrl(config, product, vertical, sku),
     tags: [
       ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
       product.title,
@@ -233,6 +299,7 @@ function normalizeMedusaProduct(
       stringFromMetadata(product.metadata?.nivel) || "",
       stringFromMetadata(product.metadata?.bundleUseCase) || "",
       stringFromMetadata(product.metadata?.healthAngle) || "",
+      stringFromMetadata(product.metadata?.vertical) || "",
       ...(stringArrayFromMetadata(product.metadata?.sourceUrls) || []),
       ...(stringArrayFromMetadata(product.metadata?.contentAngles) || []),
     ],
@@ -267,27 +334,111 @@ const kitchenTerms = [
   "familia",
 ]
 
-function isKitchenProduct(product: Product) {
-  if (product.sku.startsWith("COC-") || product.sku.startsWith("MGC-")) {
-    return true
-  }
-  const haystack = [
+const wellnessTerms = [
+  "bienestar",
+  "wellness",
+  "yoga",
+  "mat",
+  "botella",
+  "termica",
+  "hidratacion",
+  "bowl",
+  "ceramica",
+  "aroma",
+  "calma",
+  "ritual",
+  "mindful",
+  "movimiento",
+  "descanso",
+]
+
+function productHaystack(product: Product) {
+  return [
     product.title,
     product.description,
     product.category,
     product.brand,
+    product.sku,
     product.material || "",
     product.coating || "",
     product.tipoCocina || "",
     product.bundleUseCase || "",
     product.healthAngle || "",
+    product.vertical || "",
     ...(product.sourceUrls || []),
     ...(product.contentAngles || []),
     ...product.tags,
   ]
     .join(" ")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
+}
+
+function inferVertical(
+  product: MedusaProduct,
+  category: string,
+  sku: string,
+): ProductVertical {
+  const explicit = stringFromMetadata(product.metadata?.vertical)?.toLowerCase()
+  if (explicit === "bienestar" || explicit === "wellness") return "bienestar"
+  if (explicit === "cocina" || explicit === "kitchen") return "cocina"
+  const normalizedSku = sku.toUpperCase()
+  if (normalizedSku.startsWith("BIEN-") || normalizedSku.startsWith("WELL-")) {
+    return "bienestar"
+  }
+
+  const haystack = [
+    product.title,
+    product.description || "",
+    category,
+    product.collection?.title || "",
+    ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
+    stringFromMetadata(product.metadata?.material) || "",
+    stringFromMetadata(product.metadata?.bundleUseCase) || "",
+    stringFromMetadata(product.metadata?.healthAngle) || "",
+    ...(stringArrayFromMetadata(product.metadata?.contentAngles) || []),
+  ]
+    .join(" ")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+  const isWellness = wellnessTerms.some((term) => haystack.includes(term))
+  const isKitchen = kitchenTerms.some((term) => haystack.includes(term))
+  return isWellness && !isKitchen ? "bienestar" : "cocina"
+}
+
+function isKitchenProduct(product: Product) {
+  if (product.vertical === "cocina") return true
+  if (product.vertical === "bienestar") return false
+  const sku = product.sku.toUpperCase()
+  if (sku.startsWith("COC-") || sku.startsWith("MGC-")) {
+    return true
+  }
+  const haystack = productHaystack(product)
   return kitchenTerms.some((term) => haystack.includes(term))
+}
+
+function isWellnessProduct(product: Product) {
+  if (product.vertical === "bienestar") return true
+  if (product.vertical === "cocina") return false
+  const sku = product.sku.toUpperCase()
+  if (sku.startsWith("BIEN-") || sku.startsWith("WELL-")) {
+    return true
+  }
+  const haystack = productHaystack(product)
+  return wellnessTerms.some((term) => haystack.includes(term))
+}
+
+export function productsForVertical(
+  products: Product[],
+  vertical?: ProductVertical,
+) {
+  if (vertical === "bienestar") return products.filter(isWellnessProduct)
+  if (vertical === "cocina") return products.filter(isKitchenProduct)
+  return products.filter(
+    (product) => isKitchenProduct(product) || isWellnessProduct(product),
+  )
 }
 
 export async function loadProducts(config: AppConfig): Promise<Product[]> {
@@ -312,9 +463,9 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
     const products = (body.products || []).map((product) =>
       normalizeMedusaProduct(config, product),
     )
-    const kitchenProducts = products.filter(isKitchenProduct)
-    return kitchenProducts.length
-      ? kitchenProducts
+    const supportedProducts = productsForVertical(products)
+    return supportedProducts.length
+      ? supportedProducts
       : config.allowDemoCatalog
         ? withGeneratedImages(config, demoCatalog)
         : []
@@ -333,11 +484,12 @@ export function searchProducts(
     minPrice?: number
     maxPrice?: number
     limit?: number
+    vertical?: ProductVertical
   },
 ) {
   const terms = (input.query || "").toLowerCase().split(/\s+/).filter(Boolean)
 
-  return products
+  return productsForVertical(products, input.vertical)
     .filter((product) => {
       if (input.category && product.category !== input.category) return false
       if (

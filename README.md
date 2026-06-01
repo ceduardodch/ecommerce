@@ -1,11 +1,15 @@
-# Eter Niu Cocina AI Native Ecommerce
+# Eter Niu AI Native Social Commerce
 
-Conversational healthy kitchen-commerce for `shop.b2b.com.ec` with Medusa v2, Next.js, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
+Conversational social commerce with two public verticals, one shared Medusa core, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
+
+- `cocina.b2b.com.ec`: cocina saludable, ollas/woks de granito, campanas Meta -> WhatsApp.
+- `bienestar.b2b.com.ec`: bienestar lifestyle, productos no cocina, campanas por SKU -> WhatsApp.
+- `shop.b2b.com.ec`: dominio legado/operativo mientras se completa la migracion publica.
 
 ## Apps
 
 - `apps/backend`: Medusa v2 commerce backend and admin.
-- `apps/storefront`: Next.js public catalog.
+- `apps/storefront`: Next.js public storefront with host-based vertical routing.
 - `services/ecommerce-tools`: HTTP and MCP tools for OpenClaw seller workflows.
 - `agents`: OpenClaw seller prompt and example runtime config.
 - `skills`: repo-local skills for sales, Meta/Marketplace drafts, and PayPhone reconciliation.
@@ -41,10 +45,13 @@ Useful URLs:
 
 - Storefront dev: `http://localhost:3000`
 - Storefront Docker compose: `http://localhost:18214`
+- Public cocina: `https://cocina.b2b.com.ec`
+- Public bienestar: `https://bienestar.b2b.com.ec`
 - Medusa: `http://localhost:9000`
 - Medusa Admin production route: `https://adminshop.b2b.com.ec/app`
 - Tools API: `http://localhost:8787/healthz`
-- Meta feed: `http://localhost:8787/feeds/meta/catalog.csv`
+- Meta feed cocina: `http://localhost:8787/feeds/meta/catalog.csv?vertical=cocina`
+- Meta feed bienestar: `http://localhost:8787/feeds/meta/catalog.csv?vertical=bienestar`
 
 ## OpenClaw tools
 
@@ -79,9 +86,11 @@ Use the dedicated seller agent and skills:
 - `skills/meta-marketplace-assistant/SKILL.md`
 - `skills/payphone-reconciliation/SKILL.md`
 
-## Cocina + CRM
+## Verticales + CRM
 
-Medusa es la fuente de verdad para catalogo, precios, stock y ordenes. En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no devuelve productos de cocina, la tienda muestra estado vacio administrable y el feed Meta queda solo con cabecera.
+Medusa es la fuente de verdad para catalogo, precios, stock y ordenes. En produccion `ALLOW_DEMO_CATALOG=false`: si Medusa no devuelve productos del vertical solicitado, la tienda muestra estado vacio administrable y el feed Meta queda solo con cabecera.
+
+Los productos deben llevar metadata `vertical=cocina` o `vertical=bienestar`. Si falta, `ecommerce-tools` infiere cocina para SKUs `MGC-*` y bienestar para SKUs `BIEN-*`.
 
 Para cargar una base inicial de cocina despues del seed principal:
 
@@ -89,10 +98,18 @@ Para cargar una base inicial de cocina despues del seed principal:
 npm --workspace apps/backend run seed:kitchen
 ```
 
+Para cargar los productos piloto del vertical bienestar despues del seed principal:
+
+```bash
+npm --workspace apps/backend run seed:wellness
+```
+
 El catalogo base trazado a los posts de referencia queda en:
 
 - `data/catalog/eter-niu-products.csv`
+- `data/catalog/eter-niu-wellness-products.csv`
 - `apps/backend/src/migration-scripts/kitchen-catalog-seed.ts`
+- `apps/backend/src/migration-scripts/wellness-catalog-seed.ts`
 - `services/ecommerce-tools/src/demo-catalog.ts`
 
 Productos estrella iniciales:
@@ -139,7 +156,7 @@ El CRM WhatsApp vive en el modulo Medusa `b2bCrm`:
 
 ## Deployment
 
-Use `docker-compose.yml` as the Coolify compose app. Route `shop.b2b.com.ec` to the storefront host port and `adminshop.b2b.com.ec` through Cloudflare Access to the Medusa Admin host port.
+Use `docker-compose.yml` as the Coolify compose app. Route `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` and the legacy `shop.b2b.com.ec` to the storefront host port. Route `adminshop.b2b.com.ec` through Cloudflare Access to the Medusa Admin host port.
 
 ## Branch Strategy
 

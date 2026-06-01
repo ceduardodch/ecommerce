@@ -1,4 +1,4 @@
-# Content Matrix - Eter Niu Cocina
+# Content Matrix - Eter Niu Verticales
 
 Esta matriz define que material real de cocina queda aprobado para la web, como alimenta ventas, Pixel/CRM y WhatsApp, y que material queda fuera para una futura campana separada.
 
@@ -34,6 +34,20 @@ Esta matriz define que material real de cocina queda aprobado para la web, como 
 | Decoracion / lifestyle sin producto de cocina | `future_wellness_site` | Puede servir para otra landing, pero baja claridad comercial en esta tienda. |
 | Botellas, bowls y productos no relacionados | `future_wellness_site` | Reservar para categoria/campana separada si se decide venderlos. |
 | Pruebas de huevo/queso o limpieza no disponibles | `pending_real_asset` | No publicar copy ni slot que prometa una demostracion no mostrada por el asset real. |
+
+## Vertical Bienestar
+
+`bienestar.b2b.com.ec` separa los productos no cocina sin crear otro repo ni duplicar CRM. Los anuncios de bienestar deben apuntar a `https://bienestar.b2b.com.ec/campanas/[slug]?sku=...`, igual que cocina usa `https://cocina.b2b.com.ec/campanas/[slug]?sku=...`.
+
+| Tipo de asset | Archivo inicial | Seccion | Producto piloto | Angulo comercial | Evento CRM |
+| --- | --- | --- | --- | --- | --- |
+| Hero bienestar | `wellness-hero.svg` | `bienestar.b2b.com.ec` hero | Vertical bienestar | Rutina diaria, pausa y movimiento | `page_view` / `view_content` |
+| Botella / hidratacion | `wellness-botella.svg` | Catalogo y landing SKU | `BIEN-BOTELLA-TERMICA-750` | Hidratacion diaria y oficina | `product_interest` / `whatsapp_opened` |
+| Mat / movimiento | `wellness-mat.svg` | Catalogo y landing SKU | `BIEN-MAT-YOGA-ANTIDESLIZANTE` | Pausa activa en casa | `product_interest` / `whatsapp_opened` |
+| Bowl / mesa consciente | `wellness-bowl.svg` | Catalogo y landing SKU | `BIEN-BOWL-CERAMICA-RITUAL` | Desayuno consciente y regalo | `product_interest` / `whatsapp_opened` |
+| Aroma / pausa en casa | `wellness-aroma.svg` | Catalogo y landing SKU | `BIEN-KIT-AROMA-CALMA` | Ritual de pausa sin claims medicos | `product_interest` / `whatsapp_opened` |
+
+Regla operativa: cuando existan fotos o videos reales de bienestar, reemplazar estos SVG por assets optimizados en `apps/storefront/public/media` y mantener metadata `vertical=bienestar`, `productInterestSku`, `campaignSlug`, `utm_*`, `fbclid` y `leadId`.
 
 ## Reglas De Publicacion
 

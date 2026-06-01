@@ -9,7 +9,8 @@ Mapa operativo del repo para agentes IA y humanos.
 - `README.md`: guia general.
 - `docker-compose.yml`: stack Coolify del ecommerce.
 - `.env.example`: variables locales esperadas.
-- `data/catalog/eter-niu-products.csv`: catalogo base con productos, links fuente y angulos de contenido.
+- `data/catalog/eter-niu-products.csv`: catalogo base cocina con productos, links fuente y angulos de contenido.
+- `data/catalog/eter-niu-wellness-products.csv`: catalogo base bienestar con productos piloto, URLs y reglas de claim.
 
 ## Apps
 
@@ -31,6 +32,7 @@ Archivos clave:
 - `apps/backend/src/api/store/b2b/status/route.ts`: healthcheck custom usado por Docker.
 - `apps/backend/src/migration-scripts/initial-data-seed.ts`: seed inicial de Medusa.
 - `apps/backend/src/migration-scripts/kitchen-catalog-seed.ts`: seed idempotente de catalogo cocina.
+- `apps/backend/src/migration-scripts/wellness-catalog-seed.ts`: seed idempotente de catalogo bienestar.
 - `apps/backend/src/modules/b2b-crm`: modelos, servicio y migracion CRM WhatsApp.
 - `apps/backend/src/api/admin/b2b`: API interna/admin para CRM y ordenes OpenClaw.
 - `apps/backend/src/admin/routes/crm-whatsapp/page.tsx`: vista CRM en Medusa Admin.
@@ -50,7 +52,7 @@ Next.js storefront publico.
 
 Responsabilidades:
 
-- Catalogo publico para `shop.b2b.com.ec`.
+- Catalogo publico para `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` y legado `shop.b2b.com.ec`.
 - Home social-commerce con slots locales de video, prueba de producto y catalogo visual.
 - Selector "Elige tu olla ideal" que genera recomendacion y evento `quiz_completed`.
 - Cards de producto con CTA WhatsApp y tracking de lead.
@@ -71,7 +73,8 @@ Archivos clave:
 - `apps/storefront/app/globals.css`: estilos globales.
 - `apps/storefront/public/media`: posters locales y slots para MP4 aprobados.
 - `apps/storefront/lib/catalog.ts`: lectura de catalogo desde `ecommerce-tools`; fallback solo si `ALLOW_DEMO_CATALOG=true`.
-- `apps/storefront/app/feeds/meta/catalog.csv/route.ts`: proxy del feed Meta.
+- `apps/storefront/middleware.ts`: routing por host para `cocina.b2b.com.ec` y `bienestar.b2b.com.ec`.
+- `apps/storefront/app/feeds/meta/catalog.csv/route.ts`: proxy del feed Meta por vertical.
 - `apps/storefront/app/payphone/sandbox/[clientTransactionId]/page.tsx`: pagina local de pago sandbox.
 - `apps/storefront/Dockerfile`: build del servicio `storefront`.
 

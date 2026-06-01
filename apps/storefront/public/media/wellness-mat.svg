@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-label="Mat de movimiento bienestar">
+  <rect width="900" height="1100" fill="#dbe8d0"/>
+  <circle cx="170" cy="170" r="150" fill="#f2b37a" opacity=".5"/>
+  <rect x="150" y="690" width="600" height="190" rx="95" fill="#174936"/>
+  <rect x="204" y="728" width="492" height="114" rx="57" fill="#8fb076"/>
+  <path d="M450 230c88 0 160 72 160 160s-72 160-160 160-160-72-160-160 72-160 160-160z" fill="#fffdf6" opacity=".9"/>
+  <path d="M330 518c70 82 169 82 240 0" fill="none" stroke="#d83b24" stroke-width="28" stroke-linecap="round"/>
+  <path d="M246 938h408" stroke="#174936" stroke-width="24" stroke-linecap="round" opacity=".45"/>
+</svg>

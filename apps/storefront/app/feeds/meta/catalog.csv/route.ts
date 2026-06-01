@@ -1,4 +1,9 @@
-import { fallbackProducts } from "../../../../lib/catalog"
+import { NextRequest } from "next/server"
+import {
+  fallbackProducts,
+  wellnessFallbackProducts,
+} from "../../../../lib/catalog"
+import { kitchenBaseUrl, wellnessBaseUrl } from "../../../../lib/domains"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -9,16 +14,28 @@ function csv(value: string | number) {
   return text
 }
 
-function absoluteImageLink(imageUrl: string) {
+function verticalFromRequest(request: NextRequest) {
+  const queryVertical = request.nextUrl.searchParams.get("vertical")
+  if (queryVertical === "bienestar" || queryVertical === "cocina") {
+    return queryVertical
+  }
+  const host = (request.headers.get("host") || "").toLowerCase()
+  return host.includes("bienestar") ? "bienestar" : "cocina"
+}
+
+function baseUrlForVertical(vertical: "cocina" | "bienestar") {
+  return vertical === "bienestar" ? wellnessBaseUrl : kitchenBaseUrl
+}
+
+function absoluteImageLink(imageUrl: string, vertical: "cocina" | "bienestar") {
   if (!imageUrl.startsWith("/")) return imageUrl
-  const storeUrl =
-    process.env.NEXT_PUBLIC_STORE_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://shop.b2b.com.ec"
+  const storeUrl = baseUrlForVertical(vertical)
   return `${storeUrl.replace(/\/$/, "")}${imageUrl}`
 }
 
-function fallbackCsv() {
+function fallbackCsv(vertical: "cocina" | "bienestar") {
+  const products =
+    vertical === "bienestar" ? wellnessFallbackProducts : fallbackProducts
   const columns = [
     "id",
     "title",
@@ -31,7 +48,7 @@ function fallbackCsv() {
     "brand",
     "sale_price",
   ]
-  const rows = fallbackProducts.map((product) => [
+  const rows = products.map((product) => [
     product.sku || product.id,
     product.title,
     product.description,
@@ -41,7 +58,7 @@ function fallbackCsv() {
       ? `${product.originalPrice.amount.toFixed(2)} USD`
       : `${product.price.amount.toFixed(2)} USD`,
     product.productUrl,
-    absoluteImageLink(product.imageUrl),
+    absoluteImageLink(product.imageUrl, vertical),
     product.brand,
     product.originalPrice && product.originalPrice.amount > product.price.amount
       ? `${product.price.amount.toFixed(2)} USD`
@@ -53,7 +70,8 @@ function fallbackCsv() {
   )
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const vertical = verticalFromRequest(request)
   const toolsUrl =
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
@@ -64,7 +82,9 @@ export async function GET() {
     process.env.NODE_ENV !== "production"
 
   try {
-    const response = await fetch(`${toolsUrl}/feeds/meta/catalog.csv`, {
+    const url = new URL("/feeds/meta/catalog.csv", toolsUrl)
+    url.searchParams.set("vertical", vertical)
+    const response = await fetch(url, {
       cache: "no-store",
       signal: AbortSignal.timeout(2000),
     })
@@ -78,7 +98,7 @@ export async function GET() {
     })
   } catch {
     if (!allowDemoCatalog) {
-      return new Response(fallbackCsv().split("\n")[0] + "\n", {
+      return new Response(fallbackCsv(vertical).split("\n")[0] + "\n", {
         headers: {
           "cache-control": "no-store, no-cache, must-revalidate",
           "content-type": "text/csv; charset=utf-8",
@@ -86,7 +106,7 @@ export async function GET() {
       })
     }
 
-    return new Response(fallbackCsv(), {
+    return new Response(fallbackCsv(vertical), {
       headers: {
         "cache-control": "no-store, no-cache, must-revalidate",
         "content-type": "text/csv; charset=utf-8",
