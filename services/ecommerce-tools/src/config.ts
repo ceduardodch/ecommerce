@@ -33,10 +33,13 @@ function bool(value: string | undefined, fallback: boolean) {
 
 function normalizeWhatsappSellerNumber(value: string) {
   const digits = value.replace(/\D/g, "")
+  if (digits === "593999999999" || digits === "9999999999") {
+    return "593979854915"
+  }
   if (digits.startsWith("0") && digits.length === 10) {
     return `593${digits.slice(1)}`
   }
-  return digits
+  return digits || "593979854915"
 }
 
 export function loadConfig(env = process.env): AppConfig {
