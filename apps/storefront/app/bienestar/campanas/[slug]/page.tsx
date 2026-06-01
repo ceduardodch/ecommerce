@@ -33,7 +33,7 @@ type WellnessCampaignPageProps = {
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
-const defaultWellnessSku = "BIEN-BOTELLA-TERMICA-750"
+const defaultWellnessSku = "BIEN-TERMO-SUS304-500"
 
 export async function generateMetadata({
   params,
@@ -95,7 +95,9 @@ function WellnessProofs({ product }: { product: Product }) {
       <article>
         <Truck size={24} />
         <strong>{commerce.freeShippingLabel}</strong>
-        <span>El chat confirma ciudad, cobertura y despacho antes del pago.</span>
+        <span>
+          El chat confirma ciudad, cobertura y despacho antes del pago.
+        </span>
       </article>
       <article>
         <BadgeDollarSign size={24} />
@@ -105,7 +107,9 @@ function WellnessProofs({ product }: { product: Product }) {
       <article>
         <HeartHandshake size={24} />
         <strong>Asesoria directa</strong>
-        <span>Vicky recibe SKU, vertical, campana, Lead y fuente Meta Ads.</span>
+        <span>
+          Vicky recibe SKU, vertical, campana, Lead y fuente Meta Ads.
+        </span>
       </article>
     </section>
   )
@@ -124,7 +128,9 @@ function WellnessFaq({ product }: { product: Product }) {
       <article>
         <Leaf size={22} />
         <h2>Como se cuida</h2>
-        <p>{product.careTips || "Cuidado simple segun material del producto."}</p>
+        <p>
+          {product.careTips || "Cuidado simple segun material del producto."}
+        </p>
       </article>
       <article>
         <CheckCircle2 size={22} />
@@ -135,8 +141,9 @@ function WellnessFaq({ product }: { product: Product }) {
         <Sparkles size={22} />
         <h2>Cupon</h2>
         <p>
-          Cupon {commerce.couponCode}, {commerce.freeShippingLabel.toLowerCase()} y
-          confirmacion por WhatsApp.
+          Cupon {commerce.couponCode},{" "}
+          {commerce.freeShippingLabel.toLowerCase()} y confirmacion por
+          WhatsApp.
         </p>
       </article>
     </section>
@@ -151,7 +158,8 @@ export default async function WellnessCampaignPage({
   const query = searchParams ? await searchParams : {}
   const products = await getWellnessProducts()
   const requestedSku = paramValue(query.sku)
-  const defaultProduct = productBySku(products, defaultWellnessSku) || products[0]
+  const defaultProduct =
+    productBySku(products, defaultWellnessSku) || products[0]
   const selectedProduct = productBySku(products, requestedSku) || defaultProduct
 
   if (!selectedProduct) {
@@ -169,7 +177,9 @@ export default async function WellnessCampaignPage({
     )
   }
 
-  const fallbackUsed = Boolean(requestedSku && requestedSku !== selectedProduct.sku)
+  const fallbackUsed = Boolean(
+    requestedSku && requestedSku !== selectedProduct.sku,
+  )
   const attribution: WellnessAttribution = {
     vertical: "bienestar",
     campaignSlug: slug,

@@ -65,28 +65,24 @@ function recommendationFor(
   },
 ) {
   const interested = productBySku(products, input.interestSku)
-  const set = firstAvailable(products, ["MGC-SET-GRANITO-FAMILIAR"])
-  const wok = firstAvailable(products, [
-    "MGC-WOK-GRANITO-32",
-    "MGC-SARTEN-WOK-GRANITO-28",
-  ])
-  const olla24 = firstAvailable(products, ["MGC-OLLA-GRANITO-24"])
+  const wok = firstAvailable(products, ["MGC-WOK-GRANITO-32"])
   const olla20 = firstAvailable(products, ["MGC-OLLA-GRANITO-20"])
+  const olla18 = firstAvailable(products, ["MGC-OLLA-GRANITO-18"])
 
   if (input.budget === "set" || input.useCase === "renovar") {
-    return set || interested || olla24 || wok || products[0]
+    return wok || olla20 || interested || products[0]
   }
   if (input.useCase === "rapidas" || input.interestSku?.includes("WOK")) {
-    return wok || interested || olla24 || products[0]
+    return wok || interested || olla20 || products[0]
   }
   if (input.people === "1-2" || input.budget === "hasta100") {
-    return olla20 || interested || products[0]
+    return olla18 || olla20 || interested || products[0]
   }
   if (input.people === "5+") {
-    return set || olla24 || wok || interested || products[0]
+    return wok || olla20 || interested || products[0]
   }
 
-  return interested || olla24 || wok || olla20 || products[0]
+  return interested || wok || olla20 || olla18 || products[0]
 }
 
 function reasonFor(recommendation: Product, people: string, useCase: string) {
@@ -96,11 +92,14 @@ function reasonFor(recommendation: Product, people: string, useCase: string) {
   if (recommendation.sku.includes("WOK")) {
     return "wok amplio para salteados, recetas rapidas y porciones generosas"
   }
+  if (recommendation.sku.includes("18")) {
+    return "olla 18 cm para 1 a 2 personas y cocina diaria ligera"
+  }
   if (recommendation.sku.includes("20")) {
     return "olla compacta para 1 a 2 personas y cocina diaria ligera"
   }
   if (people === "5+" || useCase === "familia") {
-    return "olla 24 cm para cocinar porciones familiares con mejor control"
+    return "wok 32 cm para cocinar porciones familiares con mejor control"
   }
   return "pieza equilibrada para empezar con granito y pedir asesoria por uso"
 }
@@ -108,7 +107,8 @@ function reasonFor(recommendation: Product, people: string, useCase: string) {
 export function PotRecommendationQuiz({ products }: { products: Product[] }) {
   const [recommendation, setRecommendation] = useState<Recommendation>()
   const productOptions = useMemo(
-    () => products.filter((product) => product.sku.startsWith("MGC-")).slice(0, 8),
+    () =>
+      products.filter((product) => product.sku.startsWith("MGC-")).slice(0, 8),
     [products],
   )
 
@@ -120,8 +120,8 @@ export function PotRecommendationQuiz({ products }: { products: Product[] }) {
         <p className="eyebrow">Elige tu olla ideal</p>
         <h2>Vicky recomienda segun tu cocina, no por impulso.</h2>
         <p>
-          En menos de un minuto te orientamos por ciudad, personas,
-          presupuesto y producto de interes para responder mejor por WhatsApp.
+          En menos de un minuto te orientamos por ciudad, personas, presupuesto
+          y producto de interes para responder mejor por WhatsApp.
         </p>
       </div>
       <form
@@ -245,10 +245,18 @@ export function PotRecommendationQuiz({ products }: { products: Product[] }) {
             <h3>{recommendation.product.title}</h3>
             <p>{recommendation.reason}.</p>
             <div className="quiz-result-benefits">
-              <span>Cupon {commercialInfo(recommendation.product).couponCode}</span>
-              <span>{commercialInfo(recommendation.product).freeShippingLabel}</span>
-              <span>{commercialInfo(recommendation.product).paymentMethodsLabel}</span>
-              <span>{commercialInfo(recommendation.product).stoveCompatibility}</span>
+              <span>
+                Cupon {commercialInfo(recommendation.product).couponCode}
+              </span>
+              <span>
+                {commercialInfo(recommendation.product).freeShippingLabel}
+              </span>
+              <span>
+                {commercialInfo(recommendation.product).paymentMethodsLabel}
+              </span>
+              <span>
+                {commercialInfo(recommendation.product).stoveCompatibility}
+              </span>
             </div>
             <strong>{money(recommendation.product.price.amount)}</strong>
           </div>

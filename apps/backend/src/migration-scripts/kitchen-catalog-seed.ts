@@ -23,6 +23,7 @@ type KitchenProduct = {
 }
 
 const commercialMetadata = {
+  vertical: "cocina",
   freeShipping: true,
   paymentMethods: ["transferencia", "deuna", "payphone"],
   couponCode: "GRANITOHOY",
@@ -30,58 +31,54 @@ const commercialMetadata = {
 
 const products: KitchenProduct[] = [
   {
-    title: "Wok de granito 32 cm con tapa",
+    title: "Wok 32 cm granito premium antiadherente",
     handle: "wok-granito-32cm-tapa",
     sku: "MGC-WOK-GRANITO-32",
     category: "Woks granito",
     description:
-      "Wok amplio para recetas diarias, salteados y preparaciones familiares con menos aceite.",
-    price: 150,
-    originalPrice: 179,
-    stock: 8,
+      "Wok de granito antiadherente libre de teflon y PFOA segun catalogo WhatsApp.",
+    price: 151.2,
+    originalPrice: 151.2,
+    stock: 1,
     image: "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
       teflonFree: true,
+      pfoaFree: true,
       capacity: "Porciones familiares",
       diameterCm: 32,
-      pieces: 2,
+      pieces: 1,
       stoveCompatibility: "Gas, induccion y vitroceramica",
       tipoCocina: "Familia y recetas",
       nivel: "Uso diario",
-      bundleUseCase: "Shakshuka, arroz, salteados y vegetales con menos aceite",
+      bundleUseCase:
+        "Salteados, arroz, recetas familiares y cocina con menos aceite",
       careTips:
         "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
-      healthAngle: "Opcion sin teflon para cocinar con menos aceite.",
+      healthAngle:
+        "Opcion sin teflon para cocinar diario con una superficie antiadherente de granito.",
       warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      instagramSourceUrl: "https://www.instagram.com/p/DUhZTX2FSeo/",
-      sourceUrls: [
-        "https://www.instagram.com/p/DYdciw8oTmW/",
-        "https://www.instagram.com/p/DV7N5cXmICF/",
-        "https://www.instagram.com/p/DVXbLrPiHnd/",
-        "https://www.instagram.com/p/DUhZTX2FSeo/",
-        "https://www.instagram.com/p/DSIitliCMDg/",
-      ],
+      sourceUrls: ["https://wa.me/c/593979854915"],
       contentAngles: [
-        "6 anos usando el wok",
-        "granito y tapa visibles",
-        "shakshuka en wok 32 cm",
-        "tapa de vidrio templado",
+        "granito premium",
+        "wok 32 cm",
+        "menos aceite",
+        "cocina familiar",
       ],
-      certificationStatus: "Proveedor por confirmar",
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
       claimNote:
-        "Publicar PFOA, PFAS o PTFE solo si el proveedor entrega certificacion.",
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
       reorderAfterDays: 180,
-      promoLabel: "Producto estrella",
-      discountPercent: 16,
+      promoLabel: "Catalogo real WhatsApp",
       deliveryBadge: "Envio gratis Ecuador",
-      stockSignal: "8 woks listos para entrega",
+      stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
       brand: "Eter Niu Cocina",
-      price: 150,
-      stock: 8,
-      originalPrice: 179,
+      price: 151.2,
+      stock: 1,
+      originalPrice: 151.2,
     },
   },
   {
@@ -90,15 +87,16 @@ const products: KitchenProduct[] = [
     sku: "MGC-OLLA-GRANITO-20",
     category: "Ollas granito",
     description:
-      "Olla compacta para el dia a dia, porciones pequenas y cocina practica en casa.",
-    price: 95,
-    originalPrice: 119,
-    stock: 10,
+      "Olla de granito antiadherente libre de teflon y PFOA segun catalogo WhatsApp.",
+    price: 75.6,
+    originalPrice: 75.6,
+    stock: 1,
     image: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
       teflonFree: true,
+      pfoaFree: true,
       capacity: "1 a 3 personas",
       diameterCm: 20,
       pieces: 1,
@@ -109,230 +107,128 @@ const products: KitchenProduct[] = [
       careTips:
         "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
       healthAngle:
-        "Alternativa a antiadherentes tradicionales para uso diario.",
+        "Alternativa a antiadherentes tradicionales para uso diario en casa.",
       warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      instagramSourceUrl: "https://www.instagram.com/p/DWfKOWXhvJs/",
-      sourceUrls: ["https://www.instagram.com/p/DWfKOWXhvJs/"],
+      sourceUrls: ["https://wa.me/c/593979854915"],
       contentAngles: [
-        "tamano compacto para porciones pequenas",
-        "granito visible en olla 20 cm",
+        "olla 20 cm",
+        "porciones pequenas",
         "uso diario en cocina real",
       ],
-      certificationStatus: "Proveedor por confirmar",
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
       claimNote:
-        "Mantener copy educativo; no publicar claims medicos absolutos.",
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
       reorderAfterDays: 180,
       promoLabel: "Uso diario",
-      discountPercent: 20,
       deliveryBadge: "Envio gratis 24-48h segun ciudad",
-      stockSignal: "10 ollas disponibles",
+      stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
       brand: "Eter Niu Cocina",
-      price: 95,
-      stock: 10,
-      originalPrice: 119,
+      price: 75.6,
+      stock: 1,
+      originalPrice: 75.6,
     },
   },
   {
-    title: "Olla de granito 24 cm familiar",
-    handle: "olla-granito-24cm-familiar",
-    sku: "MGC-OLLA-GRANITO-24",
+    title: "Olla 18 cm Granito Premium antiadherente",
+    handle: "olla-granito-18cm",
+    sku: "MGC-OLLA-GRANITO-18",
     category: "Ollas granito",
     description:
-      "Olla familiar para porciones grandes, sopas, guisos y cocina diaria con acabado granito.",
-    price: 130,
-    originalPrice: 159,
-    stock: 12,
-    image: "https://cocina.b2b.com.ec/media/photo-product-olla-24.jpg",
+      "Olla de granito antiadherente libre de teflon y PFOA segun catalogo WhatsApp.",
+    price: 63.6,
+    originalPrice: 63.6,
+    stock: 1,
+    image: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
       teflonFree: true,
-      capacity: "3 a 5 personas",
-      diameterCm: 24,
+      pfoaFree: true,
+      capacity: "1 a 2 personas",
+      diameterCm: 18,
       pieces: 1,
       stoveCompatibility: "Gas, induccion y vitroceramica",
-      tipoCocina: "Familia",
+      tipoCocina: "Diario ligero",
       nivel: "Uso diario",
-      bundleUseCase: "Porciones grandes, sopas, arroz y guisos familiares",
+      bundleUseCase: "Porciones pequenas, salsas, guarniciones y cocina diaria",
       careTips:
         "Cocinar a fuego medio para conservar el recubrimiento por mas tiempo.",
       healthAngle:
-        "Granito para familias que quieren una opcion practica sin teflon.",
+        "Olla compacta sin teflon para empezar con granito en la cocina diaria.",
       warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      instagramSourceUrl: "https://www.instagram.com/p/DVNNNRsFYj0/",
-      sourceUrls: [
-        "https://www.instagram.com/p/DVewP3viHey/",
-        "https://www.instagram.com/p/DVNNNRsFYj0/",
-      ],
+      sourceUrls: ["https://wa.me/c/593979854915"],
       contentAngles: [
-        "24 cm para porciones familiares",
-        "menos aceite en olla familiar",
+        "olla 18 cm",
+        "tamano compacto",
         "uso diario en hornilla",
       ],
-      certificationStatus: "Proveedor por confirmar",
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
       claimNote:
-        "Si se menciona libre de PFOA/PFAS/PTFE, pedir certificacion previa.",
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
       reorderAfterDays: 180,
-      promoLabel: "Familiar",
-      discountPercent: 18,
+      promoLabel: "Catalogo real WhatsApp",
       deliveryBadge: "Envio gratis con stock confirmado",
-      stockSignal: "12 ollas familiares disponibles",
+      stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
       brand: "Eter Niu Cocina",
-      price: 130,
-      stock: 12,
-      originalPrice: 159,
+      price: 63.6,
+      stock: 1,
+      originalPrice: 63.6,
     },
   },
   {
-    title: "Set MGC ollas y sartenes de granito",
-    handle: "set-mgc-ollas-sartenes-granito",
-    sku: "MGC-SET-GRANITO-FAMILIAR",
-    category: "Sets granito",
+    title: "Cuchillo samurai Japones todo uso",
+    handle: "cuchillo-samurai-japones-todo-uso",
+    sku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+    category: "Cuchillos",
     description:
-      "Linea MGC para cambiar ollas rayadas por un set de granito de uso diario.",
-    price: 249,
-    originalPrice: 299,
-    stock: 5,
-    image: "https://cocina.b2b.com.ec/media/photo-product-set-granito.jpg",
-    metadata: {
-      material: "Granito antiadherente",
-      coating: "Granito",
-      teflonFree: true,
-      capacity: "Cocina completa",
-      pieces: 5,
-      stoveCompatibility: "Gas, induccion y vitroceramica",
-      tipoCocina: "Casa completa",
-      nivel: "Kit familiar",
-      bundleUseCase: "Reemplazar ollas viejas y equipar la cocina principal",
-      careTips:
-        "Guardar sin raspar piezas entre si y usar protectores si se apilan.",
-      healthAngle:
-        "Set de granito para cocinar todos los dias con menos preocupacion.",
-      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      instagramSourceUrl: "https://www.instagram.com/p/DU_bJI4iCTW/",
-      sourceUrls: [
-        "https://www.instagram.com/p/DU_bJI4iCTW/",
-        "https://www.instagram.com/p/DUmeEY_FR2i/",
-        "https://www.instagram.com/p/DSIitliCMDg/",
-      ],
-      contentAngles: [
-        "cambiar ollas viejas o rayadas",
-        "linea MGC granito",
-        "cocina diaria con menos preocupacion",
-      ],
-      certificationStatus: "Proveedor por confirmar",
-      claimNote: "Set saludable como eleccion informada, sin promesas medicas.",
-      reorderAfterDays: 210,
-      promoLabel: "Cambio saludable",
-      discountPercent: 17,
-      deliveryBadge: "Envio gratis coordinado",
-      stockSignal: "5 sets armados",
-      bundleEligible: true,
-      brand: "Eter Niu Cocina",
-      price: 249,
-      stock: 5,
-      originalPrice: 299,
-    },
-  },
-  {
-    title: "Sarten wok granito para recetas rapidas",
-    handle: "sarten-wok-granito-recetas-rapidas",
-    sku: "MGC-SARTEN-WOK-GRANITO-28",
-    category: "Sartenes granito",
-    description:
-      "Sarten tipo wok para vegetales, pollo y recetas rapidas con menos aceite.",
-    price: 85,
-    originalPrice: 105,
-    stock: 14,
-    image: "https://cocina.b2b.com.ec/media/photo-detalle-wok.jpg",
-    metadata: {
-      material: "Granito antiadherente",
-      coating: "Granito",
-      teflonFree: true,
-      capacity: "1 a 4 personas",
-      diameterCm: 28,
-      pieces: 1,
-      stoveCompatibility: "Gas, induccion y vitroceramica",
-      tipoCocina: "Recetas rapidas",
-      nivel: "Uso diario",
-      bundleUseCase: "Vegetales, pollo y salteados de semana",
-      careTips:
-        "Usar fuego medio y evitar aerosoles que saturen la superficie.",
-      healthAngle: "Pensado para cocinar ligero sin depender de mucho aceite.",
-      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      instagramSourceUrl: "https://www.instagram.com/p/DV7N5cXmICF/",
-      sourceUrls: [
-        "https://www.instagram.com/p/DV7N5cXmICF/",
-        "https://www.instagram.com/p/DVXbLrPiHnd/",
-      ],
-      contentAngles: [
-        "detalle de granito y uso rapido",
-        "recetas rapidas entre semana",
-        "salteados y desayuno",
-      ],
-      certificationStatus: "Proveedor por confirmar",
-      claimNote:
-        "Hablar de menos aceite como uso culinario, no como tratamiento de salud.",
-      reorderAfterDays: 180,
-      promoLabel: "Menos aceite",
-      discountPercent: 19,
-      deliveryBadge: "Envio gratis con despacho rapido",
-      stockSignal: "14 sartenes disponibles",
-      bundleEligible: true,
-      brand: "Eter Niu Cocina",
-      price: 85,
-      stock: 14,
-      originalPrice: 105,
-    },
-  },
-  {
-    title: "Utensilios compatibles para granito",
-    handle: "utensilios-compatibles-granito",
-    sku: "MGC-UTENSILIOS-CUIDADO",
-    category: "Complementos",
-    description:
-      "Kit de utensilios suaves para cuidar ollas y sartenes de granito sin rayarlas.",
-    price: 28,
-    originalPrice: 35,
-    stock: 20,
+      "Cuchillo Samurai todo uso para cortes precisos en preparaciones diarias.",
+    price: 30,
+    originalPrice: 30,
+    stock: 1,
     image: "https://cocina.b2b.com.ec/media/photo-product-utensilios.jpg",
     metadata: {
-      material: "Silicona y madera",
-      capacity: "Kit de cuidado",
-      pieces: 4,
-      tipoCocina: "Complemento",
-      nivel: "Cuidado",
-      bundleUseCase: "Evitar rayones y alargar la vida del recubrimiento",
-      careTips: "No apoyar sobre llama directa y lavar despues de cada uso.",
+      material: "Acero inoxidable",
+      capacity: "Todo uso",
+      pieces: 1,
+      stoveCompatibility: "No aplica; complemento de cocina",
+      tipoCocina: "Corte diario",
+      nivel: "Uso diario",
+      bundleUseCase: "Verduras, carnes, frutas y preparacion general",
+      careTips: "Lavar y secar despues de usar; guardar protegido.",
       healthAngle:
-        "Complemento para mantener el antiadherente sin usar utensilios metalicos.",
-      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
-      sourceUrls: [
-        "https://www.facebook.com/infintyimportsec/photos",
-        "https://www.instagram.com/stories/highlights/18046750105530201/",
-      ],
+        "Complemento practico para preparar ingredientes antes de cocinar.",
+      warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854915"],
       contentAngles: [
-        "cuidado del recubrimiento",
-        "utensilios suaves para no rayar",
-        "complemento recomendado tras compra",
+        "cuchillo todo uso",
+        "preparacion diaria",
+        "complemento para ollas de granito",
       ],
       certificationStatus: "No aplica",
       claimNote:
-        "Complemento operativo para cuidado; no usarlo como claim de salud.",
-      reorderAfterDays: 120,
-      promoLabel: "Cuida tu olla",
-      discountPercent: 20,
+        "No publicar promesas de durabilidad extrema sin ficha tecnica.",
+      reorderAfterDays: 240,
+      promoLabel: "Complemento",
       deliveryBadge: "Agregar al pedido con envio gratis",
-      stockSignal: "20 kits disponibles",
+      stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
       brand: "Eter Niu Cocina",
-      price: 28,
-      stock: 20,
-      originalPrice: 35,
+      price: 30,
+      stock: 1,
+      originalPrice: 30,
     },
   },
+]
+
+const legacyKitchenHandles = [
+  "olla-granito-24cm-familiar",
+  "set-mgc-ollas-sartenes-granito",
+  "sarten-wok-granito-recetas-rapidas",
+  "utensilios-compatibles-granito",
 ]
 
 async function ensureCategories(container: MedusaContainer) {
@@ -366,6 +262,29 @@ async function ensureCategories(container: MedusaContainer) {
   return [...existingCategories, ...createdCategories]
 }
 
+function updateVariantInput(
+  seed: KitchenProduct,
+  existing: Record<string, any>,
+) {
+  const variant = existing.variants?.[0]
+  if (!variant?.id) return undefined
+
+  return [
+    {
+      id: variant.id,
+      title: "Default",
+      sku: seed.sku,
+      prices: [{ amount: seed.price, currency_code: "usd" }],
+      metadata: {
+        ...(variant.metadata || {}),
+        stock: seed.stock,
+        price: seed.price,
+        originalPrice: seed.originalPrice,
+      },
+    },
+  ]
+}
+
 export default async function kitchenCatalogSeed({
   container,
 }: {
@@ -395,7 +314,7 @@ export default async function kitchenCatalogSeed({
 
   const { data: existingProducts } = await query.graph({
     entity: "product",
-    fields: ["id", "handle", "metadata"],
+    fields: ["id", "handle", "metadata", "variants.id", "variants.metadata"],
     pagination: { take: 500 },
   })
   const categories = await ensureCategories(container)
@@ -409,6 +328,31 @@ export default async function kitchenCatalogSeed({
   const missingProducts = products.filter(
     (product) => !existingByHandle.has(product.handle),
   )
+  const legacyProducts = legacyKitchenHandles.flatMap((handle) => {
+    const existing = existingByHandle.get(handle)
+    return existing ? [existing] : []
+  })
+
+  if (legacyProducts.length) {
+    await updateProductsWorkflow(container).run({
+      input: {
+        products: legacyProducts.map((existing) => ({
+          id: existing.id,
+          status: ProductStatus.DRAFT,
+          metadata: {
+            ...(existing.metadata || {}),
+            catalogActive: false,
+            archivedFromWhatsappCatalog: true,
+            archiveReason: "No aparece en el catalogo real de WhatsApp.",
+          },
+        })),
+      },
+    })
+
+    logger.info(
+      `Kitchen catalog seed archived ${legacyProducts.length} legacy products.`,
+    )
+  }
 
   if (existingKitchenProducts.length) {
     await updateProductsWorkflow(container).run({
@@ -421,6 +365,7 @@ export default async function kitchenCatalogSeed({
           status: ProductStatus.PUBLISHED,
           thumbnail: seed.image,
           images: [{ url: seed.image }],
+          variants: updateVariantInput(seed, existing),
           metadata: {
             ...(existing.metadata || {}),
             ...commercialMetadata,

@@ -39,8 +39,8 @@ export type ContentMatrixItem = {
 export const starProductSkus = [
   "MGC-WOK-GRANITO-32",
   "MGC-OLLA-GRANITO-20",
-  "MGC-OLLA-GRANITO-24",
-  "MGC-SET-GRANITO-FAMILIAR",
+  "MGC-OLLA-GRANITO-18",
+  "COC-CUCHILLO-SAMURAI-TODO-USO",
 ]
 
 export const mediaSlots: MediaSlot[] = [
@@ -52,7 +52,7 @@ export const mediaSlots: MediaSlot[] = [
     video: "hero-cocina.mp4",
     metric: "Producto real, cocina real y asesoria por WhatsApp",
     cta: "Reclamar cupon del wok",
-    productSkus: ["MGC-WOK-GRANITO-32", "MGC-SET-GRANITO-FAMILIAR"],
+    productSkus: ["MGC-WOK-GRANITO-32"],
     proofPoints: ["wok MGC", "tapa visible", "cocina real"],
     eventType: "video_interest",
   },
@@ -64,7 +64,7 @@ export const mediaSlots: MediaSlot[] = [
     video: "detalle-wok.mp4",
     metric: "Interior, tapa, base y marca MGC sin filtros",
     cta: "Ver promo del wok",
-    productSkus: ["MGC-WOK-GRANITO-32", "MGC-SARTEN-WOK-GRANITO-28"],
+    productSkus: ["MGC-WOK-GRANITO-32"],
     proofPoints: ["granito", "tapa", "base MGC"],
     eventType: "video_interest",
   },
@@ -76,7 +76,7 @@ export const mediaSlots: MediaSlot[] = [
     video: "uso-diario-gas.mp4",
     metric: "Una olla trabajando en gas, sin escena montada",
     cta: "Preguntar por olla familiar",
-    productSkus: ["MGC-OLLA-GRANITO-24"],
+    productSkus: ["MGC-OLLA-GRANITO-20", "MGC-OLLA-GRANITO-18"],
     proofPoints: ["gas", "olla en uso", "cocina diaria"],
     eventType: "video_interest",
   },
@@ -100,7 +100,7 @@ export const mediaSlots: MediaSlot[] = [
     video: "set-mgc.mp4",
     metric: "Mira el set antes de armar combo por WhatsApp",
     cta: "Armar combo con cupon",
-    productSkus: ["MGC-SET-GRANITO-FAMILIAR"],
+    productSkus: ["MGC-WOK-GRANITO-32", "MGC-OLLA-GRANITO-20"],
     proofPoints: ["set", "tapas", "mangos"],
     eventType: "video_interest",
   },
@@ -114,7 +114,7 @@ export const editorialTiles: EditorialTile[] = [
     text: "Bonita para dejarla afuera, practica para arroz, guisos y salteados.",
     poster: "/media/photo-editorial-mesa.jpg",
     cta: "Ver recomendacion",
-    productSkus: ["MGC-OLLA-GRANITO-24", "MGC-WOK-GRANITO-32"],
+    productSkus: ["MGC-OLLA-GRANITO-20", "MGC-WOK-GRANITO-32"],
   },
   {
     id: "combo-familiar",
@@ -123,7 +123,7 @@ export const editorialTiles: EditorialTile[] = [
     text: "Te guiamos entre wok, olla o set segun cuantas personas comen en casa.",
     poster: "/media/photo-product-set-granito.jpg",
     cta: "Armar combo",
-    productSkus: ["MGC-SET-GRANITO-FAMILIAR"],
+    productSkus: ["MGC-WOK-GRANITO-32", "MGC-OLLA-GRANITO-18"],
   },
   {
     id: "cuidado",
@@ -132,7 +132,7 @@ export const editorialTiles: EditorialTile[] = [
     text: "Utensilios suaves, fuego medio, limpieza correcta y recordatorio por WhatsApp.",
     poster: "/media/photo-product-utensilios.jpg",
     cta: "Recibir guia",
-    productSkus: ["MGC-UTENSILIOS-CUIDADO"],
+    productSkus: ["COC-CUCHILLO-SAMURAI-TODO-USO"],
   },
 ]
 
@@ -162,7 +162,7 @@ export const contentMatrix: ContentMatrixItem[] = [
   })),
   {
     asset: "olla-ideal-quiz",
-    fallbackPoster: "/media/photo-product-olla-24.jpg",
+    fallbackPoster: "/media/photo-product-olla-20.jpg",
     section: "olla_ideal_quiz",
     productSkus: starProductSkus,
     cta: "Ver recomendacion",

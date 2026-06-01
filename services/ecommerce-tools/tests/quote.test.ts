@@ -16,9 +16,9 @@ describe("commerce tools", () => {
       { productId: "prod-wok-granito-32", quantity: 2 },
     ])
 
-    expect(quote.subtotal.amount).toBe(300)
-    expect(quote.tax.amount).toBe(45)
-    expect(quote.total.amount).toBe(345)
+    expect(quote.subtotal.amount).toBe(302.4)
+    expect(quote.tax.amount).toBe(45.36)
+    expect(quote.total.amount).toBe(347.76)
     expect(quote.whatsappMessage).toContain("PayPhone")
   })
 
@@ -33,9 +33,10 @@ describe("commerce tools", () => {
       "id,title,description,availability,condition,price,link,image_link,brand,sale_price",
     )
     expect(csv).toContain("in stock")
-    expect(csv).toContain("MGC-WOK-GRANITO-32,Wok de granito 32 cm con tapa")
-    expect(csv).toContain("179.00 USD")
-    expect(csv).toContain("150.00 USD")
+    expect(csv).toContain(
+      "MGC-WOK-GRANITO-32,Wok 32 cm granito premium antiadherente",
+    )
+    expect(csv).toContain("151.20 USD")
   })
 
   it("imports CRM customers and returns due WhatsApp followups", async () => {
@@ -56,9 +57,9 @@ describe("commerce tools", () => {
             lastPurchaseAt: "2026-05-01T00:00:00.000Z",
             purchasedProducts: [
               {
-                productId: "prod-olla-granito-24",
-                sku: "MGC-OLLA-GRANITO-24",
-                title: "Olla de granito 24 cm familiar",
+                productId: "prod-olla-granito-20",
+                sku: "MGC-OLLA-GRANITO-20",
+                title: "Olla de granito 20 cm",
                 quantity: 1,
                 purchasedAt: "2026-05-01T00:00:00.000Z",
                 reorderAfterDays: 90,
@@ -72,7 +73,7 @@ describe("commerce tools", () => {
       expect(result.imported).toBe(1)
       const customer = await service.getCustomer("+593 99 111 2222")
       expect(customer?.phone).toBe("+593991112222")
-      expect(customer?.purchasedProducts[0]?.sku).toBe("MGC-OLLA-GRANITO-24")
+      expect(customer?.purchasedProducts[0]?.sku).toBe("MGC-OLLA-GRANITO-20")
 
       const due = await service.dueFollowups({
         asOf: "2026-08-01T00:00:00.000Z",
@@ -80,7 +81,7 @@ describe("commerce tools", () => {
       expect(due[0]?.suggestedMessage).toContain("compraste")
       expect(due[0]?.reason).toBe("recompra_90d")
       expect(due[0]?.priority).toBe("high")
-      expect(due[0]?.recommendedProductSku).toBe("MGC-OLLA-GRANITO-24")
+      expect(due[0]?.recommendedProductSku).toBe("MGC-OLLA-GRANITO-20")
       expect(due[0]?.requiresHumanApproval).toBe(true)
 
       const dashboard = await service.dashboard({
@@ -89,7 +90,7 @@ describe("commerce tools", () => {
       expect(dashboard.counts.dueFollowups).toBe(1)
       expect(dashboard.campaignDraftQueue[0]?.phone).toBe("+593991112222")
       expect(dashboard.reorderFollowups[0]?.recommendedProductSku).toBe(
-        "MGC-OLLA-GRANITO-24",
+        "MGC-OLLA-GRANITO-20",
       )
     } finally {
       await rm(dataDir, { recursive: true, force: true })

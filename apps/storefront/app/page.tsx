@@ -16,11 +16,7 @@ import {
 import type { Product } from "../lib/catalog"
 import { getProducts, productPath } from "../lib/catalog"
 import { commercialInfo } from "../lib/commercial"
-import {
-  mediaSlots,
-  starProductSkus,
-  type MediaSlot,
-} from "../lib/content"
+import { mediaSlots, starProductSkus, type MediaSlot } from "../lib/content"
 import { LeadCaptureForm } from "./components/lead-capture-form"
 import { FloatingWhatsAppCta } from "./components/floating-whatsapp-cta"
 import { PotRecommendationQuiz } from "./components/pot-recommendation-quiz"
@@ -64,8 +60,8 @@ function starRank(product: Product) {
   const normalized = `${product.title} ${product.sku}`.toLowerCase()
   if (normalized.includes("wok") && normalized.includes("32")) return 0
   if (normalized.includes("20 cm")) return 1
-  if (normalized.includes("24 cm")) return 2
-  if (normalized.includes("set")) return 3
+  if (normalized.includes("18 cm")) return 2
+  if (normalized.includes("cuchillo")) return 3
   return 99
 }
 
@@ -73,17 +69,20 @@ function isStarProduct(product: Product) {
   return starRank(product) < 99
 }
 
-function productForSkus(products: Product[], skus: string[], fallback?: Product) {
+function productForSkus(
+  products: Product[],
+  skus: string[],
+  fallback?: Product,
+) {
   return products.find((product) => skus.includes(product.sku)) || fallback
 }
 
-const mainCouponCta =
-  "Reclamar mi cupon y confirmar stock por WhatsApp"
+const mainCouponCta = "Reclamar mi cupon y confirmar stock por WhatsApp"
 
 const landingProductSkus = [
   "MGC-WOK-GRANITO-32",
-  "MGC-OLLA-GRANITO-24",
-  "MGC-SET-GRANITO-FAMILIAR",
+  "MGC-OLLA-GRANITO-20",
+  "MGC-OLLA-GRANITO-18",
 ]
 
 const landingVideoSlotIds = ["detalle-wok", "uso-diario-gas", "receta-wok"]
@@ -123,7 +122,10 @@ function PrequalificationBlock({ featured }: { featured?: Product }) {
   const commerce = commercialInfo(featured)
 
   return (
-    <section className="prequal-section" aria-label="Pagos envio y compatibilidad">
+    <section
+      className="prequal-section"
+      aria-label="Pagos envio y compatibilidad"
+    >
       <div className="prequal-copy">
         <p className="eyebrow">Antes de escribir</p>
         <h2>Ya sabes lo importante: envio, pago y cocina compatible.</h2>
@@ -424,8 +426,9 @@ export default async function Home({ searchParams }: HomeProps) {
           <p className="eyebrow">Eter Niu Cocina</p>
           <h1>Granito que se ve rico antes de cotizar.</h1>
           <p className="hero-subcopy">
-            Mira la prueba, elige tamano y te asesoramos por WhatsApp sin vueltas:
-            cupon, envio gratis, pagos claros y compatibilidad confirmada.
+            Mira la prueba, elige tamano y te asesoramos por WhatsApp sin
+            vueltas: cupon, envio gratis, pagos claros y compatibilidad
+            confirmada.
           </p>
           <div className="hero-actions">
             {featured ? (
@@ -514,7 +517,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <PrequalificationBlock featured={featured} />
 
-      <PotRecommendationQuiz products={starProducts.length ? starProducts : products} />
+      <PotRecommendationQuiz
+        products={starProducts.length ? starProducts : products}
+      />
 
       <section className="section-head" id="videos">
         <div>
