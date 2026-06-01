@@ -29,6 +29,14 @@ const commercialMetadata = {
   couponCode: "GRANITOHOY",
 }
 
+const kitchenPublicUrl = (
+  process.env.COCINA_PUBLIC_URL ||
+  process.env.STORE_PUBLIC_URL ||
+  "https://shop.b2b.com.ec"
+).replace(/\/$/, "")
+
+const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`
+
 const products: KitchenProduct[] = [
   {
     title: "Wok 32 cm granito premium antiadherente",
@@ -40,7 +48,7 @@ const products: KitchenProduct[] = [
     price: 151.2,
     originalPrice: 151.2,
     stock: 1,
-    image: "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
+    image: kitchenMediaUrl("photo-receta-wok.jpg"),
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -91,7 +99,7 @@ const products: KitchenProduct[] = [
     price: 75.6,
     originalPrice: 75.6,
     stock: 1,
-    image: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
+    image: kitchenMediaUrl("photo-product-olla-20.jpg"),
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -140,7 +148,7 @@ const products: KitchenProduct[] = [
     price: 63.6,
     originalPrice: 63.6,
     stock: 1,
-    image: "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
+    image: kitchenMediaUrl("photo-product-olla-20.jpg"),
     metadata: {
       material: "Granito antiadherente",
       coating: "Granito",
@@ -189,7 +197,7 @@ const products: KitchenProduct[] = [
     price: 30,
     originalPrice: 30,
     stock: 1,
-    image: "https://cocina.b2b.com.ec/media/photo-product-utensilios.jpg",
+    image: kitchenMediaUrl("photo-product-utensilios.jpg"),
     metadata: {
       material: "Acero inoxidable",
       capacity: "Todo uso",
