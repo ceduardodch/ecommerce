@@ -48,6 +48,14 @@ type WhatsappContext = {
   fbclid?: string
 }
 
+function normalizeWhatsappSellerNumber(value: string) {
+  const digits = value.replace(/\D/g, "")
+  if (digits.startsWith("0") && digits.length === 10) {
+    return `593${digits.slice(1)}`
+  }
+  return digits
+}
+
 export function whatsappLink(
   product: WhatsappProduct,
   context: WhatsappContext = {},
@@ -60,8 +68,9 @@ export function whatsappLink(
     stoveCompatibility:
       context.stoveCompatibility || product.stoveCompatibility,
   })
-  const seller =
-    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593999999999"
+  const seller = normalizeWhatsappSellerNumber(
+    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "0979854915",
+  )
   const details = [
     `SKU: ${product.sku}`,
     `Precio: $${product.price.amount.toFixed(2)}`,

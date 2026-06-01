@@ -31,6 +31,14 @@ function bool(value: string | undefined, fallback: boolean) {
   return ["1", "true", "yes", "y"].includes(value.toLowerCase())
 }
 
+function normalizeWhatsappSellerNumber(value: string) {
+  const digits = value.replace(/\D/g, "")
+  if (digits.startsWith("0") && digits.length === 10) {
+    return `593${digits.slice(1)}`
+  }
+  return digits
+}
+
 export function loadConfig(env = process.env): AppConfig {
   const nodeEnv = env.NODE_ENV || "development"
   const crmBackend =
@@ -59,7 +67,9 @@ export function loadConfig(env = process.env): AppConfig {
     medusaPublishableKey: env.MEDUSA_PUBLISHABLE_KEY,
     medusaAdminApiKey: env.MEDUSA_ADMIN_API_KEY,
     taxRate: Number(env.ECOMMERCE_TAX_RATE ?? 0.15),
-    whatsappSellerNumber: env.WHATSAPP_SELLER_NUMBER || "593999999999",
+    whatsappSellerNumber: normalizeWhatsappSellerNumber(
+      env.WHATSAPP_SELLER_NUMBER || "0979854915",
+    ),
     payphoneApiLinkUrl:
       env.PAYPHONE_API_LINK_URL ||
       "https://pay.payphonetodoesposible.com/api/Links",

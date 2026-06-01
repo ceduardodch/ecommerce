@@ -73,7 +73,7 @@ Minimal order body:
   ],
   "customer": {
     "name": "Cliente",
-    "phone": "593999999999",
+    "phone": "0979854915",
     "whatsappConsent": true
   },
   "source": "whatsapp"
