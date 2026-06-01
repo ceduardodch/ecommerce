@@ -111,6 +111,17 @@ function generatedImageForProduct(
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
   if (input.vertical === "bienestar") {
+    if (
+      haystack.includes("tambor") ||
+      haystack.includes("lengua") ||
+      haystack.includes("8 notas")
+    ) {
+      return publicMediaUrl(
+        config,
+        "wellness-tambor-lengua-real.jpg",
+        "bienestar",
+      )
+    }
     if (haystack.includes("botella") || haystack.includes("termica")) {
       return publicMediaUrl(config, "wellness-botella.svg", "bienestar")
     }

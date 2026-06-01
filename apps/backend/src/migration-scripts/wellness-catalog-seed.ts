@@ -322,7 +322,7 @@ const products: WellnessProduct[] = [
     price: 65,
     originalPrice: 65,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.b2b.com.ec/media/wellness-tambor-lengua-real.jpg",
     metadata: {
       brand: "Eter Niu Bienestar",
       material: "Metal",

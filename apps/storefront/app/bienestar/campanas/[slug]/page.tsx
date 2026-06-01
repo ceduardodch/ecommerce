@@ -51,7 +51,7 @@ export async function generateMetadata({
       title: "Producto de bienestar con cupon",
       description:
         "Mira el producto, confirma stock y reclama cupon por WhatsApp.",
-      images: ["/media/wellness-hero.svg"],
+      images: ["/media/wellness-tambor-lengua-real.jpg"],
       type: "website",
       url: `${wellnessBaseUrl}/campanas/${slug}`,
       siteName: "Eter Niu Bienestar",
@@ -300,7 +300,10 @@ export default async function WellnessCampaignPage({
 
       <section className="wellness-story-grid">
         <article>
-          <img alt="Rutina bienestar" src="/media/wellness-hero.svg" />
+          <img
+            alt="Producto real de bienestar Eter Niu"
+            src="/media/wellness-tambor-lengua-real.jpg"
+          />
           <strong>Visual por vertical</strong>
           <span>Bienestar no compite visualmente con cocina.</span>
         </article>

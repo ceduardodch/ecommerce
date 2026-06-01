@@ -302,7 +302,7 @@ const wellnessCatalog = [
     price: 65,
     material: "Metal",
     capacity: "8 notas",
-    image: "wellness-aroma.svg",
+    image: "wellness-tambor-lengua-real.jpg",
     tags: ["bienestar", "tambor", "sonido", "8 notas", "regalo"],
   },
   {

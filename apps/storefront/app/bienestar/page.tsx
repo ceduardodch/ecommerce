@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "Eter Niu Bienestar",
     description:
       "Productos para hidratacion, movimiento suave y pausas en casa.",
-    images: ["/media/wellness-hero.svg"],
+    images: ["/media/wellness-tambor-lengua-real.jpg"],
     type: "website",
     url: wellnessBaseUrl,
     siteName: "Eter Niu Bienestar",
@@ -132,11 +132,10 @@ export default async function WellnessPage() {
       <section className="wellness-hero">
         <div className="wellness-hero-copy">
           <p className="eyebrow">Nuevo vertical</p>
-          <h1>Bienestar diario, vendido como social commerce.</h1>
+          <h1>Bienestar diario para crear pausas en casa.</h1>
           <p>
-            Este espacio separa yoga, botellas, bowls, pausa y regalos de la
-            tienda de cocina. Misma IA, CRM y WhatsApp; otra intencion de
-            compra.
+            Productos para hidratacion, movimiento suave, sonido, regalos y
+            rincones de calma, con asesoria directa por WhatsApp.
           </p>
           <div className="wellness-hero-actions">
             <a className="primary-button" href="#productos">
@@ -174,10 +173,13 @@ export default async function WellnessPage() {
           </div>
         </div>
         <div className="wellness-hero-media">
-          <img alt="Rutina de bienestar Eter Niu" src="/media/wellness-hero.svg" />
+          <img
+            alt="Productos de sonido y pausa Eter Niu"
+            src="/media/wellness-tambor-lengua-real.jpg"
+          />
           <div>
-            <strong>Meta Ads a landing a WhatsApp</strong>
-            <span>Cada click guarda vertical, SKU, fuente y Lead.</span>
+            <strong>Producto real del catalogo</strong>
+            <span>Sonido, pausa y regalos con stock confirmado por WhatsApp.</span>
           </div>
         </div>
       </section>
@@ -203,7 +205,7 @@ export default async function WellnessPage() {
       <section className="campaign-section-head" id="productos">
         <div>
           <p className="eyebrow">Catalogo piloto</p>
-          <h2>Productos listos para landings por SKU.</h2>
+          <h2>Productos listos para pedir por WhatsApp.</h2>
         </div>
         <span>Bienestar separado de cocina</span>
       </section>

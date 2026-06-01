@@ -556,7 +556,7 @@ const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [
     claimNote: "No prometer beneficios terapeuticos.",
     reorderAfterDays: 240,
     stock: 1,
-    imageUrl: "/media/wellness-aroma.svg",
+    imageUrl: "/media/wellness-tambor-lengua-real.jpg",
     tags: ["bienestar", "tambor", "sonido", "8 notas", "regalo"],
   },
   {
@@ -781,8 +781,14 @@ function generatedImageForProduct(product: Product) {
       return "/media/wellness-botella.svg"
     }
     if (
-      haystack.includes("cuenco") ||
       haystack.includes("tambor") ||
+      haystack.includes("lengua") ||
+      haystack.includes("8 notas")
+    ) {
+      return "/media/wellness-tambor-lengua-real.jpg"
+    }
+    if (
+      haystack.includes("cuenco") ||
       haystack.includes("pendulo") ||
       haystack.includes("lampara") ||
       haystack.includes("plata") ||
