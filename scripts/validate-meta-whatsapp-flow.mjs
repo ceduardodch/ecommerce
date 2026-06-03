@@ -294,19 +294,30 @@ async function main() {
       firstLine || "missing first line",
     )
     const requiredFragments = [
-      "Hola, quiero el cuchillo samurai Japones todo uso.",
-      `SKU: ${config.sku}`,
-      "Precio: $30.00",
-      "Cupon: GRANITOHOY",
-      "Envio: Envio gratis por Servientrega",
-      `Campana: ${config.campaignSlug}`,
-      `utm_source: ${config.utmSource}`,
-      "Lead:",
+      "Hola, quiero reclamar la promo del cuchillo samurai Japones todo uso.",
+      "Vi la promo de $30.00 con cupon GRANITOHOY.",
+      "Me confirmas stock, envio gratis por Servientrega y formas de pago?",
+      "Ref: lead_",
     ]
     for (const fragment of requiredFragments) {
       record(
         `WhatsApp message includes ${fragment.slice(0, 28)}`,
         message.includes(fragment),
+        fragment,
+      )
+    }
+    const forbiddenFragments = [
+      `SKU: ${config.sku}`,
+      `Campana: ${config.campaignSlug}`,
+      `utm_source: ${config.utmSource}`,
+      "ProductoID:",
+      "Variante:",
+      "Sesion:",
+    ]
+    for (const fragment of forbiddenFragments) {
+      record(
+        `WhatsApp message hides ${fragment.slice(0, 30)}`,
+        !message.includes(fragment),
         fragment,
       )
     }
@@ -333,6 +344,18 @@ async function main() {
         missingCount === 0,
         missingCount
           ? `${missingCount}/${messages.length} messages missing ${fragment}`
+          : `${messages.length} messages checked`,
+      )
+    }
+    for (const fragment of forbiddenFragments) {
+      const visibleCount = messages.filter((item) =>
+        item.includes(fragment),
+      ).length
+      record(
+        `all WhatsApp CTAs hide ${fragment.slice(0, 24)}`,
+        visibleCount === 0,
+        visibleCount
+          ? `${visibleCount}/${messages.length} messages still show ${fragment}`
           : `${messages.length} messages checked`,
       )
     }
