@@ -1,8 +1,8 @@
-import fs from "node:fs";
-import path from "node:path";
+import fs from "node:fs"
+import path from "node:path"
 
-const root = path.resolve(import.meta.dirname, "..");
-const whatsappSource = "https://wa.me/c/593979854915";
+const root = path.resolve(import.meta.dirname, "..")
+const whatsappSource = "https://wa.me/c/593979854915"
 
 const kitchenProducts = [
   {
@@ -191,15 +191,15 @@ const kitchenProducts = [
     description:
       "Cuchillo Samurai todo uso para cortes precisos en preparaciones diarias.",
     price: 30,
-    originalPrice: 30,
+    originalPrice: 50,
     stock: 1,
-    image: "photo-product-utensilios.jpg",
+    image: "photo-product-cuchillo-samurai.jpg",
     material: "Acero inoxidable",
     capacity: "Todo uso",
     pieces: 1,
-    promoLabel: "Complemento",
+    promoLabel: "Oferta especial",
     stockSignal: "Stock por confirmar por WhatsApp",
-    deliveryBadge: "Agregar al pedido con envio gratis",
+    deliveryBadge: "Envio gratis por Servientrega",
     bundleEligible: true,
     stoveCompatibility: "No aplica; complemento de cocina",
     tipoCocina: "Corte diario",
@@ -215,7 +215,7 @@ const kitchenProducts = [
     reorderAfterDays: 240,
     tags: ["cuchillo", "samurai", "japones", "todo uso", "cocina"],
   },
-];
+]
 
 const wellnessProducts = [
   wellness(
@@ -226,7 +226,7 @@ const wellnessProducts = [
     139,
     "Ceramica y accesorios",
     "Set de te",
-    "wellness-bowl.svg",
+    "wellness-juego-te-japones.jpg",
     "Juego de te para rituales de mesa, regalos y momentos de pausa en casa.",
     "Hogar Zen",
     "ritual de te|mesa zen|regalo premium",
@@ -240,7 +240,7 @@ const wellnessProducts = [
     20,
     "Acero inoxidable SUS 304",
     "500 ml",
-    "wellness-botella.svg",
+    "wellness-termo-sus304.jpg",
     "Termo de acero inoxidable SUS 304 de 500 ml para agua, te o bebidas del dia.",
     "Uso diario",
     "termo 500 ml|SUS 304|uso diario",
@@ -254,7 +254,7 @@ const wellnessProducts = [
     28.5,
     "Acero inoxidable SUS 304",
     "1000 ml",
-    "wellness-botella.svg",
+    "wellness-termo-sus304.jpg",
     "Termo de acero SUS304 de 1000 ml para llevar bebida durante el dia.",
     "Uso diario",
     "termo 1000 ml|SUS 304|dia completo",
@@ -268,7 +268,7 @@ const wellnessProducts = [
     79.99,
     "Suede",
     "Uso personal",
-    "wellness-mat.svg",
+    "wellness-yoga-mat-suede.jpg",
     "Mat premium de suede de 4 mm para yoga, estiramiento y movimiento suave.",
     "Movimiento premium",
     "mat suede|4 mm|movimiento suave",
@@ -282,7 +282,7 @@ const wellnessProducts = [
     33,
     "PU rubber",
     "70 cm diametro",
-    "wellness-mat.svg",
+    "wellness-meditador-mandala.jpg",
     "Meditador mandala de PU rubber de 70 cm para rincones de yoga, meditacion y pausa.",
     "Pausa visual",
     "mandala|70 cm|rincon de meditacion",
@@ -296,7 +296,7 @@ const wellnessProducts = [
     199,
     "Equipo de masaje",
     "30 niveles",
-    "wellness-mat.svg",
+    "wellness-pistola-percusion.jpg",
     "Pistola de percusion profesional con 30 niveles para masaje muscular de rutina.",
     "Movimiento",
     "30 niveles|masaje muscular|rutina deportiva",
@@ -310,7 +310,7 @@ const wellnessProducts = [
     45,
     "Bronce",
     "8 cm",
-    "wellness-aroma.svg",
+    "wellness-cuenco-bronce.jpg",
     "Cuenco de bronce con grabado sanscrito de 8 cm para rituales de sonido.",
     "Sonido",
     "cuenco 8 cm|bronce|sonido",
@@ -324,7 +324,7 @@ const wellnessProducts = [
     65,
     "Bronce",
     "9 cm",
-    "wellness-aroma.svg",
+    "wellness-cuenco-bronce.jpg",
     "Cuenco de bronce con grabado sanscrito de 9 cm para rituales de sonido.",
     "Sonido",
     "cuenco 9 cm|bronce|sonido",
@@ -338,7 +338,7 @@ const wellnessProducts = [
     65,
     "Metal",
     "8 notas",
-    "wellness-tambor-lengua-real.jpg",
+    "wellness-tambor-lengua.jpg",
     "Tambor de lengua de 8 notas para sonido ambiental, regalos y pausas personales.",
     "Sonido",
     "8 notas|sonido|regalo",
@@ -394,7 +394,7 @@ const wellnessProducts = [
     12,
     "Accesorio decorativo",
     "1 cascada",
-    "wellness-aroma.svg",
+    "wellness-cascada-humo.jpg",
     "Cascadas de humo con disenos OM, Ganesha y Torre para ambientar espacios.",
     "Ambiente",
     "humo|OM|Ganesha",
@@ -422,7 +422,7 @@ const wellnessProducts = [
     65,
     "Sal del Himalaya",
     "10 kilos",
-    "wellness-aroma.svg",
+    "wellness-lampara-sal.jpg",
     "Lampara de sal Himalaya grande de 10 kilos para luz calida y decoracion.",
     "Luz calida",
     "10 kilos|luz calida|decoracion",
@@ -436,7 +436,7 @@ const wellnessProducts = [
     20,
     "Moxa por confirmar",
     "Set de moxas",
-    "wellness-aroma.svg",
+    "wellness-moxas-chinas.jpg",
     "Moxas chinas para practica personal supervisada y rituales tradicionales.",
     "Tradicional",
     "moxas|tradicion|ritual",
@@ -506,7 +506,7 @@ const wellnessProducts = [
     15,
     "Metal",
     "1 portaincienso",
-    "wellness-aroma.svg",
+    "wellness-portaincienso-metal.jpg",
     "Portaincienso de metal para aroma, decoracion y uso diario.",
     "Aroma",
     "incienso|metal|decoracion",
@@ -520,7 +520,7 @@ const wellnessProducts = [
     29.99,
     "Bronce",
     "1 portaincienso",
-    "wellness-aroma.svg",
+    "wellness-portaincienso-metal.jpg",
     "Portaincienso vertical de bronce para rincones de aroma y decoracion.",
     "Bronce",
     "incienso|bronce|decoracion",
@@ -702,7 +702,7 @@ const wellnessProducts = [
     4.99,
     "Cera por confirmar",
     "Caja mandala",
-    "wellness-aroma.svg",
+    "wellness-velas-mandala.jpg",
     "Velas grandes en caja mandala para ambientar espacios.",
     "Ambiente",
     "velas|mandala|decoracion",
@@ -716,7 +716,7 @@ const wellnessProducts = [
     3.99,
     "Cera por confirmar",
     "Caja mandala",
-    "wellness-aroma.svg",
+    "wellness-velas-mandala.jpg",
     "Velas pequenas en caja mandala para ambientar espacios.",
     "Ambiente",
     "velas pequenas|mandala|decoracion",
@@ -730,7 +730,7 @@ const wellnessProducts = [
     5,
     "Alumbre",
     "1 piedra",
-    "wellness-aroma.svg",
+    "wellness-piedra-alumbre.jpg",
     "Piedra alumbre para rutina de cuidado personal, segun uso tradicional.",
     "Cuidado personal",
     "alumbre|cuidado personal|rutina",
@@ -744,7 +744,7 @@ const wellnessProducts = [
     11,
     "Bronce",
     "1 lampara",
-    "wellness-aroma.svg",
+    "wellness-lampara-ghee-bronce.jpg",
     "Lampara de ghee de bronce para ritual, decoracion y ambiente.",
     "Bronce",
     "ghee|bronce|ritual",
@@ -758,7 +758,7 @@ const wellnessProducts = [
     55,
     "Bronce",
     "Figura decorativa",
-    "wellness-aroma.svg",
+    "wellness-nataraj-bronce.jpg",
     "Figura Nataraj de bronce para decoracion y espacios de pausa.",
     "Bronce",
     "nataraj|bronce|decoracion",
@@ -772,7 +772,7 @@ const wellnessProducts = [
     4.99,
     "Incienso",
     "Stick jumbo",
-    "wellness-aroma.svg",
+    "wellness-incienso-ullas.jpg",
     "Inciensos stick jumbo para aroma y ambiente en casa.",
     "Aroma",
     "incienso jumbo|aroma|ambiente",
@@ -786,7 +786,7 @@ const wellnessProducts = [
     9,
     "Tela por confirmar",
     "1.8 metros",
-    "wellness-mat.svg",
+    "wellness-straps.jpg",
     "Strap de 1.8 metros para yoga, estiramiento y movilidad suave.",
     "Yoga",
     "strap 1.8 m|yoga|movimiento",
@@ -800,7 +800,7 @@ const wellnessProducts = [
     11,
     "Tela por confirmar",
     "3 metros",
-    "wellness-mat.svg",
+    "wellness-straps.jpg",
     "Strap de 3 metros para yoga, estiramiento y movilidad suave.",
     "Yoga",
     "strap 3 m|yoga|movimiento",
@@ -814,7 +814,7 @@ const wellnessProducts = [
     15,
     "Cobre",
     "1 limpiador",
-    "wellness-aroma.svg",
+    "wellness-limpiador-lengua-cobre.jpg",
     "Limpiador de lengua de cobre hecho a mano para rutina diaria de cuidado personal.",
     "Cobre",
     "limpiador lengua|cobre|rutina diaria",
@@ -828,7 +828,7 @@ const wellnessProducts = [
     15,
     "Vidrio",
     "450 ml",
-    "wellness-bowl.svg",
+    "wellness-tetera-vidrio-450.jpg",
     "Tetera de vidrio de 450 ml para infusiones y rituales de mesa.",
     "Te",
     "tetera 450 ml|vidrio|infusiones",
@@ -842,7 +842,7 @@ const wellnessProducts = [
     4.99,
     "Incienso organico por confirmar",
     "Caja de incienso",
-    "wellness-aroma.svg",
+    "wellness-incienso-ullas.jpg",
     "Inciensos organicos Ullas hechos a mano para aroma y ambiente.",
     "Aroma",
     "incienso organico|hecho a mano|ambiente",
@@ -856,7 +856,7 @@ const wellnessProducts = [
     15,
     "Vidrio",
     "1600 ml",
-    "wellness-bowl.svg",
+    "wellness-tetera-vidrio-1600.jpg",
     "Tetera de vidrio de 1600 ml con infusor para compartir infusiones.",
     "Te",
     "tetera 1600 ml|infusor|vidrio",
@@ -884,7 +884,7 @@ const wellnessProducts = [
     39.99,
     "Ceramica por confirmar",
     "Set de te",
-    "wellness-bowl.svg",
+    "wellness-juego-te-japones.jpg",
     "Juego de te japones para mesa, regalos y pausas en casa.",
     "Te",
     "te japones|set de te|regalo",
@@ -898,16 +898,16 @@ const wellnessProducts = [
     3.5,
     "Papel decorativo",
     "1 billete",
-    "wellness-aroma.svg",
+    "wellness-billete-1-millon.jpg",
     "Billete decorativo de 1 millon para regalo simbolico o detalle.",
     "Detalle",
     "billete 1 millon|detalle|regalo",
     "No prometer abundancia, suerte ni resultados economicos.",
   ),
-];
+]
 
 for (const product of [...kitchenProducts, ...wellnessProducts]) {
-  product.sourceUrls ??= [whatsappSource];
+  product.sourceUrls ??= [whatsappSource]
 }
 
 function wellness(
@@ -930,7 +930,7 @@ function wellness(
       .split("|")
       .map((item) => item.trim())
       .filter(Boolean),
-  ];
+  ]
   return {
     id: `prod-${handle}`,
     variantId: `var-${handle}`,
@@ -961,14 +961,14 @@ function wellness(
     claimNote,
     reorderAfterDays: 180,
     tags,
-  };
+  }
 }
 
 function csvValue(value) {
-  if (Array.isArray(value)) return csvValue(value.join("|"));
-  const text = String(value ?? "");
-  if (/[",\n]/.test(text)) return `"${text.replaceAll('"', '""')}"`;
-  return text;
+  if (Array.isArray(value)) return csvValue(value.join("|"))
+  const text = String(value ?? "")
+  if (/[",\n]/.test(text)) return `"${text.replaceAll('"', '""')}"`
+  return text
 }
 
 function writeCsv(file, products, vertical) {
@@ -1011,47 +1011,47 @@ function writeCsv(file, products, vertical) {
           "imageUrl",
           "contentAngles",
           "claimNote",
-        ];
+        ]
 
   const baseUrl =
     vertical === "cocina"
       ? "https://cocina.b2b.com.ec"
-      : "https://bienestar.b2b.com.ec";
+      : "https://bienestar.b2b.com.ec"
   const rows = products.map((product) => {
-    const imageUrl = `${baseUrl}/media/${product.image}`;
+    const imageUrl = `${baseUrl}/media/${product.image}`
     const row = {
       ...product,
       imageUrl,
       sourceUrls: product.sourceUrls || [whatsappSource],
-    };
-    return headers.map((header) => csvValue(row[header])).join(",");
-  });
+    }
+    return headers.map((header) => csvValue(row[header])).join(",")
+  })
 
   fs.writeFileSync(
     path.join(root, file),
     `${headers.join(",")}\n${rows.join("\n")}\n`,
-  );
+  )
 }
 
 function ts(value, indent = 2) {
-  return JSON.stringify(value, null, indent);
+  return JSON.stringify(value, null, indent)
 }
 
 function replaceSection(file, start, end, replacement) {
-  const fullPath = path.join(root, file);
-  const current = fs.readFileSync(fullPath, "utf8");
-  const startIndex = current.indexOf(start);
-  const endIndex = current.indexOf(end, startIndex);
+  const fullPath = path.join(root, file)
+  const current = fs.readFileSync(fullPath, "utf8")
+  const startIndex = current.indexOf(start)
+  const endIndex = current.indexOf(end, startIndex)
   if (startIndex === -1 || endIndex === -1) {
-    throw new Error(`Cannot replace section in ${file}`);
+    throw new Error(`Cannot replace section in ${file}`)
   }
-  let afterEnd = endIndex;
+  let afterEnd = endIndex
   while (current.startsWith(end, afterEnd)) {
-    afterEnd += end.length;
+    afterEnd += end.length
   }
   const next =
-    current.slice(0, startIndex) + replacement + current.slice(afterEnd);
-  fs.writeFileSync(fullPath, next);
+    current.slice(0, startIndex) + replacement + current.slice(afterEnd)
+  fs.writeFileSync(fullPath, next)
 }
 
 function frontendKitchenArray() {
@@ -1094,15 +1094,15 @@ function frontendKitchenArray() {
         stock: product.stock,
         imageUrl: `/media/${product.image}`,
         tags: product.tags,
-      };
+      }
       const rendered = ts(object, 2).replace(
         /\n\}/,
         `,\n  "productUrl": \`\${kitchenBaseUrl}/products/${product.handle}\`\n}`,
-      );
-      return rendered.replace(/^/gm, "  ");
+      )
+      return rendered.replace(/^/gm, "  ")
     })
-    .join(",\n");
-  return `export const fallbackProducts: Product[] = [\n${body},\n]\n\n`;
+    .join(",\n")
+  return `export const fallbackProducts: Product[] = [\n${body},\n]\n\n`
 }
 
 function frontendWellnessArray() {
@@ -1135,11 +1135,11 @@ function frontendWellnessArray() {
         stock: product.stock,
         imageUrl: `/media/${product.image}`,
         tags: product.tags,
-      };
-      return ts(object, 2).replace(/^/gm, "  ");
+      }
+      return ts(object, 2).replace(/^/gm, "  ")
     })
-    .join(",\n");
-  return `const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [\n${body},\n]\n\n`;
+    .join(",\n")
+  return `const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [\n${body},\n]\n\n`
 }
 
 function toolsKitchenArray() {
@@ -1161,15 +1161,15 @@ function toolsKitchenArray() {
         couponCode: "GRANITOHOY",
         imageUrl: `https://cocina.b2b.com.ec/media/${product.image}`,
         productUrl: `https://cocina.b2b.com.ec/products/${product.handle}`,
-      };
+      }
       return `  {\n    ...kitchenDefaults,\n${ts(object, 4)
         .slice(2, -2)
         .split("\n")
         .map((line) => `    ${line}`)
-        .join("\n")}\n  }`;
+        .join("\n")}\n  }`
     })
-    .join(",\n");
-  return `const kitchenCatalog: Product[] = [\n${body},\n]\n\n`;
+    .join(",\n")
+  return `const kitchenCatalog: Product[] = [\n${body},\n]\n\n`
 }
 
 function toolsWellnessArray() {
@@ -1187,19 +1187,19 @@ function toolsWellnessArray() {
         capacity: product.capacity,
         image: product.image,
         tags: product.tags,
-      };
-      return ts(object, 2).replace(/^/gm, "  ");
+      }
+      return ts(object, 2).replace(/^/gm, "  ")
     })
-    .join(",\n");
-  return `const wellnessCatalog = [\n${body},\n] as const\n\n`;
+    .join(",\n")
+  return `const wellnessCatalog = [\n${body},\n] as const\n\n`
 }
 
 function seedProductsArray(products, vertical) {
-  const isKitchen = vertical === "cocina";
+  const isKitchen = vertical === "cocina"
   const media = isKitchen
     ? (image) => `kitchenMediaUrl(${JSON.stringify(image)})`
-    : (image) => JSON.stringify(`https://bienestar.b2b.com.ec/media/${image}`);
-  const commercial = isKitchen ? "Eter Niu Cocina" : "Eter Niu Bienestar";
+    : (image) => JSON.stringify(`https://bienestar.b2b.com.ec/media/${image}`)
+  const commercial = isKitchen ? "Eter Niu Cocina" : "Eter Niu Bienestar"
   const body = products
     .map((product) => {
       const metadata = {
@@ -1224,7 +1224,7 @@ function seedProductsArray(products, vertical) {
         price: product.price,
         originalPrice: product.originalPrice,
         stock: product.stock,
-      };
+      }
       if (isKitchen) {
         Object.assign(metadata, {
           coating: product.coating,
@@ -1233,58 +1233,58 @@ function seedProductsArray(products, vertical) {
           diameterCm: product.diameterCm,
           stoveCompatibility: product.stoveCompatibility,
           tipoCocina: product.tipoCocina,
-        });
+        })
       }
-      return `  {\n    title: ${JSON.stringify(product.title)},\n    handle: ${JSON.stringify(product.handle)},\n    sku: ${JSON.stringify(product.sku)},\n    category: ${JSON.stringify(product.category)},\n    description: ${JSON.stringify(product.description)},\n    price: ${product.price},\n    originalPrice: ${product.originalPrice},\n    stock: ${product.stock},\n    image: ${media(product.image)},\n    metadata: ${ts(metadata, 4).replace(/^/gm, "    ").trimStart()},\n  }`;
+      return `  {\n    title: ${JSON.stringify(product.title)},\n    handle: ${JSON.stringify(product.handle)},\n    sku: ${JSON.stringify(product.sku)},\n    category: ${JSON.stringify(product.category)},\n    description: ${JSON.stringify(product.description)},\n    price: ${product.price},\n    originalPrice: ${product.originalPrice},\n    stock: ${product.stock},\n    image: ${media(product.image)},\n    metadata: ${ts(metadata, 4).replace(/^/gm, "    ").trimStart()},\n  }`
     })
-    .join(",\n");
-  return `const products: ${isKitchen ? "KitchenProduct" : "WellnessProduct"}[] = [\n${body},\n]\n\n`;
+    .join(",\n")
+  return `const products: ${isKitchen ? "KitchenProduct" : "WellnessProduct"}[] = [\n${body},\n]\n\n`
 }
 
-writeCsv("data/catalog/eter-niu-products.csv", kitchenProducts, "cocina");
+writeCsv("data/catalog/eter-niu-products.csv", kitchenProducts, "cocina")
 writeCsv(
   "data/catalog/eter-niu-wellness-products.csv",
   wellnessProducts,
   "bienestar",
-);
+)
 
 replaceSection(
   "apps/storefront/lib/catalog.ts",
   "export const fallbackProducts: Product[] = [",
   "type WellnessFallbackProductInput",
   `${frontendKitchenArray()}type WellnessFallbackProductInput`,
-);
+)
 replaceSection(
   "apps/storefront/lib/catalog.ts",
   "const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [",
   "export const wellnessFallbackProducts",
   `${frontendWellnessArray()}export const wellnessFallbackProducts`,
-);
+)
 replaceSection(
   "services/ecommerce-tools/src/demo-catalog.ts",
   "const kitchenCatalog: Product[] = [",
   "const wellnessCatalog = [",
   `${toolsKitchenArray()}const wellnessCatalog = [`,
-);
+)
 replaceSection(
   "services/ecommerce-tools/src/demo-catalog.ts",
   "const wellnessCatalog = [",
   "const wellnessProducts: Product[] = wellnessCatalog.map",
   `${toolsWellnessArray()}const wellnessProducts: Product[] = wellnessCatalog.map`,
-);
+)
 replaceSection(
   "apps/backend/src/migration-scripts/kitchen-catalog-seed.ts",
   "const products: KitchenProduct[] = [",
   "const legacyKitchenHandles",
   `${seedProductsArray(kitchenProducts, "cocina")}const legacyKitchenHandles`,
-);
+)
 replaceSection(
   "apps/backend/src/migration-scripts/wellness-catalog-seed.ts",
   "const products: WellnessProduct[] = [",
   "const legacyWellnessHandles",
   `${seedProductsArray(wellnessProducts, "bienestar")}const legacyWellnessHandles`,
-);
+)
 
 console.log(
   `Synced ${kitchenProducts.length} kitchen products and ${wellnessProducts.length} wellness products.`,
-);
+)

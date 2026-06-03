@@ -161,6 +161,63 @@ describe("commerce tools", () => {
     }
   })
 
+  it("accepts campaign CTA clicks and exposes campaign context to AI", async () => {
+    const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-campaign-"))
+    try {
+      const config = loadConfig({
+        TOOLS_DATA_DIR: dataDir,
+        PIXEL_ENABLED: "false",
+      })
+      const service = createCommerceService(config)
+
+      const result = await service.recordEvent({
+        eventName: "Lead",
+        type: "campaign_cta_click",
+        leadId: "lead cuchillo samurai 001",
+        source: "meta_ads",
+        consent: true,
+        product: {
+          productId: "prod-cuchillo-samurai",
+          variantId: "var-cuchillo-samurai",
+          sku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+          title: "Cuchillo samurai Japones todo uso",
+          category: "Cuchillos",
+          brand: "MGC",
+          price: 30,
+          currency: "USD",
+        },
+        value: 30,
+        currency: "USD",
+        metadata: {
+          campaignSlug: "cuchillo-samurai-japones-todo-uso",
+          productInterestSku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+          couponClaimed: true,
+          utmSource: "meta",
+        },
+      })
+
+      expect(result.crmStored).toBe(true)
+      expect(result.crmEventType).toBe("campaign_cta_click")
+
+      const context = await service.aiContext("+593999111222", {
+        leadId: "lead cuchillo samurai 001",
+      })
+
+      expect(context.webSignals[0]).toMatchObject({
+        type: "campaign_cta_click",
+        source: "meta_ads",
+      })
+      expect(context.lifecycle).toMatchObject({
+        journeyStage: "cotizacion_pendiente",
+        productInterestSku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+        campaignSlug: "cuchillo-samurai-japones-todo-uso",
+        couponClaimed: true,
+      })
+    } finally {
+      await rm(dataDir, { recursive: true, force: true })
+    }
+  })
+
   it("keeps transfer payment proof in CRM review instead of sending Purchase CAPI", async () => {
     const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-proof-"))
     try {

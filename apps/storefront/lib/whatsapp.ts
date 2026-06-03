@@ -59,6 +59,41 @@ function normalizeWhatsappSellerNumber(value: string) {
   return digits || "593979854915"
 }
 
+function isKnifeProduct(product: WhatsappProduct) {
+  return [product.category, product.title, product.sku]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .includes("cuchillo")
+}
+
+function isKitchenComplement(product: WhatsappProduct) {
+  return (
+    isKnifeProduct(product) ||
+    product.stoveCompatibility?.toLowerCase().includes("no aplica")
+  )
+}
+
+function defaultOpeningLine(
+  product: WhatsappProduct,
+  context: WhatsappContext,
+) {
+  if (context.vertical === "bienestar") {
+    return `Hola, quiero el producto de bienestar ${product.title}.`
+  }
+
+  if (isKnifeProduct(product)) {
+    const title = product.title.replace(/^cuchillo\b/i, "cuchillo")
+    return `Hola, quiero el ${title}.`
+  }
+
+  if (isKitchenComplement(product)) {
+    return `Hola, quiero ${product.title}.`
+  }
+
+  return `Hola, quiero la olla de granito ${product.title}.`
+}
+
 export function whatsappLink(
   product: WhatsappProduct,
   context: WhatsappContext = {},
@@ -85,7 +120,9 @@ export function whatsappLink(
     `Pago: ${commerce.paymentMethodsLabel}`,
     `Compatibilidad: ${commerce.stoveCompatibility}`,
     product.promoLabel ? `Promo: ${product.promoLabel}` : undefined,
-    context.recommendation ? `Recomendacion: ${context.recommendation}` : undefined,
+    context.recommendation
+      ? `Recomendacion: ${context.recommendation}`
+      : undefined,
     context.city ? `Ciudad: ${context.city}` : undefined,
     context.householdPeople
       ? `Personas en casa: ${context.householdPeople}`
@@ -118,7 +155,9 @@ export function whatsappLink(
     context.utmContent ? `utm_content: ${context.utmContent}` : undefined,
     context.utmTerm ? `utm_term: ${context.utmTerm}` : undefined,
     context.fbclid ? `fbclid: ${context.fbclid}` : undefined,
-    context.recommendedSku ? `SKU recomendado: ${context.recommendedSku}` : undefined,
+    context.recommendedSku
+      ? `SKU recomendado: ${context.recommendedSku}`
+      : undefined,
     context.journeyStage ? `Etapa: ${context.journeyStage}` : undefined,
     context.videoSlot ? `Video: ${context.videoSlot}` : undefined,
   ]
@@ -126,11 +165,11 @@ export function whatsappLink(
     .join(" | ")
   const fitQuestion =
     context.fitQuestion ||
-    (context.vertical === "bienestar"
+    (context.vertical === "bienestar" || isKitchenComplement(product)
       ? "Lo quiero para __. Me confirmas stock y entrega?"
       : "Cocino para __ personas. Me confirmas stock y entrega?")
   const text =
-    (context.openingLine || `Hola, quiero la olla de granito ${product.title}.`) +
+    (context.openingLine || defaultOpeningLine(product, context)) +
     `\n${fitQuestion}` +
     `\n\n${details}` +
     `\n\n${tracking}`

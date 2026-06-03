@@ -1,9 +1,6 @@
 import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
-import {
-  buildFollowupAction,
-  parseCustomerImport,
-} from "./customers.js"
+import { buildFollowupAction, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
 import { createPayPhoneLink } from "./payphone.js"
 import {
@@ -102,7 +99,9 @@ function recentEventsFromCustomer(customer: unknown) {
 function customerTags(customer: unknown) {
   if (!customer || typeof customer !== "object") return []
   const tags = (customer as { tags?: unknown }).tags
-  return Array.isArray(tags) ? tags.filter((tag) => typeof tag === "string") : []
+  return Array.isArray(tags)
+    ? tags.filter((tag) => typeof tag === "string")
+    : []
 }
 
 function eventTypes(events: unknown[]) {
@@ -200,13 +199,13 @@ function customerLifecycleSummary(events: unknown[]) {
           : {}
       return {
         sku:
-          metadata.recommendedSku ||
-          metadata.productInterestSku ||
-          product.sku,
+          metadata.recommendedSku || metadata.productInterestSku || product.sku,
         videoSlot: metadata.videoSlot,
         city: metadata.city,
         householdPeople: metadata.householdPeople,
         journeyStage: metadata.journeyStage,
+        campaignSlug: metadata.campaignSlug,
+        couponClaimed: metadata.couponClaimed,
       }
     })
     .find((signal) => Object.values(signal).some(Boolean))
@@ -218,17 +217,20 @@ function customerLifecycleSummary(events: unknown[]) {
         ? "cliente_pagado"
         : types.includes("payment_proof_received")
           ? "pago_en_revision"
-          : types.includes("checkout_started")
-          ? "cotizacion_pendiente"
-          : types.includes("video_interest")
-            ? "interes_video"
-            : types.includes("quiz_completed")
-              ? "lead_nuevo"
-              : undefined),
+          : types.includes("checkout_started") ||
+              types.includes("campaign_cta_click")
+            ? "cotizacion_pendiente"
+            : types.includes("video_interest")
+              ? "interes_video"
+              : types.includes("quiz_completed")
+                ? "lead_nuevo"
+                : undefined),
     productInterestSku: latestProduct?.sku,
     videoSlot: latestProduct?.videoSlot,
     city: latestProduct?.city,
     householdPeople: latestProduct?.householdPeople,
+    campaignSlug: latestProduct?.campaignSlug,
+    couponClaimed: latestProduct?.couponClaimed,
   }
 }
 
@@ -251,8 +253,7 @@ async function trackCustomerEvent(
       source: event.source,
       nextFollowupAt: patch.nextFollowupAt,
       followupReason: patch.followupReason,
-      whatsappConsent:
-        event.type === "opt_out" ? false : patch.whatsappConsent,
+      whatsappConsent: event.type === "opt_out" ? false : patch.whatsappConsent,
       tags: patch.tags,
     })
   }
@@ -672,6 +673,7 @@ export function createCommerceService(config: AppConfig) {
           "interes_video",
           "lead_nuevo",
           "campaign_click",
+          "campaign_cta_click",
           "payment_proof_received",
         ].includes(String((event as { type?: unknown }).type || ""))
       })
@@ -740,8 +742,10 @@ export function createCommerceService(config: AppConfig) {
       const optOuts = customers.filter((customer) =>
         customer.events.some((event) => event.type === "opt_out"),
       )
-      const reasonIncludes = (customer: { reason?: string }, values: string[]) =>
-        values.some((value) => customer.reason?.includes(value))
+      const reasonIncludes = (
+        customer: { reason?: string },
+        values: string[],
+      ) => values.some((value) => customer.reason?.includes(value))
 
       return {
         asOf,

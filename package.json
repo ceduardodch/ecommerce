@@ -24,7 +24,10 @@
     "tools:build": "turbo build --filter=@b2b/ecommerce-tools",
     "tools:start": "turbo start --filter=@b2b/ecommerce-tools",
     "tools:test": "turbo test --filter=@b2b/ecommerce-tools",
-    "biblioteca:metadata": "node scripts/generate-biblioteca-metadata.mjs"
+    "biblioteca:metadata": "node scripts/generate-biblioteca-metadata.mjs",
+    "validate:meta-whatsapp": "node scripts/validate-meta-whatsapp-flow.mjs",
+    "validate:cuchillo-release": "node scripts/validate-cuchillo-release-package.mjs",
+    "campaign:readiness": "node scripts/campaign-readiness-report.mjs"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

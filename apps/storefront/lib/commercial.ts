@@ -1,7 +1,7 @@
 export const defaultCouponCode = "GRANITOHOY"
 export const defaultPaymentMethods = ["transferencia", "deuna", "payphone"]
 export const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
-export const defaultFreeShippingLabel = "Envio gratis"
+export const defaultFreeShippingLabel = "Envio gratis por Servientrega"
 
 type CommercialProduct = {
   couponCode?: string

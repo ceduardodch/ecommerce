@@ -495,7 +495,11 @@ h1 {
   display: grid;
   gap: 3px;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(17, 24, 19, 0.1), rgba(17, 24, 19, 0.86));
+  background: linear-gradient(
+    180deg,
+    rgba(17, 24, 19, 0.1),
+    rgba(17, 24, 19, 0.86)
+  );
   padding: 42px 12px 12px;
   color: #fffdf6;
   pointer-events: none;
@@ -677,7 +681,11 @@ h1 {
   border: 1px solid rgba(13, 61, 43, 0.16);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(255, 240, 231, 0.9)),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.96),
+      rgba(255, 240, 231, 0.9)
+    ),
     url("/media/photo-editorial-mesa.jpg");
   background-position: center;
   background-size: cover;
@@ -752,7 +760,11 @@ h1 {
   border: 1px solid rgba(13, 61, 43, 0.16);
   border-radius: 8px;
   background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(231, 244, 231, 0.92)),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.96),
+      rgba(231, 244, 231, 0.92)
+    ),
     url("/media/photo-product-olla-24.jpg");
   background-position: center;
   background-size: cover;
@@ -1720,7 +1732,11 @@ h1 {
   display: grid;
   gap: 3px;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(17, 24, 19, 0.1), rgba(17, 24, 19, 0.86));
+  background: linear-gradient(
+    180deg,
+    rgba(17, 24, 19, 0.1),
+    rgba(17, 24, 19, 0.86)
+  );
   padding: 42px 12px 12px;
 }
 
@@ -1754,10 +1770,18 @@ h1 {
 }
 
 .campaign-video-card a {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
   width: fit-content;
-  color: var(--yellow);
+  border-radius: 999px;
+  background: var(--yellow);
+  padding: 0 14px;
+  color: #1b160e;
   font-size: 0.9rem;
   font-weight: 950;
+  box-shadow: 0 8px 20px rgba(25, 27, 20, 0.18);
 }
 
 .campaign-hero-copy {
@@ -1766,9 +1790,21 @@ h1 {
   gap: 18px;
   padding: 42px;
   background:
-    radial-gradient(circle at 80% 18%, rgba(245, 164, 93, 0.38), transparent 19rem),
-    radial-gradient(circle at 16% 92%, rgba(159, 184, 140, 0.42), transparent 21rem),
-    linear-gradient(135deg, rgba(255, 253, 246, 0.99), rgba(247, 232, 208, 0.92));
+    radial-gradient(
+      circle at 80% 18%,
+      rgba(245, 164, 93, 0.38),
+      transparent 19rem
+    ),
+    radial-gradient(
+      circle at 16% 92%,
+      rgba(159, 184, 140, 0.42),
+      transparent 21rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.99),
+      rgba(247, 232, 208, 0.92)
+    );
 }
 
 .campaign-hero-copy h1 {
@@ -1894,6 +1930,91 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.campaign-photo-proof {
+  margin-top: 18px;
+}
+
+.campaign-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.campaign-photo-card {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 253, 246, 0.96);
+  box-shadow: 0 12px 30px rgba(25, 27, 20, 0.08);
+}
+
+.campaign-photo-card img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: block;
+  object-fit: cover;
+}
+
+.campaign-photo-card div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+}
+
+.campaign-photo-card span {
+  color: var(--tomato-dark);
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.campaign-photo-card strong {
+  color: var(--green-dark);
+  font-size: 0.98rem;
+  line-height: 1.12;
+}
+
+.campaign-photo-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 760;
+  line-height: 1.34;
+}
+
+.campaign-photo-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 12px;
+  border: 1px solid rgba(25, 27, 20, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(255, 244, 223, 0.94));
+  padding: 14px;
+}
+
+.campaign-photo-cta > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.campaign-photo-cta strong {
+  color: var(--green-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.18rem;
+  line-height: 1.1;
+}
+
+.campaign-photo-cta span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 820;
+  line-height: 1.35;
+}
+
 .campaign-video-card.compact {
   border-radius: 8px;
 }
@@ -1911,7 +2032,11 @@ h1 {
   margin-top: 18px;
   padding: 18px;
   background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(231, 244, 231, 0.92)),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.96),
+      rgba(231, 244, 231, 0.92)
+    ),
     url("/media/photo-product-olla-24.jpg");
   background-position: center;
   background-size: cover;
@@ -2020,6 +2145,18 @@ h1 {
   padding: 10px;
   color: #fffdf6;
   box-shadow: 0 18px 42px rgba(23, 32, 27, 0.26);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.campaign-sticky-cta.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .campaign-sticky-cta div {
@@ -2031,8 +2168,9 @@ h1 {
 .campaign-sticky-cta span {
   color: var(--yellow);
   font-size: 0.72rem;
+  line-height: 1.15;
   font-weight: 950;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .campaign-sticky-cta strong {
@@ -2082,7 +2220,11 @@ h1 {
   overflow: hidden;
   border-radius: 8px;
   background:
-    radial-gradient(circle at 12% 18%, rgba(216, 59, 36, 0.16), transparent 18rem),
+    radial-gradient(
+      circle at 12% 18%,
+      rgba(216, 59, 36, 0.16),
+      transparent 18rem
+    ),
     linear-gradient(135deg, #fffdf6, #dbe8d0);
   box-shadow: var(--shadow);
 }
@@ -2339,7 +2481,11 @@ h1 {
   margin-top: 18px;
   padding: 18px;
   background:
-    linear-gradient(135deg, rgba(255, 253, 246, 0.96), rgba(219, 232, 208, 0.88)),
+    linear-gradient(
+      135deg,
+      rgba(255, 253, 246, 0.96),
+      rgba(219, 232, 208, 0.88)
+    ),
     url("/media/wellness-hero.svg");
   background-position: center;
   background-size: cover;
@@ -2602,7 +2748,11 @@ h1 {
   gap: 18px;
   padding: 44px;
   background:
-    radial-gradient(circle at 78% 14%, rgba(245, 164, 93, 0.34), transparent 18rem),
+    radial-gradient(
+      circle at 78% 14%,
+      rgba(245, 164, 93, 0.34),
+      transparent 18rem
+    ),
     linear-gradient(135deg, #fffdf6, #f3ead8);
 }
 
@@ -3044,11 +3194,15 @@ h1 {
   }
 
   h1,
-  .campaign-hero-copy h1,
   .guide-hero h1,
   .article-hero h1 {
     font-size: 2.65rem;
     line-height: 1.03;
+  }
+
+  .campaign-hero-copy h1 {
+    font-size: 2.42rem;
+    line-height: 1.02;
   }
 
   .hero-subcopy {
@@ -3104,6 +3258,7 @@ h1 {
 
   .campaign-trust,
   .campaign-proof-grid,
+  .campaign-photo-grid,
   .campaign-faq,
   .campaign-selector,
   .campaign-choice-group,
@@ -3145,6 +3300,7 @@ h1 {
   }
 
   .campaign-selector,
+  .campaign-photo-proof,
   .wellness-routine,
   .club-section,
   .quiz-section,
@@ -3317,6 +3473,25 @@ h1 {
     gap: 7px;
   }
 
+  .campaign-photo-grid {
+    gap: 10px;
+  }
+
+  .campaign-photo-card img {
+    aspect-ratio: 4 / 5;
+    max-height: 360px;
+  }
+
+  .campaign-photo-cta {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .campaign-photo-cta .primary-button {
+    width: 100%;
+  }
+
   .campaign-sticky-cta {
     right: 10px;
     bottom: 10px;
@@ -3324,6 +3499,14 @@ h1 {
     grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
     width: auto;
     padding: 8px;
+  }
+
+  .campaign-sticky-cta strong {
+    display: none;
+  }
+
+  .campaign-sticky-cta span {
+    font-size: 0.75rem;
   }
 
   .campaign-sticky-cta .primary-button {

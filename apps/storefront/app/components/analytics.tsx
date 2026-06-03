@@ -61,6 +61,7 @@ type TrackingPayload = {
 
 type WhatsappTrackingContext = {
   openingLine?: string
+  fitQuestion?: string
   vertical?: string
   source?: string
   campaignSlug?: string
@@ -403,15 +404,19 @@ export function PageAnalytics({
     const pageKey = `page:${window.location.pathname}:${window.location.search}`
     if (!fired.current.has(pageKey) && readConsent()) {
       fired.current.add(pageKey)
-    trackStorefrontEvent({
-      eventName: "PageView",
-      type: "page_view",
-      source: "storefront",
-      metadata: { category },
-    })
+      trackStorefrontEvent({
+        eventName: "PageView",
+        type: "page_view",
+        source: "storefront",
+        metadata: { category },
+      })
     }
 
-    if (featured && !fired.current.has(`view:${featured.id}`) && readConsent()) {
+    if (
+      featured &&
+      !fired.current.has(`view:${featured.id}`) &&
+      readConsent()
+    ) {
       fired.current.add(`view:${featured.id}`)
       trackStorefrontEvent({
         eventName: "ViewContent",
@@ -509,7 +514,9 @@ export function TrackedWhatsAppLink({
             ...metadata,
             ...whatsappContext,
             productInterestSku:
-              metadata?.productInterestSku || whatsappContext?.recommendedSku || product.sku,
+              metadata?.productInterestSku ||
+              whatsappContext?.recommendedSku ||
+              product.sku,
           },
         })
         for (const extraEventType of extraEventTypes) {

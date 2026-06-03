@@ -45,6 +45,30 @@ export const starProductSkus = [
 
 export const mediaSlots: MediaSlot[] = [
   {
+    id: "cuchillo-samurai-hero",
+    title: "Cuchillo samurai en preparacion real",
+    label: "Video real",
+    poster: "/media/photo-cuchillo-samurai-hero.jpg",
+    video: "video-cuchillo-samurai-hero.mp4",
+    metric: "Producto real cortando ingredientes en cocina diaria",
+    cta: "Consultar stock con cupon",
+    productSkus: ["COC-CUCHILLO-SAMURAI-TODO-USO"],
+    proofPoints: ["$30 oferta", "corte diario", "envio gratis"],
+    eventType: "video_interest",
+  },
+  {
+    id: "cuchillo-samurai-corte",
+    title: "Prueba de corte en tabla",
+    label: "Uso real",
+    poster: "/media/photo-cuchillo-samurai-full.jpg",
+    video: "video-cuchillo-samurai-corte.mp4",
+    metric: "Mira el corte antes de pedirlo por WhatsApp",
+    cta: "Reclamar oferta de $30",
+    productSkus: ["COC-CUCHILLO-SAMURAI-TODO-USO"],
+    proofPoints: ["tomate y ajo", "uso diario", "Servientrega"],
+    eventType: "video_interest",
+  },
+  {
     id: "hero-cocina",
     title: "Mira el wok en una cocina real",
     label: "Video real",

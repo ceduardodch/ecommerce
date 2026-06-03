@@ -94,6 +94,7 @@ export type CustomerEventType =
   | "checkout_started"
   | "purchase_confirmed"
   | "campaign_click"
+  | "campaign_cta_click"
   | "quote_created"
   | "order_created"
   | "paid"
