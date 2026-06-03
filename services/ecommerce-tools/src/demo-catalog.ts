@@ -324,7 +324,7 @@ const kitchenCatalog: Product[] = [
             "https://wa.me/c/593979854915"
         ],
         "price": {
-            "amount": 30,
+            "amount": 34.99,
             "currency": "USD"
         },
         "originalPrice": {

@@ -131,10 +131,10 @@ function eventPayload(leadId) {
       title: "Cuchillo samurai Japones todo uso",
       category: "Cuchillos",
       brand: "MGC",
-      price: 30,
+      price: 34.99,
       currency: "USD",
     },
-    value: 30,
+    value: 34.99,
     currency: "USD",
     metadata: {
       campaignSlug: config.campaignSlug,
@@ -244,8 +244,8 @@ async function main() {
   record("campaign avoids wrong olla copy", !/olla de granito/i.test(text), "")
   record(
     "campaign shows offer",
-    /Antes \$50|Hoy \$30|\$30 oferta|Ahorra \$20/i.test(text),
-    "expected $50 -> $30 copy",
+    /Antes \$50|Hoy \$34\.99|\$34\.99 oferta|Ahorra \$15\.01/i.test(text),
+    "expected $50 -> $34.99 copy",
   )
   record(
     "campaign shows Servientrega",
@@ -295,7 +295,7 @@ async function main() {
     )
     const requiredFragments = [
       "Hola, quiero reclamar la promo del cuchillo samurai Japones todo uso.",
-      "Vi la promo de $30.00 con cupon GRANITOHOY.",
+      "Vi la promo de $34.99 con cupon GRANITOHOY.",
       "Me confirmas stock, envio gratis por Servientrega y formas de pago?",
       "Ref: lead_",
     ]

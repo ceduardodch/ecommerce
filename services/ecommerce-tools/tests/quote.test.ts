@@ -183,10 +183,10 @@ describe("commerce tools", () => {
           title: "Cuchillo samurai Japones todo uso",
           category: "Cuchillos",
           brand: "MGC",
-          price: 30,
+          price: 34.99,
           currency: "USD",
         },
-        value: 30,
+        value: 34.99,
         currency: "USD",
         metadata: {
           campaignSlug: "cuchillo-samurai-japones-todo-uso",

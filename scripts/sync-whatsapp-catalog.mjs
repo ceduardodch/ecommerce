@@ -190,7 +190,7 @@ const kitchenProducts = [
     category: "Cuchillos",
     description:
       "Cuchillo Samurai todo uso para cortes precisos en preparaciones diarias.",
-    price: 30,
+    price: 34.99,
     originalPrice: 50,
     stock: 1,
     image: "photo-product-cuchillo-samurai.jpg",

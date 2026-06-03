@@ -53,7 +53,7 @@ export const mediaSlots: MediaSlot[] = [
     metric: "Producto real cortando ingredientes en cocina diaria",
     cta: "Consultar stock con cupon",
     productSkus: ["COC-CUCHILLO-SAMURAI-TODO-USO"],
-    proofPoints: ["$30 oferta", "corte diario", "envio gratis"],
+    proofPoints: ["$34.99 oferta", "corte diario", "envio gratis"],
     eventType: "video_interest",
   },
   {
@@ -63,7 +63,7 @@ export const mediaSlots: MediaSlot[] = [
     poster: "/media/photo-cuchillo-samurai-full.jpg",
     video: "video-cuchillo-samurai-corte.mp4",
     metric: "Mira el corte antes de pedirlo por WhatsApp",
-    cta: "Reclamar oferta de $30",
+    cta: "Reclamar oferta de $34.99",
     productSkus: ["COC-CUCHILLO-SAMURAI-TODO-USO"],
     proofPoints: ["tomate y ajo", "uso diario", "Servientrega"],
     eventType: "video_interest",
