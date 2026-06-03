@@ -79,19 +79,19 @@ function defaultOpeningLine(
   context: WhatsappContext,
 ) {
   if (context.vertical === "bienestar") {
-    return `Hola, quiero el producto de bienestar ${product.title}.`
+    return `Hola, quiero reclamar la promo de ${product.title}.`
   }
 
   if (isKnifeProduct(product)) {
     const title = product.title.replace(/^cuchillo\b/i, "cuchillo")
-    return `Hola, quiero el ${title}.`
+    return `Hola, quiero reclamar la promo del ${title}.`
   }
 
   if (isKitchenComplement(product)) {
-    return `Hola, quiero ${product.title}.`
+    return `Hola, quiero reclamar la promo de ${product.title}.`
   }
 
-  return `Hola, quiero la olla de granito ${product.title}.`
+  return `Hola, quiero reclamar la promo de la olla de granito ${product.title}.`
 }
 
 export function whatsappLink(
@@ -109,70 +109,21 @@ export function whatsappLink(
   const seller = normalizeWhatsappSellerNumber(
     process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "0979854915",
   )
-  const details = [
-    `SKU: ${product.sku}`,
-    `Precio: $${product.price.amount.toFixed(2)}`,
-    `Cupon: ${commerce.couponCode}`,
-    product.material ? `Material: ${product.material}` : undefined,
-    product.diameterCm ? `Diametro: ${product.diameterCm} cm` : undefined,
-    product.stockSignal ? `Stock: ${product.stockSignal}` : undefined,
-    `Envio: ${commerce.freeShippingLabel}`,
-    `Pago: ${commerce.paymentMethodsLabel}`,
-    `Compatibilidad: ${commerce.stoveCompatibility}`,
-    product.promoLabel ? `Promo: ${product.promoLabel}` : undefined,
-    context.recommendation
-      ? `Recomendacion: ${context.recommendation}`
-      : undefined,
-    context.city ? `Ciudad: ${context.city}` : undefined,
-    context.householdPeople
-      ? `Personas en casa: ${context.householdPeople}`
-      : undefined,
-    context.useCase ? `Uso: ${context.useCase}` : undefined,
-    context.budget ? `Presupuesto: ${context.budget}` : undefined,
-  ]
-    .filter(Boolean)
-    .join(" | ")
-  const tracking = [
-    context.vertical ? `Vertical: ${context.vertical}` : undefined,
-    context.campaignSlug ? `Campana: ${context.campaignSlug}` : undefined,
-    `ProductoID: ${product.id}`,
-    product.variantId ? `Variante: ${product.variantId}` : undefined,
-    `SKU: ${product.sku}`,
-    `Precio: ${product.price.amount.toFixed(2)} ${product.price.currency}`,
-    `Cupon: ${commerce.couponCode}`,
-    product.material ? `Material: ${product.material}` : undefined,
-    product.diameterCm ? `Diametro: ${product.diameterCm} cm` : undefined,
-    `Envio gratis: ${commerce.freeShipping ? "si" : "no"}`,
-    `Metodos de pago: ${commerce.paymentMethodsLabel}`,
-    `Compatibilidad: ${commerce.stoveCompatibility}`,
-    context.leadId ? `Lead: ${context.leadId}` : undefined,
-    context.sessionId ? `Sesion: ${context.sessionId}` : undefined,
-    context.source ? `Fuente: ${context.source}` : undefined,
-    context.placement ? `Ubicacion: ${context.placement}` : undefined,
-    context.utmSource ? `utm_source: ${context.utmSource}` : undefined,
-    context.utmMedium ? `utm_medium: ${context.utmMedium}` : undefined,
-    context.utmCampaign ? `utm_campaign: ${context.utmCampaign}` : undefined,
-    context.utmContent ? `utm_content: ${context.utmContent}` : undefined,
-    context.utmTerm ? `utm_term: ${context.utmTerm}` : undefined,
-    context.fbclid ? `fbclid: ${context.fbclid}` : undefined,
-    context.recommendedSku
-      ? `SKU recomendado: ${context.recommendedSku}`
-      : undefined,
-    context.journeyStage ? `Etapa: ${context.journeyStage}` : undefined,
-    context.videoSlot ? `Video: ${context.videoSlot}` : undefined,
-  ]
-    .filter(Boolean)
-    .join(" | ")
   const fitQuestion =
     context.fitQuestion ||
     (context.vertical === "bienestar" || isKitchenComplement(product)
-      ? "Lo quiero para __. Me confirmas stock y entrega?"
-      : "Cocino para __ personas. Me confirmas stock y entrega?")
-  const text =
-    (context.openingLine || defaultOpeningLine(product, context)) +
-    `\n${fitQuestion}` +
-    `\n\n${details}` +
-    `\n\n${tracking}`
+      ? "Me confirmas stock, envio gratis por Servientrega y formas de pago?"
+      : "Cocino para __ personas. Me confirmas stock, envio gratis por Servientrega y formas de pago?")
+  const priceLine = `Vi la promo de $${product.price.amount.toFixed(2)} con cupon ${commerce.couponCode}.`
+  const reference = context.leadId || product.sku
+  const text = [
+    context.openingLine || defaultOpeningLine(product, context),
+    "",
+    priceLine,
+    fitQuestion,
+    "",
+    `Ref: ${reference}`,
+  ].join("\n")
 
   return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
 }

@@ -35,7 +35,7 @@ import {
   upsertOrder,
 } from "./storage.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
-import type { ToolsEventInput } from "./contracts.js"
+import type { SaleFeedbackInput, ToolsEventInput } from "./contracts.js"
 import type {
   CustomerEventRecord,
   CustomerInput,
@@ -271,6 +271,147 @@ export function createCommerceService(config: AppConfig) {
     } catch {
       return undefined
     }
+  }
+
+  async function recordTrackingEvent(input: ToolsEventInput) {
+    const eventId = eventIdFor(input)
+    const meta = await sendMetaConversionEvent(config, input, eventId)
+    const identity = identityForEvent(input)
+
+    if (!identity) {
+      return {
+        accepted: true,
+        crmStored: false,
+        reason: "missing_identity",
+        eventId,
+        eventName: input.eventName,
+        meta,
+      }
+    }
+
+    const type = eventTypeFor(input)
+    const now = input.at || new Date().toISOString()
+    const payload = crmPayloadForEvent(input, eventId, meta)
+    const tags = input.customer?.tags || [
+      input.customer?.phone ? "web-lead" : "web-anonymous",
+    ]
+    const customerPatch = {
+      whatsappConsent: input.customer?.whatsappConsent,
+      tags,
+    }
+
+    if (config.crmBackend === "medusa") {
+      await addMedusaCustomerEvent(config, {
+        phone: identity,
+        type,
+        at: now,
+        payload,
+        source: input.source || "storefront",
+        whatsappConsent: customerPatch.whatsappConsent,
+        tags: customerPatch.tags,
+      })
+    } else {
+      await upsertCustomer(config.dataDir, {
+        phone: identity,
+        name: input.customer?.name,
+        email: input.customer?.email,
+        whatsappConsent: input.customer?.whatsappConsent,
+        tags,
+      })
+      await addCustomerEvent(
+        config.dataDir,
+        identity,
+        {
+          type,
+          at: now,
+          payload,
+          source: input.source || "storefront",
+        },
+        customerPatch,
+      )
+    }
+
+    return {
+      accepted: true,
+      crmStored: true,
+      identity,
+      eventId,
+      eventName: input.eventName,
+      crmEventType: type,
+      meta,
+    }
+  }
+
+  async function recordSaleFeedbackEvent(
+    input: SaleFeedbackInput & {
+      status: "payment_proof_received" | "paid"
+    },
+  ) {
+    const products = await loadProducts(config)
+    const product = products.find((item) => item.sku === input.sku)
+    if (!product) throw new Error(`Producto no encontrado por SKU: ${input.sku}`)
+
+    const amount = input.amount ?? product.price.amount
+    const eventName = input.status === "paid" ? "Purchase" : "Lead"
+    const eventId = `${input.status}:${input.phone}:${input.sku}:${Date.now()}`
+    const source =
+      input.source ||
+      (input.status === "paid"
+        ? "manual_sale_confirmation"
+        : "manual_payment_review")
+
+    return recordTrackingEvent({
+      eventName,
+      type: input.status,
+      eventId,
+      at: input.at,
+      leadId: input.leadId,
+      sessionId: input.sessionId,
+      source,
+      consent: input.consent,
+      customer: {
+        phone: input.phone,
+        name: input.customerName,
+        email: input.email,
+        whatsappConsent: input.whatsappConsent,
+        tags:
+          input.status === "paid"
+            ? ["cliente-pagado", "venta-confirmada"]
+            : ["pago-en-revision", "comprobante-recibido"],
+      },
+      product: {
+        productId: product.id,
+        variantId: product.variantId,
+        sku: product.sku,
+        title: product.title,
+        category: product.category,
+        brand: product.brand,
+        price: amount,
+        currency: input.currency,
+        quantity: input.quantity,
+        material: product.material,
+        diameterCm: product.diameterCm,
+        promoLabel: product.promoLabel,
+        stockSignal: product.stockSignal,
+        deliveryBadge: product.deliveryBadge,
+        freeShipping: product.freeShipping,
+        paymentMethods: product.paymentMethods,
+        couponCode: product.couponCode,
+        stoveCompatibility: product.stoveCompatibility,
+      },
+      value: amount * input.quantity,
+      currency: input.currency,
+      metadata: {
+        campaignSlug: input.campaignSlug,
+        productInterestSku: product.sku,
+        paymentMethod: input.paymentMethod,
+        orderId: input.orderId,
+        quoteId: input.quoteId,
+        notes: input.notes,
+        confirmedBy: input.confirmedBy,
+        requiresHumanApproval: input.status === "payment_proof_received",
+      },
+    })
   }
 
   return {
@@ -575,72 +716,15 @@ export function createCommerceService(config: AppConfig) {
     },
 
     async recordEvent(input: ToolsEventInput) {
-      const eventId = eventIdFor(input)
-      const meta = await sendMetaConversionEvent(config, input, eventId)
-      const identity = identityForEvent(input)
+      return recordTrackingEvent(input)
+    },
 
-      if (!identity) {
-        return {
-          accepted: true,
-          crmStored: false,
-          reason: "missing_identity",
-          eventId,
-          eventName: input.eventName,
-          meta,
-        }
-      }
-
-      const type = eventTypeFor(input)
-      const now = input.at || new Date().toISOString()
-      const payload = crmPayloadForEvent(input, eventId, meta)
-      const tags = input.customer?.tags || [
-        input.customer?.phone ? "web-lead" : "web-anonymous",
-      ]
-      const customerPatch = {
-        whatsappConsent: input.customer?.whatsappConsent,
-        tags,
-      }
-
-      if (config.crmBackend === "medusa") {
-        await addMedusaCustomerEvent(config, {
-          phone: identity,
-          type,
-          at: now,
-          payload,
-          source: input.source || "storefront",
-          whatsappConsent: customerPatch.whatsappConsent,
-          tags: customerPatch.tags,
-        })
-      } else {
-        await upsertCustomer(config.dataDir, {
-          phone: identity,
-          name: input.customer?.name,
-          email: input.customer?.email,
-          whatsappConsent: input.customer?.whatsappConsent,
-          tags,
-        })
-        await addCustomerEvent(
-          config.dataDir,
-          identity,
-          {
-            type,
-            at: now,
-            payload,
-            source: input.source || "storefront",
-          },
-          customerPatch,
-        )
-      }
-
-      return {
-        accepted: true,
-        crmStored: true,
-        identity,
-        eventId,
-        eventName: input.eventName,
-        crmEventType: type,
-        meta,
-      }
+    async recordSaleFeedback(
+      input: SaleFeedbackInput & {
+        status: "payment_proof_received" | "paid"
+      },
+    ) {
+      return recordSaleFeedbackEvent(input)
     },
 
     async aiContext(

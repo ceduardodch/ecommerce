@@ -273,4 +273,57 @@ describe("commerce tools", () => {
       await rm(dataDir, { recursive: true, force: true })
     }
   })
+
+  it("records simple sale feedback by SKU for buyer followup", async () => {
+    const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-sale-feedback-"))
+    try {
+      const config = loadConfig({
+        TOOLS_DATA_DIR: dataDir,
+        PIXEL_ENABLED: "false",
+      })
+      const service = createCommerceService(config)
+
+      const proof = await service.recordSaleFeedback({
+        status: "payment_proof_received",
+        phone: "+593 99 111 2222",
+        sku: "MGC-WOK-GRANITO-32",
+        amount: 150,
+        paymentMethod: "transferencia",
+        leadId: "Lead Venta 001",
+        campaignSlug: "wok-32-granito",
+      })
+
+      expect(proof.crmStored).toBe(true)
+      expect(proof.crmEventType).toBe("payment_proof_received")
+      expect(proof.meta).toEqual({
+        sent: false,
+        reason: "payment_proof_requires_human_confirmation",
+      })
+
+      const paid = await service.recordSaleFeedback({
+        status: "paid",
+        phone: "+593 99 111 2222",
+        sku: "MGC-WOK-GRANITO-32",
+        amount: 150,
+        paymentMethod: "transferencia",
+        leadId: "Lead Venta 001",
+        campaignSlug: "wok-32-granito",
+        confirmedBy: "Carlos",
+      })
+
+      expect(paid.crmStored).toBe(true)
+      expect(paid.crmEventType).toBe("paid")
+
+      const context = await service.aiContext("+593 99 111 2222", {
+        leadId: "Lead Venta 001",
+      })
+      expect(context.lifecycle).toMatchObject({
+        journeyStage: "cliente_pagado",
+        productInterestSku: "MGC-WOK-GRANITO-32",
+        campaignSlug: "wok-32-granito",
+      })
+    } finally {
+      await rm(dataDir, { recursive: true, force: true })
+    }
+  })
 })

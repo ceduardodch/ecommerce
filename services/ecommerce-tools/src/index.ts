@@ -11,6 +11,7 @@ import {
   payphoneInputSchema,
   payphoneWebhookSchema,
   quoteInputSchema,
+  saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
 
@@ -121,6 +122,22 @@ app.post("/tools/events", async (request) => {
       request.ip,
   })
   return service.recordEvent(input)
+})
+
+app.post("/tools/sales/payment-proof", async (request) => {
+  const input = saleFeedbackInputSchema.parse(request.body)
+  return service.recordSaleFeedback({
+    ...input,
+    status: "payment_proof_received",
+  })
+})
+
+app.post("/tools/sales/confirm", async (request) => {
+  const input = saleFeedbackInputSchema.parse(request.body)
+  return service.recordSaleFeedback({
+    ...input,
+    status: "paid",
+  })
 })
 
 app.get("/tools/ai-context/customer/:phone", async (request) => {

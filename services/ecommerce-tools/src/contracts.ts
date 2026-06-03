@@ -229,6 +229,32 @@ export const toolsEventInputSchema = z.object({
 
 export type ToolsEventInput = z.infer<typeof toolsEventInputSchema>
 
+export const saleFeedbackInputSchema = z.object({
+  phone: z.string().min(1),
+  sku: z.string().min(1),
+  amount: z.number().positive().optional(),
+  currency: z.string().default("USD"),
+  quantity: z.number().int().positive().default(1),
+  paymentMethod: z
+    .enum(["transferencia", "deuna", "payphone", "tarjeta", "efectivo", "otro"])
+    .optional(),
+  leadId: z.string().min(1).optional(),
+  sessionId: z.string().min(1).optional(),
+  customerName: z.string().optional(),
+  email: z.string().email().optional(),
+  whatsappConsent: z.boolean().default(true),
+  campaignSlug: z.string().optional(),
+  source: z.string().default("manual_sales_feedback"),
+  orderId: z.string().optional(),
+  quoteId: z.string().optional(),
+  notes: z.string().optional(),
+  confirmedBy: z.string().optional(),
+  at: z.string().optional(),
+  consent: z.boolean().default(true),
+})
+
+export type SaleFeedbackInput = z.infer<typeof saleFeedbackInputSchema>
+
 export const payphoneWebhookSchema = z
   .object({
     clientTransactionId: z.string().optional(),

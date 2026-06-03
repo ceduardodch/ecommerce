@@ -186,7 +186,7 @@ export function CampaignWhatsAppPanel({
             ...context,
             source: "meta_ads",
             fitQuestion: complement
-              ? "Lo quiero para __. Me confirmas stock y entrega?"
+              ? "Me confirmas stock, envio gratis por Servientrega y formas de pago?"
               : undefined,
             householdPeople: complement ? undefined : people,
             useCase,
