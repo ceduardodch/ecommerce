@@ -86,6 +86,23 @@ function money(amount: number) {
   return `$${amount.toFixed(2)}`
 }
 
+function campaignProduct(product: Product): Product {
+  if (
+    product.sku === "COC-CUCHILLO-SAMURAI-TODO-USO" &&
+    (!product.originalPrice ||
+      product.originalPrice.amount <= product.price.amount) &&
+    product.price.amount <= 30
+  ) {
+    return {
+      ...product,
+      originalPrice: { amount: 50, currency: "USD" },
+      promoLabel: product.promoLabel || "Oferta especial",
+    }
+  }
+
+  return product
+}
+
 function mediaPath(file?: string) {
   if (!file) return undefined
   try {
@@ -452,9 +469,10 @@ export default async function CampaignPage({
   const requestedSku = paramValue(query.sku)
   const defaultProduct =
     productBySku(products, defaultCampaignSku) || products[0]
-  const selectedProduct = productBySku(products, requestedSku) || defaultProduct
+  const selectedProductCandidate =
+    productBySku(products, requestedSku) || defaultProduct
 
-  if (!selectedProduct) {
+  if (!selectedProductCandidate) {
     return (
       <main className="campaign-page">
         <section className="campaign-empty">
@@ -463,6 +481,8 @@ export default async function CampaignPage({
       </main>
     )
   }
+
+  const selectedProduct = campaignProduct(selectedProductCandidate)
 
   const fallbackUsed = Boolean(
     requestedSku && requestedSku !== selectedProduct.sku,
