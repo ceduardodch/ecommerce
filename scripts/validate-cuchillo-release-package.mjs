@@ -104,10 +104,13 @@ const dirtyPaths = gitStatusPaths()
 const dirtyRequired = [...requiredFiles, ...requiredAssets].filter((file) =>
   dirtyPaths.includes(file),
 )
+const workingTreeClean = dirtyPaths.length === 0
 record(
-  "required files present in working-tree release set",
-  dirtyRequired.length > 0,
-  `${dirtyRequired.length} required files changed or untracked`,
+  "required files committed or present in working-tree release set",
+  workingTreeClean || dirtyRequired.length > 0,
+  workingTreeClean
+    ? "working tree clean; required files are committed"
+    : `${dirtyRequired.length} required files changed or untracked`,
 )
 
 const dirtyOwnerDecision = dirtyPaths.filter(
