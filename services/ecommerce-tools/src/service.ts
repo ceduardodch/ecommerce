@@ -183,6 +183,28 @@ function payloadObject(event: unknown) {
     : {}
 }
 
+function payloadWithMetadata(
+  payload: unknown,
+  metadata?: Record<string, unknown>,
+) {
+  if (!metadata || !Object.keys(metadata).length) return payload
+  if (!payload || typeof payload !== "object") return { metadata }
+
+  const existing = payload as Record<string, unknown>
+  const existingMetadata =
+    existing.metadata && typeof existing.metadata === "object"
+      ? (existing.metadata as Record<string, unknown>)
+      : {}
+
+  return {
+    ...existing,
+    metadata: {
+      ...existingMetadata,
+      ...metadata,
+    },
+  }
+}
+
 function customerLifecycleSummary(events: unknown[]) {
   const latest = [...events].reverse()
   const types = eventTypes(events)
@@ -247,6 +269,7 @@ async function trackCustomerEvent(
       phone: customer.phone,
       type: event.type,
       at: event.at,
+      customer,
       payload: event.payload,
       orderId: event.orderId,
       quoteId: event.quoteId,
@@ -296,8 +319,14 @@ export function createCommerceService(config: AppConfig) {
       input.customer?.phone ? "web-lead" : "web-anonymous",
     ]
     const customerPatch = {
+      name: input.customer?.name,
+      email: input.customer?.email,
       whatsappConsent: input.customer?.whatsappConsent,
       tags,
+      metadata: {
+        ...(input.customer?.metadata || {}),
+        ...(input.metadata || {}),
+      },
     }
 
     if (config.crmBackend === "medusa") {
@@ -305,7 +334,9 @@ export function createCommerceService(config: AppConfig) {
         phone: identity,
         type,
         at: now,
+        customer: input.customer,
         payload,
+        metadata: input.metadata,
         source: input.source || "storefront",
         whatsappConsent: customerPatch.whatsappConsent,
         tags: customerPatch.tags,
@@ -402,6 +433,9 @@ export function createCommerceService(config: AppConfig) {
       value: amount * input.quantity,
       currency: input.currency,
       metadata: {
+        journeyStage:
+          input.status === "paid" ? "cliente_pagado" : "pago_en_revision",
+        leadId: input.leadId,
         campaignSlug: input.campaignSlug,
         productInterestSku: product.sku,
         paymentMethod: input.paymentMethod,
@@ -674,7 +708,9 @@ export function createCommerceService(config: AppConfig) {
       phone: string
       type: CustomerEventRecord["type"]
       at?: string
+      customer?: CustomerInput
       payload?: unknown
+      metadata?: Record<string, unknown>
       orderId?: string
       quoteId?: string
       source?: string
@@ -688,10 +724,26 @@ export function createCommerceService(config: AppConfig) {
       }
 
       const at = input.at || new Date().toISOString()
+      const tags =
+        input.customer?.tags?.length || input.tags?.length
+          ? [
+              ...new Set([
+                ...(input.customer?.tags || []),
+                ...(input.tags || []),
+              ]),
+            ]
+          : undefined
       const customer = await upsertCustomer(config.dataDir, {
         phone: input.phone,
-        whatsappConsent: input.whatsappConsent,
-        tags: input.tags,
+        name: input.customer?.name,
+        email: input.customer?.email,
+        whatsappConsent:
+          input.whatsappConsent ?? input.customer?.whatsappConsent,
+        tags,
+        metadata: {
+          ...(input.customer?.metadata || {}),
+          ...(input.metadata || {}),
+        },
       })
       const updated = await addCustomerEvent(
         config.dataDir,
@@ -699,17 +751,25 @@ export function createCommerceService(config: AppConfig) {
         {
           type: input.type,
           at,
-          payload: input.payload,
+          payload: payloadWithMetadata(input.payload, input.metadata),
           orderId: input.orderId,
           quoteId: input.quoteId,
           source: input.source || "manual",
         },
         {
+          name: input.customer?.name,
+          email: input.customer?.email,
           whatsappConsent:
-            input.type === "opt_out" ? false : input.whatsappConsent,
+            input.type === "opt_out"
+              ? false
+              : input.whatsappConsent ?? input.customer?.whatsappConsent,
           nextFollowupAt: input.nextFollowupAt,
           followupReason: input.followupReason,
-          tags: input.tags,
+          metadata: {
+            ...(input.customer?.metadata || {}),
+            ...(input.metadata || {}),
+          },
+          tags,
         },
       )
       return updated

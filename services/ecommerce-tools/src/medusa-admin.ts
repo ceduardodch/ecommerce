@@ -126,7 +126,9 @@ export async function addMedusaCustomerEvent(
     phone: string
     type: CustomerEventRecord["type"]
     at?: string
+    customer?: CustomerInput
     payload?: unknown
+    metadata?: Record<string, unknown>
     orderId?: string
     quoteId?: string
     source?: string

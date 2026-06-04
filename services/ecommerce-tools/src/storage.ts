@@ -141,6 +141,10 @@ export async function upsertCustomer(
       input.suggestedFrequencyDays || existing?.suggestedFrequencyDays,
     nextFollowupAt: input.nextFollowupAt || existing?.nextFollowupAt,
     followupReason: input.followupReason || existing?.followupReason,
+    metadata: {
+      ...(existing?.metadata || {}),
+      ...(input.metadata || {}),
+    },
     createdAt: existing?.createdAt || now,
     updatedAt: now,
     events: [...(existing?.events || []), ...(input.events || [])],
@@ -176,6 +180,10 @@ export async function addCustomerEvent(
       patch.suggestedFrequencyDays || customer.suggestedFrequencyDays,
     nextFollowupAt: patch.nextFollowupAt || customer.nextFollowupAt,
     followupReason: patch.followupReason || customer.followupReason,
+    metadata: {
+      ...(customer.metadata || {}),
+      ...(patch.metadata || {}),
+    },
     createdAt: customer.createdAt,
     events: [...customer.events, event],
     updatedAt: new Date().toISOString(),

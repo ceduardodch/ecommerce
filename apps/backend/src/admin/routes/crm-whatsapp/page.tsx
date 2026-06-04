@@ -4,6 +4,11 @@ import { useEffect, useState } from "react"
 type CrmCustomerRow = {
   phone: string
   name?: string
+  email?: string
+  city?: string
+  journeyStage?: string
+  campaignSlug?: string
+  leadId?: string
   lastPurchaseAt?: string
   nextFollowupAt?: string
   followupReason?: string
@@ -91,7 +96,7 @@ function renderCustomerQueue(
         <thead>
           <tr>
             <th style={cellStyle}>Cliente</th>
-            <th style={cellStyle}>Prioridad</th>
+            <th style={cellStyle}>Etapa</th>
             <th style={cellStyle}>Producto</th>
             <th style={cellStyle}>Mensaje sugerido</th>
           </tr>
@@ -103,13 +108,42 @@ function renderCustomerQueue(
                 <strong>{customer.name || customer.phone}</strong>
                 <br />
                 <span>{customer.phone}</span>
+                {customer.city ? (
+                  <>
+                    <br />
+                    <small>{customer.city}</small>
+                  </>
+                ) : null}
+                {customer.email ? (
+                  <>
+                    <br />
+                    <small>{customer.email}</small>
+                  </>
+                ) : null}
                 <br />
                 <small>{formatDate(customer.nextFollowupAt)}</small>
               </td>
               <td style={cellStyle}>
                 <strong>{customer.priority || "medium"}</strong>
                 <br />
-                <span>{customer.reason || customer.followupReason || "-"}</span>
+                <span>
+                  {customer.journeyStage ||
+                    customer.reason ||
+                    customer.followupReason ||
+                    "-"}
+                </span>
+                {customer.campaignSlug ? (
+                  <>
+                    <br />
+                    <small>{customer.campaignSlug}</small>
+                  </>
+                ) : null}
+                {customer.leadId ? (
+                  <>
+                    <br />
+                    <small>{customer.leadId}</small>
+                  </>
+                ) : null}
                 {customer.requiresHumanApproval ? (
                   <>
                     <br />

@@ -17,6 +17,7 @@ type CustomerPayload = {
   email?: string
   whatsappConsent?: boolean
   tags?: string[]
+  metadata?: Record<string, unknown>
 }
 
 type QuoteLinePayload = {
@@ -65,6 +66,7 @@ function iso(value?: Date | string | null) {
 export function serializeCustomer(customer: any) {
   if (!customer) return undefined
   const reason = followupReason(customer)
+  const metadata = customer.metadata || {}
 
   return {
     phone: customer.phone,
@@ -78,6 +80,11 @@ export function serializeCustomer(customer: any) {
     suggestedFrequencyDays: customer.suggested_frequency_days,
     nextFollowupAt: iso(customer.next_followup_at),
     followupReason: customer.followup_reason,
+    metadata,
+    city: metadata.city,
+    journeyStage: metadata.journeyStage,
+    campaignSlug: metadata.campaignSlug,
+    leadId: metadata.leadId,
     createdAt: iso(customer.created_at),
     updatedAt: iso(customer.updated_at),
     suggestedMessage: buildFollowupDraft(customer),
@@ -218,6 +225,7 @@ export async function findOrCreateMedusaCustomer(
           metadata: {
             source: "whatsapp",
             whatsapp_consent: customer.whatsappConsent || false,
+            ...(customer.metadata || {}),
           },
         },
       ],
@@ -319,5 +327,6 @@ export function customerInputFromPayload(
     medusaCustomerId,
     whatsappConsent: payload.whatsappConsent,
     tags: payload.tags,
+    metadata: payload.metadata,
   }
 }

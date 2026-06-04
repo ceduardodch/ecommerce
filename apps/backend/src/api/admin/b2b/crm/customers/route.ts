@@ -21,6 +21,7 @@ type ImportBody = {
     suggestedFrequencyDays?: number
     nextFollowupAt?: string
     followupReason?: string
+    metadata?: Record<string, unknown>
   }>
 }
 

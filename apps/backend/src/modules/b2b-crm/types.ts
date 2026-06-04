@@ -26,11 +26,13 @@ export type CrmCustomerEventInput = {
   phone: string
   type: string
   at?: string
+  customer?: Omit<CrmCustomerInput, "phone"> & { phone?: string }
   quoteId?: string
   orderId?: string
   medusaOrderId?: string
   source?: string
   payload?: unknown
+  metadata?: Record<string, unknown>
   nextFollowupAt?: string
   followupReason?: string
   whatsappConsent?: boolean

@@ -6,6 +6,7 @@ const customerSchema = z.object({
   email: z.string().email().optional(),
   whatsappConsent: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 })
 
 export const lineInputSchema = z.object({
@@ -109,7 +110,9 @@ export const customerEventInputSchema = z.object({
     "conversation_escalated",
   ]),
   at: z.string().optional(),
+  customer: customerSchema.optional(),
   payload: z.unknown().optional(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   orderId: z.string().optional(),
   quoteId: z.string().optional(),
   source: z.string().optional(),

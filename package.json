@@ -27,9 +27,11 @@
     "biblioteca:metadata": "node scripts/generate-biblioteca-metadata.mjs",
     "validate:meta-whatsapp": "node scripts/validate-meta-whatsapp-flow.mjs",
     "validate:cuchillo-release": "node scripts/validate-cuchillo-release-package.mjs",
-    "campaign:readiness": "node scripts/campaign-readiness-report.mjs"
+    "campaign:readiness": "node scripts/campaign-readiness-report.mjs",
+    "crm:reset": "node scripts/reset-medusa-crm.mjs"
   },
   "devDependencies": {
+    "pg": "^8.21.0",
     "prettier": "^3.2.5",
     "turbo": "^2.0.14"
   },

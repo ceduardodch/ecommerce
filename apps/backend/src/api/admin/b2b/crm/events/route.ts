@@ -6,7 +6,15 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     phone: string
     type: string
     at?: string
+    customer?: {
+      name?: string
+      email?: string
+      whatsappConsent?: boolean
+      tags?: string[]
+      metadata?: Record<string, unknown>
+    }
     payload?: unknown
+    metadata?: Record<string, unknown>
     orderId?: string
     quoteId?: string
     medusaOrderId?: string

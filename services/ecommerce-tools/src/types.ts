@@ -77,6 +77,7 @@ export type CustomerInput = {
   email?: string
   whatsappConsent?: boolean
   tags?: string[]
+  metadata?: Record<string, unknown>
 }
 
 export type CustomerEventType =
@@ -148,6 +149,7 @@ export type CustomerRecord = {
   suggestedFrequencyDays?: number
   nextFollowupAt?: string
   followupReason?: string
+  metadata?: Record<string, unknown>
   createdAt: string
   updatedAt: string
   events: CustomerEventRecord[]

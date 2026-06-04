@@ -115,6 +115,8 @@ Rutas privadas esperadas:
 8. Webhook PayPhone o conciliacion humana confirma el pago y agenda recompra si aplica.
 9. Si entrega, factura, instalacion o garantia no son claras, OpenClaw escala a humano.
 10. Si el cliente envia comprobante de transferencia/deuna, registrar `payment_proof_received`; queda en revision humana y no se marca `paid` ni `Purchase`.
+11. Si el cliente ya mostro interes y falta perfil, pedir: "Para confirmarte envio gratis por Servientrega, me ayudas con tu nombre y ciudad?" y registrar `lead_created` con `customer.name`, `customer.whatsappConsent=true` y metadata `city`, `productInterestSku`, `campaignSlug`, `leadId`, `journeyStage=cotizacion_pendiente`.
+12. Cuando un humano confirma transferencia/deuna/pago, usar `POST /tools/sales/confirm` con `customerName`, telefono, SKU, monto, metodo de pago, `leadId`, campana y `confirmedBy`.
 
 ## Recompra
 
@@ -193,3 +195,14 @@ El agente debe dejar rastro corto:
 - Evento CRM y proximo seguimiento.
 - Siguiente accion.
 - Si fue escalado: motivo y datos que faltan.
+
+## Reset CRM de campana
+
+Para arrancar una campana con CRM limpio, usar el script de mantenimiento desde el repo/servidor con `DATABASE_URL` de Medusa. El reset solo toca `crm_customer_profile`, `crm_customer_event` y `conversational_order`.
+
+```bash
+DATABASE_URL="<medusa_postgres_url>" npm run crm:reset
+DATABASE_URL="<medusa_postgres_url>" npm run crm:reset -- --confirm-reset-crm
+```
+
+La primera llamada genera backup y conteos sin borrar. La segunda borra solo CRM conversacional despues de guardar backup JSON/CSV en `data/crm-backups`.

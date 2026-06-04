@@ -218,6 +218,64 @@ describe("commerce tools", () => {
     }
   })
 
+  it("records Vicky customer name and city in CRM context", async () => {
+    const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-vicky-profile-"))
+    try {
+      const config = loadConfig({
+        TOOLS_DATA_DIR: dataDir,
+        PIXEL_ENABLED: "false",
+      })
+      const service = createCommerceService(config)
+
+      const customer = await service.addCustomerEvent({
+        phone: "+593 97 985 4915",
+        type: "lead_created",
+        source: "vicky_whatsapp",
+        customer: {
+          name: "Maria Cliente",
+          whatsappConsent: true,
+        },
+        metadata: {
+          city: "Cuenca",
+          campaignSlug: "cuchillo-samurai-japones-todo-uso",
+          leadId: "Lead Cuchillo 777",
+          productInterestSku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+          journeyStage: "cotizacion_pendiente",
+        },
+      })
+
+      expect(customer).toMatchObject({
+        phone: "+593979854915",
+        name: "Maria Cliente",
+        whatsappConsent: true,
+        metadata: {
+          city: "Cuenca",
+          productInterestSku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+        },
+      })
+
+      const context = await service.aiContext("+593 97 985 4915", {
+        leadId: "Lead Cuchillo 777",
+      })
+
+      expect(context.customer).toMatchObject({
+        name: "Maria Cliente",
+        metadata: {
+          city: "Cuenca",
+          journeyStage: "cotizacion_pendiente",
+        },
+      })
+      expect(context.lifecycle).toMatchObject({
+        journeyStage: "cotizacion_pendiente",
+        productInterestSku: "COC-CUCHILLO-SAMURAI-TODO-USO",
+        city: "Cuenca",
+        campaignSlug: "cuchillo-samurai-japones-todo-uso",
+      })
+    } finally {
+      await rm(dataDir, { recursive: true, force: true })
+    }
+  })
+
   it("keeps transfer payment proof in CRM review instead of sending Purchase CAPI", async () => {
     const dataDir = await mkdtemp(join(tmpdir(), "ecommerce-proof-"))
     try {
@@ -290,6 +348,7 @@ describe("commerce tools", () => {
         amount: 150,
         paymentMethod: "transferencia",
         leadId: "Lead Venta 001",
+        customerName: "Ana Compradora",
         campaignSlug: "wok-32-granito",
       })
 
@@ -307,6 +366,7 @@ describe("commerce tools", () => {
         amount: 150,
         paymentMethod: "transferencia",
         leadId: "Lead Venta 001",
+        customerName: "Ana Compradora",
         campaignSlug: "wok-32-granito",
         confirmedBy: "Carlos",
       })
@@ -316,6 +376,9 @@ describe("commerce tools", () => {
 
       const context = await service.aiContext("+593 99 111 2222", {
         leadId: "Lead Venta 001",
+      })
+      expect(context.customer).toMatchObject({
+        name: "Ana Compradora",
       })
       expect(context.lifecycle).toMatchObject({
         journeyStage: "cliente_pagado",

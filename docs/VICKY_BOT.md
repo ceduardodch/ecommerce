@@ -102,6 +102,55 @@ Then run a controlled WhatsApp test:
 5. Confirm the order appears in `/app/crm-whatsapp`.
 6. Confirm no followup is sent without consent or active conversation policy.
 
+## CRM Reset Before Campaigns
+
+Use the reset script only for a clean launch window and only after confirming that no real CRM record must be preserved. It resets only the B2B CRM tables: `crm_customer_profile`, `crm_customer_event` and `conversational_order`.
+
+Dry-run with backup:
+
+```bash
+DATABASE_URL="<medusa_postgres_url>" npm run crm:reset
+```
+
+Confirmed reset with backup:
+
+```bash
+DATABASE_URL="<medusa_postgres_url>" npm run crm:reset -- --confirm-reset-crm
+```
+
+The script writes JSON/CSV backups under `data/crm-backups/<timestamp>` and does not touch Medusa catalog, products, users, customers, regions or core orders.
+
+## Name And City Capture
+
+After a product-specific WhatsApp click or stock/payment question, Vicky should ask:
+
+```text
+Para confirmarte envio gratis por Servientrega, me ayudas con tu nombre y ciudad?
+```
+
+Then register:
+
+```bash
+curl -X POST "$ECOMMERCE_TOOLS_BASE_URL/tools/customer-events" \
+  -H "Authorization: Bearer $ECOMMERCE_TOOLS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+593979854915",
+    "type": "lead_created",
+    "source": "vicky_whatsapp",
+    "customer": {"name": "Maria Cliente", "whatsappConsent": true},
+    "metadata": {
+      "city": "Cuenca",
+      "productInterestSku": "COC-CUCHILLO-SAMURAI-TODO-USO",
+      "campaignSlug": "cuchillo-samurai-japones-todo-uso",
+      "leadId": "Lead Cuchillo 777",
+      "journeyStage": "cotizacion_pendiente"
+    }
+  }'
+```
+
+Use `/tools/sales/payment-proof` for transfer/deuna screenshots under review and `/tools/sales/confirm` only after human confirmation.
+
 ## Production Guardrails
 
 - Keep PayPhone in `PAYPHONE_DRY_RUN=true` until real credentials and webhook are validated.

@@ -65,6 +65,28 @@ function eventMetadata(payload: unknown) {
     : {}
 }
 
+function payloadWithMetadata(
+  payload: unknown,
+  metadata: Record<string, unknown>,
+) {
+  if (!Object.keys(metadata).length) return payload || {}
+  if (!payload || typeof payload !== "object") return { metadata }
+
+  const existing = payload as Record<string, unknown>
+  const existingMetadata =
+    existing.metadata && typeof existing.metadata === "object"
+      ? (existing.metadata as Record<string, unknown>)
+      : {}
+
+  return {
+    ...existing,
+    metadata: {
+      ...existingMetadata,
+      ...metadata,
+    },
+  }
+}
+
 class B2bCrmModuleService extends MedusaService({
   ConversationalOrder,
   CrmCustomerEvent,
@@ -141,12 +163,23 @@ class B2bCrmModuleService extends MedusaService({
 
   async addCustomerEvent(input: CrmCustomerEventInput) {
     const phone = normalizePhone(input.phone)
-    const metadata = eventMetadata(input.payload)
+    const customer = input.customer || {}
+    const metadata = {
+      ...(customer.metadata || {}),
+      ...eventMetadata(input.payload),
+      ...(input.metadata || {}),
+    }
+    const tags = uniqueTags(customer.tags || [], input.tags || [])
     await this.upsertCustomer({
       phone,
+      name: customer.name,
+      email: customer.email,
+      medusaCustomerId: customer.medusaCustomerId,
       whatsappConsent:
-        input.type === "opt_out" ? false : input.whatsappConsent,
-      tags: input.tags,
+        input.type === "opt_out"
+          ? false
+          : input.whatsappConsent ?? customer.whatsappConsent,
+      tags,
       nextFollowupAt: input.nextFollowupAt,
       followupReason:
         input.followupReason ||
@@ -164,7 +197,7 @@ class B2bCrmModuleService extends MedusaService({
       order_id: input.orderId,
       medusa_order_id: input.medusaOrderId,
       source: input.source,
-      payload: input.payload || {},
+      payload: payloadWithMetadata(input.payload, metadata),
     })
   }
 

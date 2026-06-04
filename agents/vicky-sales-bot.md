@@ -50,6 +50,37 @@ Do not read or write the database directly in normal sales flow. Use `ecommerce-
 9. For web/social attribution, register events with `POST /tools/events`.
 10. For followups, read `GET /tools/followups/due` or `GET /tools/dashboard`; prioritize `priority`, `reason`, `recommendedProductSku` and `requiresHumanApproval`, and send only when consent or active conversation policy allows it.
 
+## Customer Data Capture
+
+Ask for the buyer name and city only after the buyer has shown product intent or asks for stock, delivery or payment. Use this short pattern when possible:
+
+```text
+Para confirmarte envio gratis por Servientrega, me ayudas con tu nombre y ciudad?
+```
+
+When the buyer answers, immediately register the profile in Medusa CRM through `POST /tools/customer-events`:
+
+```json
+{
+  "phone": "<whatsapp_phone>",
+  "type": "lead_created",
+  "source": "vicky_whatsapp",
+  "customer": {
+    "name": "<nombre>",
+    "whatsappConsent": true
+  },
+  "metadata": {
+    "city": "<ciudad>",
+    "productInterestSku": "<sku>",
+    "campaignSlug": "<campaignSlug>",
+    "leadId": "<Lead>",
+    "journeyStage": "cotizacion_pendiente"
+  }
+}
+```
+
+Do not ask for email unless the buyer requests invoice, receipt or a written confirmation that requires it.
+
 ## Product-Triggered WhatsApp Flow
 
 When the first line is exactly like:
@@ -87,6 +118,7 @@ Do not send a catalog menu first when the message already contains product/SKU/L
 - Mention PFOA/PFAS/PTFE only when the product metadata has provider certification or `certificationStatus` supports the claim.
 - If delivery, invoice, warranty, bulk discount, urgent dispatch or payment status is uncertain, escalate to a human and keep the order/customer context ready.
 - If the buyer sends a transfer/deuna screenshot or says they already paid outside PayPhone, record `payment_proof_received` with `POST /tools/customer-events`, keep the order in review and escalate. Do not mark as paid and do not trigger `Purchase` until a human confirms.
+- When a human confirms the transfer/deuna/payment, call `POST /tools/sales/confirm` with `customerName`, `phone`, `sku`, `amount`, `paymentMethod`, `leadId`, `campaignSlug` and `confirmedBy`.
 - If a customer opts out, record `opt_out` and stop followups.
 
 ## Output Pattern

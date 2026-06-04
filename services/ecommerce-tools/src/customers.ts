@@ -8,6 +8,9 @@ type CustomerEventPayload = {
   product?: { sku?: string }
   products?: Array<{ sku?: string }>
   metadata?: {
+    city?: string
+    campaignSlug?: string
+    leadId?: string
     productInterestSku?: string
     recommendedSku?: string
     journeyStage?: string
@@ -193,6 +196,18 @@ export function parseCustomerImport(input: {
           : undefined),
       followupReason:
         row.followupReason || row.followup_reason || row.motivo_seguimiento,
+      metadata: {
+        city: row.city || row.ciudad || undefined,
+        campaignSlug: row.campaignSlug || row.campaign_slug || undefined,
+        leadId: row.leadId || row.lead_id || undefined,
+        productInterestSku:
+          row.productInterestSku ||
+          row.product_interest_sku ||
+          row.sku_interes ||
+          undefined,
+        journeyStage:
+          row.journeyStage || row.journey_stage || row.etapa || undefined,
+      },
     } satisfies ImportCustomer
   })
 }
