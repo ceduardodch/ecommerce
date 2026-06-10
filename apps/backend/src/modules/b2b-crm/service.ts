@@ -1,4 +1,5 @@
 import { MedusaService } from "@medusajs/framework/utils"
+import { normalizeEcPhone } from "../../lib/ec-phone"
 import {
   ConversationalOrder,
   CrmCustomerEvent,
@@ -13,6 +14,10 @@ import type {
 
 type AnyB2bCrmService = {
   listCrmCustomerProfiles: (filters?: unknown, config?: unknown) => Promise<any[]>
+  listAndCountCrmCustomerProfiles: (
+    filters?: unknown,
+    config?: unknown,
+  ) => Promise<[any[], number]>
   createCrmCustomerProfiles: (data: unknown) => Promise<any>
   updateCrmCustomerProfiles: (data: unknown) => Promise<any>
   listCrmCustomerEvents: (filters?: unknown, config?: unknown) => Promise<any[]>
@@ -20,6 +25,33 @@ type AnyB2bCrmService = {
   listConversationalOrders: (filters?: unknown, config?: unknown) => Promise<any[]>
   createConversationalOrders: (data: unknown) => Promise<any>
   updateConversationalOrders: (data: unknown) => Promise<any>
+}
+
+export type CustomerSearchInput = {
+  q?: string
+  consent?: boolean
+  dueOnly?: boolean
+  tag?: string
+  stage?: string
+  offset?: number
+  limit?: number
+}
+
+export type CustomerProfilePatch = {
+  name?: string
+  email?: string
+  tags?: string[]
+  whatsappConsent?: boolean
+  nextFollowupAt?: string | null
+  followupReason?: string
+  suggestedFrequencyDays?: number
+  metadata?: Record<string, unknown>
+}
+
+export type CustomerImportResult = {
+  created: number
+  updated: number
+  errors: Array<{ row: number; phone?: string; error: string }>
 }
 
 function normalizePhone(phone: string) {
@@ -154,6 +186,160 @@ class B2bCrmModuleService extends MedusaService({
     )
   }
 
+  async searchCustomers(input: CustomerSearchInput = {}) {
+    const service = this.service_()
+    const offset = Math.max(0, input.offset ?? 0)
+    const limit = Math.min(200, Math.max(1, input.limit ?? 25))
+
+    const where: Record<string, unknown> = {}
+    if (input.q) where.q = input.q
+    if (typeof input.consent === "boolean") {
+      where.whatsapp_consent = input.consent
+    }
+    if (input.dueOnly) {
+      where.next_followup_at = { $lte: new Date() }
+    }
+
+    const needsMemoryFilter = Boolean(input.tag || input.stage)
+
+    if (!needsMemoryFilter) {
+      const [customers, count] = await service.listAndCountCrmCustomerProfiles(
+        where,
+        { skip: offset, take: limit, order: { updated_at: "DESC" } },
+      )
+      return { customers, count }
+    }
+
+    const candidates = await service.listCrmCustomerProfiles(where, {
+      take: 2000,
+      order: { updated_at: "DESC" },
+    })
+    const stage = input.stage?.toLowerCase()
+    const tag = input.tag?.toLowerCase()
+    const filtered = candidates.filter((customer) => {
+      if (tag) {
+        const tags = (customer.tags || []).map((value: string) =>
+          String(value).toLowerCase(),
+        )
+        if (!tags.includes(tag)) return false
+      }
+      if (stage) {
+        const customerStage = String(
+          customer.metadata?.journeyStage || customer.followup_reason || "",
+        ).toLowerCase()
+        if (!customerStage.includes(stage)) return false
+      }
+      return true
+    })
+
+    return {
+      customers: filtered.slice(offset, offset + limit),
+      count: filtered.length,
+    }
+  }
+
+  async updateCustomerProfile(phone: string, patch: CustomerProfilePatch) {
+    const existing = await this.getCustomer(phone)
+    if (!existing) return undefined
+
+    const data: Record<string, unknown> = { id: existing.id }
+    if (patch.name !== undefined) data.name = patch.name || null
+    if (patch.email !== undefined) data.email = patch.email || null
+    if (patch.tags !== undefined) data.tags = patch.tags
+    if (patch.whatsappConsent !== undefined) {
+      data.whatsapp_consent = patch.whatsappConsent
+    }
+    if (patch.nextFollowupAt !== undefined) {
+      data.next_followup_at = patch.nextFollowupAt
+        ? new Date(patch.nextFollowupAt)
+        : null
+    }
+    if (patch.followupReason !== undefined) {
+      data.followup_reason = patch.followupReason || null
+    }
+    if (patch.suggestedFrequencyDays !== undefined) {
+      data.suggested_frequency_days = patch.suggestedFrequencyDays
+    }
+    if (patch.metadata !== undefined) {
+      data.metadata = {
+        ...(existing.metadata || {}),
+        ...patch.metadata,
+      }
+    }
+
+    return this.service_().updateCrmCustomerProfiles(data)
+  }
+
+  async importCustomers(
+    inputs: CrmCustomerInput[],
+  ): Promise<CustomerImportResult> {
+    const result: CustomerImportResult = { created: 0, updated: 0, errors: [] }
+
+    for (const [index, input] of inputs.entries()) {
+      const normalized = normalizeEcPhone(input.phone)
+      const phone = normalized.phone
+      if (!phone) {
+        result.errors.push({
+          row: index + 1,
+          phone: input.phone,
+          error: normalized.error || "telefono_invalido",
+        })
+        continue
+      }
+
+      try {
+        const existing = await this.getCustomer(phone)
+        await this.upsertCustomer({ ...input, phone })
+        if (existing) {
+          result.updated += 1
+        } else {
+          result.created += 1
+        }
+      } catch (cause) {
+        result.errors.push({
+          row: index + 1,
+          phone,
+          error: cause instanceof Error ? cause.message : "error_desconocido",
+        })
+      }
+    }
+
+    return result
+  }
+
+  async recordManualPurchase(input: {
+    phone: string
+    products: PurchasedProduct[]
+    payload?: unknown
+  }) {
+    return this.markPaid({
+      externalOrderId: `manual_${Date.now()}`,
+      phone: input.phone,
+      purchasedProducts: input.products,
+      payload: input.payload,
+      source: "manual",
+    })
+  }
+
+  async snoozeFollowup(phone: string, untilIso: string, reason?: string) {
+    const customer = await this.getCustomer(phone)
+    if (!customer) return undefined
+
+    await this.service_().updateCrmCustomerProfiles({
+      id: customer.id,
+      next_followup_at: new Date(untilIso),
+      ...(reason ? { followup_reason: reason } : {}),
+    })
+
+    return this.service_().createCrmCustomerEvents({
+      phone: customer.phone,
+      type: "followup_snoozed",
+      at: new Date(),
+      source: "admin",
+      payload: { until: untilIso, reason },
+    })
+  }
+
   async listCustomerEvents(phone: string, limit = 50) {
     return this.service_().listCrmCustomerEvents(
       { phone: normalizePhone(phone) },
@@ -208,6 +394,7 @@ class B2bCrmModuleService extends MedusaService({
     medusaOrderId?: string
     purchasedProducts: PurchasedProduct[]
     payload?: unknown
+    source?: string
   }) {
     if (!input.phone) return undefined
 
@@ -233,7 +420,7 @@ class B2bCrmModuleService extends MedusaService({
       quoteId: input.quoteId,
       orderId: input.externalOrderId,
       medusaOrderId: input.medusaOrderId,
-      source: "payphone",
+      source: input.source || "payphone",
       payload: input.payload,
     })
   }

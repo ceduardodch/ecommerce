@@ -21,3 +21,30 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     },
   })
 }
+
+type ProfilePatchBody = {
+  name?: string
+  email?: string
+  tags?: string[]
+  whatsappConsent?: boolean
+  nextFollowupAt?: string | null
+  followupReason?: string
+  suggestedFrequencyDays?: number
+  metadata?: Record<string, unknown>
+}
+
+export async function PATCH(req: MedusaRequest, res: MedusaResponse) {
+  const { phone } = req.params as { phone: string }
+  const patch = req.body as ProfilePatchBody
+
+  const updated = await crmService(req).updateCustomerProfile(
+    decodeURIComponent(phone),
+    patch,
+  )
+
+  if (!updated) {
+    return res.status(404).json({ error: "customer_not_found" })
+  }
+
+  res.json({ customer: serializeCustomer(updated) })
+}

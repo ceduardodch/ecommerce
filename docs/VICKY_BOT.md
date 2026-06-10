@@ -157,3 +157,70 @@ Use `/tools/sales/payment-proof` for transfer/deuna screenshots under review and
 - Keep outbound WhatsApp allowlisted during early testing.
 - Do not automate ad spend or Marketplace publishing without explicit human confirmation.
 - Human must confirm delivery, invoice, warranty exceptions, bulk discounts and unclear payment status.
+
+## Automatic Reorder Followups (CRM Dispatch)
+
+The Medusa backend runs a daily scheduled job (`dispatch-due-followups`, default
+`0 14 * * *` UTC = 9:00 America/Guayaquil) that processes CRM customers whose
+`next_followup_at` is due, with `whatsapp_consent=true`, no `opt_out` event and
+no `followup_sent`/`followup_queued` event in the last
+`CRM_FOLLOWUP_COOLDOWN_DAYS` (default 7).
+
+It can also be triggered manually from the admin dashboard ("Ejecutar followups
+ahora") or via:
+
+```bash
+curl -X POST "https://adminshop.b2b.com.ec/admin/b2b/crm/followups/dispatch" \
+  -H "Content-Type: application/json" \
+  -b "$MEDUSA_ADMIN_COOKIE" \
+  -d '{"dryRun": true}'
+```
+
+### Dispatch modes (`CRM_FOLLOWUP_DISPATCH_MODE`)
+
+- `draft` (default, safe lane): no message is sent. Each due customer gets a
+  `followup_queued` CRM event with the suggested message, visible in the admin
+  dashboard ("Cola de envío de recompra") for manual sending via wa.me.
+- `openclaw`: the job POSTs each followup to the OpenClaw gateway so Vicky
+  sends it through the existing WhatsApp session. On success a `followup_sent`
+  event is recorded; on any HTTP/network failure it degrades to
+  `followup_queued`.
+
+In both modes `next_followup_at` advances `CRM_FOLLOWUP_RETRY_DAYS` (default 7)
+so customers are not reprocessed on every run.
+
+### OpenClaw hook contract (mode `openclaw`)
+
+Request sent by the backend:
+
+```http
+POST ${OPENCLAW_GATEWAY_URL}${OPENCLAW_GATEWAY_HOOK_PATH:-/hooks/agent}
+Authorization: Bearer ${OPENCLAW_HOOKS_TOKEN}
+Content-Type: application/json
+
+{
+  "name": "crm-followup",
+  "channel": "whatsapp",
+  "to": "+593979854915",
+  "deliver": true,
+  "message": "Hola Maria, vi que compraste ..."
+}
+```
+
+Any 2xx response counts as sent. Configure the OpenClaw side (Coolify app) to
+accept this webhook and deliver `message` to `to` over the connected WhatsApp
+channel, respecting `OPENCLAW_WHATSAPP_DM_POLICY`.
+
+### Enabling automatic sending in Coolify
+
+1. Verify the queue works in `draft` mode first (events `followup_queued`).
+2. Set on the ecommerce stack (medusa-api service):
+   - `CRM_FOLLOWUP_DISPATCH_MODE=openclaw`
+   - `OPENCLAW_GATEWAY_URL=https://vicky.b2b.com.ec` (or internal URL)
+   - `OPENCLAW_HOOKS_TOKEN=<shared token>`
+3. Optional tuning: `CRM_FOLLOWUP_MAX_PER_RUN` (default 20),
+   `CRM_FOLLOWUP_WINDOW` (default `9-19`, Guayaquil hours),
+   `CRM_FOLLOWUP_CRON`, `CRM_FOLLOWUP_ENABLED=false` as kill-switch.
+4. Guardrails: consent-only (the query already filters
+   `whatsapp_consent=true`), opt-out respected, cooldown dedupe, per-run cap,
+   send window, and full audit trail as CRM events.

@@ -1,5 +1,6 @@
 import { defineRouteConfig } from "@medusajs/admin-sdk"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 type CrmCustomerRow = {
   phone: string
@@ -173,26 +174,48 @@ function renderCustomerQueue(
 function CrmWhatsappPage() {
   const [dashboard, setDashboard] = useState<Dashboard | undefined>()
   const [error, setError] = useState<string | undefined>()
+  const [dispatchStatus, setDispatchStatus] = useState<string | undefined>()
 
-  useEffect(() => {
-    let mounted = true
-
+  const load = useCallback(() => {
     fetch("/admin/b2b/crm/dashboard", { credentials: "include" })
       .then(async (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         return response.json() as Promise<Dashboard>
       })
-      .then((data) => {
-        if (mounted) setDashboard(data)
-      })
-      .catch((cause: Error) => {
-        if (mounted) setError(cause.message)
-      })
-
-    return () => {
-      mounted = false
-    }
+      .then((data) => setDashboard(data))
+      .catch((cause: Error) => setError(cause.message))
   }, [])
+
+  useEffect(() => {
+    load()
+  }, [load])
+
+  async function runDispatch() {
+    setDispatchStatus("Ejecutando followups...")
+    try {
+      const response = await fetch("/admin/b2b/crm/followups/dispatch", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const result = (await response.json()) as {
+        mode?: string
+        sent?: number
+        queued?: number
+        skipped?: number
+      }
+      setDispatchStatus(
+        `Modo ${result.mode}: ${result.sent || 0} enviados, ${result.queued || 0} en cola, ${result.skipped || 0} omitidos`,
+      )
+      load()
+    } catch (cause) {
+      setDispatchStatus(
+        `Error: ${cause instanceof Error ? cause.message : cause}`,
+      )
+    }
+  }
 
   if (error) {
     return (
@@ -214,11 +237,70 @@ function CrmWhatsappPage() {
 
   return (
     <div style={{ display: "grid", gap: 24, padding: 24 }}>
-      <header>
-        <p style={{ color: "var(--fg-subtle)", margin: 0 }}>
-          Cocina, recompra y ventas conversacionales
-        </p>
-        <h1 style={{ fontSize: 28, margin: "4px 0 0" }}>CRM WhatsApp</h1>
+      <header
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 12,
+        }}
+      >
+        <div>
+          <p style={{ color: "var(--fg-subtle)", margin: 0 }}>
+            Cocina, recompra y ventas conversacionales
+          </p>
+          <h1 style={{ fontSize: 28, margin: "4px 0 0" }}>CRM WhatsApp</h1>
+          {dispatchStatus ? (
+            <p style={{ color: "var(--fg-subtle)", margin: "4px 0 0", fontSize: 13 }}>
+              {dispatchStatus}
+            </p>
+          ) : null}
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <Link
+            to="/crm-whatsapp/leads"
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-subtle)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              textDecoration: "none",
+            }}
+          >
+            Leads
+          </Link>
+          <Link
+            to="/crm-whatsapp/import"
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-subtle)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              textDecoration: "none",
+            }}
+          >
+            Importar leads
+          </Link>
+          <button
+            onClick={runDispatch}
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-subtle)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            Ejecutar followups ahora
+          </button>
+        </div>
       </header>
 
       <section
@@ -274,6 +356,65 @@ function CrmWhatsappPage() {
         dashboard.dueFollowups,
         "No hay followups vencidos.",
       )}
+
+      <section style={cardStyle}>
+        <h2 style={{ marginTop: 0 }}>Cola de envío de recompra</h2>
+        <p style={{ fontSize: 13, color: "var(--fg-subtle)", marginTop: 0 }}>
+          Followups procesados por el job automático (enviados vía Vicky o en
+          cola para envío manual).
+        </p>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={cellStyle}>Estado</th>
+              <th style={cellStyle}>Telefono</th>
+              <th style={cellStyle}>Fecha</th>
+              <th style={cellStyle}>Origen</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dashboard.recentEvents
+              .filter((event) =>
+                ["followup_queued", "followup_sent"].includes(event.type),
+              )
+              .map((event, index) => (
+                <tr key={`queue-${event.at}-${index}`}>
+                  <td style={cellStyle}>
+                    <strong>
+                      {event.type === "followup_sent"
+                        ? "Enviado"
+                        : "En cola (manual)"}
+                    </strong>
+                  </td>
+                  <td style={cellStyle}>
+                    {event.phone ? (
+                      <Link
+                        to={`/crm-whatsapp/leads/${encodeURIComponent(event.phone)}`}
+                        style={{ color: "var(--fg-base)" }}
+                      >
+                        {event.phone}
+                      </Link>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td style={cellStyle}>{formatDate(event.at)}</td>
+                  <td style={cellStyle}>{event.source || "-"}</td>
+                </tr>
+              ))}
+            {!dashboard.recentEvents.some((event) =>
+              ["followup_queued", "followup_sent"].includes(event.type),
+            ) ? (
+              <tr>
+                <td colSpan={4} style={cellStyle}>
+                  Aun no hay followups procesados. Usa "Ejecutar followups
+                  ahora" o espera al job diario.
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </section>
 
       <section style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Ordenes pendientes de pago</h2>

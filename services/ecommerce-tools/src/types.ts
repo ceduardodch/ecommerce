@@ -119,6 +119,9 @@ export type CustomerEventType =
   | "opt_out"
   | "no_response"
   | "conversation_escalated"
+  | "note"
+  | "followup_queued"
+  | "followup_snoozed"
 
 export type CustomerEventRecord = {
   type: CustomerEventType
