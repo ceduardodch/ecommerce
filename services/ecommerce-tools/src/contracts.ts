@@ -257,6 +257,7 @@ export const saleFeedbackInputSchema = z.object({
   confirmedBy: z.string().optional(),
   at: z.string().optional(),
   consent: z.boolean().default(true),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 })
 
 export type SaleFeedbackInput = z.infer<typeof saleFeedbackInputSchema>

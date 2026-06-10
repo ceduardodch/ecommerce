@@ -433,6 +433,7 @@ export function createCommerceService(config: AppConfig) {
       value: amount * input.quantity,
       currency: input.currency,
       metadata: {
+        ...(input.metadata || {}),
         journeyStage:
           input.status === "paid" ? "cliente_pagado" : "pago_en_revision",
         leadId: input.leadId,

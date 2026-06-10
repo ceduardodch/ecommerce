@@ -91,7 +91,7 @@ function campaignProduct(product: Product): Product {
     product.sku === "COC-CUCHILLO-SAMURAI-TODO-USO" &&
     (!product.originalPrice ||
       product.originalPrice.amount <= product.price.amount) &&
-    product.price.amount <= 34.99
+    product.price.amount <= 29.99
   ) {
     return {
       ...product,
@@ -253,7 +253,7 @@ function CampaignPhotoGallery({
       </div>
       <div className="campaign-photo-cta">
         <div>
-          <strong>Oferta de lanzamiento: $34.99</strong>
+          <strong>Oferta de lanzamiento: $29.99</strong>
           <span>Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.</span>
         </div>
         <TrackedWhatsAppLink

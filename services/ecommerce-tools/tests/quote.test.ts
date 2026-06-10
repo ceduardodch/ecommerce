@@ -183,10 +183,10 @@ describe("commerce tools", () => {
           title: "Cuchillo samurai Japones todo uso",
           category: "Cuchillos",
           brand: "MGC",
-          price: 34.99,
+          price: 29.99,
           currency: "USD",
         },
-        value: 34.99,
+        value: 29.99,
         currency: "USD",
         metadata: {
           campaignSlug: "cuchillo-samurai-japones-todo-uso",
@@ -369,6 +369,14 @@ describe("commerce tools", () => {
         customerName: "Ana Compradora",
         campaignSlug: "wok-32-granito",
         confirmedBy: "Carlos",
+        metadata: {
+          city: "Quito",
+          leadQuality: "alta",
+          firstResponseMin: 1,
+          customerMessages: 4,
+          objection: "ninguna",
+          nextAction: "cerrado",
+        },
       })
 
       expect(paid.crmStored).toBe(true)
@@ -384,6 +392,17 @@ describe("commerce tools", () => {
         journeyStage: "cliente_pagado",
         productInterestSku: "MGC-WOK-GRANITO-32",
         campaignSlug: "wok-32-granito",
+        city: "Quito",
+      })
+      const paidEvent = context.recentEvents.find((event) => event.type === "paid")
+      expect(paidEvent?.payload).toMatchObject({
+        metadata: {
+          leadQuality: "alta",
+          firstResponseMin: 1,
+          customerMessages: 4,
+          objection: "ninguna",
+          nextAction: "cerrado",
+        },
       })
     } finally {
       await rm(dataDir, { recursive: true, force: true })

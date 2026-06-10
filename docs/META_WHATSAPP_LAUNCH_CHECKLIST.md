@@ -11,7 +11,7 @@ https://cocina.b2b.com.ec/campanas/cuchillo-samurai-japones-todo-uso?sku=COC-CUC
 ## Required Flow
 
 1. Meta ad opens the one-product campaign landing.
-2. Landing shows real cuchillo video, offer `$50 -> $34.99`, and `Envio gratis por Servientrega`.
+2. Landing shows real cuchillo video, offer `$50 -> $29.99`, and `Envio gratis por Servientrega`.
 3. Landing shows real photo proof: full product, hoja/textura, mango, and main product photo.
 4. WhatsApp sticky CTA stays visible while scrolling.
 5. WhatsApp message includes product, SKU, price, coupon, campaign, UTM, Lead, and Servientrega shipping.
@@ -107,13 +107,13 @@ Local readiness evidence:
 
 - Landing `200`.
 - Cuchillo SKU present.
-- `$50 -> $34.99` offer present.
+- `$50 -> $29.99` offer present.
 - `Envio gratis por Servientrega` present.
 - `video-cuchillo-samurai-hero.mp4` and `video-cuchillo-samurai-corte.mp4` serve `200`.
 - `photo-product-cuchillo-samurai.jpg`, `photo-cuchillo-samurai-vertical.jpg`, `photo-cuchillo-samurai-textura.jpg`, and `photo-cuchillo-samurai-mango.jpg` serve `200`.
 - Six WhatsApp CTAs use `593979854915`.
 - Six WhatsApp CTAs use first line `Hola, quiero el cuchillo samurai Japones todo uso.`
-- Six WhatsApp CTAs include price `$34.99`, coupon `GRANITOHOY`, Lead ref, and Servientrega shipping.
+- Six WhatsApp CTAs include price `$29.99`, coupon `GRANITOHOY`, Lead ref, and Servientrega shipping.
 - `/api/events` accepts `campaign_cta_click`.
 - Direct `/tools/events` stores CRM.
 - `/tools/ai-context/customer/:phone?leadId=...` returns `journeyStage: cotizacion_pendiente`, `productInterestSku: COC-CUCHILLO-SAMURAI-TODO-USO`, `campaignSlug`, and `couponClaimed: true`.
@@ -138,7 +138,7 @@ Known public-production failures before launch:
 - `/media/photo-cuchillo-samurai-vertical.jpg` returns `404`.
 - `/media/photo-cuchillo-samurai-textura.jpg` returns `404`.
 - `/media/photo-cuchillo-samurai-mango.jpg` returns `404`.
-- The public page does not show the `$50 -> $34.99` offer.
+- The public page does not show the `$50 -> $29.99` offer.
 - The public page does not show `Envio gratis por Servientrega`.
 - The public WhatsApp first line is still not the product-specific cuchillo trigger; current public first line is `Hola, quiero la olla de granito Cuchillo samurai Japones todo uso.`
 - Public `/api/events` returns `500` for `campaign_cta_click`, which means the deployed `ecommerce-tools` schema has not received the local fix yet.
@@ -186,7 +186,7 @@ npm run validate:meta-whatsapp
 ## Human Checks Before Spending
 
 - Open the campaign URL on a real phone.
-- Confirm the first viewport shows video, `$34.99 oferta`, and WhatsApp sticky CTA.
+- Confirm the first viewport shows video, `$29.99 oferta`, and WhatsApp sticky CTA.
 - Click WhatsApp and confirm the first line is product-specific, not a generic menu.
-- Confirm Vicky responds with cuchillo context, price `$34.99`, Servientrega shipping, and payment options.
+- Confirm Vicky responds with cuchillo context, price `$29.99`, Servientrega shipping, and payment options.
 - Keep the ad muted-friendly; the landing must convert without audio.

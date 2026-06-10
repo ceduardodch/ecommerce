@@ -322,7 +322,7 @@ export const fallbackProducts: Product[] = [
     "category": "Cuchillos",
     "brand": "Eter Niu Cocina",
     "price": {
-      "amount": 34.99,
+      "amount": 29.99,
       "currency": "USD"
     },
     "originalPrice": {
