@@ -190,8 +190,8 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 |---|---|---|
 | A — Fundación | WFND-1..4 | ✅ Hecho + correcciones de auditoría (commits `a654b67..c966b96`) |
 | (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
-| **B — Dinero** | WCMP-1..3, WPRD-1 | ✅ Hecho (commits `f44ea3b..7322577`, jun 2026) |
-| C — Marca | WHOM-1..3 | ❌ Pendiente |
+| B — Dinero | WCMP-1..3, WPRD-1 | ✅ Hecho + fix de auditoría (commits `f44ea3b..86a633b`, jun 2026) |
+| **C — Marca** | WHOM-1..3 | 🔜 Siguiente |
 | D — Limpieza | WCLN-1..3 | ❌ Pendiente |
 
 ### Sprint A — Fundación (WFND) ✅ HECHO
