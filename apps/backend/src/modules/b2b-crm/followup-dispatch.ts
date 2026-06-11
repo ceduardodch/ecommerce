@@ -109,10 +109,13 @@ export function selectDispatchTargets<T extends CustomerLike>(
   return { targets, skipped }
 }
 
-export function buildFollowupMessage(customer: {
+export type TemplateCustomer = {
   name?: string | null
   purchased_products?: Array<{ title?: string }> | null
-}) {
+  followup_reason?: string | null
+}
+
+export function buildFollowupMessage(customer: TemplateCustomer) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
   const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
@@ -123,6 +126,63 @@ export function buildFollowupMessage(customer: {
   }
 
   return `${greeting}, tenemos nuevas opciones de ollas, cuchillos y combos de cocina. Te preparo una cotizacion corta por WhatsApp?`
+}
+
+/**
+ * Renderiza una plantilla con variables del cliente.
+ * Esta función será usada por el dispatcher y por el admin para consistencia.
+ *
+ * @param template - Plantilla con body que puede contener {nombre}, {producto}, {dias}
+ * @param customer - Cliente con nombre, productos comprados y días desde última compra
+ * @returns Mensaje renderizado
+ */
+export function renderTemplate(
+  template: { body: string },
+  customer: TemplateCustomer & { daysSincePurchase?: number }
+) {
+  const products = customer.purchased_products || []
+  const lastProduct = products[products.length - 1]
+  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
+  const productName = lastProduct?.title || "tu compra"
+  const days = customer.daysSincePurchase || 30
+
+  let message = template.body
+    .replace(/\{nombre\}/gi, firstName || "Cliente")
+    .replace(/\{producto\}/gi, String(productName))
+    .replace(/\{dias\}/gi, String(days))
+
+  return message
+}
+
+/**
+ * Mapea un followup_reason a una key de plantilla.
+ * Si no hay match, devuelve 'generico'.
+ */
+export function templateKeyFromReason(reason?: string | null): string {
+  if (!reason) return "generico"
+
+  const normalized = reason.toLowerCase()
+
+  if (normalized.includes("recompra") || normalized.includes("reorder")) {
+    return "recompra"
+  }
+  if (normalized.includes("complemento") || normalized.includes("complement")) {
+    return "complemento"
+  }
+  if (normalized.includes("cuidado") || normalized.includes("care")) {
+    return "cuidado"
+  }
+  if (normalized.includes("estacional")) {
+    return "estacional"
+  }
+  if (normalized.includes("cross_sell_cocina")) {
+    return "cross_sell_cocina"
+  }
+  if (normalized.includes("cross_sell_bienestar")) {
+    return "cross_sell_bienestar"
+  }
+
+  return "generico"
 }
 
 export type DispatchOutcome = {
@@ -254,7 +314,29 @@ export async function runFollowupDispatch(
   }
 
   for (const customer of targets) {
-    const message = buildFollowupMessage(customer as any)
+    // Usar plantillas en lugar del mensaje hardcoded
+    const templateKey = templateKeyFromReason((customer as any).followup_reason)
+    const template = await crm.getTemplate(templateKey)
+
+    let message: string
+    if (template?.body) {
+      // Calcular días desde la última compra
+      const lastPurchase = customer.last_purchase_at
+        ? new Date(customer.last_purchase_at)
+        : undefined
+      const daysSincePurchase = lastPurchase
+        ? Math.floor((now.getTime() - lastPurchase.getTime()) / (1000 * 60 * 60 * 24))
+        : undefined
+
+      message = renderTemplate(template, {
+        name: customer.name,
+        purchased_products: customer.purchased_products,
+        daysSincePurchase,
+      })
+    } else {
+      // Fallback al mensaje legacy si no hay plantilla
+      message = buildFollowupMessage(customer as any)
+    }
 
     if (options.dryRun) {
       result.results.push({ phone: customer.phone, status: "dry_run" })

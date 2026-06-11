@@ -10,6 +10,7 @@ import {
 import { B2B_CRM_MODULE } from "../../../modules/b2b-crm"
 import type B2bCrmModuleService from "../../../modules/b2b-crm/service"
 import type { CrmCustomerInput } from "../../../modules/b2b-crm/types"
+import { renderTemplate, templateKeyFromReason } from "../../../modules/b2b-crm/followup-dispatch"
 
 type CustomerPayload = {
   name?: string
@@ -124,6 +125,43 @@ export function serializeOrder(order: any) {
     updatedAt: iso(order.updated_at),
     events: order.events || [],
   }
+}
+
+/**
+ * Construye el borrador del mensaje de followup usando plantillas.
+ * Esta función es async porque necesita buscar la plantilla en el servicio.
+ *
+ * NOTA: El caller debe manejar el caso de que esta función sea async.
+ * Para backwards compatibility con código existente, mantenemos la versión sync
+ * como fallback, pero idealmente todo debería migrar a usar plantillas.
+ */
+export async function buildFollowupDraftAsync(
+  req: MedusaRequest,
+  customer: any
+): Promise<string> {
+  const crm = crmService(req)
+  const templateKey = templateKeyFromReason(followupReason(customer))
+  const template = await crm.getTemplate(templateKey)
+
+  if (template?.body) {
+    // Calcular días desde la última compra
+    const lastPurchase = customer.last_purchase_at || customer.lastPurchaseAt
+      ? new Date(customer.last_purchase_at || customer.lastPurchaseAt)
+      : undefined
+    const now = new Date()
+    const daysSincePurchase = lastPurchase
+      ? Math.floor((now.getTime() - lastPurchase.getTime()) / (1000 * 60 * 60 * 24))
+      : undefined
+
+    return renderTemplate(template, {
+      name: customer.name,
+      purchased_products: customer.purchased_products || [],
+      daysSincePurchase,
+    })
+  }
+
+  // Fallback al mensaje legacy si no hay plantilla
+  return buildFollowupDraft(customer)
 }
 
 export function buildFollowupDraft(customer: any) {
