@@ -184,7 +184,17 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 
 ## 4. Sprints (orden estricto, cada uno sale a producción)
 
-### Sprint A — Fundación (WFND)
+### Estado real (jun 2026)
+
+| Sprint | Historias | Estado |
+|---|---|---|
+| A — Fundación | WFND-1..4 | ✅ Hecho + correcciones de auditoría (commits `a654b67..c966b96`) |
+| (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
+| **B — Dinero** | WCMP-1..3, WPRD-1 | 🔜 **EN CURSO / siguiente** |
+| C — Marca | WHOM-1..3 | ❌ Pendiente |
+| D — Limpieza | WCLN-1..3 | ❌ Pendiente |
+
+### Sprint A — Fundación (WFND) ✅ HECHO
 
 **WFND-1 · Tailwind v4 + tokens** — `cd apps/storefront && npm install tailwindcss @tailwindcss/postcss postcss`.
 Crear `postcss.config.mjs` (`plugins: { "@tailwindcss/postcss": {} }`) y
