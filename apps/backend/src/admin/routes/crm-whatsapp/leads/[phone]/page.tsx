@@ -496,6 +496,118 @@ function LeadDetailPage() {
       </section>
 
       <section style={cardStyle}>
+        <h2 style={{ marginTop: 0 }}>Conversación</h2>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            maxHeight: 500,
+            overflowY: "auto",
+            background: "var(--bg-subtle, #f5f5f5)",
+            borderRadius: 8,
+            padding: 12,
+          }}
+        >
+          {(customer.events || [])
+            .filter(
+              (event) =>
+                ["message_in", "message_out", "paid", "quote_created"].includes(
+                  event.type
+                )
+            )
+            .sort((a, b) => {
+              const atA = a.at ? new Date(a.at).getTime() : 0
+              const atB = b.at ? new Date(b.at).getTime() : 0
+              return atA - atB
+            })
+            .map((event, index) => {
+              const isIncoming = event.type === "message_in"
+              const isMessage = event.type === "message_in" || event.type === "message_out"
+              const isEvent = !isMessage
+
+              const text = isMessage && event.payload && typeof event.payload === "object"
+                ? (event.payload as { text?: string }).text || ""
+                : event.type === "paid"
+                ? "💰 Pagado"
+                : event.type === "quote_created"
+                ? "📋 Cotización creada"
+                : event.type
+
+              return (
+                <div
+                  key={`${event.type}-${event.at}-${index}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: isIncoming ? "flex-start" : "flex-end",
+                  }}
+                >
+                  <div
+                    style={{
+                      maxWidth: "70%",
+                      background: isIncoming
+                        ? "var(--bg-base, #ffffff)"
+                        : "var(--fg-muted, #e3f2fd)",
+                      borderRadius: 12,
+                      padding: "10px 14px",
+                      boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+                      ...(isEvent
+                        ? {
+                            background: "var(--bg-muted, #fff9c4)",
+                            border: "1px solid var(--border-base)",
+                          }
+                        : {}),
+                    }}
+                  >
+                    {isEvent && (
+                      <div
+                        style={{
+                          fontSize: 11,
+                          color: "var(--fg-subtle)",
+                          marginBottom: 4,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {event.type === "paid" ? "💰" : "📋"}{" "}
+                        {event.type.replace(/_/g, " ")}
+                      </div>
+                    )}
+                    <div style={{ fontSize: 13, lineHeight: 1.5, wordBreak: "break-word" }}>
+                      {text}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 10,
+                        color: "var(--fg-subtle)",
+                        marginTop: 4,
+                        textAlign: "right",
+                      }}
+                    >
+                      {event.at ? formatDate(event.at) : ""}
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          {!(customer.events || []).filter((e) =>
+            ["message_in", "message_out", "paid", "quote_created"].includes(e.type)
+          ).length ? (
+            <div
+              style={{
+                textAlign: "center",
+                color: "var(--fg-subtle)",
+                fontSize: 13,
+                padding: 20,
+              }}
+            >
+              Sin mensajes registrados. La conversación aparecerá aquí cuando Vicky
+              registre eventos message_in/message_out.
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      <section style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Historial de eventos</h2>
         <table style={tableStyle}>
           <thead>
