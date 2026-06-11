@@ -149,6 +149,92 @@ curl -X POST "$ECOMMERCE_TOOLS_BASE_URL/tools/customer-events" \
   }'
 ```
 
+## Message Logging (Timeline de Conversación)
+
+**IMPORTANTE**: Vicky debe registrar cada mensaje de WhatsApp en el CRM para construir el timeline de conversación.
+
+### Mensajes entrantes (cliente → Vicky)
+
+Cuando Vicky recibe un mensaje del cliente, registra inmediatamente:
+
+```bash
+curl -X POST "$ECOMMERCE_TOOLS_BASE_URL/tools/customer-events" \
+  -H "Authorization: Bearer $ECOMMERCE_TOOLS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+593979854915",
+    "type": "message_in",
+    "at": "2026-06-11T14:30:00Z",
+    "source": "vicky_whatsapp",
+    "payload": {
+      "text": "Hola, me interesa la olla de granito",
+      "mediaType": "text",
+      "mediaUrl": null
+    }
+  }'
+```
+
+### Mensajes salientes (Vicky → cliente)
+
+Cuando Vicky envía un mensaje al cliente, registra inmediatamente:
+
+```bash
+curl -X POST "$ECOMMERCE_TOOLS_BASE_URL/tools/customer-events" \
+  -H "Authorization: Bearer $ECOMMERCE_TOOLS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+593979854915",
+    "type": "message_out",
+    "at": "2026-06-11T14:30:15Z",
+    "source": "vicky_whatsapp",
+    "payload": {
+      "text": "Hola Maria, la olla de granito tiene X capacidad...",
+      "mediaType": "text",
+      "mediaUrl": null
+    }
+  }'
+```
+
+### Payload soportado
+
+El campo `payload` debe contener:
+
+- `text` (string): El texto del mensaje
+- `mediaType` (string, opcional): Tipo de media (`text`, `image`, `video`, `audio`, `document`)
+- `mediaUrl` (string, opcional): URL del media si no es texto
+
+### Volumen y validación
+
+- **1 evento por mensaje**: No agrupar ni batchear mensajes
+- **Timestamp `at`**: Usar la hora real del mensaje (no la hora del registro)
+- **Consentimiento implícito**: Al registrar un `message_in`, asumir que el cliente tiene consentimiento si el número tiene `whatsapp_consent=true`
+- **Casos especiales**:
+  - Si el cliente envía media (imagen/video), registrar en `mediaUrl`
+  - Si el mensaje contiene un audio, usar `mediaType: "audio"`
+  - Si el cliente comparte ubicación, usar `mediaType: "location"` y poner coordenadas en `text`
+
+### Prompt de Vicky
+
+Añadir a las instrucciones del prompt de Vicky:
+
+```text
+TRANSPARENCIA DE CRM: Cada mensaje que envíes o recibas debe registrarse en el CRM.
+Al recibir un mensaje, POST /tools/customer-events con type=message_in.
+Al enviar un mensaje, POST /tools/customer-events con type=message_out.
+Esto crea el timeline de conversación visible en el admin.
+```
+
+### Validación en producción
+
+Verificar que cada conversación tenga N eventos `message_in` + `message_out` intercalados:
+
+```bash
+# En el admin, abrir la ficha de un cliente
+# Ir a la pestaña "Conversación"
+# Verificar que los mensajes aparecen como burbujas (in izquierda, out derecha)
+# Verificar que hay 1 evento por cada mensaje real de WhatsApp
+```
+
 Use `/tools/sales/payment-proof` for transfer/deuna screenshots under review and `/tools/sales/confirm` only after human confirmation.
 
 ## Production Guardrails
