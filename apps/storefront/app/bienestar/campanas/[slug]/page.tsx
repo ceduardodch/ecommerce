@@ -6,7 +6,7 @@ import {
   HeartHandshake,
   Leaf,
   MessageCircle,
-  Sparkles,
+  ShieldCheck,
   Truck,
 } from "lucide-react"
 import {
@@ -24,6 +24,10 @@ import {
   WellnessStickyCta,
   type WellnessAttribution,
 } from "../../components/wellness-interactions"
+import { Badge } from "../../../components/ui/badge"
+import { PromoBar } from "../../../components/ui/promo-bar"
+import { SiteHeader } from "../../../components/ui/site-header"
+import { PriceTag } from "../../../components/ui/price-tag"
 
 type WellnessCampaignPageProps = {
   params: Promise<{ slug: string }>
@@ -87,65 +91,90 @@ function hasPromo(product: Product) {
   )
 }
 
-function WellnessProofs({ product }: { product: Product }) {
+/** Trust grid 3-col (maqueta 2.3 point 6) */
+function TrustGrid({ product }: { product: Product }) {
   const commerce = commercialInfo(product)
 
   return (
-    <section className="wellness-proof-grid">
-      <article>
-        <Truck size={24} />
-        <strong>{commerce.freeShippingLabel}</strong>
-        <span>
-          El chat confirma ciudad, cobertura y despacho antes del pago.
+    <div className="grid grid-cols-3 divide-x divide-[#E8E2D8] border-y border-[#E8E2D8]">
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        <Truck size={20} className="text-[#1A1A18]" />
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          {commerce.freeShippingLabel}
         </span>
-      </article>
-      <article>
-        <BadgeDollarSign size={24} />
-        <strong>{commerce.paymentMethodsLabel}</strong>
-        <span>Transferencia, deuna! o link PayPhone/tarjeta si aplica.</span>
-      </article>
-      <article>
-        <HeartHandshake size={24} />
-        <strong>Asesoria directa</strong>
-        <span>
-          Vicky recibe SKU, vertical, campana, Lead y fuente Meta Ads.
+      </div>
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        <BadgeDollarSign size={20} className="text-[#1A1A18]" />
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          Pagas al recibir
         </span>
-      </article>
-    </section>
+      </div>
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        <ShieldCheck size={20} className="text-[#1A1A18]" />
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          Garantia y asesoria
+        </span>
+      </div>
+    </div>
   )
 }
 
+/** FAQ section (conserved content, re-styled) */
 function WellnessFaq({ product }: { product: Product }) {
   const commerce = commercialInfo(product)
 
+  const items = [
+    {
+      icon: <Droplets size={20} className="text-[var(--accent)]" />,
+      title: "Para que sirve",
+      body: product.bundleUseCase || product.description,
+    },
+    {
+      icon: <Leaf size={20} className="text-[var(--accent)]" />,
+      title: "Como se cuida",
+      body: product.careTips || "Cuidado simple segun material del producto.",
+    },
+    {
+      icon: <CheckCircle2 size={20} className="text-[var(--accent)]" />,
+      title: "Stock y precio",
+      body: `${product.stockSignal || "Stock por confirmar en WhatsApp"}.`,
+    },
+    {
+      icon: <ShieldCheck size={20} className="text-[var(--accent)]" />,
+      title: "Cupon",
+      body: `Cupon ${commerce.couponCode}, ${commerce.freeShippingLabel.toLowerCase()} y confirmacion por WhatsApp.`,
+    },
+  ]
+
   return (
-    <section className="wellness-faq">
-      <article>
-        <Droplets size={22} />
-        <h2>Para que sirve</h2>
-        <p>{product.bundleUseCase || product.description}</p>
-      </article>
-      <article>
-        <Leaf size={22} />
-        <h2>Como se cuida</h2>
-        <p>
-          {product.careTips || "Cuidado simple segun material del producto."}
-        </p>
-      </article>
-      <article>
-        <CheckCircle2 size={22} />
-        <h2>Stock y precio</h2>
-        <p>{product.stockSignal || "Stock por confirmar en WhatsApp"}.</p>
-      </article>
-      <article>
-        <Sparkles size={22} />
-        <h2>Cupon</h2>
-        <p>
-          Cupon {commerce.couponCode},{" "}
-          {commerce.freeShippingLabel.toLowerCase()} y confirmacion por
-          WhatsApp.
-        </p>
-      </article>
+    <section className="px-4 py-10" aria-label="Preguntas frecuentes">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        FAQ
+      </p>
+      <h2
+        className="mb-6 text-[20px] font-medium leading-snug text-[#1A1A18]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        Antes de escribir a Vicky.
+      </h2>
+      <div className="space-y-4">
+        {items.map((item) => (
+          <div
+            key={item.title}
+            className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-4"
+          >
+            <div className="mt-0.5 shrink-0">{item.icon}</div>
+            <div>
+              <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">
+                {item.title}
+              </p>
+              <p className="text-[13px] leading-snug text-[#6B6B66]">
+                {item.body}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
@@ -164,13 +193,18 @@ export default async function WellnessCampaignPage({
 
   if (!selectedProduct) {
     return (
-      <main className="wellness-page">
-        <section className="wellness-empty">
-          <HeartHandshake size={26} />
-          <h1>No hay productos de bienestar disponibles.</h1>
-          <p>
-            Carga productos reales en Medusa con tag `bienestar` para activar
-            esta campana.
+      <main data-theme="bienestar" className="min-h-screen bg-[#FAF7F2]">
+        <PromoBar message="Bienestar consciente · Envío gratis a todo Ecuador" />
+        <section className="flex flex-col items-center gap-4 px-4 py-16 text-center">
+          <HeartHandshake size={26} className="text-[var(--accent)]" />
+          <h1
+            className="text-[20px] font-medium text-[#1A1A18]"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            No hay productos de bienestar disponibles.
+          </h1>
+          <p className="text-[14px] text-[#6B6B66]">
+            Carga productos reales en Medusa con tag bienestar para activar esta campana.
           </p>
         </section>
       </main>
@@ -197,10 +231,9 @@ export default async function WellnessCampaignPage({
     promo && selectedProduct.originalPrice
       ? selectedProduct.originalPrice.amount - selectedProduct.price.amount
       : 0
-  const commerce = commercialInfo(selectedProduct)
 
   return (
-    <main className="wellness-page wellness-campaign-page">
+    <main data-theme="bienestar" className="min-h-screen bg-[#FAF7F2] pb-24">
       <WellnessAnalytics
         context={{
           ...attribution,
@@ -212,108 +245,113 @@ export default async function WellnessCampaignPage({
         product={selectedProduct}
       />
 
-      <header className="wellness-topbar">
-        <a className="brand-mark" href={wellnessBaseUrl}>
-          <HeartHandshake size={21} />
-          <span>Eter Niu Bienestar</span>
-        </a>
-        <a className="campaign-topbar-link" href={wellnessBaseUrl}>
-          Ver vertical
-        </a>
-      </header>
+      {/* 1. Promo bar */}
+      <PromoBar message="Bienestar consciente · Envío gratis a todo Ecuador" />
 
-      <section className="wellness-campaign-hero">
-        <div className="wellness-campaign-media">
-          <img alt={selectedProduct.title} src={selectedProduct.imageUrl} />
-          <span>{selectedProduct.promoLabel || "Campana bienestar"}</span>
-        </div>
-        <div className="wellness-campaign-copy">
-          <p className="eyebrow">Campana de un producto</p>
-          <h1>{selectedProduct.title}</h1>
-          <p>{selectedProduct.description}</p>
-          <div className="campaign-price-card">
-            <div>
-              {promo && selectedProduct.originalPrice ? (
-                <span className="original-price">
-                  {money(selectedProduct.originalPrice.amount)}
-                </span>
-              ) : null}
-              <strong>{money(selectedProduct.price.amount)}</strong>
-              {savings > 0 ? <small>Ahorra {money(savings)}</small> : null}
-            </div>
-            <TrackedWhatsAppLink
-              className="primary-button hero-cta"
-              cta="wellness_campaign_hero_whatsapp"
-              eventType="campaign_cta_click"
-              extraEventTypes={["whatsapp_opened"]}
-              leadId={`lead_bienestar_${slug}_${selectedProduct.sku}_hero`}
-              metadata={{
-                ...attribution,
-                source: "meta_ads",
-                journeyStage: "cotizacion_pendiente",
-                productInterestSku: selectedProduct.sku,
-                recommendedSku: selectedProduct.sku,
-              }}
-              placement="wellness_campaign_hero"
-              product={selectedProduct}
-              source="meta_ads"
-              whatsappContext={{
-                ...attribution,
-                openingLine: wellnessOpeningLine(selectedProduct),
-                source: "meta_ads",
-                recommendation: "campana de bienestar desde Meta Ads",
-                recommendedSku: selectedProduct.sku,
-                journeyStage: "cotizacion_pendiente",
-                vertical: "bienestar",
-              }}
-            >
-              <MessageCircle size={19} />
-              Reclamar cupon y confirmar stock por WhatsApp
-            </TrackedWhatsAppLink>
-          </div>
-          <div className="commerce-badges">
-            <span>
-              <Truck size={15} />
-              {commerce.freeShippingLabel}
-            </span>
-            <span>
-              <BadgeDollarSign size={15} />
-              {commerce.paymentMethodsLabel}
-            </span>
-            <strong>
-              <Sparkles size={15} />
-              Cupon {commerce.couponCode}
-            </strong>
-          </div>
-        </div>
-      </section>
+      {/* 2. Header mínimo */}
+      <SiteHeader
+        compact
+        compactTitle={selectedProduct.category}
+        backHref={wellnessBaseUrl}
+        vertical="bienestar"
+      />
 
-      <WellnessProofs product={selectedProduct} />
-
-      <section className="campaign-section-head">
-        <div>
-          <p className="eyebrow">Por que esta landing</p>
-          <h2>Un anuncio, un producto y un chat con contexto.</h2>
-        </div>
-        <span>Sin catalogo largo</span>
-      </section>
-
-      <section className="wellness-story-grid">
-        <article>
+      {/* 3. Hero image 9:16 con pill de promo */}
+      <div className="relative px-4 pt-4">
+        <div className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            alt="Producto real de bienestar Eter Niu"
-            src="/media/wellness-tambor-lengua-real.jpg"
+            alt={selectedProduct.title}
+            src={selectedProduct.imageUrl}
+            className="absolute inset-0 h-full w-full object-cover"
           />
-          <strong>Visual por vertical</strong>
-          <span>Bienestar no compite visualmente con cocina.</span>
-        </article>
-        <article>
-          <img alt={selectedProduct.title} src={selectedProduct.imageUrl} />
-          <strong>Producto protagonista</strong>
-          <span>La campana cambia por SKU sin rehacer la pagina.</span>
-        </article>
-      </section>
+          {/* Scrim for readability (decisión 8 del plan) */}
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
+        </div>
 
+        {/* Pill: promo label top-left */}
+        {(selectedProduct.promoLabel || promo) && (
+          <div className="absolute left-6 top-6">
+            <Badge tone="accent">
+              {promo && savings > 0
+                ? `-${Math.round((savings / selectedProduct.originalPrice!.amount) * 100)}% hoy`
+                : selectedProduct.promoLabel}
+            </Badge>
+          </div>
+        )}
+      </div>
+
+      {/* 4. Eyebrow → H1 → subcopy */}
+      <div className="px-4 pt-6">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          {`${selectedProduct.category} · bienestar consciente`}
+        </p>
+        <h1
+          className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-[#1A1A18]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {selectedProduct.title}
+        </h1>
+        <p className="mb-5 text-[14px] leading-snug text-[#6B6B66]">
+          {selectedProduct.description}
+        </p>
+
+        {/* 5. Price row */}
+        <div className="mb-5 flex items-end gap-3">
+          <PriceTag
+            price={money(selectedProduct.price.amount)}
+            originalPrice={
+              promo && selectedProduct.originalPrice
+                ? money(selectedProduct.originalPrice.amount)
+                : undefined
+            }
+            note="stock por WhatsApp"
+          />
+          {savings > 0 && (
+            <span className="text-[12px] text-[#6B6B66]">
+              Ahorra {money(savings)}
+            </span>
+          )}
+        </div>
+
+        {/* Hero CTA */}
+        <TrackedWhatsAppLink
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
+          cta="wellness_campaign_hero_whatsapp"
+          eventType="campaign_cta_click"
+          extraEventTypes={["whatsapp_opened"]}
+          leadId={`lead_bienestar_${slug}_${selectedProduct.sku}_hero`}
+          metadata={{
+            ...attribution,
+            source: "meta_ads",
+            journeyStage: "cotizacion_pendiente",
+            productInterestSku: selectedProduct.sku,
+            recommendedSku: selectedProduct.sku,
+          }}
+          placement="wellness_campaign_hero"
+          product={selectedProduct}
+          source="meta_ads"
+          whatsappContext={{
+            ...attribution,
+            openingLine: wellnessOpeningLine(selectedProduct),
+            source: "meta_ads",
+            recommendation: "campana de bienestar desde Meta Ads",
+            recommendedSku: selectedProduct.sku,
+            journeyStage: "cotizacion_pendiente",
+            vertical: "bienestar",
+          }}
+        >
+          <MessageCircle size={19} />
+          Reclamar cupon y confirmar stock por WhatsApp
+        </TrackedWhatsAppLink>
+      </div>
+
+      {/* 6. Trust grid */}
+      <div className="mt-6">
+        <TrustGrid product={selectedProduct} />
+      </div>
+
+      {/* 7. WhatsApp panel (personalization) */}
       <WellnessRoutinePanel
         context={{
           ...attribution,
@@ -324,26 +362,47 @@ export default async function WellnessCampaignPage({
         product={selectedProduct}
       />
 
+      {/* 8. FAQ */}
       <WellnessFaq product={selectedProduct} />
 
-      <section className="wellness-more-products">
-        <div>
-          <p className="eyebrow">Cambiar producto</p>
-          <h2>La misma landing sirve para otro SKU.</h2>
-        </div>
-        <div>
-          {products
-            .filter((product) => product.sku !== selectedProduct.sku)
-            .slice(0, 3)
-            .map((product) => (
-              <a href={campaignPath(product)} key={product.sku}>
-                <img alt={product.title} src={product.imageUrl} />
-                <span>{product.title}</span>
-              </a>
-            ))}
-        </div>
-      </section>
+      {/* 9. Other products (preserved, re-styled) */}
+      {products.filter((p) => p.sku !== selectedProduct.sku).length > 0 && (
+        <section className="px-4 py-10">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+            Cambiar producto
+          </p>
+          <h2
+            className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            La misma landing sirve para otro SKU.
+          </h2>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {products
+              .filter((product) => product.sku !== selectedProduct.sku)
+              .slice(0, 3)
+              .map((product) => (
+                <a
+                  href={campaignPath(product)}
+                  key={product.sku}
+                  className="flex min-w-[120px] flex-col gap-2 rounded-2xl border border-[#E8E2D8] bg-white p-2"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={product.title}
+                    src={product.imageUrl}
+                    className="aspect-square w-full rounded-xl object-cover"
+                  />
+                  <span className="text-[11px] leading-snug text-[#1A1A18]">
+                    {product.title}
+                  </span>
+                </a>
+              ))}
+          </div>
+        </section>
+      )}
 
+      {/* 10. Sticky CTA bar — TrackedWhatsAppLink internally via WellnessStickyCta */}
       <WellnessStickyCta
         context={{
           ...attribution,
