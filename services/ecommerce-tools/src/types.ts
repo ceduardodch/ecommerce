@@ -122,6 +122,8 @@ export type CustomerEventType =
   | "note"
   | "followup_queued"
   | "followup_snoozed"
+  | "message_in"
+  | "message_out"
 
 export type CustomerEventRecord = {
   type: CustomerEventType

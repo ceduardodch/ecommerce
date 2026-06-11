@@ -111,6 +111,8 @@ export const customerEventInputSchema = z.object({
     "note",
     "followup_queued",
     "followup_snoozed",
+    "message_in",
+    "message_out",
   ]),
   at: z.string().optional(),
   customer: customerSchema.optional(),
