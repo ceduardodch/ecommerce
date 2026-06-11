@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { TrackedEventLink } from "../components/analytics"
+import { Isotipo } from "../components/ui/isotipo"
 import { brandBaseUrl, kitchenBaseUrl, wellnessBaseUrl } from "../../lib/domains"
 
 export const metadata: Metadata = {
@@ -28,33 +29,6 @@ function sellerNumber() {
     return `593${digits.slice(1)}`
   }
   return digits
-}
-
-// Isotipo interino vectorizado a mano desde la foto de perfil de Instagram;
-// reemplazar cuando el dueño entregue el archivo original (WEB_REDESIGN_PLAN 2.4.1).
-function Isotipo({ size = 72, color = ink }: { size?: number; color?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 100 100"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M50 8 L88 35 L74 80 L26 80 L12 35 Z"
-        stroke={color}
-        strokeWidth="5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M50 8 Q60 38 88 35 M88 35 Q58 48 74 80 M74 80 Q48 62 26 80 M26 80 Q42 50 12 35 M12 35 Q40 36 50 8"
-        stroke={color}
-        strokeWidth="4.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
 }
 
 const doorStyle = {
@@ -90,7 +64,7 @@ export default function BrandPortalPage() {
       }}
     >
       <style>{`.brand-portal a { text-decoration: none; color: inherit; }`}</style>
-      <Isotipo />
+      <Isotipo size={72} color={ink} />
       <h1
         style={{
           fontFamily: 'Georgia, "Times New Roman", serif',
