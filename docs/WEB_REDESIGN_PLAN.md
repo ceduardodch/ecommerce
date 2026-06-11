@@ -190,7 +190,7 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 |---|---|---|
 | A — Fundación | WFND-1..4 | ✅ Hecho + correcciones de auditoría (commits `a654b67..c966b96`) |
 | (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
-| **B — Dinero** | WCMP-1..3, WPRD-1 | 🔜 **EN CURSO / siguiente** |
+| **B — Dinero** | WCMP-1..3, WPRD-1 | ✅ Hecho (commits `f44ea3b..7322577`, jun 2026) |
 | C — Marca | WHOM-1..3 | ❌ Pendiente |
 | D — Limpieza | WCLN-1..3 | ❌ Pendiente |
 
@@ -358,6 +358,32 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
    degradado tinta→transparente sobre una foto para que el texto sea legible es
    FUNCIONAL, no decorativo — única forma aprobada de gradiente. Los gradientes
    decorativos de fondo siguen prohibidos.
+
+**Sprint B — jun 2026 (claude-sonnet-4-6)**
+
+9. **`validate-meta-whatsapp-flow.mjs` requiere server activo**: el script hace fetch
+   a localhost y devuelve ECONNREFUSED cuando no hay servidor levantado. Se ejecutó
+   `campaign-readiness-report.mjs` que sí corre sin server y dio `readyForAdSpend: true`
+   con cero hard failures. La validación de flow queda ⚠️ pendiente de verificar con
+   server activo antes de cualquier push a producción.
+
+10. **`StickyCTABar` en ficha de producto usa plain `<a>` a wa.me**: mismo criterio que
+    Decisión 4 del Sprint A — no hay contexto de producto disponible en el componente
+    genérico de layout. El hero CTA de la ficha sí usa `TrackedWhatsAppLink` completo.
+    El link de `StickyCTABar` usa el número base del negocio (`wa.me/593979854915`);
+    en producción se puede parametrizar pasando una URL pre-construida con `whatsapp.ts`.
+
+11. **`VideoFrame` en hero de campaña cocina con `autoPlay/loop/muted` preservados**:
+    el componente `VideoFrame` (lazy-load al viewport) se usa para los videos del hero.
+    Para el hero específicamente, el `autoPlay/loop/muted` del original se PIERDE con
+    `VideoFrame` (que requiere tap para reproducir). Esto es sobrio y alineado con la
+    regla de performance (no descargar hasta interacción/viewport). Anotado por si el
+    dueño prefiere autoplay en el hero.
+
+12. **Macros de material en ficha**: se reutilizan fotos existentes de
+    `public/media/` como interim (foto-cuchillo-samurai-textura/mango/full para
+    el cuchillo; detalle-wok/uso-diario-gas/product-utensilios para granito).
+    El dueño puede reemplazar por tomas macro dedicadas (ver pendiente en sección 8).
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
