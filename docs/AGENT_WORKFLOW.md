@@ -11,6 +11,7 @@
 | **frontend-architect** | Especialista React/Next del storefront | sonnet/opus | Historias de UI con criterio fino (WCMP-1, WHOM-1) o cuando sprint-executor se traba en frontend |
 | **backend-engineer** | Especialista Medusa/Postgres | sonnet/opus | Historias de CRM con modelo/migración (TPL-1) o endpoints complejos |
 | **software-architect** | Decisiones estructurales | opus/fable | SOLO cuando hay que cambiar un plan o tomar una decisión nueva de arquitectura |
+| **verificador** | Auditor independiente: re-ejecuta verificaciones y audita afirmaciones con veredictos ✅/❌/⚠️ | sonnet | Después de cada lote ANTES del push; y para auditar cualquier afirmación sobre casos reales (métricas, clientes, producción) |
 | **Explore** (built-in) | Búsqueda de solo lectura | haiku/sonnet | Responder "¿dónde está X?" sin gastar el contexto principal |
 
 Skills instalados que los refuerzan: `tailwind-design-system`, `tailwind-v4-shadcn`,
@@ -43,6 +44,11 @@ Sesión principal (Fable/Opus) — COORDINADOR: poco código, mucho criterio
    SendMessage al mismo agente (conserva su contexto) en vez de lanzar uno nuevo.
 5. **Revisión barata**: tras cada lote, `/code-review` (effort low/medium) sobre
    el diff en vez de re-leer todo a mano.
+6. **Verificar antes de push (REGLA #1 de CLAUDE.md)**: el reporte de un
+   ejecutor es una afirmación, no un hecho. Lanzar el agente `verificador` con
+   el rango de commits + IDs de historias (sin el razonamiento del ejecutor) y
+   hacer push solo con "Apto para push: SÍ". Lo no verificable se reporta al
+   dueño como ⚠️ explícito — nunca se presenta como hecho.
 
 ## 3. Estrategia de tokens (honesta)
 
