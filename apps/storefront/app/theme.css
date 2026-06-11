@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  /* ─── Color palette ─── */
+  --color-ivory:  #FAF7F2;
+  --color-ink:    #1A1A18;
+  --color-stone:  #6B6B66;
+  --color-sand:   #E8E2D8;
+  --color-shell:  #EFE9DD;
+  --color-clay:   #C4502A;
+  --color-moss:   #2F5D43;
+  --color-wa:     #25D366;
+  --color-white:  #FFFFFF;
+
+  /* Granito collection chips */
+  --color-granito-negro:     #2B2B28;
+  --color-granito-sage:      #B7C4B1;
+  --color-granito-crema:     #E8DFCE;
+  --color-granito-terracota: #C97B5A;
+
+  /* ─── Typography ─── */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ─── Accent per vertical ─── */
+[data-theme="cocina"] {
+  --accent: var(--color-clay);
+}
+
+[data-theme="bienestar"] {
+  --accent: var(--color-moss);
+}

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { kitchenBaseUrl } from "../lib/domains"
 import { MetaPixel } from "./components/analytics"
 import "./globals.css"
+import "./theme.css"
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
