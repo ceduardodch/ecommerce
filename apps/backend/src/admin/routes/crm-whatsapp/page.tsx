@@ -286,6 +286,20 @@ function CrmWhatsappPage() {
           >
             Importar leads
           </Link>
+          <Link
+            to="/crm-whatsapp/recompra"
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-subtle)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              textDecoration: "none",
+            }}
+          >
+            Recompra
+          </Link>
           <button
             onClick={runDispatch}
             style={{
