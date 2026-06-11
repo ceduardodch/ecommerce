@@ -49,7 +49,23 @@
 2. En Coolify, app storefront: añadir los 4 dominios nuevos → TLS automático.
 3. CA: los 4 responden con certificado válido (aunque muestren contenido de cocina por defecto).
 
-### D2 — Código multi-host (storefront)
+### D2 — Código multi-host (storefront) — ✅ IMPLEMENTADO (jun 2026)
+
+Estado: hecho y verificado con curl multi-host. Detalles de lo implementado:
+- `middleware.ts`: hosts nuevos en `kitchenHosts`/`wellnessHosts`; `brandHosts`
+  (eter-niu.com y www) con rewrite `/` → `/marca`; redirects 301 de los hosts
+  b2b.com.ec **detrás del flag `DOMAIN_MIGRATION_REDIRECTS`** (default `false`)
+  — activar en Coolify SOLO después de D1+D4.1; conservan ruta+query (verificado:
+  `/campanas/x?sku=...&utm_campaign=...` redirige exacto).
+- `app/marca/page.tsx`: portal de marca (isotipo interino SVG, tagline, dos
+  puertas con tracking `portal_cocina`/`portal_bienestar`, CTA WhatsApp trackeada).
+- `lib/domains.ts`: `brandBaseUrl` (env `NEXT_PUBLIC_BRAND_URL`).
+- `docker-compose.yml`: `NEXT_PUBLIC_BRAND_URL`, `DOMAIN_MIGRATION_REDIRECTS` y
+  dominios nuevos añadidos a STORE/ADMIN/AUTH_CORS.
+- PENDIENTE de este D2 (post-D1): flip de envs `*_PUBLIC_URL`/`NEXT_PUBLIC_*_URL`
+  en Coolify al dominio nuevo y actualización de fallbacks/seeds (ver D5).
+
+Pasos originales (referencia):
 1. `middleware.ts`: añadir `cocina.eter-niu.com` a `kitchenHosts`,
    `bienestar.eter-niu.com` a `wellnessHosts`; nuevo set
    `brandHosts = {"eter-niu.com","www.eter-niu.com"}` con rewrite de `/` a la

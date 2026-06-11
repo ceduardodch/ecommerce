@@ -1,3 +1,5 @@
+export const brandBaseUrl =
+  process.env.NEXT_PUBLIC_BRAND_URL || "https://www.eter-niu.com"
 export const kitchenBaseUrl =
   process.env.NEXT_PUBLIC_COCINA_URL || "https://cocina.b2b.com.ec"
 export const wellnessBaseUrl =

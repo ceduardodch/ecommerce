@@ -148,6 +148,15 @@ Quito-Ecuador". Hallazgos que el rediseño DEBE incorporar:
 5. **Prueba social existente**: highlight "Clientes Felices" en IG — la sección
    de estrellas de la ficha ("Clientes reales por WhatsApp") puede enlazar o
    citar capturas de ese highlight.
+6. **Decisión de color de marca (CERRADA, jun 2026)**: ante la pregunta
+   "¿cambiamos los colores para ser consistentes con el logo verde menta?":
+   NO se reemplaza la paleta aprobada. El verde es la familia DE MARCA: bienestar
+   usa `--moss #2F5D43` (la versión profunda y accesible de ese verde) como
+   acento, el isotipo va monocromo heredando el color del contexto, y el menta
+   del logo solo puede aparecer como detalle decorativo puntual (nunca CTA,
+   precio ni texto — no pasa contraste sobre marfil). Cocina mantiene terracota
+   `--clay` para diferenciar el nicho. La consistencia de marca la dan el
+   isotipo + Fraunces + marfil compartidos, no repetir el menta en todo.
 
 ## 3. Especificación de componentes (`apps/storefront/app/components/ui/`)
 
