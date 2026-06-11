@@ -95,8 +95,16 @@ a mitad de historia desperdicia todo lo anterior.
 > Usa el agente Explore (haiku): "¿Qué componentes importan hoy
 > floating-whatsapp-cta.tsx en apps/storefront?"
 
+**Auditoría independiente (antes de cada push de lote):**
+> Usa el agente verificador (sonnet): "Audita el lote <nombre> — rango de
+> commits <base>..<head> — contra los criterios de aceptación de las historias
+> <IDs> en docs/<plan>.md. Afirmaciones a auditar: <lista numerada de lo que el
+> ejecutor reportó>. Entrega veredictos y la conclusión Apto para push."
+> (No le pases el razonamiento del ejecutor — solo las afirmaciones.)
+
 ## 5. Registro de consumo por sprint
 
 | Fecha | Sprint/lote | Agente(s) | Consumo | Notas |
 |---|---|---|---|---|
 | 2026-06-11 | Sprint A rediseño (WFND-1..4) | sprint-executor (sonnet) | ~90K tokens del subagente, 95 tool calls, ~15 min | 4 historias, 5 commits, 17 componentes UI, builds en verde al primer intento del lote. Referencia: ~22K tokens/historia mecánica |
+| 2026-06-11 | Auditoría Sprint A | verificador (sonnet) | ~45K tokens, 40 tool calls, ~4 min | Veredicto inicial: NO apto (2 hallazgos reales: fuente muerta en globals.css y 7 estilos inline de color). Corregidos por el coordinador. Referencia: una auditoría de lote ≈ mitad del costo del lote |

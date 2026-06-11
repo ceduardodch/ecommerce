@@ -314,6 +314,18 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
    `/marca/page.tsx` pasa explícitamente `color={ink}` para mantener el
    comportamiento original.
 
+**Correcciones post-auditoría (verificador independiente, jun 2026)**
+
+7. **Auditoría del Sprint A** encontró 2 incumplimientos de CA: (a) la
+   font-family muerta "Plus Jakarta Sans" seguía en `globals.css` — corregida a
+   `var(--font-sans)`; (b) 6 estilos inline `style={{color|background:
+   "var(--accent)"}}` en componentes UI — migrados a clases Tailwind arbitrarias
+   `text-[var(--accent)]` / `bg-[var(--accent)]`. **Excepción registrada**: el
+   swatch de `color-picker.tsx` usa `style={{ background: color.hex }}` con un
+   hex dinámico de datos — es funcional (no expresable como clase estática) y
+   queda permitido SOLO ahí. El CA de WFND-3 se interpreta en adelante como
+   "cero estilos inline de color estáticos".
+
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
 - [ ] Confirmar si el granito tiene variantes de color reales (afecta `color-picker` en cocina; en bienestar las botellas ya tienen variantes de color — ver 2.4.4).

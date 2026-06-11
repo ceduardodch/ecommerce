@@ -10,10 +10,7 @@ export function SectionHead({
   return (
     <div className="mb-6">
       {eyebrow && (
-        <p
-          className="mb-1 text-[11px] font-semibold uppercase tracking-widest"
-          style={{ color: "var(--accent)" }}
-        >
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
           {eyebrow}
         </p>
       )}

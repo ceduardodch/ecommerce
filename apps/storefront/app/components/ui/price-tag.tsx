@@ -14,10 +14,7 @@ export function PriceTag({
           {originalPrice}
         </span>
       )}
-      <span
-        className="text-[20px] font-medium leading-none"
-        style={{ color: "var(--accent)" }}
-      >
+      <span className="text-[20px] font-medium leading-none text-[var(--accent)]">
         {price}
       </span>
       {note && (

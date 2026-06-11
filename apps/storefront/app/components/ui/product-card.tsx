@@ -47,10 +47,7 @@ export function ProductCard({ product }: { product: ProductCardData }) {
               {product.originalPrice}
             </span>
           )}
-          <span
-            className="text-[16px] font-medium"
-            style={{ color: "var(--accent)" }}
-          >
+          <span className="text-[16px] font-medium text-[var(--accent)]">
             {product.price}
           </span>
         </div>

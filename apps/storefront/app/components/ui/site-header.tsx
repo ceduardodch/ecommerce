@@ -103,10 +103,7 @@ export function SiteHeader({
         <span className="leading-none" style={{ fontFamily: "var(--font-display)" }}>
           <span className="text-[18px] font-medium text-[#1A1A18]">Eter Niu</span>
           {vertical && (
-            <span
-              className="ml-1.5 text-[13px] font-medium"
-              style={{ color: "var(--accent)" }}
-            >
+            <span className="ml-1.5 text-[13px] font-medium text-[var(--accent)]">
               {vertical === "cocina" ? "Cocina" : "Bienestar"}
             </span>
           )}

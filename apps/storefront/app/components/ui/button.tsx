@@ -6,7 +6,7 @@ const baseClass =
   "inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[14px] font-semibold leading-none transition-opacity hover:opacity-85 cursor-pointer"
 
 const variantClass = {
-  primary: `${baseClass} text-[#FAF7F2]`,
+  primary: `${baseClass} bg-[var(--accent)] text-[#FAF7F2]`,
   secondary: `${baseClass} border border-[#1A1A18] bg-transparent text-[#1A1A18]`,
   whatsapp: `${baseClass} bg-[#25D366] text-white`,
 }
@@ -41,19 +41,17 @@ export function Button({
   className?: string
 }) {
   const cls = `${variantClass[variant]} ${className ?? ""}`
-  const style =
-    variant === "primary" ? { background: "var(--accent)" } : undefined
 
   if (href && variant !== "whatsapp") {
     return (
-      <a href={href} className={cls} style={style}>
+      <a href={href} className={cls}>
         {children}
       </a>
     )
   }
 
   return (
-    <button type="button" onClick={onClick} className={cls} style={style}>
+    <button type="button" onClick={onClick} className={cls}>
       {children}
     </button>
   )

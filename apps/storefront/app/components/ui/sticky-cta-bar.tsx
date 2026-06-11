@@ -58,10 +58,7 @@ export function StickyCTABar({
         {price && (
           <div className="flex flex-col leading-none">
             <span className="text-[11px] text-[#6B6B66]">Hoy</span>
-            <span
-              className="text-[16px] font-medium"
-              style={{ color: "var(--accent)" }}
-            >
+            <span className="text-[16px] font-medium text-[var(--accent)]">
               {price}
             </span>
           </div>
