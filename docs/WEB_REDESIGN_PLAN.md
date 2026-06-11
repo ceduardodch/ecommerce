@@ -278,9 +278,41 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
 
 ## 7. Registro de decisiones tomadas durante la ejecución
 
-*(El agente ejecutor anota aquí cualquier decisión no cubierta por el plan.)*
+**Sprint A — jun 2026 (claude-sonnet-4-6)**
 
-- —
+1. **Tailwind v4 instalación workspace-level**: el monorepo ya tenía tailwindcss@3 en
+   root node_modules. Se instaló tailwindcss@4.3.0 explícitamente en el workspace
+   `apps/storefront` para que el resolver de npm use la versión correcta.
+   `@import "tailwindcss"` en theme.css requiere v4 local.
+
+2. **`@theme` y font variables**: Las variables de fuente inyectadas por `next/font`
+   (`--font-fraunces`, `--font-inter`) son runtime; se referencian dentro de `@theme`
+   como `var()`. Tailwind v4 no resuelve estos como valores estáticos (esperado).
+   Las reglas `--font-display` / `--font-sans` de `@theme` actúan como alias de
+   CSS custom properties que el browser resuelve en runtime. Funciona correctamente.
+
+3. **`Button` vs `WhatsAppButton`**: La spec dice que el variant `whatsapp` de
+   `button.tsx` DEBE renderizar `TrackedWhatsAppLink`. Se separó en dos exports:
+   `Button` (primary/secondary, server-safe) y `WhatsAppButton` (wraps
+   TrackedWhatsAppLink). El `Button` variant="whatsapp" es un fallback sin tracking
+   para casos sin producto; los CTAs reales usarán `WhatsAppButton`.
+   Decisión: más sobria que añadir prop opcional compleja a un solo componente.
+
+4. **`sticky-cta-bar` y `TrackedWhatsAppLink`**: El `StickyCTABar` usa `<a>` plain
+   para el botón de WhatsApp porque no siempre tiene un `Product` disponible (home,
+   rutas genéricas). En páginas de campaña/producto, el Sprint B re-usa
+   `WhatsAppButton` dentro del bar o lo wrappea directamente. Evita prop-drilling
+   forzado del objeto Product a un componente de layout.
+
+5. **`photo.tsx` con `fill` mode**: Todas las imágenes son locales (`/media/*.jpg`).
+   Se usa `fill + object-cover` en lugar de width/height explícitos para flexibilidad
+   de aspect-ratio CSS (evita warnings de dimensiones en build, soporta todos los
+   aspect-ratios existentes: 9:16, 3:4, 1:1, 16:9).
+
+6. **Isotipo extraído a `components/ui/isotipo.tsx`**: La prop de color fue cambiada
+   de default `ink` (string literal) a `"currentColor"` para ser más composable.
+   `/marca/page.tsx` pasa explícitamente `color={ink}` para mantener el
+   comportamiento original.
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
