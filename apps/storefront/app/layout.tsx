@@ -1,8 +1,22 @@
 import type { Metadata } from "next"
+import { Fraunces, Inter } from "next/font/google"
 import { kitchenBaseUrl } from "../lib/domains"
 import { MetaPixel } from "./components/analytics"
 import "./globals.css"
 import "./theme.css"
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-fraunces",
+  display: "swap",
+})
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
@@ -26,7 +40,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
         {children}
         <MetaPixel />

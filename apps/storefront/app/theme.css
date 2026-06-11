@@ -18,7 +18,7 @@
   --color-granito-crema:     #E8DFCE;
   --color-granito-terracota: #C97B5A;
 
-  /* ─── Typography ─── */
+  /* ─── Typography (runtime vars injected by next/font on <html>) ─── */
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -30,4 +30,11 @@
 
 [data-theme="bienestar"] {
   --accent: var(--color-moss);
+}
+
+/* ─── Base typography ─── */
+html {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-ivory);
 }
