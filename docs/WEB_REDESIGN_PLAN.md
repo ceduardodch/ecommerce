@@ -232,6 +232,24 @@ tiene variantes de color en metadata → `color-picker`.
 
 ### Sprint C — Marca (WHOM)
 
+**WHOM-0 · Portal de marca v2 `app/marca/page.tsx`** — ✅ v2 HECHA (jun 2026),
+quedan pendientes para retomar. Crítica de ecommerce que motivó la v2: la v1 era
+informativa pero no seductora (puertas de solo texto, cero fotos de producto,
+sin prueba social, sin ancla de precio — no daba razones para entrar). La v2
+implementó: puertas como **vitrinas fotográficas** (foto real + scrim de
+legibilidad + título Fraunces + promesa + chips de categoría + ancla
+"Desde $95 · Envío gratis" + CTA con acento del vertical via `data-theme`),
+strip de prueba social ("+7.000 nos siguen en @eter.niu · Envío gratis ·
+Pagas al recibir") y CTA de WhatsApp reformulada como asesoría ("¿No sabes por
+dónde empezar?"). **Pendientes al retomar**:
+- [ ] Foto dedicada de bienestar estilo "producto en el páramo" (hoy usa
+  wellness-yoga-mat-suede.jpg) y foto de cocina con plato terminado.
+- [ ] Verificar con el dueño el ancla "Desde $95" cuando cambien precios.
+- [ ] Medir CTR `portal_cocina` vs `portal_bienestar` (eventos ya instrumentados)
+  y reordenar puertas según datos.
+- [ ] Opcional premium: video corto de fondo en la puerta de cocina (muted,
+  lazy) cuando exista material.
+
 **WHOM-1 · Home cocina `app/page.tsx`** — Layout 2.3-"HOME". Los MP4 existentes
 van en `video-stories` (generar posters si faltan: frame con ffmpeg). Quiz y club
 form conservan lógica, re-estilizados con `form-field`. Densidad: máx una idea
@@ -325,6 +343,11 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
    hex dinámico de datos — es funcional (no expresable como clase estática) y
    queda permitido SOLO ahí. El CA de WFND-3 se interpreta en adelante como
    "cero estilos inline de color estáticos".
+
+8. **Scrim de legibilidad permitido sobre fotos** (portal v2, jun 2026): el
+   degradado tinta→transparente sobre una foto para que el texto sea legible es
+   FUNCIONAL, no decorativo — única forma aprobada de gradiente. Los gradientes
+   decorativos de fondo siguen prohibidos.
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 

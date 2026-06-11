@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { TrackedEventLink } from "../components/analytics"
 import { Isotipo } from "../components/ui/isotipo"
+import { Photo } from "../components/ui/photo"
 import { brandBaseUrl, kitchenBaseUrl, wellnessBaseUrl } from "../../lib/domains"
 
 export const metadata: Metadata = {
@@ -15,13 +16,6 @@ export const metadata: Metadata = {
   },
 }
 
-const ink = "#1A1A18"
-const ivory = "#FAF7F2"
-const stone = "#6B6B66"
-const sand = "#E8E2D8"
-const clay = "#C4502A"
-const moss = "#2F5D43"
-
 function sellerNumber() {
   const raw = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "0979854915"
   const digits = raw.replace(/\D/g, "")
@@ -31,139 +25,150 @@ function sellerNumber() {
   return digits
 }
 
-const doorStyle = {
-  display: "block",
-  border: `1px solid ${sand}`,
-  borderRadius: 18,
-  padding: "26px 24px",
-  background: "#FFFFFF",
-  color: ink,
-  textDecoration: "none",
+type Door = {
+  vertical: "cocina" | "bienestar"
+  href: string
+  image: string
+  alt: string
+  eyebrow: string
+  title: string
+  promise: string
+  chips: string[]
+  anchor: string
+  cta: string
 }
+
+const doors: Door[] = [
+  {
+    vertical: "cocina",
+    href: "",
+    image: "/media/photo-hero-cocina.jpg",
+    alt: "Ollas y sartenes de granito Eter Niu sobre cocina encendida",
+    eyebrow: "Línea cocina",
+    title: "Cocina sano, sin esfuerzo",
+    promise: "Granito antiadherente para cocinar con menos aceite, todos los días.",
+    chips: ["Ollas", "Woks", "Sartenes", "Cuchillos"],
+    anchor: "Desde $95 · Envío gratis",
+    cta: "Explorar cocina",
+  },
+  {
+    vertical: "bienestar",
+    href: "",
+    image: "/media/wellness-yoga-mat-suede.jpg",
+    alt: "Mat de yoga y rituales de bienestar Eter Niu",
+    eyebrow: "Línea bienestar",
+    title: "Rituales que te devuelven la calma",
+    promise: "Yoga, energía y pausas conscientes para tu rutina diaria.",
+    chips: ["Yoga", "Cuencos", "Aromaterapia", "Energía"],
+    anchor: "Curado desde Quito · Envío gratis",
+    cta: "Explorar bienestar",
+  },
+]
 
 export default function BrandPortalPage() {
   const wa = `https://wa.me/${sellerNumber()}?text=${encodeURIComponent(
     "Hola Eter Niu, quiero conocer sus productos.",
   )}`
+  const doorHrefs: Record<Door["vertical"], string> = {
+    cocina: kitchenBaseUrl,
+    bienestar: wellnessBaseUrl,
+  }
 
   return (
-    <main
-      className="brand-portal"
-      style={{
-        minHeight: "100vh",
-        background: ivory,
-        color: ink,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "48px 20px",
-        fontFamily:
-          'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
-        textAlign: "center",
-      }}
-    >
+    <main className="brand-portal min-h-screen bg-[#FAF7F2] px-5 py-10 text-[#1A1A18] sm:py-14">
       <style>{`.brand-portal a { text-decoration: none; color: inherit; }`}</style>
-      <Isotipo size={72} color={ink} />
-      <h1
-        style={{
-          fontFamily: 'Georgia, "Times New Roman", serif',
-          fontSize: "clamp(2.4rem, 8vw, 3.6rem)",
-          fontWeight: 500,
-          margin: "18px 0 6px",
-          letterSpacing: "0.01em",
-        }}
-      >
-        Eter Niu
-      </h1>
-      <p style={{ margin: 0, fontSize: 15, color: stone }}>
-        Bienestar &amp; Cocina Consciente
-      </p>
-      <p style={{ margin: "4px 0 0", fontSize: 13, color: stone }}>
-        Elevan tu alma y tu hogar · Quito, Ecuador
-      </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 14,
-          width: "min(620px, 100%)",
-          margin: "36px 0 28px",
-          textAlign: "left",
-        }}
-      >
+      <header className="mx-auto flex max-w-4xl flex-col items-center text-center">
+        <Isotipo size={56} color="#1A1A18" />
+        <h1 className="mt-4 text-[40px] font-medium leading-none [font-family:var(--font-display)]">
+          Eter Niu
+        </h1>
+        <p className="mt-2 text-[14px] text-[#6B6B66]">
+          Bienestar &amp; Cocina Consciente · Quito, Ecuador
+        </p>
+        <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] text-[#6B6B66]">
+          <span>+7.000 nos siguen en @eter.niu</span>
+          <span aria-hidden="true">·</span>
+          <span>Envío gratis por Servientrega</span>
+          <span aria-hidden="true">·</span>
+          <span>Pagas al recibir</span>
+        </p>
+      </header>
+
+      <section className="mx-auto mt-8 grid max-w-4xl gap-4 sm:grid-cols-2">
+        {doors.map((door) => (
+          <TrackedEventLink
+            key={door.vertical}
+            href={doorHrefs[door.vertical]}
+            cta={`portal_${door.vertical}`}
+            placement="brand_portal"
+            metadata={{ vertical: door.vertical }}
+            className="group block"
+          >
+            <span
+              className="relative block overflow-hidden rounded-2xl"
+              data-theme={door.vertical}
+            >
+              <Photo
+                src={door.image}
+                alt={door.alt}
+                priority
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="aspect-[4/5] sm:aspect-[3/4]"
+              />
+              <span
+                className="absolute inset-0 rounded-2xl bg-gradient-to-t from-[#1A1A18]/80 via-[#1A1A18]/25 to-transparent"
+                aria-hidden="true"
+              />
+              <span className="absolute inset-x-0 bottom-0 flex flex-col gap-2 p-5 text-left text-[#FAF7F2]">
+                <span className="text-[11px] font-semibold uppercase tracking-widest text-[#FAF7F2]">
+                  {door.eyebrow}
+                </span>
+                <span className="text-[28px] font-medium leading-[1.1] [font-family:var(--font-display)]">
+                  {door.title}
+                </span>
+                <span className="text-[13px] leading-snug text-[#FAF7F2]/85">
+                  {door.promise}
+                </span>
+                <span className="flex flex-wrap gap-1.5 pt-1">
+                  {door.chips.map((chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-full border border-[#FAF7F2]/40 px-2.5 py-1 text-[11px]"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </span>
+                <span className="mt-2 flex items-center justify-between">
+                  <span className="text-[12px] text-[#FAF7F2]/80">
+                    {door.anchor}
+                  </span>
+                  <span className="rounded-full bg-[var(--accent)] px-4 py-2 text-[13px] font-semibold text-[#FAF7F2] transition-transform group-hover:scale-[1.03]">
+                    {door.cta} →
+                  </span>
+                </span>
+              </span>
+            </span>
+          </TrackedEventLink>
+        ))}
+      </section>
+
+      <section className="mx-auto mt-8 flex max-w-4xl flex-col items-center gap-4 text-center">
         <TrackedEventLink
-          href={kitchenBaseUrl}
-          cta="portal_cocina"
+          href={wa}
+          cta="portal_whatsapp"
           placement="brand_portal"
-          metadata={{ vertical: "cocina" }}
+          type="whatsapp_opened"
         >
-          <span style={{ ...doorStyle, borderTop: `4px solid ${clay}`, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
-            <span style={{ display: "block", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: clay, marginBottom: 8 }}>
-              Línea cocina
-            </span>
-            <span style={{ display: "block", fontFamily: 'Georgia, serif', fontSize: 24, marginBottom: 6 }}>
-              Cocina saludable
-            </span>
-            <span style={{ display: "block", fontSize: 13, color: stone, lineHeight: 1.5 }}>
-              Ollas, woks y sartenes de granito para cocinar con menos aceite.
-            </span>
-            <span style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 600, color: clay }}>
-              Entrar →
-            </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-[14px] font-semibold text-white">
+            ¿No sabes por dónde empezar? Escríbenos
           </span>
         </TrackedEventLink>
-
-        <TrackedEventLink
-          href={wellnessBaseUrl}
-          cta="portal_bienestar"
-          placement="brand_portal"
-          metadata={{ vertical: "bienestar" }}
-        >
-          <span style={{ ...doorStyle, borderTop: `4px solid ${moss}`, borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
-            <span style={{ display: "block", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: moss, marginBottom: 8 }}>
-              Línea bienestar
-            </span>
-            <span style={{ display: "block", fontFamily: 'Georgia, serif', fontSize: 24, marginBottom: 6 }}>
-              Bienestar consciente
-            </span>
-            <span style={{ display: "block", fontSize: 13, color: stone, lineHeight: 1.5 }}>
-              Yoga, energía y estilo de vida para tu rutina diaria.
-            </span>
-            <span style={{ display: "inline-block", marginTop: 14, fontSize: 13, fontWeight: 600, color: moss }}>
-              Entrar →
-            </span>
-          </span>
-        </TrackedEventLink>
-      </div>
-
-      <TrackedEventLink
-        href={wa}
-        cta="portal_whatsapp"
-        placement="brand_portal"
-        type="whatsapp_opened"
-      >
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            background: "#25D366",
-            color: "#FFFFFF",
-            borderRadius: 999,
-            padding: "12px 22px",
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
-          Escríbenos por WhatsApp
-        </span>
-      </TrackedEventLink>
-
-      <p style={{ marginTop: 28, fontSize: 12, color: stone }}>
-        @eter.niu · Envío gratis a todo Ecuador por Servientrega
-      </p>
+        <p className="text-[12px] text-[#6B6B66]">
+          Te asesoramos por WhatsApp, sin compromiso · Elevan tu alma y tu hogar
+        </p>
+      </section>
     </main>
   )
 }
