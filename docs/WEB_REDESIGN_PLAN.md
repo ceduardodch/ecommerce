@@ -120,6 +120,35 @@
 8. FAQ breve (conservar contenido actual).
 9. Barra sticky de precio + WhatsApp (igual a ficha).
 
+### 2.4 Identidad de marca verificada (Instagram @eter.niu, jun 2026)
+
+Auditada en vivo: 282 posts, 7.224 seguidores, bio "Bienestar & Cocina
+Consciente · Yoga · Energía · Estilo de vida · Elevan tu alma y tu hogar ·
+Quito-Ecuador". Hallazgos que el rediseño DEBE incorporar:
+
+1. **Existe isotipo**: nudo/pentágono geométrico de línea (estilo wok tejido /
+   flor), hoy en verde menta sobre gris oscuro. Para la web: vectorizarlo a SVG
+   monocromo y usarlo en `--ink` sobre marfil en el header (junto al wordmark en
+   Fraunces). El verde menta NO entra a la paleta web (chocaría con clay/moss);
+   el isotipo hereda el color del contexto. Pedir al dueño el archivo original;
+   interim: vectorizar desde la foto de perfil de IG.
+2. **Copy de marca aprovechable**: "Bienestar & Cocina Consciente" y "Elevan tu
+   alma y tu hogar" — usar como tagline en footer y como subcopy del hero de
+   bienestar. El tono de la web debe sonar a esta bio (consciente, cálido), no a
+   tienda de ofertas.
+3. **Firma fotográfica diferencial**: el feed tiene fotos de producto en el
+   páramo andino (botellas térmicas, tambor de lengua con paisaje de Ecuador de
+   fondo). Ningún referente gringo tiene esto — usarlo como estilo de foto hero
+   de bienestar ("producto en el páramo"). Las fotos de cocina sobre madera
+   cálida ya alinean con el patrón Material Kitchen.
+4. **El patrón Le Creuset aplica más a bienestar que a cocina**: las botellas
+   térmicas vienen en degradados de color (morado/naranja) y hay instrumentos en
+   varios colores — el `color-picker` se estrena ahí; en cocina queda como
+   narrativa de colección salvo que existan variantes reales de granito.
+5. **Prueba social existente**: highlight "Clientes Felices" en IG — la sección
+   de estrellas de la ficha ("Clientes reales por WhatsApp") puede enlazar o
+   citar capturas de ese highlight.
+
 ## 3. Especificación de componentes (`apps/storefront/app/components/ui/`)
 
 Crear estos archivos. Server components salvo donde se indique. Tipar props.
@@ -246,6 +275,6 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
-- [ ] Confirmar si el granito tiene variantes de color reales (afecta `color-picker`; si no, el patrón Le Creuset se aplica solo como narrativa de colección en fotos).
-- [ ] Fotos macro de materiales (interim: recortes de las fotos actuales).
-- [ ] Logo: ¿se mantiene texto "Eter Niu Cocina/Bienestar" en Fraunces o hay isotipo?
+- [ ] Confirmar si el granito tiene variantes de color reales (afecta `color-picker` en cocina; en bienestar las botellas ya tienen variantes de color — ver 2.4.4).
+- [ ] Fotos macro de materiales (interim: recortes de las fotos actuales o del feed de IG).
+- [x] Logo: RESUELTO — existe isotipo (ver 2.4.1); falta que el dueño entregue el archivo original (SVG/PNG alta).
