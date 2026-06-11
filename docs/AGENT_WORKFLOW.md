@@ -91,6 +91,6 @@ a mitad de historia desperdicia todo lo anterior.
 
 ## 5. Registro de consumo por sprint
 
-| Fecha | Sprint/lote | Agente(s) | % de límite consumido (aprox de /usage) | Notas |
+| Fecha | Sprint/lote | Agente(s) | Consumo | Notas |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| 2026-06-11 | Sprint A rediseño (WFND-1..4) | sprint-executor (sonnet) | ~90K tokens del subagente, 95 tool calls, ~15 min | 4 historias, 5 commits, 17 componentes UI, builds en verde al primer intento del lote. Referencia: ~22K tokens/historia mecánica |
