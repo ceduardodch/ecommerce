@@ -69,6 +69,19 @@ export function serializeCustomer(customer: any) {
   const reason = followupReason(customer)
   const metadata = customer.metadata || {}
 
+  // Detect vertical
+  const products = customer.purchased_products || []
+  const cocinaSkus = products.some((p: any) =>
+    p.sku && (p.sku.toUpperCase().startsWith("COC-") || p.sku.toUpperCase().startsWith("MGC-"))
+  )
+  const bienestarSkus = products.some((p: any) =>
+    p.sku && !p.sku.toUpperCase().startsWith("COC-") && !p.sku.toUpperCase().startsWith("MGC-")
+  )
+  let vertical: "cocina" | "bienestar" | null = null
+  if (cocinaSkus && !bienestarSkus) vertical = "cocina"
+  if (bienestarSkus && !cocinaSkus) vertical = "bienestar"
+  if (cocinaSkus && bienestarSkus) vertical = "cocina" // Priorizamos cocina si tiene ambas
+
   return {
     phone: customer.phone,
     name: customer.name,
@@ -86,6 +99,7 @@ export function serializeCustomer(customer: any) {
     journeyStage: metadata.journeyStage,
     campaignSlug: metadata.campaignSlug,
     leadId: metadata.leadId,
+    vertical: metadata.vertical || vertical,
     createdAt: iso(customer.created_at),
     updatedAt: iso(customer.updated_at),
     suggestedMessage: buildFollowupDraft(customer),

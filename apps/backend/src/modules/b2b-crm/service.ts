@@ -38,6 +38,7 @@ export type CustomerSearchInput = {
   dueOnly?: boolean
   tag?: string
   stage?: string
+  vertical?: "cocina" | "bienestar" | "cross-sell-cocina" | "cross-sell-bienestar"
   offset?: number
   limit?: number
 }
@@ -92,6 +93,44 @@ function nextReorderDays(items: PurchasedProduct[]) {
     .filter((value): value is number => Number.isFinite(value))
 
   return days.length ? Math.min(...days) : 90
+}
+
+/**
+ * Devuelve qué líneas compró un cliente, como flags independientes.
+ * Un SKU es de cocina si empieza con COC- o MGC-; cualquier otro es bienestar.
+ * Si no hay compras, usa metadata.vertical (lead sin compra aún).
+ */
+export function customerVerticals(customer: {
+  purchased_products?: PurchasedProduct[]
+  metadata?: Record<string, unknown>
+}): { cocina: boolean; bienestar: boolean } {
+  const products = customer.purchased_products || []
+  if (products.length === 0) {
+    const meta = customer.metadata?.vertical
+    return { cocina: meta === "cocina", bienestar: meta === "bienestar" }
+  }
+  const isCocina = (sku?: string) =>
+    Boolean(sku) &&
+    (sku!.toUpperCase().startsWith("COC-") ||
+      sku!.toUpperCase().startsWith("MGC-"))
+  return {
+    cocina: products.some((p) => isCocina(p.sku)),
+    bienestar: products.some((p) => !isCocina(p.sku)),
+  }
+}
+
+/**
+ * Vertical primaria para mostrar (no para cross-sell). Si compró ambas,
+ * prioriza cocina. Para segmentar cross-sell, usar customerVerticals().
+ */
+function detectVertical(customer: {
+  purchased_products?: PurchasedProduct[]
+  metadata?: Record<string, unknown>
+}): "cocina" | "bienestar" | null {
+  const { cocina, bienestar } = customerVerticals(customer)
+  if (cocina) return "cocina"
+  if (bienestar) return "bienestar"
+  return null
 }
 
 function eventMetadata(payload: unknown) {
@@ -206,7 +245,7 @@ class B2bCrmModuleService extends MedusaService({
       where.next_followup_at = { $lte: new Date() }
     }
 
-    const needsMemoryFilter = Boolean(input.tag || input.stage)
+    const needsMemoryFilter = Boolean(input.tag || input.stage || input.vertical)
 
     if (!needsMemoryFilter) {
       const [customers, count] = await service.listAndCountCrmCustomerProfiles(
@@ -222,6 +261,7 @@ class B2bCrmModuleService extends MedusaService({
     })
     const stage = input.stage?.toLowerCase()
     const tag = input.tag?.toLowerCase()
+    const vertical = input.vertical?.toLowerCase()
     const filtered = candidates.filter((customer) => {
       if (tag) {
         const tags = (customer.tags || []).map((value: string) =>
@@ -234,6 +274,21 @@ class B2bCrmModuleService extends MedusaService({
           customer.metadata?.journeyStage || customer.followup_reason || "",
         ).toLowerCase()
         if (!customerStage.includes(stage)) return false
+      }
+      if (vertical) {
+        const { cocina, bienestar } = customerVerticals(customer)
+        if (!cocina && !bienestar) return false
+
+        // Cross-sell: compró una línea y NO la otra (candidato a la otra)
+        if (vertical === "cross-sell-cocina") {
+          return bienestar && !cocina
+        }
+        if (vertical === "cross-sell-bienestar") {
+          return cocina && !bienestar
+        }
+        // Match directo de línea (incluye clientes con ambas)
+        if (vertical === "cocina" && !cocina) return false
+        if (vertical === "bienestar" && !bienestar) return false
       }
       return true
     })
@@ -628,6 +683,14 @@ class B2bCrmModuleService extends MedusaService({
     ])
 
     return calculateRecompraMetrics(events, customers, asOfIso)
+  }
+
+  async listRecentBroadcasts(limit = 50) {
+    const events = await this.service_().listCrmCustomerEvents(
+      { type: ["broadcast_sent", "broadcast_queued"] },
+      { take: limit, order: { at: "DESC" } },
+    )
+    return events
   }
 }
 
