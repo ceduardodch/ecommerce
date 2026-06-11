@@ -7,9 +7,7 @@ import {
   CookingPot,
   Leaf,
   MessageCircle,
-  PlayCircle,
   ShieldCheck,
-  Sparkles,
   Timer,
   Truck,
   Utensils,
@@ -25,6 +23,11 @@ import {
   type CampaignAttribution,
 } from "./components/campaign-interactions"
 import { TrackedWhatsAppLink } from "../../components/analytics"
+import { Badge } from "../../components/ui/badge"
+import { PromoBar } from "../../components/ui/promo-bar"
+import { SiteHeader } from "../../components/ui/site-header"
+import { VideoFrame } from "../../components/ui/video-frame"
+import { PriceTag } from "../../components/ui/price-tag"
 
 type CampaignPageProps = {
   params: Promise<{ slug: string }>
@@ -220,6 +223,36 @@ function campaignPhotos(product: Product): CampaignPhoto[] {
   ].filter((photo) => mediaPath(photo.file))
 }
 
+/** Trust grid: 3 columns with icon + caption (maqueta 2.3 point 6) */
+function TrustGrid({ product }: { product: Product }) {
+  const commerce = commercialInfo(product)
+  const complement = isKitchenComplement(product)
+
+  return (
+    <div className="grid grid-cols-3 divide-x divide-[#E8E2D8] border-y border-[#E8E2D8]">
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        <Truck size={20} className="text-[#1A1A18]" />
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          {commerce.freeShippingLabel}
+        </span>
+      </div>
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        <BadgeDollarSign size={20} className="text-[#1A1A18]" />
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          Pagas al recibir
+        </span>
+      </div>
+      <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
+        {complement ? <Utensils size={20} className="text-[#1A1A18]" /> : <ShieldCheck size={20} className="text-[#1A1A18]" />}
+        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+          Garantia 6 meses
+        </span>
+      </div>
+    </div>
+  )
+}
+
+/** Photo gallery for knife product */
 function CampaignPhotoGallery({
   product,
   attribution,
@@ -231,33 +264,34 @@ function CampaignPhotoGallery({
   if (!photos.length) return null
 
   return (
-    <section className="campaign-photo-proof" aria-label="Fotos reales">
-      <div className="campaign-section-head">
-        <div>
-          <p className="eyebrow">Mira el producto de cerca</p>
-          <h2>Fotos reales para confirmar antes de pedir.</h2>
-        </div>
-        <span>Sin renders</span>
-      </div>
-      <div className="campaign-photo-grid">
+    <section className="px-4 py-10" aria-label="Fotos reales">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        Mira el producto de cerca
+      </p>
+      <h2 className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+        Fotos reales para confirmar antes de pedir.
+      </h2>
+      <div className="grid grid-cols-2 gap-2">
         {photos.map((photo) => (
-          <article className="campaign-photo-card" key={photo.file}>
-            <img alt={`${photo.title} de ${product.title}`} src={`/media/${photo.file}`} />
-            <div>
-              <span>{photo.label}</span>
-              <strong>{photo.title}</strong>
-              <p>{photo.text}</p>
-            </div>
-          </article>
+          <div key={photo.file} className="overflow-hidden rounded-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={`${photo.title} de ${product.title}`}
+              src={`/media/${photo.file}`}
+              className="w-full aspect-square object-cover"
+            />
+          </div>
         ))}
       </div>
-      <div className="campaign-photo-cta">
-        <div>
-          <strong>Oferta de lanzamiento: $29.99</strong>
-          <span>Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.</span>
-        </div>
+      <div className="mt-6 rounded-2xl border border-[#E8E2D8] bg-white p-4">
+        <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">
+          Oferta de lanzamiento: $29.99
+        </p>
+        <p className="mb-4 text-[12px] text-[#6B6B66]">
+          Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.
+        </p>
         <TrackedWhatsAppLink
-          className="primary-button"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
           cta="campaign_photo_gallery_whatsapp"
           eventType="campaign_cta_click"
           extraEventTypes={["whatsapp_opened"]}
@@ -289,172 +323,61 @@ function CampaignPhotoGallery({
   )
 }
 
-function ProductVideo({
-  slot,
-  product,
-  compact = false,
-  attribution,
-}: {
-  slot: MediaSlot
-  product: Product
-  compact?: boolean
-  attribution: CampaignAttribution
-}) {
-  const video = mediaPath(slot.video)
-  const priceLabel =
-    product.originalPrice && product.originalPrice.amount > product.price.amount
-      ? `Antes ${money(product.originalPrice.amount)} · Hoy ${money(product.price.amount)}`
-      : money(product.price.amount)
-
-  return (
-    <article
-      className={
-        compact ? "campaign-video-card compact" : "campaign-video-card"
-      }
-    >
-      <div className="campaign-video-frame">
-        {video ? (
-          <video
-            aria-label={slot.title}
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={slot.poster}
-          >
-            <source src={video} type="video/mp4" />
-          </video>
-        ) : (
-          <img alt={slot.title} src={slot.poster || product.imageUrl} />
-        )}
-        <span>
-          <PlayCircle size={16} />
-          {slot.label}
-        </span>
-        <div className="campaign-video-caption">
-          <strong>{slot.proofPoints[0]}</strong>
-          <small>
-            {priceLabel} | {slot.title}
-          </small>
-        </div>
-      </div>
-      <div>
-        <strong>{slot.title}</strong>
-        <p>{slot.metric}</p>
-        <div className="video-proof-row">
-          {slot.proofPoints.map((point) => (
-            <span key={point}>{point}</span>
-          ))}
-        </div>
-        <TrackedWhatsAppLink
-          cta={`campaign_video_${slot.id}_whatsapp`}
-          eventType="video_interest"
-          extraEventTypes={["whatsapp_opened"]}
-          leadId={`lead_${attribution.campaignSlug}_${product.sku}_${slot.id}`}
-          metadata={{
-            ...attribution,
-            source: "meta_ads",
-            journeyStage: "interes_video",
-            videoSlot: slot.id,
-            productInterestSku: product.sku,
-            recommendedSku: product.sku,
-          }}
-          placement={`campaign_video_${slot.id}`}
-          product={product}
-          source="meta_ads"
-          whatsappContext={{
-            ...attribution,
-            source: "meta_ads",
-            recommendation: slot.metric,
-            recommendedSku: product.sku,
-            journeyStage: "interes_video",
-            videoSlot: slot.id,
-          }}
-        >
-          {slot.cta || "Preguntar por este producto"}
-        </TrackedWhatsAppLink>
-      </div>
-    </article>
-  )
-}
-
-function TrustStrip({ product }: { product: Product }) {
-  const commerce = commercialInfo(product)
-  const complement = isKitchenComplement(product)
-
-  return (
-    <section className="campaign-trust" aria-label="Confianza antes del chat">
-      <article>
-        <Truck size={24} />
-        <strong>{commerce.freeShippingLabel}</strong>
-        <span>
-          Despacho por Servientrega; cobertura y tiempo se confirman por ciudad.
-        </span>
-      </article>
-      <article>
-        <BadgeDollarSign size={24} />
-        <strong>{commerce.paymentMethodsLabel}</strong>
-        <span>Transferencia, deuna! o link PayPhone/tarjeta.</span>
-      </article>
-      <article>
-        {complement ? <Utensils size={24} /> : <CookingPot size={24} />}
-        <strong>
-          {complement
-            ? product.capacity || product.category || "Preparacion diaria"
-            : commerce.stoveCompatibility}
-        </strong>
-        <span>
-          {complement
-            ? "Producto de cocina con uso confirmado antes de pagar."
-            : "Compatibilidad clara antes de escribir a Vicky."}
-        </span>
-      </article>
-    </section>
-  )
-}
-
+/** FAQ section (conserved content, re-styled) */
 function CampaignFaq({ product }: { product: Product }) {
   const commerce = commercialInfo(product)
   const complement = isKitchenComplement(product)
 
+  const items = [
+    {
+      icon: <Timer size={20} className="text-[var(--accent)]" />,
+      title: "Hay stock",
+      body: `${product.stockSignal || `${product.stock} disponibles`}.`,
+    },
+    {
+      icon: <ShieldCheck size={20} className="text-[var(--accent)]" />,
+      title: complement ? "Para que sirve" : "Por que granito",
+      body: complement
+        ? product.bundleUseCase ||
+          "Complemento practico para preparar ingredientes antes de cocinar."
+        : product.healthAngle ||
+          "Es una alternativa a antiadherentes tradicionales para cocinar con menos aceite.",
+    },
+    {
+      icon: <Leaf size={20} className="text-[var(--accent)]" />,
+      title: "Como se cuida",
+      body:
+        product.careTips ||
+        (complement
+          ? "Lavalo y secalo despues de usarlo. Evita golpes fuertes y guardalo protegido."
+          : "Usa utensilios suaves, fuego medio y esponja no abrasiva."),
+    },
+    {
+      icon: <CheckCircle2 size={20} className="text-[var(--accent)]" />,
+      title: "Que incluye el cupon",
+      body: `Cupon ${commerce.couponCode}, ${commerce.freeShippingLabel.toLowerCase()} y confirmacion de entrega por WhatsApp.`,
+    },
+  ]
+
   return (
-    <section className="campaign-faq" aria-label="Dudas frecuentes de campana">
-      <article>
-        <Timer size={22} />
-        <h2>Hay stock</h2>
-        <p>{product.stockSignal || `${product.stock} disponibles`}.</p>
-      </article>
-      <article>
-        <ShieldCheck size={22} />
-        <h2>{complement ? "Para que sirve" : "Por que granito"}</h2>
-        <p>
-          {complement
-            ? product.bundleUseCase ||
-              "Complemento practico para preparar ingredientes antes de cocinar."
-            : product.healthAngle ||
-              "Es una alternativa a antiadherentes tradicionales para cocinar con menos aceite."}
-        </p>
-      </article>
-      <article>
-        <Leaf size={22} />
-        <h2>Como se cuida</h2>
-        <p>
-          {product.careTips ||
-            (complement
-              ? "Lavalo y secalo despues de usarlo. Evita golpes fuertes y guardalo protegido."
-              : undefined) ||
-            "Usa utensilios suaves, fuego medio y esponja no abrasiva."}
-        </p>
-      </article>
-      <article>
-        <CheckCircle2 size={22} />
-        <h2>Que incluye el cupon</h2>
-        <p>
-          Cupon {commerce.couponCode},{" "}
-          {commerce.freeShippingLabel.toLowerCase()} y confirmacion de entrega
-          por WhatsApp.
-        </p>
-      </article>
+    <section className="px-4 py-10" aria-label="Dudas frecuentes">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        FAQ
+      </p>
+      <h2 className="mb-6 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+        Antes de escribir a Vicky.
+      </h2>
+      <div className="space-y-4">
+        {items.map((item) => (
+          <div key={item.title} className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-4">
+            <div className="mt-0.5 shrink-0">{item.icon}</div>
+            <div>
+              <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">{item.title}</p>
+              <p className="text-[13px] leading-snug text-[#6B6B66]">{item.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   )
 }
@@ -474,8 +397,9 @@ export default async function CampaignPage({
 
   if (!selectedProductCandidate) {
     return (
-      <main className="campaign-page">
-        <section className="campaign-empty">
+      <main data-theme="cocina" className="min-h-screen bg-[#FAF7F2]">
+        <PromoBar />
+        <section className="px-4 py-16 text-center text-[14px] text-[#6B6B66]">
           No hay productos de cocina disponibles para esta campana.
         </section>
       </main>
@@ -506,8 +430,12 @@ export default async function CampaignPage({
       ? selectedProduct.originalPrice.amount - selectedProduct.price.amount
       : 0
 
+  const heroVideo = mediaPath(hero.video)
+  const heroVideoSrc = heroVideo || undefined
+  const heroPoster = hero.poster || selectedProduct.imageUrl
+
   return (
-    <main className="campaign-page">
+    <main data-theme="cocina" className="min-h-screen bg-[#FAF7F2] pb-24">
       <CampaignAnalytics
         context={{
           ...attribution,
@@ -518,120 +446,194 @@ export default async function CampaignPage({
         product={selectedProduct}
       />
 
-      <header className="campaign-topbar">
-        <a className="brand-mark" href="/">
-          <CookingPot size={21} />
-          <span>Eter Niu Cocina</span>
-        </a>
-        <a className="campaign-topbar-link" href={productPath(selectedProduct)}>
-          Ver ficha
-        </a>
-      </header>
+      {/* 1. Promo bar */}
+      <PromoBar />
 
-      <section className="campaign-hero">
-        <ProductVideo
-          attribution={attribution}
-          product={selectedProduct}
-          slot={hero}
-        />
-        <div className="campaign-hero-copy">
-          <p className="eyebrow">Campana de redes</p>
-          <h1>{selectedProduct.title}</h1>
-          <p>
-            {complement
-              ? "Mira el producto real, confirma stock y reclama el cupon por WhatsApp sin pasar por catalogo largo."
-              : "Mira el producto real, confirma si sirve para tu cocina y reclama el cupon por WhatsApp sin pasar por catalogo largo."}
-          </p>
-          <div className="campaign-price-card">
-            <div>
-              {promo && selectedProduct.originalPrice ? (
-                <span className="original-price">
-                  {money(selectedProduct.originalPrice.amount)}
-                </span>
-              ) : null}
-              <strong>{money(selectedProduct.price.amount)}</strong>
-              {savings > 0 ? <small>Ahorra {money(savings)}</small> : null}
-            </div>
-            <TrackedWhatsAppLink
-              className="primary-button hero-cta"
-              cta="campaign_hero_whatsapp"
-              eventType="campaign_cta_click"
-              extraEventTypes={["whatsapp_opened"]}
-              leadId={`lead_${slug}_${selectedProduct.sku}_hero`}
-              metadata={{
-                ...attribution,
-                source: "meta_ads",
-                journeyStage: "cotizacion_pendiente",
-                productInterestSku: selectedProduct.sku,
-                recommendedSku: selectedProduct.sku,
-              }}
-              placement="campaign_hero"
-              product={selectedProduct}
-              source="meta_ads"
-              whatsappContext={{
-                ...attribution,
-                source: "meta_ads",
-                recommendation: "campana de un producto desde Meta Ads",
-                recommendedSku: selectedProduct.sku,
-                journeyStage: "cotizacion_pendiente",
-                videoSlot: hero.id,
-              }}
-            >
-              <MessageCircle size={19} />
-              Reclamar cupon y confirmar stock por WhatsApp
-            </TrackedWhatsAppLink>
+      {/* 2. Header mínimo */}
+      <SiteHeader
+        compact
+        compactTitle={selectedProduct.category}
+        backHref={productPath(selectedProduct)}
+        vertical="cocina"
+      />
+
+      {/* 3. Hero video 9:16 con pills */}
+      <div className="relative px-4 pt-4">
+        {heroVideoSrc ? (
+          <VideoFrame
+            src={heroVideoSrc}
+            poster={heroPoster}
+            ratio="9/16"
+            label="Ver en uso"
+          />
+        ) : (
+          <div className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              alt={hero.title}
+              src={heroPoster}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
-          <div className="commerce-badges">
-            <span>
-              <Truck size={15} />
-              {commercialInfo(selectedProduct).freeShippingLabel}
-            </span>
-            <span>
-              <BadgeDollarSign size={15} />
-              {commercialInfo(selectedProduct).paymentMethodsLabel}
-            </span>
-            <span>
-              {complement ? <Utensils size={15} /> : <CookingPot size={15} />}
-              {complement
-                ? selectedProduct.capacity || selectedProduct.category
-                : commercialInfo(selectedProduct).stoveCompatibility}
-            </span>
-            <strong>
-              <Sparkles size={15} />
-              Cupon {commercialInfo(selectedProduct).couponCode}
-            </strong>
+        )}
+
+        {/* Pill: discount badge top-left */}
+        {promo && savings > 0 && (
+          <div className="absolute left-6 top-6">
+            <Badge tone="accent">
+              -{Math.round((savings / selectedProduct.originalPrice!.amount) * 100)}% hoy
+            </Badge>
           </div>
+        )}
+        {selectedProduct.promoLabel && !promo && (
+          <div className="absolute left-6 top-6">
+            <Badge tone="accent">{selectedProduct.promoLabel}</Badge>
+          </div>
+        )}
+      </div>
+
+      {/* 4. Eyebrow → H1 → subcopy */}
+      <div className="px-4 pt-6">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          {complement
+            ? `${selectedProduct.category} · todo uso`
+            : `Granito Eter Niu · ${selectedProduct.category}`}
+        </p>
+        <h1
+          className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-[#1A1A18]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {selectedProduct.title}
+        </h1>
+        <p className="mb-5 text-[14px] leading-snug text-[#6B6B66]">
+          {complement
+            ? "Mira el producto real, confirma stock y reclama el cupon por WhatsApp sin pasar por catalogo largo."
+            : "Mira el producto real, confirma si sirve para tu cocina y reclama el cupon por WhatsApp sin pasar por catalogo largo."}
+        </p>
+
+        {/* 5. Price row */}
+        <div className="mb-5 flex items-end gap-3">
+          <PriceTag
+            price={money(selectedProduct.price.amount)}
+            originalPrice={
+              promo && selectedProduct.originalPrice
+                ? money(selectedProduct.originalPrice.amount)
+                : undefined
+            }
+            note="stock por WhatsApp"
+          />
+          {savings > 0 && (
+            <span className="text-[12px] text-[#6B6B66]">
+              Ahorra {money(savings)}
+            </span>
+          )}
         </div>
-      </section>
 
-      <TrustStrip product={selectedProduct} />
+        {/* Hero CTA */}
+        <TrackedWhatsAppLink
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
+          cta="campaign_hero_whatsapp"
+          eventType="campaign_cta_click"
+          extraEventTypes={["whatsapp_opened"]}
+          leadId={`lead_${slug}_${selectedProduct.sku}_hero`}
+          metadata={{
+            ...attribution,
+            source: "meta_ads",
+            journeyStage: "cotizacion_pendiente",
+            productInterestSku: selectedProduct.sku,
+            recommendedSku: selectedProduct.sku,
+          }}
+          placement="campaign_hero"
+          product={selectedProduct}
+          source="meta_ads"
+          whatsappContext={{
+            ...attribution,
+            source: "meta_ads",
+            recommendation: "campana de un producto desde Meta Ads",
+            recommendedSku: selectedProduct.sku,
+            journeyStage: "cotizacion_pendiente",
+            videoSlot: hero.id,
+          }}
+        >
+          <MessageCircle size={19} />
+          Reclamar cupon y confirmar stock por WhatsApp
+        </TrackedWhatsAppLink>
+      </div>
 
-      {proofs.length ? (
-        <>
-          <section className="campaign-section-head" id="pruebas">
-            <div>
-              <p className="eyebrow">Pruebas rapidas</p>
-              <h2>Antes de escribir, mira lo que vas a pedir.</h2>
-            </div>
-            <span>Videos muted</span>
-          </section>
+      {/* 6. Trust grid */}
+      <div className="mt-6">
+        <TrustGrid product={selectedProduct} />
+      </div>
 
-          <section className="campaign-proof-grid">
-            {proofs.map((slot) => (
-              <ProductVideo
-                attribution={attribution}
-                compact
-                key={slot.id}
-                product={selectedProduct}
-                slot={slot}
-              />
-            ))}
-          </section>
-        </>
-      ) : null}
+      {/* 7. Proof videos (when available) */}
+      {proofs.length > 0 && (
+        <div className="px-4 pt-10">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+            Pruebas rapidas
+          </p>
+          <h2 className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+            Antes de escribir, mira lo que vas a pedir.
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            {proofs.map((slot) => {
+              const slotVideo = mediaPath(slot.video)
+              return slotVideo ? (
+                <VideoFrame
+                  key={slot.id}
+                  src={slotVideo}
+                  poster={slot.poster}
+                  ratio="9/16"
+                  label={slot.label}
+                />
+              ) : (
+                <div
+                  key={slot.id}
+                  className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt={slot.title}
+                    src={slot.poster}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
+              )
+            })}
+          </div>
+          <TrackedWhatsAppLink
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
+            cta={`campaign_proofs_whatsapp`}
+            eventType="campaign_cta_click"
+            extraEventTypes={["whatsapp_opened"]}
+            leadId={`lead_${slug}_${selectedProduct.sku}_proofs`}
+            metadata={{
+              ...attribution,
+              source: "meta_ads",
+              journeyStage: "interes_video",
+              productInterestSku: selectedProduct.sku,
+              recommendedSku: selectedProduct.sku,
+            }}
+            placement="campaign_proofs"
+            product={selectedProduct}
+            source="meta_ads"
+            whatsappContext={{
+              ...attribution,
+              source: "meta_ads",
+              recommendation: "vio videos de prueba del producto",
+              recommendedSku: selectedProduct.sku,
+              journeyStage: "interes_video",
+            }}
+          >
+            <MessageCircle size={19} />
+            Reclamar cupon por WhatsApp
+          </TrackedWhatsAppLink>
+        </div>
+      )}
 
+      {/* 8. Photo gallery (knife only) */}
       <CampaignPhotoGallery attribution={attribution} product={selectedProduct} />
 
+      {/* 9. WhatsApp panel (personalization) */}
       <CampaignWhatsAppPanel
         context={{
           ...attribution,
@@ -642,8 +644,10 @@ export default async function CampaignPage({
         product={selectedProduct}
       />
 
+      {/* 10. FAQ */}
       <CampaignFaq product={selectedProduct} />
 
+      {/* 11. Sticky CTA bar — always visible, uses TrackedWhatsAppLink internally via CampaignStickyCta */}
       <CampaignStickyCta
         context={{
           ...attribution,
