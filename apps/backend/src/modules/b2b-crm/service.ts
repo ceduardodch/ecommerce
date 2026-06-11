@@ -12,6 +12,7 @@ import type {
   CrmCustomerInput,
   PurchasedProduct,
 } from "./types"
+import { recompraMetrics as calculateRecompraMetrics } from "./recompra-metrics"
 
 type AnyB2bCrmService = {
   listCrmCustomerProfiles: (filters?: unknown, config?: unknown) => Promise<any[]>
@@ -617,6 +618,16 @@ class B2bCrmModuleService extends MedusaService({
     if (patch.active !== undefined) data.active = patch.active
 
     return this.service_().updateCrmMessageTemplates(data)
+  }
+
+  async recompraMetrics(asOfIso: string) {
+    const service = this.service_()
+    const [customers, events] = await Promise.all([
+      service.listCrmCustomerProfiles({}, { take: 10000 }),
+      service.listCrmCustomerEvents({}, { take: 10000 }),
+    ])
+
+    return calculateRecompraMetrics(events, customers, asOfIso)
   }
 }
 
