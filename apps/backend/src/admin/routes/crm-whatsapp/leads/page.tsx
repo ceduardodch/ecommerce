@@ -71,6 +71,61 @@ function isDue(value?: string) {
   return Boolean(value && Date.parse(value) <= Date.now())
 }
 
+function escapeCsvValue(value: string | undefined | null): string {
+  if (!value) return ""
+  const stringValue = String(value)
+  // Escapar comillas y envolver en comillas si contiene comas, comillas o saltos de línea
+  if (stringValue.includes(",") || stringValue.includes('"') || stringValue.includes("\n")) {
+    return `"${stringValue.replace(/"/g, '""')}"`
+  }
+  return stringValue
+}
+
+function exportCustomersToCsv(customers: CustomerRow[]) {
+  // Headers compatibles con import (columnas en orden del import CSV)
+  const headers = [
+    "telefono",
+    "nombre",
+    "email",
+    "ciudad",
+    "etapa",
+    "etiquetas",
+    "consentimiento_whatsapp",
+    "ultima_compra",
+    "proximo_seguimiento",
+    "motivo_seguimiento",
+  ]
+
+  const rows = customers.map((customer) => [
+    escapeCsvValue(customer.phone),
+    escapeCsvValue(customer.name),
+    escapeCsvValue(customer.email),
+    escapeCsvValue(customer.city),
+    escapeCsvValue(customer.journeyStage),
+    escapeCsvValue(customer.tags?.join(", ")),
+    escapeCsvValue(customer.whatsappConsent ? "si" : "no"),
+    escapeCsvValue(customer.lastPurchaseAt ? formatDate(customer.lastPurchaseAt) : ""),
+    escapeCsvValue(customer.nextFollowupAt ? formatDate(customer.nextFollowupAt) : ""),
+    escapeCsvValue(customer.followupReason),
+  ])
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map((row) => row.join(",")),
+  ].join("\n")
+
+  // Crear Blob y descargar
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.setAttribute("href", url)
+  link.setAttribute("download", `leads_crm_${new Date().toISOString().split("T")[0]}.csv`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
 function LeadsPage() {
   const [search, setSearch] = useState("")
   const [query, setQuery] = useState("")
@@ -151,9 +206,22 @@ function LeadsPage() {
           </p>
           <h1 style={{ fontSize: 28, margin: "4px 0 0" }}>Leads y clientes</h1>
         </div>
-        <Link to="/crm-whatsapp/import" style={{ ...buttonStyle, textDecoration: "none" }}>
-          Importar leads (CSV/Excel)
-        </Link>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            onClick={() => data?.customers && exportCustomersToCsv(data.customers)}
+            disabled={!data || data.customers.length === 0}
+            style={{
+              ...buttonStyle,
+              opacity: !data || data.customers.length === 0 ? 0.5 : 1,
+              cursor: !data || data.customers.length === 0 ? "not-allowed" : "pointer",
+            }}
+          >
+            Exportar CSV ({data?.customers.length || 0})
+          </button>
+          <Link to="/crm-whatsapp/import" style={{ ...buttonStyle, textDecoration: "none" }}>
+            Importar leads (CSV/Excel)
+          </Link>
+        </div>
       </header>
 
       <section
