@@ -4,6 +4,7 @@ import {
   ConversationalOrder,
   CrmCustomerEvent,
   CrmCustomerProfile,
+  CrmMessageTemplate,
 } from "./models"
 import type {
   ConversationalOrderInput,
@@ -25,6 +26,9 @@ type AnyB2bCrmService = {
   listConversationalOrders: (filters?: unknown, config?: unknown) => Promise<any[]>
   createConversationalOrders: (data: unknown) => Promise<any>
   updateConversationalOrders: (data: unknown) => Promise<any>
+  listCrmMessageTemplates: (filters?: unknown, config?: unknown) => Promise<any[]>
+  createCrmMessageTemplates: (data: unknown) => Promise<any>
+  updateCrmMessageTemplates: (data: unknown) => Promise<any>
 }
 
 export type CustomerSearchInput = {
@@ -123,6 +127,7 @@ class B2bCrmModuleService extends MedusaService({
   ConversationalOrder,
   CrmCustomerEvent,
   CrmCustomerProfile,
+  CrmMessageTemplate,
 }) {
   private service_() {
     return this as unknown as AnyB2bCrmService
@@ -583,6 +588,35 @@ class B2bCrmModuleService extends MedusaService({
       optOuts: customers.filter((customer) => optOutPhones.has(customer.phone)),
       recentEvents: events.slice(-25).reverse(),
     }
+  }
+
+  async listTemplates(activeOnly = true) {
+    const service = this.service_()
+    const templates = await service.listCrmMessageTemplates(
+      activeOnly ? { active: true } : {},
+      { order: { key: "ASC" } },
+    )
+    return templates
+  }
+
+  async getTemplate(key: string) {
+    const service = this.service_()
+    const [template] = await service.listCrmMessageTemplates(
+      { key },
+      { take: 1 },
+    )
+    return template
+  }
+
+  async updateTemplate(key: string, patch: { body?: string; active?: boolean }) {
+    const existing = await this.getTemplate(key)
+    if (!existing) return undefined
+
+    const data: Record<string, unknown> = { id: existing.id }
+    if (patch.body !== undefined) data.body = patch.body
+    if (patch.active !== undefined) data.active = patch.active
+
+    return this.service_().updateCrmMessageTemplates(data)
   }
 }
 
