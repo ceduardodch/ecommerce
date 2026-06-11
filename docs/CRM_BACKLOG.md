@@ -90,8 +90,8 @@ Lo que Kommo cobra en Advanced ($25/usuario). Reutiliza el 80% del dispatch.
 
 | ID | Historia | Esf. | Detalle |
 |---|---|---|---|
-| BRC-1 | Endpoint de broadcast | M | POST `admin/b2b/crm/broadcasts`: `{ filter: {stage, tag, consent}, templateKey, dryRun }`. Resuelve el segmento con `searchCustomers`, aplica `selectDispatchTargets` (consentimiento, opt-out, cooldown) + tope `CRM_BROADCAST_MAX_PER_DAY` (env, default 50), despacha con `dispatchFollowup`, registra `broadcast_sent`/`broadcast_queued` (añadir al enum tools). dryRun devuelve el conteo y muestra. |
-| BRC-2 | UI de campaña | M | En la lista de leads: botón "Campaña a este filtro" → modal con plantilla, preview del mensaje renderizado, conteo de destinatarios (dryRun) y confirmación explícita. |
+| BRC-1 | Endpoint de broadcast | ✅ M | POST `admin/b2b/crm/broadcasts`: `{ filter: {stage, tag, consent, vertical}, templateKey, dryRun }`. Resuelve el segmento con `searchCustomers`, aplica `selectDispatchTargets` (consentimiento, opt-out, cooldown) + tope `CRM_BROADCAST_MAX_PER_DAY` (env, default 50), despacha con `dispatchFollowup`, registra `broadcast_sent`/`broadcast_queued`. dryRun devuelve conteo + muestra. GET lista broadcasts recientes vía `listRecentBroadcasts`. |
+| BRC-2 | UI de campaña | ✅ M | Lista de leads: filtro de línea + botón "Campaña a este filtro" → `CampaignModal` con selección de plantilla, vista previa dry-run (elegibles/omitidos + muestra del mensaje renderizado) y envío con confirmación explícita. |
 
 **CA épica**: enviar una campaña de Navidad al segmento "vertical=cocina, consent=sí"
 en 3 clics, sin pasar el tope diario.
@@ -106,7 +106,7 @@ Friday) va por calendario sobre el pipeline de dispatch existente.
 
 | ID | Historia | Esf. | Detalle |
 |---|---|---|---|
-| XS-1 | Segmento por vertical | S | Filtro "línea" en la lista de leads: derivar vertical de `purchasedProducts` (SKU `COC-`/`MGC-` = cocina, bienestar por su prefijo) o de `metadata.vertical`; exponerlo en `searchCustomers` y la UI. Segmento clave: "compró en una línea y no en la otra". |
+| XS-1 | Segmento por vertical | ✅ S | Filtro "línea" en la lista de leads: deriva vertical de `purchasedProducts` (SKU `COC-`/`MGC-` = cocina, resto = bienestar) o de `metadata.vertical` vía `customerVerticals()` (flags independientes); expuesto en `searchCustomers`, en el filtro de la UI y en el selector de segmento del broadcast. Incluye los segmentos cross-sell "compró una línea y no la otra". |
 | XS-2 | Plantillas de cross-sell | S | Seeds `cross_sell_bienestar` (compró cocina) y `cross_sell_cocina` (compró bienestar) en TPL; usables desde BRC-2. |
 | XS-3 | Followups estacionales | M | Job mensual `src/jobs/schedule-seasonal-followups.ts`: fechas fijas EC (Navidad → 15-nov, Día de la Madre → fin de abril, Black Friday → mediados de nov) sobre segmentos con consentimiento; setea `next_followup_at` + `followup_reason: "estacional_*"` solo si no hay un followup más próximo. El dispatch existente hace el resto con la plantilla correcta. Lógica pura + tests unit. |
 | XS-4 | Ciclos reales de bienestar | S | Auditar `reorderAfterDays` del catálogo de bienestar (`wellness-catalog-seed.ts`): los consumibles tienen ciclos más cortos que las ollas (30–60d vs 180d). Ajustar metadata para que el motor de recompra use frecuencias reales por producto. |
