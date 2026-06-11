@@ -367,11 +367,21 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
    con cero hard failures. La validación de flow queda ⚠️ pendiente de verificar con
    server activo antes de cualquier push a producción.
 
-10. **`StickyCTABar` en ficha de producto usa plain `<a>` a wa.me**: mismo criterio que
-    Decisión 4 del Sprint A — no hay contexto de producto disponible en el componente
-    genérico de layout. El hero CTA de la ficha sí usa `TrackedWhatsAppLink` completo.
-    El link de `StickyCTABar` usa el número base del negocio (`wa.me/593979854915`);
-    en producción se puede parametrizar pasando una URL pre-construida con `whatsapp.ts`.
+10. **`StickyCTABar` con tracking opcional** (corregido tras auditoría): el
+    componente acepta un `product?` opcional. Cuando se le pasa (ficha de producto
+    y campañas, que sí tienen producto en contexto), la CTA usa
+    `TrackedWhatsAppLink` — cumpliendo la regla #1. El `<a>` plano solo queda como
+    fallback para el home genérico, donde aún no hay producto. La ficha
+    (`products/[slug]`) ya pasa `product` + `placement="ficha_sticky"`. Reemplaza
+    la decisión original de dejar el sticky sin tracking.
+
+    Pendiente WHOM-2: las clases legacy `.wellness-*` que emiten los componentes
+    importados `WellnessRoutinePanel` / `WellnessStickyCta`
+    (`bienestar/components/wellness-interactions.tsx`) NO se migraron en WCMP-2
+    (estaba fuera de su alcance: WCMP-2 reescribió la `page.tsx`). Esa migración
+    está explícitamente cubierta por WHOM-2 ("eliminar todas las clases
+    `.wellness-*` restantes"). El CA de WCMP-2 se interpreta como "la `page.tsx`
+    directa queda limpia".
 
 11. **`VideoFrame` en hero de campaña cocina con `autoPlay/loop/muted` preservados**:
     el componente `VideoFrame` (lazy-load al viewport) se usa para los videos del hero.

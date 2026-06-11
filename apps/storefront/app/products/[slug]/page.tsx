@@ -454,12 +454,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       )}
 
       {/* 7. Sticky CTA bar: precio izquierda + botón WA — siempre visible (alwaysVisible) */}
-      {/* Note: StickyCTABar uses a plain <a> for the WA link because there is no product
-          context flowing into a generic layout component. The real tracked CTAs are the
-          hero TrackedWhatsAppLink above. This matches decision 4 of the plan (registered). */}
+      {/* La ficha tiene product en contexto, así que el sticky usa TrackedWhatsAppLink
+          (regla #1: ninguna CTA de WhatsApp sin tracking). */}
       <StickyCTABar
         alwaysVisible
         price={money(product.price.amount)}
+        product={product}
+        placement="ficha_sticky"
         waHref={waHref}
         waLabel="Pedir por WhatsApp"
       />

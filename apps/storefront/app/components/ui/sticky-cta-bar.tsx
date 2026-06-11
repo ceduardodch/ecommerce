@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import type { Product } from "../../../lib/catalog"
+import { TrackedWhatsAppLink } from "../analytics"
 
 // WhatsApp icon inline
 function WhatsAppIcon() {
@@ -20,7 +22,7 @@ function WhatsAppIcon() {
 type StickyCTABarProps = {
   /** Optional price label (for product/campaign pages) */
   price?: string
-  /** WhatsApp href (wa.me link) */
+  /** WhatsApp href (wa.me link) — fallback when no product is provided */
   waHref: string
   /** Button label */
   waLabel?: string
@@ -29,6 +31,14 @@ type StickyCTABarProps = {
    * When false (default) the bar fades in after 300px scroll (home).
    */
   alwaysVisible?: boolean
+  /**
+   * When provided, the WhatsApp CTA is tracked via TrackedWhatsAppLink
+   * (required for product/campaign pages — regla #1). Without it, the bar
+   * falls back to a plain link (generic/home use only).
+   */
+  product?: Product
+  /** Tracking placement label; required when product is set */
+  placement?: string
 }
 
 export function StickyCTABar({
@@ -36,6 +46,8 @@ export function StickyCTABar({
   waHref,
   waLabel = "Pedir por WhatsApp",
   alwaysVisible = false,
+  product,
+  placement = "sticky_cta",
 }: StickyCTABarProps) {
   const [visible, setVisible] = useState(alwaysVisible)
 
@@ -63,15 +75,26 @@ export function StickyCTABar({
             </span>
           </div>
         )}
-        <a
-          href={waHref}
-          target="_blank"
-          rel="noreferrer"
-          className={`flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white`}
-        >
-          <WhatsAppIcon />
-          {waLabel}
-        </a>
+        {product ? (
+          <TrackedWhatsAppLink
+            product={product}
+            placement={placement}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
+          >
+            <WhatsAppIcon />
+            {waLabel}
+          </TrackedWhatsAppLink>
+        ) : (
+          <a
+            href={waHref}
+            target="_blank"
+            rel="noreferrer"
+            className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
+          >
+            <WhatsAppIcon />
+            {waLabel}
+          </a>
+        )}
       </div>
     </div>
   )
