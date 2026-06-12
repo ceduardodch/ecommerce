@@ -1,15 +1,17 @@
 import type { Metadata } from "next"
-import { BookOpen, ChefHat, MessageCircle, ShieldCheck } from "lucide-react"
+import { BookOpen, MessageCircle, ShieldCheck } from "lucide-react"
 import { getProducts } from "../../../lib/catalog"
 import {
   TrackedEventLink,
   TrackedWhatsAppLink,
 } from "../../components/analytics"
+import { PromoBar } from "../../components/ui/promo-bar"
+import { SiteHeader } from "../../components/ui/site-header"
 
 export const metadata: Metadata = {
-  title: "PFAS, PFOA y teflon explicado simple | Eter Niu Cocina",
+  title: "PFAS, PFOA y teflón explicado simple | Eter Niu Cocina",
   description:
-    "Guia educativa para elegir antiadherentes con informacion segura sobre PFAS, PFOA, PTFE y ollas de granito.",
+    "Guía educativa para elegir antiadherentes con información segura sobre PFAS, PFOA, PTFE y ollas de granito.",
 }
 
 export default async function TeflonPfasGuidePage() {
@@ -19,133 +21,225 @@ export default async function TeflonPfasGuidePage() {
     products[0]
 
   return (
-    <main className="article-page">
-      <header className="topbar">
-        <a className="brand-mark" href="/">
-          <ChefHat size={22} />
-          <span>Eter Niu Cocina</span>
-        </a>
-        <nav>
-          <a href="/">Tienda</a>
-          <a href="/guias">Guias</a>
-          <a href="/#club">Club</a>
-        </nav>
-      </header>
+    <div data-theme="cocina">
+      <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
+      <SiteHeader
+        vertical="cocina"
+        compact
+        backHref="/guias"
+        compactTitle="PFAS y Teflón"
+      />
 
-      <section className="article-hero">
-        <p className="eyebrow">Eleccion informada</p>
-        <h1>PFAS, PFOA y teflon sin sustos ni promesas medicas.</h1>
-        <p className="hero-subcopy">
-          Esta guia explica por que muchas familias buscan alternativas a
-          antiadherentes tradicionales, y por que no publicamos claims fuertes
-          sin certificacion del proveedor.
-        </p>
-      </section>
+      <main className="bg-[#FAF7F2] pb-20">
+        {/* Reading layout: max-w-[65ch], centred */}
+        <div className="mx-auto max-w-[65ch] px-4">
 
-      <section className="article-layout">
-        <article className="article-body">
-          <section>
-            <h2>La idea simple</h2>
-            <p>
-              PFAS es una familia amplia de sustancias usadas en productos que
-              resisten aceite, agua, manchas o calor. Algunas se han usado en
-              recubrimientos antiadherentes y otros materiales de contacto con
-              alimentos. Por eso hablamos de eleccion informada, no de miedo.
+          {/* Article hero */}
+          <div className="pt-10 pb-8">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+              Elección informada
             </p>
-          </section>
-
-          <section>
-            <h2>Que si podemos decir</h2>
-            <ul>
-              <li>Muchas personas prefieren alternativas a antiadherentes tradicionales.</li>
-              <li>El granito es una opcion practica para cocinar con menos aceite.</li>
-              <li>Una olla vieja, rayada o mal cuidada pierde confianza de uso.</li>
-              <li>Las declaraciones sobre PFOA, PFAS o PTFE deben estar respaldadas.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>Que no vamos a decir</h2>
-            <p>
-              No afirmamos que un material cause enfermedades, no damos
-              diagnosticos y no prometemos beneficios medicos. Si un proveedor
-              certifica una condicion tecnica, se publica con esa base; si no,
-              se mantiene como "por confirmar".
-            </p>
-          </section>
-
-          <section>
-            <h2>Como elegir en casa</h2>
-            <p>
-              Si cocinas para una o dos personas, empieza por 20 cm. Para una
-              familia, 24 cm suele ser mas practico. Si haces salteados,
-              shakshuka, arroz o recetas amplias, el wok 32 cm es el producto
-              estrella.
-            </p>
-          </section>
-
-          <section>
-            <h2>Fuentes editoriales</h2>
-            <ul className="source-list">
-              <li>
-                <a href="https://www.cancer.org/cancer/risk-prevention/chemicals/teflon-and-perfluorooctanoic-acid-pfoa.html">
-                  American Cancer Society sobre PFOA, PFOS y PFAS
-                </a>
-              </li>
-              <li>
-                <a href="https://www.epa.gov/pfas/our-current-understanding-human-health-and-environmental-risks-pfas">
-                  EPA sobre riesgos y exposicion a PFAS
-                </a>
-              </li>
-              <li>
-                <a href="https://www.fda.gov/food/process-contaminants-food/questions-and-answers-pfas-food">
-                  FDA preguntas y respuestas sobre PFAS en alimentos
-                </a>
-              </li>
-            </ul>
-          </section>
-        </article>
-
-        <aside className="article-aside">
-          <ShieldCheck size={28} />
-          <h2>Recomendacion segura</h2>
-          <p>
-            El vendedor IA debe recomendar desde catalogo real, preguntar por
-            uso y presupuesto, y evitar frases medicas absolutas.
-          </p>
-          {featured ? (
-            <TrackedWhatsAppLink
-              className="primary-button"
-              placement="pfas_guide_aside"
-              product={featured}
+            <h1
+              className="text-[40px] font-medium leading-[1.15] text-[#1A1A18]"
+              style={{ fontFamily: "var(--font-display)" }}
             >
-              <MessageCircle size={18} />
-              Elegir mi olla
-            </TrackedWhatsAppLink>
-          ) : null}
-          <TrackedEventLink
-            className="secondary-button"
-            cta="pfas_guide_club"
-            href="/#club"
-            placement="pfas_guide_aside"
-            type="guide_downloaded"
-            metadata={{
-              journeyStage: "lead_nuevo",
-              leadMagnet: "guia_pfas",
-              followupSequence: [
-                "dia_0_guia",
-                "dia_2_tamano",
-                "dia_7_cuidado",
-                "dia_30_complemento",
-                "dia_90_recompra",
-              ],
-            }}
-          >
-            <BookOpen size={18} />
-            Recibir guia + cupon
-          </TrackedEventLink>
-        </aside>
-      </section>
-    </main>
+              PFAS, PFOA y teflón sin sustos ni promesas médicas.
+            </h1>
+            <p className="mt-3 text-[16px] text-[#6B6B66]">
+              Esta guía explica por qué muchas familias buscan alternativas a
+              antiadherentes tradicionales, y por qué no publicamos claims
+              fuertes sin certificación del proveedor.
+            </p>
+          </div>
+
+          {/* Article body — Fraunces on h2, prose with max-w-[65ch] already set */}
+          <article className="space-y-8 text-[16px] text-[#1A1A18]">
+
+            <section>
+              <h2
+                className="mb-2 text-[28px] font-medium text-[#1A1A18]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                La idea simple
+              </h2>
+              <p className="text-[#6B6B66] leading-relaxed">
+                PFAS es una familia amplia de sustancias usadas en productos que
+                resisten aceite, agua, manchas o calor. Algunas se han usado en
+                recubrimientos antiadherentes y otros materiales de contacto con
+                alimentos. Por eso hablamos de elección informada, no de miedo.
+              </p>
+            </section>
+
+            <section>
+              <h2
+                className="mb-2 text-[28px] font-medium text-[#1A1A18]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Qué sí podemos decir
+              </h2>
+              <ul className="space-y-2 text-[#6B6B66] leading-relaxed">
+                <li className="flex items-start gap-2">
+                  <ShieldCheck
+                    size={16}
+                    className="mt-1 flex-none text-[var(--accent)]"
+                  />
+                  Muchas personas prefieren alternativas a antiadherentes
+                  tradicionales.
+                </li>
+                <li className="flex items-start gap-2">
+                  <ShieldCheck
+                    size={16}
+                    className="mt-1 flex-none text-[var(--accent)]"
+                  />
+                  El granito es una opción práctica para cocinar con menos
+                  aceite.
+                </li>
+                <li className="flex items-start gap-2">
+                  <ShieldCheck
+                    size={16}
+                    className="mt-1 flex-none text-[var(--accent)]"
+                  />
+                  Una olla vieja, rayada o mal cuidada pierde confianza de uso.
+                </li>
+                <li className="flex items-start gap-2">
+                  <ShieldCheck
+                    size={16}
+                    className="mt-1 flex-none text-[var(--accent)]"
+                  />
+                  Las declaraciones sobre PFOA, PFAS o PTFE deben estar
+                  respaldadas.
+                </li>
+              </ul>
+            </section>
+
+            <section>
+              <h2
+                className="mb-2 text-[28px] font-medium text-[#1A1A18]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Qué no vamos a decir
+              </h2>
+              <p className="text-[#6B6B66] leading-relaxed">
+                No afirmamos que un material cause enfermedades, no damos
+                diagnósticos y no prometemos beneficios médicos. Si un proveedor
+                certifica una condición técnica, se publica con esa base; si no,
+                se mantiene como "por confirmar".
+              </p>
+            </section>
+
+            <section>
+              <h2
+                className="mb-2 text-[28px] font-medium text-[#1A1A18]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Cómo elegir en casa
+              </h2>
+              <p className="text-[#6B6B66] leading-relaxed">
+                Si cocinas para una o dos personas, empieza por 20 cm. Para una
+                familia, 24 cm suele ser más práctico. Si haces salteados,
+                shakshuka, arroz o recetas amplias, el wok 32 cm es el producto
+                estrella.
+              </p>
+            </section>
+
+            <section>
+              <h2
+                className="mb-2 text-[20px] font-medium text-[#1A1A18]"
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                Fuentes editoriales
+              </h2>
+              <ul className="space-y-2 text-[14px]">
+                <li>
+                  <a
+                    href="https://www.cancer.org/cancer/risk-prevention/chemicals/teflon-and-perfluorooctanoic-acid-pfoa.html"
+                    className="text-[var(--accent)] underline underline-offset-2"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    American Cancer Society sobre PFOA, PFOS y PFAS
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.epa.gov/pfas/our-current-understanding-human-health-and-environmental-risks-pfas"
+                    className="text-[var(--accent)] underline underline-offset-2"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    EPA sobre riesgos y exposición a PFAS
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.fda.gov/food/process-contaminants-food/questions-and-answers-pfas-food"
+                    className="text-[var(--accent)] underline underline-offset-2"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    FDA preguntas y respuestas sobre PFAS en alimentos
+                  </a>
+                </li>
+              </ul>
+            </section>
+
+          </article>
+
+          {/* Inline advisory — no card box */}
+          <div className="mt-12 border-t border-[#E8E2D8] pt-8 pb-4 space-y-4">
+            <div className="flex items-start gap-3">
+              <ShieldCheck size={22} className="mt-0.5 flex-none text-[var(--accent)]" />
+              <div>
+                <h2
+                  className="text-[20px] font-medium text-[#1A1A18]"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  Recomendación segura
+                </h2>
+                <p className="mt-1 text-[14px] text-[#6B6B66]">
+                  Recomendamos desde catálogo real, preguntamos por uso y
+                  presupuesto, y evitamos frases médicas absolutas.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              {featured ? (
+                <TrackedWhatsAppLink
+                  className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
+                  placement="pfas_guide_aside"
+                  product={featured}
+                >
+                  <MessageCircle size={18} />
+                  Elegir mi olla
+                </TrackedWhatsAppLink>
+              ) : null}
+              <TrackedEventLink
+                className="inline-flex items-center gap-2 rounded-full border border-[#E8E2D8] px-5 py-3 text-[14px] font-medium text-[#1A1A18] hover:border-[var(--accent)] transition-colors"
+                cta="pfas_guide_club"
+                href="/#club"
+                placement="pfas_guide_aside"
+                type="guide_downloaded"
+                metadata={{
+                  journeyStage: "lead_nuevo",
+                  leadMagnet: "guia_pfas",
+                  followupSequence: [
+                    "dia_0_guia",
+                    "dia_2_tamano",
+                    "dia_7_cuidado",
+                    "dia_30_complemento",
+                    "dia_90_recompra",
+                  ],
+                }}
+              >
+                <BookOpen size={18} />
+                Recibir guía + cupón
+              </TrackedEventLink>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
   )
 }
