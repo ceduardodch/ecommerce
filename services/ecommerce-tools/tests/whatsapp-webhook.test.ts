@@ -9,6 +9,8 @@ import {
   validateHubSignature,
   extractInboundMessages,
   isOptOutText,
+  parseNpsScore,
+  npsDecision,
   type MetaWebhookBody,
 } from "../src/whatsapp-webhook.js"
 
@@ -232,5 +234,110 @@ describe("isOptOutText", () => {
     expect(isOptOutText("Hola, me interesa la olla")).toBe(false)
     expect(isOptOutText("BAJO precio")).toBe(false)
     expect(isOptOutText("BAJADO el precio")).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// parseNpsScore
+// ---------------------------------------------------------------------------
+
+describe("parseNpsScore", () => {
+  it("retorna número para '1' (límite inferior)", () => {
+    expect(parseNpsScore("1")).toBe(1)
+  })
+
+  it("retorna número para '10' (límite superior)", () => {
+    expect(parseNpsScore("10")).toBe(10)
+  })
+
+  it("retorna número para '9'", () => {
+    expect(parseNpsScore("9")).toBe(9)
+  })
+
+  it("retorna número con espacios alrededor '  7  '", () => {
+    expect(parseNpsScore("  7  ")).toBe(7)
+  })
+
+  it("retorna null para '0' (fuera de rango)", () => {
+    expect(parseNpsScore("0")).toBeNull()
+  })
+
+  it("retorna null para '11' (fuera de rango)", () => {
+    expect(parseNpsScore("11")).toBeNull()
+  })
+
+  it("retorna null para texto no numérico", () => {
+    expect(parseNpsScore("ocho")).toBeNull()
+    expect(parseNpsScore("Hola, me interesa la olla")).toBeNull()
+  })
+
+  it("retorna null para texto con número más palabras", () => {
+    expect(parseNpsScore("9 puntos")).toBeNull()
+    expect(parseNpsScore("8 estrellas")).toBeNull()
+  })
+
+  it("retorna null para string vacío", () => {
+    expect(parseNpsScore("")).toBeNull()
+  })
+
+  it("retorna null para número decimal", () => {
+    expect(parseNpsScore("7.5")).toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// npsDecision
+// ---------------------------------------------------------------------------
+
+describe("npsDecision", () => {
+  it("score >= 9 con contexto NPS → registra score Y agenda referido", () => {
+    expect(npsDecision(9, "nps_postentrega")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: true,
+    })
+    expect(npsDecision(10, "nps_postentrega")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: true,
+    })
+  })
+
+  it("score < 9 con contexto NPS → registra score pero NO agenda referido", () => {
+    expect(npsDecision(8, "nps_postentrega")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: false,
+    })
+    expect(npsDecision(1, "nps_postentrega")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: false,
+    })
+  })
+
+  it("score >= 9 SIN contexto NPS → no registra nada", () => {
+    expect(npsDecision(10, "recompra")).toEqual({
+      recordNpsScore: false,
+      scheduleReferido: false,
+    })
+    expect(npsDecision(9, null)).toEqual({
+      recordNpsScore: false,
+      scheduleReferido: false,
+    })
+    expect(npsDecision(9, undefined)).toEqual({
+      recordNpsScore: false,
+      scheduleReferido: false,
+    })
+  })
+
+  it("score >= 9 con followup_reason que empieza con 'nps' (variante) → agenda referido", () => {
+    expect(npsDecision(9, "nps_otro")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: true,
+    })
+  })
+
+  it("score con followup_reason 'NPS_postentrega' (mayúsculas) → case-insensitive", () => {
+    expect(npsDecision(9, "NPS_postentrega")).toEqual({
+      recordNpsScore: true,
+      scheduleReferido: true,
+    })
   })
 })

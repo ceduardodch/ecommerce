@@ -115,6 +115,7 @@ export const customerEventInputSchema = z.object({
     "message_out",
     "broadcast_sent",
     "broadcast_queued",
+    "nps_score",
   ]),
   at: z.string().optional(),
   customer: customerSchema.optional(),

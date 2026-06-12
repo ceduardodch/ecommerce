@@ -480,7 +480,7 @@ class B2bCrmModuleService extends MedusaService({
       metadata,
     })
 
-    return this.service_().createCrmCustomerEvents({
+    const event = await this.service_().createCrmCustomerEvents({
       phone,
       type: input.type,
       at: asDate(input.at) || new Date(),
@@ -490,6 +490,28 @@ class B2bCrmModuleService extends MedusaService({
       source: input.source,
       payload: payloadWithMetadata(input.payload, metadata),
     })
+
+    // Al registrar un evento `delivered`, agendar followup NPS a +7 días,
+    // SOLO si el cliente no tiene un followup más próximo.
+    if (input.type === "delivered") {
+      const customer = await this.getCustomer(phone)
+      if (customer) {
+        const npsAt = addDays(new Date().toISOString(), 7)
+        const existing = customer.next_followup_at
+        const shouldSchedule =
+          !existing ||
+          new Date(npsAt).getTime() < new Date(existing).getTime()
+        if (shouldSchedule) {
+          await this.service_().updateCrmCustomerProfiles({
+            id: customer.id,
+            next_followup_at: new Date(npsAt),
+            followup_reason: "nps_postentrega",
+          })
+        }
+      }
+    }
+
+    return event
   }
 
   async markPaid(input: {

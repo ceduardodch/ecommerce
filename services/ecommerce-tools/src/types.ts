@@ -126,6 +126,7 @@ export type CustomerEventType =
   | "message_out"
   | "broadcast_sent"
   | "broadcast_queued"
+  | "nps_score"
 
 export type CustomerEventRecord = {
   type: CustomerEventType

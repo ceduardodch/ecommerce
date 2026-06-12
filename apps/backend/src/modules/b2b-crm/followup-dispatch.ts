@@ -192,6 +192,12 @@ export function templateKeyFromReason(reason?: string | null): string {
   if (normalized.includes("cross_sell_bienestar")) {
     return "cross_sell_bienestar"
   }
+  if (normalized.startsWith("nps")) {
+    return "nps"
+  }
+  if (normalized.includes("referido")) {
+    return "referido"
+  }
 
   return "generico"
 }

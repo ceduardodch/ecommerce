@@ -116,6 +116,41 @@ export function isOptOutText(text: string): boolean {
   return upper === "BAJA" || upper.startsWith("BAJA ")
 }
 
+/**
+ * Parsea un score NPS de un mensaje de WhatsApp.
+ * Retorna un número 1-10 si el texto es SOLO un número (con espacios permitidos),
+ * o null si no es un score NPS válido.
+ * Función pura exportada para tests unitarios.
+ */
+export function parseNpsScore(text: string): number | null {
+  const trimmed = text.trim()
+  if (!/^\d+$/.test(trimmed)) return null
+  const score = Number(trimmed)
+  if (!Number.isInteger(score) || score < 1 || score > 10) return null
+  return score
+}
+
+/**
+ * Decide qué acciones tomar cuando se recibe un mensaje en contexto NPS.
+ * Retorna qué eventos registrar y si aplica seguimiento de referido.
+ * Función pura para poder testearla sin red ni I/O.
+ */
+export function npsDecision(
+  score: number,
+  followupReason: string | undefined | null,
+): {
+  recordNpsScore: boolean
+  scheduleReferido: boolean
+} {
+  const isNpsContext =
+    typeof followupReason === "string" &&
+    followupReason.toLowerCase().startsWith("nps")
+  return {
+    recordNpsScore: isNpsContext,
+    scheduleReferido: isNpsContext && score >= 9,
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Forward a Vicky (OpenClaw) — sin romper el webhook si Vicky no responde
 // ---------------------------------------------------------------------------
@@ -177,8 +212,11 @@ async function recordInboundEvent(
     source: string
     payload: unknown
     metadata: Record<string, unknown>
+    nextFollowupAt?: string
+    followupReason?: string
   }) => Promise<unknown>,
   isOptOut: boolean,
+  customerFollowupReason?: string | null,
 ): Promise<void> {
   const phone = `+${waId}`
   const at = new Date(timestamp * 1000).toISOString()
@@ -203,6 +241,37 @@ async function recordInboundEvent(
       payload: { trigger: "keyword_baja", originalText: text },
       metadata: {},
     })
+    return
+  }
+
+  // Detección de score NPS
+  const score = parseNpsScore(text)
+  if (score !== null) {
+    const { recordNpsScore, scheduleReferido } = npsDecision(score, customerFollowupReason)
+    if (recordNpsScore) {
+      await addCustomerEvent({
+        phone,
+        type: "nps_score",
+        at: new Date().toISOString(),
+        source: "whatsapp_cloud_api",
+        payload: { score },
+        metadata: {},
+      })
+      if (scheduleReferido) {
+        const referidoAt = new Date()
+        referidoAt.setDate(referidoAt.getDate() + 2)
+        await addCustomerEvent({
+          phone,
+          type: "followup_snoozed",
+          at: new Date().toISOString(),
+          source: "whatsapp_cloud_api",
+          payload: { reason: "referido", npsScore: score },
+          metadata: {},
+          nextFollowupAt: referidoAt.toISOString(),
+          followupReason: "referido",
+        })
+      }
+    }
   }
 }
 
@@ -220,7 +289,10 @@ export function mountWhatsappWebhookRoutes(
     source: string
     payload: unknown
     metadata: Record<string, unknown>
+    nextFollowupAt?: string
+    followupReason?: string
   }) => Promise<unknown>,
+  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
 
@@ -280,6 +352,16 @@ export function mountWhatsappWebhookRoutes(
       Promise.all(
         messages.map(async ({ waId, text, timestamp }) => {
           const optOut = isOptOutText(text)
+          // Buscar el followup_reason del cliente para lógica NPS (opcional)
+          let customerFollowupReason: string | null | undefined
+          if (!optOut && getCustomer) {
+            try {
+              const customer = await getCustomer(`+${waId}`)
+              customerFollowupReason = customer?.followup_reason
+            } catch {
+              // No bloquear el procesamiento si falla la búsqueda
+            }
+          }
           try {
             await recordInboundEvent(
               config,
@@ -288,6 +370,7 @@ export function mountWhatsappWebhookRoutes(
               timestamp,
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
+              customerFollowupReason,
             )
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")

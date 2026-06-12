@@ -188,6 +188,7 @@ mountWhatsappWebhookRoutes(
   async (input) => {
     return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
   },
+  async (phone) => service.getCustomer(phone) as Promise<{ followup_reason?: string | null } | undefined>,
 )
 
 // WhatsApp Cloud API — respuesta libre de Vicky (W3)

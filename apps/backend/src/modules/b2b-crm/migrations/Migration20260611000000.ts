@@ -18,7 +18,9 @@ export class Migration20260611000000 extends Migration {
       ('crmtpl_04', 'estacional', 'Hola {nombre}, tenemos ofertas especiales por temporada. ¿Te preparo una cotización corta por WhatsApp?', true),
       ('crmtpl_05', 'cross_sell_cocina', 'Hola {nombre}, vi que te interesa el bienestar. ¿Quieres ver opciones de ollas saludables para tu cocina?', true),
       ('crmtpl_06', 'cross_sell_bienestar', 'Hola {nombre}, vi que cocinas saludable. ¿Te interesa ver nuestros productos de bienestar?', true),
-      ('crmtpl_07', 'generico', 'Hola {nombre}, tenemos nuevas opciones de ollas, cuchillos y combos de cocina. Te preparo una cotizacion corta por WhatsApp?', true)
+      ('crmtpl_07', 'generico', 'Hola {nombre}, tenemos nuevas opciones de ollas, cuchillos y combos de cocina. Te preparo una cotizacion corta por WhatsApp?', true),
+      ('crmtpl_08', 'nps', 'Hola {nombre}, ¿llegó bien tu {producto}? Del 1 al 10, ¿qué tan probable es que nos recomiendes?', true),
+      ('crmtpl_09', 'referido', '¡Gracias! ¿A quién le regalamos un cupón de bienvenida? Compárteme su contacto o reenvíale nuestro número.', true)
       on conflict (key) do nothing;`,
     )
   }
