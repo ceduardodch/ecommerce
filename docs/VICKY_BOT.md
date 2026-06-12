@@ -237,6 +237,69 @@ Verificar que cada conversación tenga N eventos `message_in` + `message_out` in
 
 Use `/tools/sales/payment-proof` for transfer/deuna screenshots under review and `/tools/sales/confirm` only after human confirmation.
 
+## Responder por Cloud API cuando el mensaje llegó con replyVia: "cloud_api" (W3)
+
+Cuando el webhook de Meta reenvía un mensaje entrante a Vicky, incluye el campo
+`replyVia: "cloud_api"` en el body del hook de OpenClaw. Esto indica que la
+conversación llegó por el número dedicado a Cloud API y que **Vicky debe
+responder por ese canal**, no por la sesión OpenClaw del número original.
+
+### Flujo
+
+1. El webhook POST /webhooks/whatsapp recibe el mensaje y hace forward a Vicky:
+
+```json
+{
+  "name": "whatsapp-inbound",
+  "channel": "whatsapp",
+  "to": "+593979854915",
+  "deliver": true,
+  "message": "Hola, me interesa la olla",
+  "replyVia": "cloud_api"
+}
+```
+
+2. Vicky procesa el mensaje y, al responder, llama a:
+
+```bash
+curl -X POST "$ECOMMERCE_TOOLS_BASE_URL/tools/whatsapp/reply" \
+  -H "Authorization: Bearer $ECOMMERCE_TOOLS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "phone": "+593979854915",
+    "text": "Hola Maria, la olla de granito tiene antiadherente..."
+  }'
+```
+
+3. ecommerce-tools verifica que `metadata.lastInboundAt` exista y sea < 24h.
+   - Si sí: envía el texto como **mensaje libre (free-form)** vía Cloud API (gratis) y registra `message_out`.
+   - Si no: responde **409 `{ "error": "window_closed" }`**.
+
+4. Ante un 409, Vicky/coordinador decide si enviar una plantilla vía el
+   dispatcher (modo `meta`).
+
+### Respuesta exitosa (200)
+
+```json
+{
+  "ok": true,
+  "channel": "cloud_api_freeform",
+  "sentAt": "2026-06-12T14:30:15.000Z"
+}
+```
+
+### Ventana cerrada (409)
+
+```json
+{
+  "error": "window_closed"
+}
+```
+
+Esto significa que el cliente no ha escrito en las últimas 24h. Para contactarle
+fuera de ventana se debe usar una plantilla aprobada por Meta a través del
+dispatcher con `CRM_FOLLOWUP_DISPATCH_MODE=meta`.
+
 ## Production Guardrails
 
 - Keep PayPhone in `PAYPHONE_DRY_RUN=true` until real credentials and webhook are validated.

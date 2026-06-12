@@ -15,6 +15,7 @@ import {
   toolsEventInputSchema,
 } from "./contracts.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
+import { mountWhatsappReplyRoute } from "./whatsapp-reply.js"
 
 const config = loadConfig()
 const service = createCommerceService(config)
@@ -184,6 +185,16 @@ app.get("/tools/dashboard", async (request) => {
 mountWhatsappWebhookRoutes(
   app,
   config,
+  async (input) => {
+    return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
+  },
+)
+
+// WhatsApp Cloud API — respuesta libre de Vicky (W3)
+mountWhatsappReplyRoute(
+  app,
+  config,
+  async (phone) => service.getCustomer(phone),
   async (input) => {
     return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
   },
