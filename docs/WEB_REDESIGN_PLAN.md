@@ -192,7 +192,7 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 | (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
 | B — Dinero | WCMP-1..3, WPRD-1 | ✅ Hecho + fix de auditoría (commits `f44ea3b..86a633b`, jun 2026) |
 | **C — Marca** | WHOM-1..3 | ✅ Hecho (commits `18b1fdd..d541aee`, jun 2026) |
-| D — Limpieza | WCLN-1..3 | WCLN-1 ✅, WCLN-2 ✅, WCLN-3 ❌ pendiente (coordinador) |
+| D — Limpieza | WCLN-1..3 | ✅ Hecho. WCLN-3 (QA en vivo, jun 2026): `validate-meta-whatsapp-flow.mjs` con server activo → **hardFailures: 0, 38 checks PASS** (en local requiere `ALLOW_DEMO_CATALOG=true`); matriz de rutas 200 (/, /bienestar, /products/[slug], /guias, /guias/teflon-pfas, /marca, hosts eter-niu); inspección visual en navegador de home y campaña (video stories con posters, chips de granito, sticky con precio y cupón OK). Pendiente solo Lighthouse formal en producción |
 
 ### Sprint A — Fundación (WFND) ✅ HECHO
 
