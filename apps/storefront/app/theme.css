@@ -18,6 +18,12 @@
   --color-granito-crema:     #E8DFCE;
   --color-granito-terracota: #C97B5A;
 
+  /* ─── Breakpoints (RSP-1) ─── */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
   /* ─── Typography (runtime vars injected by next/font on <html>) ─── */
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
