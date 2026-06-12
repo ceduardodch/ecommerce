@@ -1,5 +1,15 @@
 import { commercialInfo } from "./commercial"
 
+export type CartItem = {
+  id: string
+  sku: string
+  title: string
+  price: number
+  quantity: number
+  image?: string
+  category?: string
+}
+
 export type WhatsappProduct = {
   id: string
   variantId?: string
@@ -124,6 +134,56 @@ export function whatsappLink(
     "",
     `Ref: ${reference}`,
   ].join("\n")
+
+  return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
+}
+
+export function generateCartMessage(
+  items: CartItem[],
+  total: number,
+  customerName?: string,
+  customerCity?: string,
+): string {
+  const itemsList = items
+    .map(
+      (item) =>
+        `${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}`,
+    )
+    .join("\n")
+
+  const message = [
+    customerName ? `Hola, soy ${customerName}` : "Hola",
+    customerCity ? `de ${customerCity}.` : "",
+    "",
+    "Quiero pedir:",
+    "",
+    itemsList,
+    "",
+    `Total: $${total.toFixed(2)}`,
+    "",
+    "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
+  ]
+    .filter(Boolean)
+    .join("\n")
+
+  return message
+}
+
+export function whatsappCartLink(
+  items: CartItem[],
+  total: number,
+  customerName: string = "",
+  customerCity: string = "",
+  sessionId?: string,
+): string {
+  const seller = normalizeWhatsappSellerNumber(
+    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905",
+  )
+
+  const message = generateCartMessage(items, total, customerName, customerCity)
+  const reference = sessionId ? `Ref: cart_${sessionId}` : "Ref: cart"
+
+  const text = [message, "", reference].join("\n")
 
   return `https://wa.me/${seller}?text=${encodeURIComponent(text)}`
 }

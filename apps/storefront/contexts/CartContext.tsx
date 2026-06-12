@@ -21,6 +21,7 @@ type CartContextType = {
   clearCart: () => void
   totalItems: number
   totalAmount: number
+  generateWhatsAppMessage: (customerName?: string, customerCity?: string) => string
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -109,6 +110,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     0,
   )
 
+  const generateWhatsAppMessage = (
+    customerName: string = "",
+    customerCity: string = "",
+  ) => {
+    const itemsList = items
+      .map(
+        (item) =>
+          `${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}`,
+      )
+      .join("\n")
+
+    const message = [
+      customerName ? `Hola, soy ${customerName}` : "Hola",
+      customerCity ? `de ${customerCity}.` : "",
+      "",
+      "Quiero pedir:",
+      "",
+      itemsList,
+      "",
+      `Total: $${totalAmount.toFixed(2)}`,
+      "",
+      "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
+    ]
+      .filter(Boolean)
+      .join("\n")
+
+    return message
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -120,6 +150,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         totalItems,
         totalAmount,
+        generateWhatsAppMessage,
       }}
     >
       {children}
