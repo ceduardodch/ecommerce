@@ -178,6 +178,7 @@ export default async function WellnessPage() {
       <SiteHeader vertical="bienestar" />
 
       <main className="bg-[#FAF7F2] pb-24">
+        <div className="mx-auto max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl">
 
         {/* 3. Hero */}
         <section className="px-4 pt-8 pb-6" aria-label="Bienestar diario">
@@ -297,7 +298,7 @@ export default async function WellnessPage() {
             title="Productos listos para pedir por WhatsApp."
           />
           {products.length ? (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
               {products.map((product) => (
                 <WellnessProductCard key={product.id} product={product} />
               ))}
@@ -369,6 +370,7 @@ export default async function WellnessPage() {
           </a>
         </div>
 
+        </div>
       </main>
 
       {/* Sticky advisory bar — no product on home, generic fallback */}

@@ -174,7 +174,7 @@ function FeaturedCard({ product }: { product: Product }) {
 
 function CategoryGrid() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       {categories.map((cat) => (
         <a
           key={cat.label}
@@ -289,6 +289,7 @@ export default async function Home({ searchParams }: HomeProps) {
       <SiteHeader vertical="cocina" />
 
       <main className="bg-[#FAF7F2] pb-24">
+        <div className="mx-auto max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl">
 
         {/* 3. Video stories — patrón Our Place */}
         <div className="pt-5 pb-4">
@@ -437,6 +438,7 @@ export default async function Home({ searchParams }: HomeProps) {
           <TrustRow product={featured} />
         </div>
 
+        </div>
       </main>
 
       {/* 8. Sticky bar — asesoría genérica en home (sin product, fallback permitido) */}
