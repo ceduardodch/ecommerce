@@ -1,7 +1,11 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 import type { AppConfig } from "./config.js"
 
-const publicPaths = new Set(["/healthz", "/feeds/meta/catalog.csv"])
+const publicPaths = new Set([
+  "/healthz",
+  "/feeds/meta/catalog.csv",
+  "/webhooks/whatsapp",
+])
 
 export function authHook(config: AppConfig) {
   return async (request: FastifyRequest, reply: FastifyReply) => {

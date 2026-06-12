@@ -14,6 +14,7 @@ import {
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
+import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 
 const config = loadConfig()
 const service = createCommerceService(config)
@@ -22,6 +23,21 @@ const app = Fastify({ logger: true })
 await app.register(cors, {
   origin: true,
 })
+
+// Preservar el buffer crudo para /webhooks/whatsapp (validación de firma Meta)
+app.addContentTypeParser(
+  "application/json",
+  { parseAs: "buffer" },
+  (request, body, done) => {
+    const buf = Buffer.isBuffer(body) ? body : Buffer.from(body as string)
+    ;(request as unknown as { rawBodyBuffer: Buffer }).rawBodyBuffer = buf
+    try {
+      done(null, JSON.parse(buf.toString("utf8")))
+    } catch (err) {
+      done(err as Error, undefined)
+    }
+  },
+)
 
 app.addHook("preHandler", authHook(config))
 
@@ -163,6 +179,15 @@ app.get("/tools/dashboard", async (request) => {
   const query = request.query as Record<string, string | undefined>
   return service.dashboard({ asOf: query.asOf })
 })
+
+// WhatsApp Cloud API — webhook entrante (W2)
+mountWhatsappWebhookRoutes(
+  app,
+  config,
+  async (input) => {
+    return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
+  },
+)
 
 try {
   await app.listen({ port: config.port, host: "0.0.0.0" })
