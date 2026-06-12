@@ -14,6 +14,7 @@ type CustomerRow = {
   nextFollowupAt?: string
   followupReason?: string
   priority?: string
+  rfmSegment?: string
 }
 
 type CustomersResponse = {
@@ -341,6 +342,45 @@ function CampaignModal({
   )
 }
 
+const RFM_SEGMENT_LABELS: Record<string, string> = {
+  vip: "VIP",
+  leal: "Leal",
+  prometedor: "Prometedor",
+  nuevo: "Nuevo",
+  dormido: "Dormido",
+  en_riesgo: "En riesgo",
+}
+
+function RfmBadge({ segment }: { segment?: string }) {
+  if (!segment) return null
+  const colors: Record<string, { bg: string; color: string }> = {
+    vip:        { bg: "#ffd700", color: "#1a1a1a" },
+    leal:       { bg: "#4caf50", color: "#fff" },
+    prometedor: { bg: "#2196f3", color: "#fff" },
+    nuevo:      { bg: "#9c27b0", color: "#fff" },
+    dormido:    { bg: "#9e9e9e", color: "#fff" },
+    en_riesgo:  { bg: "#f44336", color: "#fff" },
+  }
+  const style = colors[segment] || { bg: "var(--bg-subtle)", color: "var(--fg-base)" }
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        fontSize: 11,
+        fontWeight: 600,
+        padding: "2px 6px",
+        borderRadius: 4,
+        background: style.bg,
+        color: style.color,
+        textTransform: "uppercase",
+        letterSpacing: "0.04em",
+      }}
+    >
+      {RFM_SEGMENT_LABELS[segment] || segment}
+    </span>
+  )
+}
+
 function LeadsPage() {
   const [search, setSearch] = useState("")
   const [query, setQuery] = useState("")
@@ -349,6 +389,7 @@ function LeadsPage() {
   const [dueOnly, setDueOnly] = useState(false)
   const [tag, setTag] = useState("")
   const [vertical, setVertical] = useState("")
+  const [rfmSegment, setRfmSegment] = useState("")
   const [page, setPage] = useState(0)
   const [data, setData] = useState<CustomersResponse | undefined>()
   const [error, setError] = useState<string | undefined>()
@@ -373,8 +414,9 @@ function LeadsPage() {
     if (dueOnly) searchParams.set("due", "1")
     if (tag.trim()) searchParams.set("tag", tag.trim())
     if (vertical) searchParams.set("vertical", vertical)
+    if (rfmSegment) searchParams.set("rfmSegment", rfmSegment)
     return searchParams.toString()
-  }, [query, stage, consent, dueOnly, tag, vertical, page])
+  }, [query, stage, consent, dueOnly, tag, vertical, rfmSegment, page])
 
   const campaignFilter = useMemo(
     () => ({
@@ -382,8 +424,9 @@ function LeadsPage() {
       tag: tag.trim() || undefined,
       consent: consent === "1" ? true : consent === "0" ? false : undefined,
       vertical: vertical || undefined,
+      rfmSegment: rfmSegment || undefined,
     }),
-    [stage, tag, consent, vertical],
+    [stage, tag, consent, vertical, rfmSegment],
   )
 
   useEffect(() => {
@@ -528,6 +571,22 @@ function LeadsPage() {
           <option value="cross-sell-cocina">Cross-sell a cocina (compró bienestar)</option>
           <option value="cross-sell-bienestar">Cross-sell a bienestar (compró cocina)</option>
         </select>
+        <select
+          style={inputStyle}
+          value={rfmSegment}
+          onChange={(event) => {
+            setRfmSegment(event.target.value)
+            setPage(0)
+          }}
+        >
+          <option value="">Segmento RFM: todos</option>
+          <option value="vip">VIP</option>
+          <option value="leal">Leal</option>
+          <option value="prometedor">Prometedor</option>
+          <option value="nuevo">Nuevo</option>
+          <option value="dormido">Dormido</option>
+          <option value="en_riesgo">En riesgo</option>
+        </select>
         <label style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 13 }}>
           <input
             type="checkbox"
@@ -555,6 +614,7 @@ function LeadsPage() {
           <thead>
             <tr>
               <th style={cellStyle}>Cliente</th>
+              <th style={cellStyle}>Segmento RFM</th>
               <th style={cellStyle}>Etapa / Motivo</th>
               <th style={cellStyle}>Etiquetas</th>
               <th style={cellStyle}>Consent.</th>
@@ -582,6 +642,9 @@ function LeadsPage() {
                   ) : null}
                 </td>
                 <td style={cellStyle}>
+                  <RfmBadge segment={customer.rfmSegment} />
+                </td>
+                <td style={cellStyle}>
                   {customer.journeyStage || customer.followupReason || "-"}
                 </td>
                 <td style={cellStyle}>{(customer.tags || []).join(", ") || "-"}</td>
@@ -602,7 +665,7 @@ function LeadsPage() {
             ))}
             {!loading && !(data?.customers || []).length ? (
               <tr>
-                <td colSpan={6} style={cellStyle}>
+                <td colSpan={7} style={cellStyle}>
                   No hay leads con esos filtros. Puedes importar tus leads
                   anteriores con el botón de arriba.
                 </td>

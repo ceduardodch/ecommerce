@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { crmService, serializeCustomer } from "../../_shared"
+import { calculateRfmFromProfile, type RfmSegment } from "../../../../../modules/b2b-crm/rfm"
 
 type ImportBody = {
   customers?: Array<{
@@ -32,9 +33,17 @@ function boolParam(value: unknown) {
   )
 }
 
+const VALID_RFM_SEGMENTS: RfmSegment[] = [
+  "vip", "leal", "prometedor", "nuevo", "dormido", "en_riesgo",
+]
+
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
   const limit = Number(req.query.limit || 100)
   const offset = Number(req.query.offset || 0)
+  const rfmParam = req.query.rfmSegment ? String(req.query.rfmSegment) : undefined
+  const rfmSegment = rfmParam && VALID_RFM_SEGMENTS.includes(rfmParam as RfmSegment)
+    ? (rfmParam as RfmSegment)
+    : undefined
 
   const { customers, count } = await crmService(req).searchCustomers({
     q: req.query.q ? String(req.query.q) : undefined,
@@ -42,12 +51,22 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     dueOnly: boolParam(req.query.due) === true,
     tag: req.query.tag ? String(req.query.tag) : undefined,
     stage: req.query.stage ? String(req.query.stage) : undefined,
+    vertical: req.query.vertical
+      ? (String(req.query.vertical) as any)
+      : undefined,
+    rfmSegment,
     offset,
     limit,
   })
 
+  // Enrich with RFM segment on-the-fly from profile data (no extra DB calls)
+  const enriched = customers.map((customer: any) => {
+    const rfmScore = calculateRfmFromProfile(customer)
+    return { ...customer, _rfmSegment: rfmScore }
+  })
+
   res.json({
-    customers: customers.map(serializeCustomer),
+    customers: enriched.map(serializeCustomer),
     count,
     offset,
     limit,

@@ -13,6 +13,7 @@ import type {
   PurchasedProduct,
 } from "./types"
 import { recompraMetrics as calculateRecompraMetrics } from "./recompra-metrics"
+import { calculateRfm, type RfmSegment } from "./rfm"
 
 type AnyB2bCrmService = {
   listCrmCustomerProfiles: (filters?: unknown, config?: unknown) => Promise<any[]>
@@ -39,8 +40,33 @@ export type CustomerSearchInput = {
   tag?: string
   stage?: string
   vertical?: "cocina" | "bienestar" | "cross-sell-cocina" | "cross-sell-bienestar"
+  rfmSegment?: RfmSegment
   offset?: number
   limit?: number
+}
+
+/**
+ * Calcula el segmento RFM de un cliente on-the-fly dado sus eventos.
+ * Sin migración: usa los eventos existentes.
+ */
+export function computeRfmSegment(
+  customer: { last_purchase_at?: Date | string | null },
+  customerEvents: Array<{ type: string; at?: string | Date | null }>,
+  conversationalOrders: Array<{ phone?: string; total_amount?: number; status?: string }>,
+  asOf: Date = new Date(),
+): RfmSegment {
+  const paidEvents = customerEvents.filter((event) => event.type === "paid")
+  const totalAmount = conversationalOrders
+    .filter((order) => order.status === "paid" && order.total_amount)
+    .reduce((sum, order) => sum + (order.total_amount || 0), 0)
+
+  const result = calculateRfm({
+    paidEvents: paidEvents.map((event) => ({ at: event.at as string | Date })),
+    totalAmount,
+    asOf,
+  })
+
+  return result.segment
 }
 
 export type CustomerProfilePatch = {
@@ -245,7 +271,7 @@ class B2bCrmModuleService extends MedusaService({
       where.next_followup_at = { $lte: new Date() }
     }
 
-    const needsMemoryFilter = Boolean(input.tag || input.stage || input.vertical)
+    const needsMemoryFilter = Boolean(input.tag || input.stage || input.vertical || input.rfmSegment)
 
     if (!needsMemoryFilter) {
       const [customers, count] = await service.listAndCountCrmCustomerProfiles(
@@ -262,6 +288,18 @@ class B2bCrmModuleService extends MedusaService({
     const stage = input.stage?.toLowerCase()
     const tag = input.tag?.toLowerCase()
     const vertical = input.vertical?.toLowerCase()
+    const rfmSegmentFilter = input.rfmSegment
+
+    // Para filtro RFM necesitamos eventos y órdenes de todos los candidatos
+    let allEvents: Array<{ type: string; at?: string | Date | null; phone: string }> = []
+    let allOrders: Array<{ phone?: string; total_amount?: number; status?: string }> = []
+    if (rfmSegmentFilter) {
+      const phones = candidates.map((c) => c.phone)
+      // Cargamos eventos y órdenes de todos los candidatos en batch
+      allEvents = await service.listCrmCustomerEvents({ phone: phones }, { take: 10000 })
+      allOrders = await service.listConversationalOrders({}, { take: 5000 })
+    }
+
     const filtered = candidates.filter((customer) => {
       if (tag) {
         const tags = (customer.tags || []).map((value: string) =>
@@ -289,6 +327,12 @@ class B2bCrmModuleService extends MedusaService({
         // Match directo de línea (incluye clientes con ambas)
         if (vertical === "cocina" && !cocina) return false
         if (vertical === "bienestar" && !bienestar) return false
+      }
+      if (rfmSegmentFilter) {
+        const customerEvents = allEvents.filter((e) => e.phone === customer.phone)
+        const customerOrders = allOrders.filter((o) => o.phone === customer.phone)
+        const segment = computeRfmSegment(customer, customerEvents, customerOrders)
+        if (segment !== rfmSegmentFilter) return false
       }
       return true
     })

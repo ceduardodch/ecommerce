@@ -107,6 +107,8 @@ export function serializeCustomer(customer: any) {
     priority: followupPriority(reason),
     recommendedProductSku: recommendedProductSku(customer),
     requiresHumanApproval: true,
+    // rfmSegment es calculado on-the-fly por el endpoint y adjuntado aquí
+    rfmSegment: customer._rfmSegment ?? undefined,
   }
 }
 
