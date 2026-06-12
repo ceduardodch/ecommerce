@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Fraunces, Inter } from "next/font/google"
 import { kitchenBaseUrl } from "../lib/domains"
 import { MetaPixel } from "./components/analytics"
+import { CartProvider } from "../contexts/CartContext"
 import "./globals.css"
 import "./theme.css"
 
@@ -42,8 +43,10 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${fraunces.variable} ${inter.variable}`}>
       <body>
-        {children}
-        <MetaPixel />
+        <CartProvider>
+          {children}
+          <MetaPixel />
+        </CartProvider>
       </body>
     </html>
   )
