@@ -41,7 +41,7 @@ export function LeadCaptureForm({
 
   return (
     <form
-      className="club-form"
+      className="flex flex-col gap-3.5 rounded-xl border border-[#E8E2D8] bg-[#FAF7F2]/95 p-4"
       onSubmit={(event) => {
         event.preventDefault()
         setState("submitting")
@@ -110,38 +110,32 @@ export function LeadCaptureForm({
         }
       }}
     >
-      <div className="form-grid">
-        <label>
-          <span>Nombre</span>
-          <input autoComplete="name" name="name" placeholder="Tu nombre" />
-        </label>
-        <label>
-          <span>Email</span>
-          <input
-            autoComplete="email"
-            inputMode="email"
-            name="email"
-            placeholder="correo@ejemplo.com"
-            type="email"
-          />
-        </label>
-        <label>
-          <span>WhatsApp</span>
-          <input
-            autoComplete="tel"
-            inputMode="tel"
-            name="phone"
-            placeholder="09..."
-            type="tel"
-          />
-        </label>
-        <label>
-          <span>Ciudad</span>
-          <input autoComplete="address-level2" name="city" placeholder="Quito, Guayaquil..." />
-        </label>
-        <label>
-          <span>Personas en casa</span>
-          <select name="people" defaultValue="">
+      <div className="grid grid-cols-2 gap-2.5">
+        {[
+          { label: "Nombre", name: "name", placeholder: "Tu nombre", autoComplete: "name" },
+          { label: "Email", name: "email", placeholder: "correo@ejemplo.com", type: "email", inputMode: "email" as const, autoComplete: "email" },
+          { label: "WhatsApp", name: "phone", placeholder: "09...", type: "tel", inputMode: "tel" as const, autoComplete: "tel" },
+          { label: "Ciudad", name: "city", placeholder: "Quito, Guayaquil...", autoComplete: "address-level2" },
+        ].map(({ label, ...inputProps }) => (
+          <label key={inputProps.name} className="flex flex-col gap-1.5 min-w-0">
+            <span className="text-[12px] font-semibold text-[var(--accent)] uppercase tracking-wide">
+              {label}
+            </span>
+            <input
+              {...inputProps}
+              className="h-11 w-full rounded-lg border border-[#E8E2D8] bg-white px-3 text-[14px] text-[#1A1A18] placeholder:text-[#6B6B66] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+            />
+          </label>
+        ))}
+        <label className="flex flex-col gap-1.5 min-w-0">
+          <span className="text-[12px] font-semibold text-[var(--accent)] uppercase tracking-wide">
+            Personas en casa
+          </span>
+          <select
+            name="people"
+            defaultValue=""
+            className="h-11 w-full rounded-lg border border-[#E8E2D8] bg-white px-3 text-[14px] text-[#1A1A18] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+          >
             <option value="" disabled>
               Elige una opcion
             </option>
@@ -150,9 +144,15 @@ export function LeadCaptureForm({
             <option value="5+">5 o mas</option>
           </select>
         </label>
-        <label>
-          <span>Producto de interes</span>
-          <select name="productInterest" defaultValue="">
+        <label className="flex flex-col gap-1.5 min-w-0">
+          <span className="text-[12px] font-semibold text-[var(--accent)] uppercase tracking-wide">
+            Producto de interes
+          </span>
+          <select
+            name="productInterest"
+            defaultValue=""
+            className="h-11 w-full rounded-lg border border-[#E8E2D8] bg-white px-3 text-[14px] text-[#1A1A18] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+          >
             <option value="" disabled>
               Que quieres mejorar
             </option>
@@ -164,15 +164,23 @@ export function LeadCaptureForm({
           </select>
         </label>
       </div>
-      <label className="consent-row">
-        <input name="whatsappConsent" type="checkbox" />
-        <span>
+      <label className="grid grid-cols-[18px_1fr] items-start gap-2">
+        <input
+          name="whatsappConsent"
+          type="checkbox"
+          className="mt-0.5 h-[18px] w-[18px] accent-[var(--accent)]"
+        />
+        <span className="text-[13px] text-[#6B6B66] leading-relaxed">
           Acepto que Eter Niu Cocina me escriba por WhatsApp con la guia,
           cupon, recordatorios de cuidado y recomendaciones. Puedo pedir que no
           me contacten.
         </span>
       </label>
-      <button disabled={state === "submitting"} type="submit">
+      <button
+        disabled={state === "submitting"}
+        type="submit"
+        className="flex items-center justify-center gap-2 h-11 rounded-full bg-[var(--accent)] text-white text-[14px] font-semibold cursor-pointer border-0 disabled:cursor-wait disabled:opacity-70"
+      >
         {state === "submitting" ? (
           "Registrando..."
         ) : (
@@ -183,7 +191,13 @@ export function LeadCaptureForm({
         )}
       </button>
       {message ? (
-        <p className={`form-message ${state}`}>
+        <p
+          className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-[13px] font-medium ${
+            state === "success"
+              ? "bg-[#E8F5EC] text-[#2F5D43]"
+              : "bg-[#FFF0EC] text-[#C4502A]"
+          }`}
+        >
           {state === "success" ? <CheckCircle2 size={18} /> : <MessageCircle size={18} />}
           {message}
         </p>

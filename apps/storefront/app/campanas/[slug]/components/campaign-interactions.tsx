@@ -128,24 +128,40 @@ export function CampaignWhatsAppPanel({
   const metadata = compactContext(context)
 
   return (
-    <section className="campaign-selector" id="personas">
-      <div>
-        <p className="eyebrow">Antes de ir a WhatsApp</p>
-        <h2>
+    <section
+      className="grid gap-4 rounded-xl bg-[#FAF7F2] p-5 md:grid-cols-[0.9fr_1.1fr] md:items-center"
+      id="personas"
+    >
+      <div className="flex flex-col gap-2">
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          Antes de ir a WhatsApp
+        </p>
+        <h2
+          className="text-[20px] font-medium leading-tight text-[#1A1A18]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           {complement
             ? "Cuentale a Vicky como lo vas a usar."
             : "Cuentale a Vicky para cuantas personas cocinas."}
         </h2>
-        <p>
+        <p className="text-[14px] text-[#6B6B66] leading-relaxed">
           El mensaje se arma con tu producto, cupon, ciudad de campana y esta
           respuesta para que no pases por un menu generico.
         </p>
       </div>
-      <div className="campaign-selector-panel">
-        <div className="campaign-choice-group" aria-label="Personas en casa">
+      <div className="flex flex-col gap-3 rounded-xl border border-[#E8E2D8] bg-white/90 p-4">
+        <div
+          className="grid gap-2"
+          style={{ gridTemplateColumns: `repeat(${peopleOptions.length}, minmax(0,1fr))` }}
+          aria-label="Personas en casa"
+        >
           {peopleOptions.map((option) => (
             <button
-              className={people === option ? "is-active" : ""}
+              className={`min-h-[42px] rounded-lg border text-[13px] font-semibold cursor-pointer transition-colors ${
+                people === option
+                  ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+                  : "border-[#E8E2D8] bg-white text-[#1A1A18] hover:border-[var(--accent)]"
+              }`}
               key={option}
               onClick={() => setPeople(option)}
               type="button"
@@ -154,11 +170,14 @@ export function CampaignWhatsAppPanel({
             </button>
           ))}
         </div>
-        <label className="campaign-select-label">
-          <span>Uso principal</span>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[12px] font-semibold text-[var(--accent)] uppercase tracking-wide">
+            Uso principal
+          </span>
           <select
             value={useCase}
             onChange={(event) => setUseCase(event.target.value)}
+            className="h-11 w-full rounded-lg border border-[#E8E2D8] bg-white px-3 text-[14px] text-[#1A1A18] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
           >
             {useCaseOptions.map(([value, label]) => (
               <option key={value} value={value}>
@@ -168,7 +187,7 @@ export function CampaignWhatsAppPanel({
           </select>
         </label>
         <TrackedWhatsAppLink
-          className="primary-button campaign-wide-cta"
+          className="flex w-full items-center justify-center gap-2 h-11 rounded-full bg-[#25D366] px-5 text-[14px] font-semibold text-white"
           cta="campaign_selector_whatsapp"
           eventType="campaign_cta_click"
           extraEventTypes={["whatsapp_opened"]}
@@ -199,7 +218,7 @@ export function CampaignWhatsAppPanel({
           <MessageCircle size={19} />
           Reclamar cupon y confirmar stock por WhatsApp
         </TrackedWhatsAppLink>
-        <small>
+        <small className="text-[12px] text-[#6B6B66] leading-snug">
           Incluye {commerce.freeShippingLabel.toLowerCase()},{" "}
           {commerce.paymentMethodsLabel} y{" "}
           {complement
@@ -248,15 +267,22 @@ export function CampaignStickyCta({
   }, [])
 
   return (
-    <div className={`campaign-sticky-cta${visible ? " is-visible" : ""}`}>
-      <div>
-        <span>
+    <div
+      aria-hidden={!visible}
+      className={`fixed bottom-0 left-0 right-0 z-50 grid grid-cols-[1fr_auto] items-center gap-3 border-t border-white/20 bg-[rgba(17,24,19,0.94)] px-4 py-2.5 text-[#FAF7F2] shadow-[0_-4px_24px_rgba(23,32,27,0.28)] transition-all duration-200 ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
+      }`}
+    >
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="text-[11px] text-[#E8E2D8] leading-tight font-medium">
           {offerText} · {shippingText}
         </span>
-        <strong>{product.title}</strong>
+        <strong className="truncate text-[14px] font-medium leading-tight">
+          {product.title}
+        </strong>
       </div>
       <TrackedWhatsAppLink
-        className="primary-button"
+        className="flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-[13px] font-semibold text-white"
         cta="campaign_sticky_whatsapp"
         eventType="campaign_cta_click"
         extraEventTypes={["whatsapp_opened"]}
