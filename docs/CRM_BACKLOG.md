@@ -135,7 +135,7 @@ agendada automáticamente en noviembre.
 | CONV (timeline) | ✅ CONV-1..3 hechos |
 | RPT (reportes LTV) | ✅ RPT-1..4 hechos |
 | BRC (broadcasts) | ✅ BRC-1, BRC-2 hechos |
-| XSELL | 🟡 XS-1 hecho; **XS-2, XS-3, XS-4 pendientes** |
+| XSELL | ✅ XS-1..4 completados |
 | BMK (P3) | ❌ Pendiente (espera datos de RPT) |
 | EPIC 0 (operación) | ⚠️ Tareas del dueño — sin verificar (leads reales, hook OpenClaw) |
 
@@ -148,7 +148,7 @@ XS-2..4 después.
 1. ~~**Sprint 1 — Mensajería**: TPL-1..3 + CONV-1..3~~ ✅
 2. ~~**Sprint 2 — Medición**: RPT-1..4~~ ✅ (falta OPS-4 línea base con datos reales)
 3. ~~**Sprint 3 — Campañas**: BRC-1..2 + XS-1~~ ✅
-4. **Sprint 4 — Estacionalidad y ciclos**: XS-2, XS-3, XS-4. ← siguiente del CRM
+4. ~~**Sprint 4 — Estacionalidad y ciclos**: XS-2, XS-3, XS-4~~ ✅
 5. **Después, según números**: BMK-1..3.
 
 EPIC 0 (operación) corre en paralelo desde hoy — no depende de ningún sprint.
