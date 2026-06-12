@@ -273,6 +273,20 @@ function CrmWhatsappPage() {
             Leads
           </Link>
           <Link
+            to="/crm-whatsapp/pipeline"
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-subtle)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              textDecoration: "none",
+            }}
+          >
+            Pipeline
+          </Link>
+          <Link
             to="/crm-whatsapp/import"
             style={{
               border: "1px solid var(--border-base)",
