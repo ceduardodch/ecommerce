@@ -1,63 +1,46 @@
-import { existsSync } from "node:fs"
-import { join } from "node:path"
-import type { CSSProperties } from "react"
-import {
-  BadgeDollarSign,
-  BookOpen,
-  CookingPot,
-  Flame,
-  MessageCircle,
-  PlayCircle,
-  Sparkles,
-  Timer,
-  Truck,
-  Video,
-} from "lucide-react"
-import type { Product } from "../lib/catalog"
-import { getProducts, productPath } from "../lib/catalog"
+import type { Metadata } from "next"
+import { BookOpen, MessageCircle, Truck, BadgeDollarSign, Sparkles } from "lucide-react"
+import Image from "next/image"
+import { getProducts, productPath, type Product } from "../lib/catalog"
 import { commercialInfo } from "../lib/commercial"
-import { mediaSlots, starProductSkus, type MediaSlot } from "../lib/content"
+import { kitchenBaseUrl } from "../lib/domains"
 import { LeadCaptureForm } from "./components/lead-capture-form"
-import { FloatingWhatsAppCta } from "./components/floating-whatsapp-cta"
 import { PotRecommendationQuiz } from "./components/pot-recommendation-quiz"
-import {
-  PageAnalytics,
-  TrackedEventLink,
-  TrackedWhatsAppLink,
-} from "./components/analytics"
+import { PageAnalytics, TrackedEventLink, TrackedWhatsAppLink } from "./components/analytics"
+import { PromoBar } from "./components/ui/promo-bar"
+import { SiteHeader } from "./components/ui/site-header"
+import { VideoStories } from "./components/ui/video-stories"
+import { SectionHead } from "./components/ui/section"
+import { StickyCTABar } from "./components/ui/sticky-cta-bar"
 
-type HomeProps = {
-  searchParams?: Promise<{
-    q?: string
-    category?: string
-  }>
+export const metadata: Metadata = {
+  title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
+  description:
+    "Ollas, woks y sets de granito para cocinar con menos aceite, videos de uso, guias de cuidado y cotizacion por WhatsApp.",
+  metadataBase: new URL(kitchenBaseUrl),
+  alternates: { canonical: kitchenBaseUrl },
+  openGraph: {
+    title: "Eter Niu Cocina",
+    description:
+      "Ollas y woks de granito con videos, guias y asesor por WhatsApp para elegir segun tu familia y uso diario.",
+    url: kitchenBaseUrl,
+    siteName: "Eter Niu Cocina",
+    type: "website",
+  },
 }
 
-function money(amount: number) {
-  return `$${amount.toFixed(2)}`
+// ---- helpers ----------------------------------------------------------------
+
+function money(n: number) {
+  return `$${n.toFixed(2)}`
 }
 
-function mediaPath(file: string) {
-  try {
-    return existsSync(join(process.cwd(), "public", "media", file))
-      ? `/media/${file}`
-      : undefined
-  } catch {
-    return undefined
-  }
+function hasPromo(p: Product) {
+  return p.originalPrice !== undefined && p.originalPrice.amount > p.price.amount
 }
 
-function hasPromo(product: Product) {
-  return (
-    product.originalPrice !== undefined &&
-    product.originalPrice.amount > product.price.amount
-  )
-}
-
-function starRank(product: Product) {
-  const skuIndex = starProductSkus.indexOf(product.sku)
-  if (skuIndex >= 0) return skuIndex
-  const normalized = `${product.title} ${product.sku}`.toLowerCase()
+function starRank(p: Product) {
+  const normalized = `${p.title} ${p.sku}`.toLowerCase()
   if (normalized.includes("wok") && normalized.includes("32")) return 0
   if (normalized.includes("20 cm")) return 1
   if (normalized.includes("18 cm")) return 2
@@ -65,560 +48,403 @@ function starRank(product: Product) {
   return 99
 }
 
-function isStarProduct(product: Product) {
-  return starRank(product) < 99
+function isStarProduct(p: Product) {
+  return starRank(p) < 99
 }
 
-function productForSkus(
-  products: Product[],
-  skus: string[],
-  fallback?: Product,
-) {
-  return products.find((product) => skus.includes(product.sku)) || fallback
-}
+// ---- data -------------------------------------------------------------------
 
-const mainCouponCta = "Reclamar mi cupon y confirmar stock por WhatsApp"
-
-const landingProductSkus = [
-  "MGC-WOK-GRANITO-32",
-  "MGC-OLLA-GRANITO-20",
-  "MGC-OLLA-GRANITO-18",
+// 4 granito colour chips — narrativa de colección (no variantes reales todavía)
+const granitColors = [
+  { name: "Negro", hex: "#2B2B28" },
+  { name: "Sage", hex: "#B7C4B1" },
+  { name: "Crema", hex: "#E8DFCE" },
+  { name: "Terracota", hex: "#C97B5A" },
 ]
 
-const landingVideoSlotIds = ["detalle-wok", "uso-diario-gas", "receta-wok"]
+// Video stories: 4 clips con poster generado por ffmpeg
+const homeStories = [
+  {
+    src: "/media/hero-cocina.mp4",
+    poster: "/media/poster-hero-cocina.jpg",
+    label: "Wok en accion",
+  },
+  {
+    src: "/media/detalle-wok.mp4",
+    poster: "/media/poster-detalle-wok.jpg",
+    label: "Granito de cerca",
+  },
+  {
+    src: "/media/uso-diario-gas.mp4",
+    poster: "/media/poster-uso-diario-gas.jpg",
+    label: "En hornilla",
+  },
+  {
+    src: "/media/receta-wok.mp4",
+    poster: "/media/poster-receta-wok.jpg",
+    label: "Receta completa",
+  },
+]
 
-function CommerceBadges({
-  product,
-  compact = false,
-}: {
-  product?: Product
-  compact?: boolean
-}) {
+// Categorías 2×2 patrón Caraway
+const categories = [
+  { label: "Ollas", icon: "🍲", href: "#productos" },
+  { label: "Sartenes", icon: "🍳", href: "#productos" },
+  { label: "Woks", icon: "🥢", href: "#productos" },
+  { label: "Cuchillos", icon: "🔪", href: "#productos" },
+]
+
+// ---- components -------------------------------------------------------------
+
+function TrustRow({ product }: { product?: Product }) {
   const commerce = commercialInfo(product)
-
   return (
-    <div className={compact ? "commerce-badges compact" : "commerce-badges"}>
-      <span>
-        <Truck size={15} />
+    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6B6B66]">
+      <span className="flex items-center gap-1.5">
+        <Truck size={14} />
         {commerce.freeShippingLabel}
       </span>
-      <span>
-        <BadgeDollarSign size={15} />
+      <span className="flex items-center gap-1.5">
+        <BadgeDollarSign size={14} />
         {commerce.paymentMethodsLabel}
       </span>
-      <span>
-        <CookingPot size={15} />
-        {commerce.stoveCompatibility}
-      </span>
-      <strong>
-        <Sparkles size={15} />
-        Cupon {commerce.couponCode}
-      </strong>
     </div>
   )
 }
 
-function PrequalificationBlock({ featured }: { featured?: Product }) {
-  const commerce = commercialInfo(featured)
-
+function GranitColorPicker({ colors }: { colors: typeof granitColors }) {
+  // Static server component: shows the chips, active state handled by Tailwind
+  // (Le Creuset pattern — purely visual, links to WhatsApp asesoría)
   return (
-    <section
-      className="prequal-section"
-      aria-label="Pagos envio y compatibilidad"
-    >
-      <div className="prequal-copy">
-        <p className="eyebrow">Antes de escribir</p>
-        <h2>Ya sabes lo importante: envio, pago y cocina compatible.</h2>
-        <p>
-          El boton de WhatsApp reclama el cupon, manda el producto exacto a
-          Vicky y evita preguntas basicas antes de confirmar stock.
-        </p>
-        {featured ? (
-          <TrackedWhatsAppLink
-            className="primary-button"
-            cta="prequal_coupon_whatsapp"
-            eventType="whatsapp_opened"
-            metadata={{
-              journeyStage: "lead_nuevo",
-              productInterestSku: featured.sku,
-              recommendedSku: featured.sku,
-              prequalified: true,
-            }}
-            placement="prequalification_block"
-            product={featured}
-            whatsappContext={{
-              recommendation: "cupon con envio gratis y pagos disponibles",
-              recommendedSku: featured.sku,
-              journeyStage: "lead_nuevo",
-            }}
-          >
-            <MessageCircle size={18} />
-            Reclamar cupon y stock
-          </TrackedWhatsAppLink>
-        ) : null}
-      </div>
-      <div className="prequal-grid">
-        <article>
-          <Truck size={24} />
-          <strong>{commerce.freeShippingLabel}</strong>
-          <span>Se confirma cobertura y tiempo de entrega por ciudad.</span>
-        </article>
-        <article>
-          <BadgeDollarSign size={24} />
-          <strong>{commerce.paymentMethodsLabel}</strong>
-          <span>Transferencia, deuna! o link PayPhone/tarjeta.</span>
-        </article>
-        <article>
-          <CookingPot size={24} />
-          <strong>{commerce.stoveCompatibility}</strong>
-          <span>Aclara compatibilidad antes de pasar al chat.</span>
-        </article>
-      </div>
-    </section>
-  )
-}
-
-function ProductCard({
-  product,
-  compact = false,
-}: {
-  product: Product
-  compact?: boolean
-}) {
-  const promo = hasPromo(product)
-
-  return (
-    <article className={compact ? "product-card compact" : "product-card"}>
-      <div className="product-image">
-        <img alt={product.title} src={product.imageUrl} />
-        <div className="image-badges">
-          {product.promoLabel ? <span>{product.promoLabel}</span> : null}
-          {promo && product.discountPercent ? (
-            <strong>-{product.discountPercent}%</strong>
-          ) : null}
-        </div>
-      </div>
-      <div className="product-body">
-        <div className="product-heading">
-          <p>{product.category}</p>
-          <h2>{product.title}</h2>
-        </div>
-        <div className="product-specs">
-          {product.material ? <span>{product.material}</span> : null}
-          {product.diameterCm ? <span>{product.diameterCm} cm</span> : null}
-          {product.capacity ? <span>{product.capacity}</span> : null}
-          {product.teflonFree ? <span>Opcion sin teflon</span> : null}
-        </div>
-        <p className="description">
-          {product.bundleUseCase || product.description}
-        </p>
-        <div className="surface-row" aria-label="Materiales y estilo">
-          <span style={{ "--swatch": "#1c1d19" } as CSSProperties} />
-          <span style={{ "--swatch": "#c9bca7" } as CSSProperties} />
-          <span style={{ "--swatch": "#7f9a73" } as CSSProperties} />
-          <small>granito / tapa / cuidado</small>
-        </div>
-        <div className="signal-row">
-          <span>
-            <Truck size={15} />
-            {commercialInfo(product).freeShippingLabel}
-          </span>
-          <span>
-            <Timer size={15} />
-            {product.stockSignal || `${product.stock} disponibles`}
-          </span>
-        </div>
-        <CommerceBadges compact product={product} />
-        <div className="price-row">
-          <div>
-            {promo ? (
-              <span className="original-price">
-                {money(product.originalPrice!.amount)}
-              </span>
-            ) : null}
-            <strong>{money(product.price.amount)}</strong>
-          </div>
-          <div className="product-card-actions">
-            <a className="detail-link" href={productPath(product)}>
-              Ver ficha
-            </a>
-            <TrackedWhatsAppLink
-              className="primary-button"
-              eventType="product_interest"
-              metadata={{
-                journeyStage: "cotizacion_pendiente",
-                productInterestSku: product.sku,
-                recommendedSku: product.sku,
-              }}
-              placement={compact ? "social_deal_card" : "catalog_card"}
-              product={product}
-              whatsappContext={{
-                recommendation:
-                  product.bundleUseCase || product.healthAngle || product.title,
-                recommendedSku: product.sku,
-                journeyStage: "cotizacion_pendiente",
-              }}
-            >
-              <MessageCircle size={18} />
-              Reclamar cupon
-            </TrackedWhatsAppLink>
-          </div>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function VideoSlot({
-  slot,
-  featured,
-}: {
-  slot: MediaSlot
-  featured?: Product
-}) {
-  const video = mediaPath(slot.video)
-
-  return (
-    <article className="video-slot">
-      <div className="video-frame">
-        {video ? (
-          <video
-            aria-label={slot.title}
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster={slot.poster}
-          >
-            <source src={video} type="video/mp4" />
-          </video>
-        ) : (
-          <img alt={slot.title} src={slot.poster} />
-        )}
-        <span>
-          <PlayCircle size={16} />
-          {slot.label}
+    <div className="flex flex-wrap items-center gap-2">
+      {colors.map((c, i) => (
+        <span key={c.name} className="flex items-center gap-1.5 group">
+          <span
+            className={`block h-7 w-7 rounded-full border-2 ${i === 0 ? "border-[var(--accent)]" : "border-white ring-1 ring-[#E8E2D8]"}`}
+            style={{ background: c.hex }}
+            title={c.name}
+          />
+          {i === 0 && (
+            <span className="text-[12px] text-[#1A1A18]">{c.name}</span>
+          )}
         </span>
-        <div className="video-caption">
-          <strong>{slot.proofPoints[0]}</strong>
-          <small>{slot.title}</small>
+      ))}
+    </div>
+  )
+}
+
+function FeaturedCard({ product }: { product: Product }) {
+  const promo = hasPromo(product)
+  return (
+    <a
+      href={productPath(product)}
+      className="flex items-center gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-3 no-underline hover:shadow-sm transition-shadow"
+    >
+      {/* Photo 76px square */}
+      <div className="relative h-[76px] w-[76px] flex-none rounded-xl overflow-hidden bg-[#EFE9DD]">
+        <Image
+          src={product.imageUrl}
+          alt={product.title}
+          fill
+          sizes="76px"
+          className="object-cover"
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[14px] font-medium leading-snug text-[#1A1A18] line-clamp-2">
+          {product.title}
+        </p>
+        {product.capacity && (
+          <p className="mt-0.5 text-[11px] text-[#6B6B66]">{product.capacity}</p>
+        )}
+        <div className="mt-1.5 flex items-baseline gap-2">
+          {promo && product.originalPrice && (
+            <span className="text-[12px] text-[#6B6B66] line-through">
+              {money(product.originalPrice.amount)}
+            </span>
+          )}
+          <span className="text-[14px] font-medium text-[var(--accent)]">
+            {money(product.price.amount)}
+          </span>
         </div>
       </div>
-      <div>
-        <strong>{slot.title}</strong>
-        <p>{slot.metric}</p>
-        <div className="video-proof-row">
-          {slot.proofPoints.map((point) => (
-            <span key={point}>{point}</span>
-          ))}
+    </a>
+  )
+}
+
+function CategoryGrid() {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {categories.map((cat) => (
+        <a
+          key={cat.label}
+          href={cat.href}
+          className="flex flex-col items-start gap-2 rounded-[14px] bg-[#EFE9DD] px-4 py-5 no-underline hover:bg-[#E8E2D8] transition-colors"
+        >
+          <span className="text-2xl leading-none" aria-hidden="true">
+            {cat.icon}
+          </span>
+          <span className="text-[14px] font-medium text-[#1A1A18]">{cat.label}</span>
+        </a>
+      ))}
+    </div>
+  )
+}
+
+function ProductCard({ product }: { product: Product }) {
+  const promo = hasPromo(product)
+  return (
+    <article className="flex flex-col rounded-2xl border border-[#E8E2D8] bg-white overflow-hidden">
+      <a href={productPath(product)} className="block">
+        <div className="relative w-full aspect-[4/5] bg-[#EFE9DD]">
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            fill
+            sizes="(max-width: 640px) 50vw, 280px"
+            className="object-cover"
+          />
+          {product.promoLabel && (
+            <span className="absolute top-2 left-2 rounded-full bg-[var(--accent)] px-2 py-0.5 text-[11px] font-medium text-white">
+              {product.promoLabel}
+            </span>
+          )}
         </div>
-        {featured ? (
-          <div className="inline-actions">
-            <a href={productPath(featured)}>Ver ficha</a>
-            <TrackedWhatsAppLink
-              eventType={slot.eventType}
-              cta={`video_${slot.id}_whatsapp`}
-              metadata={{
-                journeyStage: "interes_video",
-                videoSlot: slot.id,
-                productInterestSku: featured.sku,
-                recommendedSku: featured.sku,
-                needType: slot.proofPoints.join(", "),
-                followupSequence: [
-                  "dia_0_video",
-                  "dia_2_recomendacion",
-                  "dia_7_cuidado",
-                  "dia_30_complemento",
-                  "dia_90_recompra",
-                ],
-              }}
-              placement={`video_${slot.id}`}
-              product={featured}
-              whatsappContext={{
-                recommendation: slot.metric,
-                recommendedSku: featured.sku,
-                journeyStage: "interes_video",
-                videoSlot: slot.id,
-              }}
-            >
-              {slot.cta}
-            </TrackedWhatsAppLink>
+      </a>
+      <div className="p-3 flex flex-col gap-2 flex-1">
+        <div>
+          <p className="text-[11px] text-[#6B6B66]">{product.category}</p>
+          <h3 className="text-[14px] font-medium text-[#1A1A18] leading-snug line-clamp-2">
+            {product.title}
+          </h3>
+        </div>
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-1.5">
+            {promo && product.originalPrice && (
+              <span className="text-[12px] text-[#6B6B66] line-through">
+                {money(product.originalPrice.amount)}
+              </span>
+            )}
+            <span className="text-[16px] font-medium text-[var(--accent)]">
+              {money(product.price.amount)}
+            </span>
           </div>
-        ) : null}
+          <TrackedWhatsAppLink
+            className="flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-[12px] font-semibold text-white"
+            eventType="product_interest"
+            metadata={{
+              journeyStage: "cotizacion_pendiente",
+              productInterestSku: product.sku,
+              recommendedSku: product.sku,
+            }}
+            placement="home_product_card"
+            product={product}
+            whatsappContext={{
+              recommendation: product.bundleUseCase || product.title,
+              recommendedSku: product.sku,
+              journeyStage: "cotizacion_pendiente",
+            }}
+          >
+            <MessageCircle size={13} />
+            Pedir
+          </TrackedWhatsAppLink>
+        </div>
       </div>
     </article>
   )
+}
+
+// ---- page -------------------------------------------------------------------
+
+type HomeProps = {
+  searchParams?: Promise<{ q?: string; category?: string }>
 }
 
 export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams
-  const products = await getProducts()
   const query = params?.q || ""
   const selectedCategory = params?.category || ""
-  const promoProducts = products.filter(hasPromo)
-  const starProducts = products.filter(isStarProduct).sort((a, b) => {
-    return starRank(a) - starRank(b)
-  })
-  const featured =
-    products.find((product) => starRank(product) === 0) ||
-    promoProducts[0] ||
-    products[0]
-  const landingProducts = landingProductSkus
-    .map((sku) => products.find((product) => product.sku === sku))
-    .filter((product): product is Product => Boolean(product))
-  const deals = (landingProducts.length ? landingProducts : starProducts).slice(
-    0,
-    3,
-  )
-  const landingVideos = mediaSlots
-    .filter((slot) => landingVideoSlotIds.includes(slot.id))
-    .slice(0, 3)
-  const heroSavings =
-    featured?.originalPrice &&
-    featured.originalPrice.amount > featured.price.amount
-      ? featured.originalPrice.amount - featured.price.amount
-      : 0
+
+  const products = await getProducts()
+  const starProducts = products
+    .filter(isStarProduct)
+    .sort((a, b) => starRank(a) - starRank(b))
+  const featured = starProducts[0] || products[0]
+  const displayProducts = starProducts.length ? starProducts : products.slice(0, 4)
+
+  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854915"}?text=${encodeURIComponent("Hola, quiero asesoría sobre ollas de granito Eter Niu.")}`
 
   return (
-    <main className="page-shell social-shell">
+    <div data-theme="cocina">
       <PageAnalytics
         category={selectedCategory}
         featured={featured}
         query={query}
       />
-      <div className="promo-bar">
-        <span>
-          <Sparkles size={16} />
-          GRANITOHOY
-        </span>
-        <strong>Lanzamiento cocina saludable: guia + cupon por WhatsApp</strong>
-        <TrackedEventLink
-          cta="promo_bar_guia"
-          href="#club"
-          placement="promo_bar"
-        >
-          Reclamar
-        </TrackedEventLink>
-      </div>
 
-      <header className="topbar">
-        <a className="brand-mark" href="/">
-          <CookingPot size={22} />
-          <span>Eter Niu Cocina</span>
-        </a>
-        <nav>
-          <a href="#videos">Videos</a>
-          <a href="#productos">Comprar</a>
-          <a href="#olla-ideal">Elegir</a>
-          <a href="/guias">Guias</a>
-        </nav>
-        <a className="ghost-button" href="#club">
-          <BookOpen size={18} />
-          Guia gratis
-        </a>
-      </header>
+      {/* 1. Promo bar */}
+      <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
 
-      <section className="social-hero" aria-label="Cocina saludable">
-        <div className="hero-media">
-          <VideoSlot featured={featured} slot={mediaSlots[0]} />
+      {/* 2. Header */}
+      <SiteHeader vertical="cocina" />
+
+      <main className="bg-[#FAF7F2] pb-24">
+
+        {/* 3. Video stories — patrón Our Place */}
+        <div className="pt-5 pb-4">
+          <VideoStories items={homeStories} />
         </div>
-        <div className="hero-copy">
-          <p className="eyebrow">Eter Niu Cocina</p>
-          <h1>Granito que se ve rico antes de cotizar.</h1>
-          <p className="hero-subcopy">
-            Mira la prueba, elige tamano y te asesoramos por WhatsApp sin
-            vueltas: cupon, envio gratis, pagos claros y compatibilidad
-            confirmada.
+
+        {/* 4. H1 + subcopy */}
+        <div className="px-4 pb-6">
+          <h1
+            className="text-[40px] font-medium leading-[1.15] text-[#1A1A18]"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Cocina sano, sin esfuerzo.
+          </h1>
+          <p className="mt-2 text-[14px] text-[#6B6B66] max-w-[34ch]">
+            Granito que se ve rico antes de llegar. Asesórate por WhatsApp y
+            elige con stock confirmado.
           </p>
-          <div className="hero-actions">
-            {featured ? (
-              <>
-                <TrackedWhatsAppLink
-                  className="primary-button hero-cta"
-                  eventType="video_interest"
-                  cta="hero_video_whatsapp"
-                  metadata={{
-                    journeyStage: "interes_video",
-                    videoSlot: "hero-cocina",
-                    productInterestSku: featured.sku,
-                    recommendedSku: featured.sku,
-                    followupSequence: [
-                      "dia_0_video",
-                      "dia_2_recomendacion",
-                      "dia_7_cuidado",
-                      "dia_30_complemento",
-                      "dia_90_recompra",
-                    ],
-                  }}
-                  placement="hero_primary"
-                  product={featured}
-                  whatsappContext={{
-                    recommendation: "video principal de cocina saludable",
-                    recommendedSku: featured.sku,
-                    journeyStage: "interes_video",
-                    videoSlot: "hero-cocina",
-                  }}
-                >
-                  <MessageCircle size={19} />
-                  {mainCouponCta}
-                </TrackedWhatsAppLink>
-                <a className="secondary-button" href={productPath(featured)}>
-                  <PlayCircle size={18} />
-                  Ver ficha
-                </a>
-              </>
-            ) : null}
-            <TrackedEventLink
-              className="secondary-button"
-              cta="hero_guia_cupon"
-              href="#club"
-              placement="hero_secondary"
-              metadata={{ leadMagnet: "guia_cocina_saludable" }}
-            >
-              <BookOpen size={18} />
-              Guia + cupon
-            </TrackedEventLink>
-          </div>
-          {featured ? (
-            <div className="hero-commerce-card">
-              <div>
-                <span>Mas pedido por redes</span>
-                <strong>{featured.title}</strong>
-                <p>
-                  {featured.diameterCm ? `${featured.diameterCm} cm · ` : ""}
-                  {featured.capacity || "Uso diario"} · {featured.material}
-                </p>
-              </div>
-              <div>
-                {heroSavings > 0 ? (
-                  <span>Ahorra {money(heroSavings)}</span>
-                ) : null}
-                <strong>{money(featured.price.amount)}</strong>
-              </div>
+        </div>
+
+        {/* 5. "Elige tu granito" — patrón Le Creuset */}
+        <section className="px-4 pb-8" aria-label="Colección de granito">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+            Elige tu granito
+          </p>
+          <GranitColorPicker colors={granitColors} />
+          {featured && (
+            <div className="mt-4">
+              <FeaturedCard product={featured} />
             </div>
-          ) : null}
-          <div className="hero-proof">
-            <span>
-              <Truck size={17} />
-              {commercialInfo(featured).freeShippingLabel}
-            </span>
-            <span>
-              <BadgeDollarSign size={17} />
-              {commercialInfo(featured).paymentMethodsLabel}
-            </span>
-            <span>
-              <CookingPot size={17} />
-              {commercialInfo(featured).stoveCompatibility}
-            </span>
-          </div>
-          <CommerceBadges product={featured} />
-        </div>
-      </section>
+          )}
+        </section>
 
-      <PrequalificationBlock featured={featured} />
+        {/* 6. "Comprar por categoría" — patrón Caraway */}
+        <section className="px-4 pb-8" id="productos" aria-label="Categorías">
+          <SectionHead eyebrow="Comprar por categoría" title="Elige tu pieza" />
+          <CategoryGrid />
+        </section>
 
-      <PotRecommendationQuiz
-        products={starProducts.length ? starProducts : products}
-      />
-
-      <section className="section-head" id="videos">
-        <div>
-          <p className="eyebrow">Visto en redes</p>
-          <h2>3 pruebas rapidas antes de escribir por WhatsApp</h2>
-        </div>
-        <span>
-          <PlayCircle size={18} />
-          Video sin audio
-        </span>
-      </section>
-
-      <section className="video-grid" aria-label="Videos de cocina">
-        {landingVideos.map((slot) => (
-          <VideoSlot
-            featured={productForSkus(products, slot.productSkus, featured)}
-            key={slot.id}
-            slot={slot}
+        {/* 7a. Quiz recomendador — lógica intacta, envuelto en nuevo estilo */}
+        <section className="px-4 pb-8">
+          <SectionHead
+            eyebrow="Elige tu olla ideal"
+            title="Vicky recomienda según tu cocina."
           />
-        ))}
-      </section>
+          <PotRecommendationQuiz
+            products={starProducts.length ? starProducts : products}
+          />
+        </section>
 
-      <section className="section-head" id="productos">
-        <div>
-          <p className="eyebrow">Productos estrella</p>
-          <h2>Elige una opcion y Vicky confirma stock</h2>
-        </div>
-        <span>
-          <Flame size={18} />
-          Desde {featured ? money(featured.price.amount) : "$95"}
-        </span>
-      </section>
-
-      <section className="deal-grid" aria-label="Productos estrella de granito">
-        {deals.map((product) => (
-          <ProductCard compact key={product.id} product={product} />
-        ))}
-        {!deals.length ? (
-          <div className="empty-state">
-            Estamos preparando los productos estrella de cocina.
+        {/* 7b. Videos demo — productos en uso */}
+        <section className="px-4 pb-8" id="videos" aria-label="Videos de cocina">
+          <SectionHead
+            eyebrow="Visto en redes"
+            title="3 pruebas antes de escribir."
+          />
+          <div className="space-y-4">
+            {displayProducts.slice(0, 3).map((product) => (
+              <article key={product.id} className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-3">
+                <div className="relative h-20 w-20 flex-none rounded-xl overflow-hidden bg-[#EFE9DD]">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.title}
+                    fill
+                    sizes="80px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-col justify-between flex-1 min-w-0">
+                  <div>
+                    <p className="text-[11px] text-[#6B6B66]">{product.category}</p>
+                    <p className="text-[14px] font-medium text-[#1A1A18] leading-snug line-clamp-2">
+                      {product.title}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[14px] font-medium text-[var(--accent)]">
+                      {money(product.price.amount)}
+                    </span>
+                    <TrackedWhatsAppLink
+                      className="flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-[12px] font-semibold text-white"
+                      eventType="product_interest"
+                      metadata={{
+                        journeyStage: "cotizacion_pendiente",
+                        productInterestSku: product.sku,
+                        recommendedSku: product.sku,
+                      }}
+                      placement="home_video_card"
+                      product={product}
+                      whatsappContext={{
+                        recommendation: product.bundleUseCase || product.title,
+                        recommendedSku: product.sku,
+                        journeyStage: "cotizacion_pendiente",
+                      }}
+                    >
+                      <MessageCircle size={13} />
+                      Pedir
+                    </TrackedWhatsAppLink>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
-        ) : null}
-      </section>
+        </section>
 
-      <section className="club-section" id="club">
-        <div className="club-copy">
-          <p className="eyebrow">Club Cocina Saludable</p>
-          <h2>Guia + cupon para decidir hoy sin vueltas.</h2>
-          <p>
-            Recibe una guia corta, el cupon y recomendaciones segun cuantas
+        {/* 7c. Club / lead-magnet — lógica de submit intacta */}
+        <section className="px-4 pb-8" id="club" aria-label="Club Cocina Saludable">
+          <SectionHead
+            eyebrow="Club Cocina Saludable"
+            title="Guía + cupón para decidir hoy."
+          />
+          <p className="mb-4 text-[14px] text-[#6B6B66]">
+            Recibe una guía corta, el cupón y recomendaciones según cuántas
             personas comen en casa.
           </p>
-          <div className="followup-flow">
-            <span>Dia 0 guia</span>
-            <span>Dia 2 tamano</span>
-            <span>Dia 7 cuidado</span>
+          <div className="flex gap-2 mb-5 text-[11px] text-[#6B6B66]">
+            <span>Día 0 guía</span>
+            <span>·</span>
+            <span>Día 2 tamaño</span>
+            <span>·</span>
+            <span>Día 7 cuidado</span>
           </div>
-          <TrackedEventLink
-            className="secondary-button"
-            cta="club_read_guides"
-            href="/guias"
-            placement="club_secondary"
-            type="campaign_click"
-          >
-            <BookOpen size={18} />
-            Ver guias completas
-          </TrackedEventLink>
+          <LeadCaptureForm
+            products={products.slice(0, 8).map((p) => ({
+              id: p.id,
+              sku: p.sku,
+              title: p.title,
+            }))}
+          />
+          <div className="mt-4">
+            <TrackedEventLink
+              className="flex items-center gap-2 text-[14px] text-[#6B6B66] underline-offset-2 underline"
+              cta="club_read_guides"
+              href="/guias"
+              placement="club_secondary"
+              type="campaign_click"
+            >
+              <BookOpen size={15} />
+              Ver guías completas
+            </TrackedEventLink>
+          </div>
+        </section>
+
+        {/* Trust row */}
+        <div className="px-4 pb-6">
+          <TrustRow product={featured} />
         </div>
-        <LeadCaptureForm
-          products={products.slice(0, 8).map((product) => ({
-            id: product.id,
-            sku: product.sku,
-            title: product.title,
-          }))}
-        />
-      </section>
 
-      {featured ? <FloatingWhatsAppCta product={featured} /> : null}
+      </main>
 
-      <nav className="mobile-action-bar" aria-label="Acciones rapidas">
-        <a href="#videos">
-          <PlayCircle size={18} />
-          Videos
-        </a>
-        <a href="#productos">
-          <Flame size={18} />
-          Estrella
-        </a>
-        {featured ? (
-          <TrackedWhatsAppLink
-            cta="mobile_coupon_whatsapp"
-            placement="mobile_bar"
-            product={featured}
-          >
-            <MessageCircle size={18} />
-            Cupon
-          </TrackedWhatsAppLink>
-        ) : null}
-      </nav>
-    </main>
+      {/* 8. Sticky bar — asesoría genérica en home (sin product, fallback permitido) */}
+      <StickyCTABar
+        waHref={waHref}
+        waLabel="Asesoría por WhatsApp"
+        alwaysVisible={false}
+      />
+    </div>
   )
 }
