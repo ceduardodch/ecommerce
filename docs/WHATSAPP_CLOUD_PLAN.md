@@ -134,6 +134,18 @@ sigue siendo opt-out ≤ 2%.
 - Toda la conversación posterior con Vicky dentro de ventana: **$0**.
 - Número nuevo: costo del chip/línea local.
 
+## 8. Registro de decisiones de implementación (W1–W4)
+
+| Decisión | Qué se decidió | Por qué |
+|---|---|---|
+| `gatewayHookPath` requerido en `FollowupDispatchConfig` | Se mantiene obligatorio (ya existía); para modo `meta` se ignora | Compatibilidad con tipos existentes |
+| `rawBodyBuffer` en request vía `addContentTypeParser` | Se usa el parser nativo de Fastify sin deps extra (sin `@fastify/rawbody`) | El proyecto no tenía esa dep; evita añadir paquete |
+| POST webhook siempre responde 200 | El procesamiento de mensajes es async (fire-and-forget) | Meta reintenta si recibe no-2xx — esto garantiza idempotencia |
+| `dispatchFollowup` con `extra?: { lastInboundAt, vars, templateKey, now }` | Parámetro opcional para no romper llamadas existentes sin `extra` | Backwards-compatible con broadcasts y tests previos |
+| Broadcasts fuerzan `lastInboundAt: null` | Para garantizar `meta_template` siempre en broadcasts | Spec dice "broadcasts: siempre plantilla" |
+| `predictedMode` en `campaignDraftQueue` del dashboard | Campo `mode` añadido a cada entrada de la cola | Spec W4: "mostrar canal en cola de envío" |
+| `DispatchRunResult.mode` ampliado a incluir `"meta_template" | "meta_freeform"` | El modo real del evento puede diferir del modo de config | Alinea con lo que se registra en el payload del evento |
+
 ## 7. Inputs del dueño
 
 - [ ] WABA creada y número nuevo registrado (W0.1–W0.3).
