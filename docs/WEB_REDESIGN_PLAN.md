@@ -191,7 +191,7 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 | A — Fundación | WFND-1..4 | ✅ Hecho + correcciones de auditoría (commits `a654b67..c966b96`) |
 | (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
 | B — Dinero | WCMP-1..3, WPRD-1 | ✅ Hecho + fix de auditoría (commits `f44ea3b..86a633b`, jun 2026) |
-| **C — Marca** | WHOM-1..3 | 🔜 Siguiente |
+| **C — Marca** | WHOM-1..3 | ✅ Hecho (commits `18b1fdd..d541aee`, jun 2026) |
 | D — Limpieza | WCLN-1..3 | ❌ Pendiente |
 
 ### Sprint A — Fundación (WFND) ✅ HECHO
@@ -394,6 +394,35 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
     `public/media/` como interim (foto-cuchillo-samurai-textura/mango/full para
     el cuchillo; detalle-wok/uso-diario-gas/product-utensilios para granito).
     El dueño puede reemplazar por tomas macro dedicadas (ver pendiente en sección 8).
+
+**Sprint C — jun 2026 (claude-sonnet-4-6)**
+
+13. **Posters de video generados con ffmpeg**: se ejecutó `ffmpeg -ss 0.5 -i <mp4> -frames:v 1 -q:v 3 poster-<base>.jpg`
+    para los 7 MP4 existentes. Los 7 posters quedan en `public/media/poster-*.jpg`. Si en
+    el futuro se agregan nuevos MP4, ejecutar el mismo comando. Anotado como dato operativo.
+
+14. **Color-picker cocina como narrativa de colección (no variantes reales)**: el plan 2.3
+    especifica "4 chips de colección" pero el dueño aún no confirmó variantes reales de granito
+    (pendiente de sección 8). Se implementó como `GranitColorPicker` estático en server component:
+    primer chip activo visualmente, el resto como puntos de color. No hay state de variante
+    porque no hay catálogo real diferenciado por color. Cuando el dueño confirme variantes, el
+    componente `color-picker.tsx` (Sprint A) se integra con client state.
+
+15. **Sticky bar home = genérico (sin product)**: en WHOM-1 y WHOM-2, el home no tiene un
+    producto fijo en contexto. `StickyCTABar` se llama sin `product`, usando `waHref` plano
+    (fallback aprobado en decisión 10, Sprint B). El label es "Asesoría por WhatsApp" en ambos
+    homes. Solo en fichas y campañas hay `product` + `TrackedWhatsAppLink` en la barra.
+
+16. **Guías sin cards**: WHOM-3 implementa `max-w-[65ch]` centrado, Fraunces en todos los
+    títulos (H1 40px, H2 28px, H2 menores 20px), enlaces editoriales planos (icono + h2 +
+    descripción) en lugar de cards. El aside de asesoría queda como sección inline (sin caja
+    bordeada) dentro del mismo contenedor de lectura.
+
+17. **wellness-interactions.tsx migrado a Tailwind**: eliminadas todas las clases
+    `.wellness-*` del archivo. Los tres exports (`WellnessRoutinePanel`, `WellnessStickyCta`,
+    `WellnessEmptyCta`) usan únicamente clases Tailwind/tokens. La lógica de estado
+    (routine, moment), los `TrackedWhatsAppLink` y los `trackStorefrontEvent` están intactos.
+    grep post-migración: 0 clases CSS `wellness-*` en todo `apps/storefront/app --include="*.tsx"`.
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
