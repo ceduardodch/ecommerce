@@ -25,6 +25,8 @@ export const metadata: Metadata = {
 }
 
 const sampleProduct = {
+  id: "prod-set-mgc-granito",
+  sku: "MGC-SET-5",
   title: "Set MGC Granito 5 piezas",
   subtitle: "Antiadherente sin PFAS · todas las cocinas",
   price: "$89",
@@ -152,6 +154,8 @@ function ThemeSection({
           <ProductCard product={sampleProduct} />
           <ProductCard
             product={{
+              id: "prod-cuchillo-samurai",
+              sku: "SAMURAI-001",
               title: "Cuchillo Samurai todo uso",
               price: "$29.99",
               originalPrice: "$49.99",
