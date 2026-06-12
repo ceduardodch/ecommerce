@@ -21,9 +21,11 @@ import {
   TrackedWhatsAppLink,
 } from "../../components/analytics"
 import { MaterialMacro } from "../../components/ui/material-macro"
+import { Photo } from "../../components/ui/photo"
 import { SiteHeader } from "../../components/ui/site-header"
 import { SpecTable } from "../../components/ui/spec-table"
 import { StickyCTABar } from "../../components/ui/sticky-cta-bar"
+import { VideoFrame } from "../../components/ui/video-frame"
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>
@@ -191,42 +193,32 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* 2. Gallery 4:5 radius 16 with position dots */}
       <div className="relative px-4 pt-4">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#E8E2D8]">
-          {video ? (
-            <video
-              aria-label={slot?.title || product.title}
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster={slot?.poster || product.imageUrl}
-              className="absolute inset-0 h-full w-full object-cover"
-            >
-              <source src={video} type="video/mp4" />
-            </video>
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              alt={product.title}
+        {video ? (
+          /* VideoFrame handles lazy load + viewport detection */
+          <VideoFrame
+            src={video}
+            poster={slot?.poster || product.imageUrl}
+            ratio="9/16"
+            label={slot?.label || "Ver en uso"}
+          />
+        ) : (
+          /* Static hero image — priority since it's the first LCP element */
+          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#E8E2D8]">
+            <Photo
               src={slot?.poster || product.imageUrl}
-              className="absolute inset-0 h-full w-full object-cover"
+              alt={product.title}
+              priority
+              sizes="(max-width: 640px) 100vw, 640px"
+              className="rounded-none"
             />
-          )}
-          {/* Position indicator dot */}
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-            <span className="h-1.5 w-4 rounded-full bg-white" />
-            <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-            <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-          </div>
-          {/* Media label pill */}
-          {slot?.label && (
-            <div className="absolute bottom-8 right-3">
-              <span className="rounded-full bg-black/50 px-3 py-1 text-[11px] text-white backdrop-blur-sm">
-                {slot.label}
-              </span>
+            {/* Position indicator dots */}
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+              <span className="h-1.5 w-4 rounded-full bg-white" />
+              <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+              <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* 3. Title Fraunces 28 + 5 stars + social proof */}

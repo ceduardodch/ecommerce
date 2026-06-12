@@ -192,7 +192,7 @@ themes, `robots: noindex`. Es el criterio de aceptación visual del Sprint A.
 | (extra) Portal de marca | WHOM-0 | ✅ v2 hecho (`7e703e8`); pendientes menores listados en WHOM-0 |
 | B — Dinero | WCMP-1..3, WPRD-1 | ✅ Hecho + fix de auditoría (commits `f44ea3b..86a633b`, jun 2026) |
 | **C — Marca** | WHOM-1..3 | ✅ Hecho (commits `18b1fdd..d541aee`, jun 2026) |
-| D — Limpieza | WCLN-1..3 | ❌ Pendiente |
+| D — Limpieza | WCLN-1..3 | WCLN-1 ✅, WCLN-2 ✅, WCLN-3 ❌ pendiente (coordinador) |
 
 ### Sprint A — Fundación (WFND) ✅ HECHO
 
@@ -423,6 +423,34 @@ posters de video, `priority` solo en hero image, fonts `display: swap`.
     `WellnessEmptyCta`) usan únicamente clases Tailwind/tokens. La lógica de estado
     (routine, moment), los `TrackedWhatsAppLink` y los `trackStorefrontEvent` están intactos.
     grep post-migración: 0 clases CSS `wellness-*` en todo `apps/storefront/app --include="*.tsx"`.
+
+**Sprint D — jun 2026 (claude-sonnet-4-6)**
+
+18. **globals.css vaciado a reset mínimo (WCLN-1)**: globals.css pasó de 63 KB / 3678 líneas
+    a 398 B / 33 líneas. Se migraron a Tailwind los 4 consumidores restantes:
+    `pot-recommendation-quiz.tsx` (quiz-section/copy/form/grid/result), `campaign-interactions.tsx`
+    (campaign-selector/choice-group/sticky-cta), `lead-capture-form.tsx` (club-form/form-grid/
+    consent-row/form-message), `payphone/sandbox/page.tsx` (page-shell/primary-button/eyebrow).
+    `floating-whatsapp-cta.tsx` eliminado (cero imports; reemplazado por StickyCTABar en Sprint B).
+    CA verificado: 0 referencias a clases legacy en className= de TSX; build pasa.
+
+19. **Producto hero video reemplazado con VideoFrame (WCLN-2)**: `products/[slug]/page.tsx` tenía
+    `<video autoPlay>` directo sin lazy loading — violaba la regla de performance. Reemplazado por
+    `VideoFrame` (IntersectionObserver + tap-to-play). El fallback estático ahora usa `Photo`
+    (next/image) con `priority` ya que es el primer LCP de la página de producto.
+
+20. **Priority checklist verificado (WCLN-2)**:
+    - Home cocina: primer elemento visual es VideoStories (poster imgs en chips) — sin img hero
+      grande, no se requiere priority. Correcto.
+    - Home bienestar: `priority` en imagen hero (línea 189) — único, correcto.
+    - Campaña cocina: hero usa VideoFrame (lazy por viewport) o `<img>` plano (correcto para
+      fallback; el video no se descarga hasta interacción). No hay next/image en hero de campaña
+      (se puede optimizar en el futuro con `next/image`).
+    - Ficha de producto: ahora usa `Photo` con `priority` en hero estático, o VideoFrame (lazy) — correcto.
+    - Portal marca: `priority` en ambas fotos de las dos puertas (cocina/bienestar) — ambas están
+      above-fold en el grid 2-col y en el stack móvil la primera siempre es visible; se acepta.
+    - Fuentes: `Fraunces` e `Inter` tienen `display: "swap"` — verificado en layout.tsx.
+    - Imports muertos: ninguno en app/components/; todos los componentes de ui/ tienen ≥1 import — verificado.
 
 ## 8. Pendientes del dueño (no bloquean Sprint A)
 
