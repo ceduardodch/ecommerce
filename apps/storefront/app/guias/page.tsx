@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import {
   BookOpen,
-  ChefHat,
   ClipboardCheck,
   MessageCircle,
   ShieldCheck,
@@ -11,11 +10,13 @@ import {
   TrackedEventLink,
   TrackedWhatsAppLink,
 } from "../components/analytics"
+import { PromoBar } from "../components/ui/promo-bar"
+import { SiteHeader } from "../components/ui/site-header"
 
 export const metadata: Metadata = {
-  title: "Guias de cocina saludable | Eter Niu Cocina",
+  title: "Guías de cocina saludable | Eter Niu Cocina",
   description:
-    "Guias simples para elegir ollas de granito, cuidar el antiadherente y cocinar con menos aceite.",
+    "Guías simples para elegir ollas de granito, cuidar el antiadherente y cocinar con menos aceite.",
 }
 
 export default async function GuidesPage() {
@@ -23,89 +24,146 @@ export default async function GuidesPage() {
   const featured = products[0]
 
   return (
-    <main className="guide-page">
-      <header className="topbar">
-        <a className="brand-mark" href="/">
-          <ChefHat size={22} />
-          <span>Eter Niu Cocina</span>
-        </a>
-        <nav>
-          <a href="/">Tienda</a>
-          <a href="/guias/teflon-pfas">PFAS</a>
-          <a href="/#club">Club</a>
-        </nav>
-      </header>
+    <div data-theme="cocina">
+      <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
+      <SiteHeader vertical="cocina" compact backHref="/" compactTitle="Guías" />
 
-      <section className="guide-hero">
-        <p className="eyebrow">Guia Cocina Saludable</p>
-        <h1>Compra una olla pensando en tu cocina real.</h1>
-        <p className="hero-subcopy">
-          Tamano, cuidado, material y uso diario explicados sin promesas medicas
-          ni lenguaje complicado.
-        </p>
-      </section>
+      <main className="bg-[#FAF7F2] pb-20">
+        {/* Reading layout: max-w-[65ch], centred */}
+        <div className="mx-auto max-w-[65ch] px-4">
 
-      <section className="guide-layout">
-        <div className="guide-list">
-          <TrackedEventLink
-            cta="guide_pfas_card"
-            href="/guias/teflon-pfas"
-            placement="guides_index"
-            type="campaign_click"
-          >
-            <ShieldCheck size={24} />
-            <h2>PFAS, PFOA y teflon explicado simple</h2>
-            <p>
-              Que significa elegir alternativas a antiadherentes tradicionales y
-              por que los claims fuertes deben tener certificacion.
+          {/* Hero */}
+          <div className="pt-10 pb-8">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+              Guía Cocina Saludable
             </p>
-          </TrackedEventLink>
-          <TrackedEventLink
-            cta="guide_sizes_card"
-            href="/#productos"
-            placement="guides_index"
-            type="campaign_click"
-          >
-            <BookOpen size={24} />
-            <h2>20 cm, 24 cm o wok 32 cm</h2>
-            <p>
-              20 cm para porciones pequenas, 24 cm para familia y wok 32 cm
-              para recetas amplias, salteados y preparaciones con tapa.
-            </p>
-          </TrackedEventLink>
-          <TrackedEventLink
-            cta="guide_care_card"
-            href="/#club"
-            placement="guides_index"
-            type="campaign_click"
-          >
-            <ClipboardCheck size={24} />
-            <h2>Como cuidar una olla de granito</h2>
-            <p>
-              Fuego medio, utensilios suaves, limpieza con esponja no abrasiva y
-              seguimiento postventa para mantener el recubrimiento.
-            </p>
-          </TrackedEventLink>
-        </div>
-
-        <aside className="article-aside">
-          <h2>Asesoria rapida</h2>
-          <p>
-            Si no sabes que tamano elegir, la IA debe preguntarte para cuantas
-            personas cocinas, tu cocina y que preparas mas seguido.
-          </p>
-          {featured ? (
-            <TrackedWhatsAppLink
-              className="primary-button"
-              placement="guides_aside"
-              product={featured}
+            <h1
+              className="text-[40px] font-medium leading-[1.15] text-[#1A1A18]"
+              style={{ fontFamily: "var(--font-display)" }}
             >
-              <MessageCircle size={18} />
-              Preguntar por WhatsApp
-            </TrackedWhatsAppLink>
-          ) : null}
-        </aside>
-      </section>
-    </main>
+              Compra una olla pensando en tu cocina real.
+            </h1>
+            <p className="mt-3 text-[16px] text-[#6B6B66]">
+              Tamaño, cuidado, material y uso diario explicados sin promesas
+              médicas ni lenguaje complicado.
+            </p>
+          </div>
+
+          {/* Guide list — no cards, plain editorial links */}
+          <nav aria-label="Guías disponibles">
+            <ul className="space-y-0 divide-y divide-[#E8E2D8]">
+              <li>
+                <TrackedEventLink
+                  className="group flex items-start gap-4 py-5 no-underline"
+                  cta="guide_pfas_card"
+                  href="/guias/teflon-pfas"
+                  placement="guides_index"
+                  type="campaign_click"
+                >
+                  <ShieldCheck
+                    size={22}
+                    className="mt-0.5 flex-none text-[var(--accent)]"
+                  />
+                  <div>
+                    <h2
+                      className="text-[20px] font-medium text-[#1A1A18] group-hover:text-[var(--accent)] transition-colors"
+                      style={{ fontFamily: "var(--font-display)" }}
+                    >
+                      PFAS, PFOA y teflón explicado simple
+                    </h2>
+                    <p className="mt-1 text-[14px] text-[#6B6B66]">
+                      Qué significa elegir alternativas a antiadherentes
+                      tradicionales y por qué los claims fuertes deben tener
+                      certificación.
+                    </p>
+                  </div>
+                </TrackedEventLink>
+              </li>
+
+              <li>
+                <TrackedEventLink
+                  className="group flex items-start gap-4 py-5 no-underline"
+                  cta="guide_sizes_card"
+                  href="/#productos"
+                  placement="guides_index"
+                  type="campaign_click"
+                >
+                  <BookOpen
+                    size={22}
+                    className="mt-0.5 flex-none text-[var(--accent)]"
+                  />
+                  <div>
+                    <h2
+                      className="text-[20px] font-medium text-[#1A1A18] group-hover:text-[var(--accent)] transition-colors"
+                      style={{ fontFamily: "var(--font-display)" }}
+                    >
+                      20 cm, 24 cm o wok 32 cm
+                    </h2>
+                    <p className="mt-1 text-[14px] text-[#6B6B66]">
+                      20 cm para porciones pequeñas, 24 cm para familia y wok
+                      32 cm para recetas amplias, salteados y preparaciones con
+                      tapa.
+                    </p>
+                  </div>
+                </TrackedEventLink>
+              </li>
+
+              <li>
+                <TrackedEventLink
+                  className="group flex items-start gap-4 py-5 no-underline"
+                  cta="guide_care_card"
+                  href="/#club"
+                  placement="guides_index"
+                  type="campaign_click"
+                >
+                  <ClipboardCheck
+                    size={22}
+                    className="mt-0.5 flex-none text-[var(--accent)]"
+                  />
+                  <div>
+                    <h2
+                      className="text-[20px] font-medium text-[#1A1A18] group-hover:text-[var(--accent)] transition-colors"
+                      style={{ fontFamily: "var(--font-display)" }}
+                    >
+                      Cómo cuidar una olla de granito
+                    </h2>
+                    <p className="mt-1 text-[14px] text-[#6B6B66]">
+                      Fuego medio, utensilios suaves, limpieza con esponja no
+                      abrasiva y seguimiento postventa para mantener el
+                      recubrimiento.
+                    </p>
+                  </div>
+                </TrackedEventLink>
+              </li>
+            </ul>
+          </nav>
+
+          {/* Aside-style advisory — inline, no card box */}
+          <div className="mt-10 border-t border-[#E8E2D8] pt-8 pb-4">
+            <h2
+              className="text-[20px] font-medium text-[#1A1A18]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Asesoría rápida
+            </h2>
+            <p className="mt-2 mb-5 text-[14px] text-[#6B6B66]">
+              Si no sabes qué tamaño elegir, cuéntanos para cuántas personas
+              cocinas, tu tipo de cocina y qué preparas más seguido.
+            </p>
+            {featured ? (
+              <TrackedWhatsAppLink
+                className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
+                placement="guides_aside"
+                product={featured}
+              >
+                <MessageCircle size={18} />
+                Preguntar por WhatsApp
+              </TrackedWhatsAppLink>
+            ) : null}
+          </div>
+
+        </div>
+      </main>
+    </div>
   )
 }
