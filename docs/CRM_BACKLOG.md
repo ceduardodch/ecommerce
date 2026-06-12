@@ -4,6 +4,7 @@
 > El rediseño visual del storefront tiene su propio plan ejecutable:
 > [WEB_REDESIGN_PLAN.md](./WEB_REDESIGN_PLAN.md) (sprints WFND/WCMP/WPRD/WHOM/WCLN).
 > La migración al dominio eter-niu.com: [DOMAIN_PLAN.md](./DOMAIN_PLAN.md) (fases D1–D5).
+> Envío oficial por WhatsApp Cloud API: [WHATSAPP_CLOUD_PLAN.md](./WHATSAPP_CLOUD_PLAN.md) (fases W0–W5).
 > Prioridad: P1 = mueve recompra/LTV ya · P2 = habilita crecimiento · P3 = pulido.
 > Esfuerzo: S < 1 día · M = 1–3 días · L = 1 semana+.
 
