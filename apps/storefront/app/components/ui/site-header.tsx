@@ -110,6 +110,28 @@ export function SiteHeader({
         </span>
       </a>
 
+      {/* Desktop nav links (RSP-4) */}
+      <nav className="hidden lg:flex items-center gap-6">
+        <a
+          href="#productos"
+          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
+        >
+          Productos
+        </a>
+        <a
+          href="/guias"
+          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
+        >
+          Guías
+        </a>
+        <a
+          href="/marca"
+          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
+        >
+          Marca
+        </a>
+      </nav>
+
       {/* Right actions */}
       <div className="flex items-center gap-1">
         <a
