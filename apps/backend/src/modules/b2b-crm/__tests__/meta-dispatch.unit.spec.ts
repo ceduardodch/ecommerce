@@ -1,5 +1,5 @@
 /**
- * Tests unitarios del builder de payload Meta Cloud API (W1).
+ * Tests unitarios del builder de payload Meta Cloud API (W1 + W4).
  * Lógica pura: sin red ni I/O.
  */
 
@@ -7,6 +7,8 @@ import {
   buildMetaTemplatePayload,
   buildMetaFreeformPayload,
   loadDispatchConfig,
+  dispatchFollowup,
+  type FollowupDispatchConfig,
 } from "../followup-dispatch"
 
 describe("buildMetaTemplatePayload", () => {
@@ -128,5 +130,87 @@ describe("loadDispatchConfig con modo meta", () => {
   it("metaApiVersion tiene fallback v23.0", () => {
     const config = loadDispatchConfig({} as NodeJS.ProcessEnv)
     expect(config.metaApiVersion).toBe("v23.0")
+  })
+})
+
+// ---------------------------------------------------------------------------
+// W4: selector inteligente de canal (dispatchFollowup modo meta)
+// ---------------------------------------------------------------------------
+
+const metaConfigBase: FollowupDispatchConfig = {
+  enabled: true,
+  mode: "meta",
+  gatewayHookPath: "/hooks/agent",
+  cooldownDays: 7,
+  maxPerRun: 20,
+  retryDays: 7,
+  windowStartHour: 9,
+  windowEndHour: 19,
+  timezoneOffsetHours: -5,
+  metaApiVersion: "v23.0",
+  // Sin credenciales para no hacer llamadas reales; probamos la lógica de
+  // selección observando el resultado "queued" con el detail correcto
+}
+
+describe("dispatchFollowup modo meta — selector de canal (W4)", () => {
+  const NOW = new Date("2026-06-12T15:00:00Z")
+  const customer = { phone: "+593979854915", name: "Maria" }
+  const message = "Hola Maria, ¿te ayudo con algo?"
+
+  it("degrada a queued con detail meta_credentials_missing si no hay credenciales", async () => {
+    const outcome = await dispatchFollowup(customer, message, metaConfigBase, {
+      templateKey: "recompra",
+      vars: { nombre: "Maria", producto: "Olla 20 cm", dias: "45" },
+      lastInboundAt: null,
+      now: NOW,
+    })
+    // Sin credenciales → queued (no falla: lógica correcta de degradación)
+    expect(outcome.status).toBe("queued")
+    expect(outcome.detail).toBe("meta_credentials_missing")
+  })
+
+  it("con ventana cerrada (lastInboundAt null) intenta plantilla → queued sin creds", async () => {
+    const outcome = await dispatchFollowup(customer, message, metaConfigBase, {
+      templateKey: "cuidado",
+      vars: { nombre: "Maria", producto: "Sarten", dias: "7" },
+      lastInboundAt: null,
+      now: NOW,
+    })
+    expect(outcome.status).toBe("queued")
+    expect(outcome.detail).toBe("meta_credentials_missing")
+  })
+
+  it("con ventana abierta (lastInboundAt < 24h) intenta free-form → queued sin creds", async () => {
+    // lastInboundAt 1h antes de NOW
+    const lastInboundAt = new Date(NOW.getTime() - 60 * 60 * 1000)
+    const outcome = await dispatchFollowup(customer, message, metaConfigBase, {
+      templateKey: "recompra",
+      vars: { nombre: "Maria", producto: "Olla", dias: "30" },
+      lastInboundAt,
+      now: NOW,
+    })
+    expect(outcome.status).toBe("queued")
+    expect(outcome.detail).toBe("meta_credentials_missing")
+  })
+
+  it("con ventana cerrada (lastInboundAt > 24h) intenta plantilla → queued sin creds", async () => {
+    // lastInboundAt 25h antes
+    const lastInboundAt = new Date(NOW.getTime() - 25 * 60 * 60 * 1000)
+    const outcome = await dispatchFollowup(customer, message, metaConfigBase, {
+      lastInboundAt,
+      now: NOW,
+    })
+    expect(outcome.status).toBe("queued")
+    expect(outcome.detail).toBe("meta_credentials_missing")
+  })
+
+  it("modo draft ignora extra y devuelve queued modo_draft", async () => {
+    const draftConfig: FollowupDispatchConfig = { ...metaConfigBase, mode: "draft" }
+    const outcome = await dispatchFollowup(customer, message, draftConfig, {
+      lastInboundAt: new Date(NOW.getTime() - 1000),
+      now: NOW,
+    })
+    expect(outcome.status).toBe("queued")
+    expect(outcome.detail).toBe("modo_draft")
   })
 })

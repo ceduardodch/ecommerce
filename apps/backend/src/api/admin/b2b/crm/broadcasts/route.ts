@@ -110,20 +110,42 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       daysSincePurchase,
     })
 
-    // Despachar
-    const outcome = await dispatchFollowup(customer, message, config)
+    // Broadcasts: siempre template (pasar lastInboundAt: null fuerza template en modo meta)
+    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const lastProductTitle =
+      (customer.purchased_products as Array<{ title?: string }> | null | undefined)
+        ?.slice(-1)[0]?.title || "tu compra"
+
+    const outcome = await dispatchFollowup(customer, message, config, {
+      templateKey: input.templateKey,
+      vars: {
+        nombre: firstName,
+        producto: lastProductTitle,
+        dias: daysSincePurchase !== undefined ? String(daysSincePurchase) : "30",
+      },
+      lastInboundAt: null, // Broadcasts siempre usan plantilla
+      now,
+    })
+
+    const eventMode =
+      config.mode === "meta" ? "meta_template" : config.mode
 
     // Registrar evento
     await crm.addCustomerEvent({
       phone: customer.phone,
       type: outcome.status === "sent" ? "broadcast_sent" : "broadcast_queued",
       at: now.toISOString(),
-      source: outcome.status === "sent" ? "openclaw-broadcast" : "crm-broadcast",
+      source:
+        outcome.status === "sent"
+          ? config.mode === "meta"
+            ? "meta-broadcast"
+            : "openclaw-broadcast"
+          : "crm-broadcast",
       payload: {
         suggestedMessage: message,
         templateKey: input.templateKey,
         filter: input.filter,
-        mode: config.mode,
+        mode: eventMode,
         detail: outcome.detail,
       },
     })
