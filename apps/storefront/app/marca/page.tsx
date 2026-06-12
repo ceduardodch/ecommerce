@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 }
 
 function sellerNumber() {
-  const raw = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "0979854915"
+  const raw = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"
   const digits = raw.replace(/\D/g, "")
   if (digits.startsWith("0") && digits.length === 10) {
     return `593${digits.slice(1)}`

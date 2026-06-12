@@ -52,7 +52,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "ritual de te",
@@ -92,7 +92,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "termo 500 ml",
@@ -132,7 +132,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "termo 1000 ml",
@@ -172,7 +172,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "mat suede",
@@ -212,7 +212,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "mandala",
@@ -252,7 +252,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "30 niveles",
@@ -292,7 +292,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "cuenco 8 cm",
@@ -332,7 +332,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "cuenco 9 cm",
@@ -372,7 +372,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "8 notas",
@@ -412,7 +412,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "plata 925",
@@ -452,7 +452,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "simbolo OM",
@@ -492,7 +492,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "amuleto",
@@ -532,7 +532,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "humo",
@@ -572,7 +572,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "7 chakras",
@@ -612,7 +612,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "10 kilos",
@@ -652,7 +652,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "moxas",
@@ -692,7 +692,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "bloque yoga",
@@ -732,7 +732,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "incienso",
@@ -772,7 +772,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "cadena",
@@ -812,7 +812,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "galapagos",
@@ -852,7 +852,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "incienso",
@@ -892,7 +892,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "incienso",
@@ -932,7 +932,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "palo santo",
@@ -972,7 +972,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes",
@@ -1012,7 +1012,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes",
@@ -1052,7 +1052,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "argollas",
@@ -1092,7 +1092,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "anillos hombre",
@@ -1132,7 +1132,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "anillos mujer",
@@ -1172,7 +1172,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "OM",
@@ -1212,7 +1212,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes largos",
@@ -1252,7 +1252,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes largos",
@@ -1292,7 +1292,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes",
@@ -1332,7 +1332,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "aretes pequenos",
@@ -1372,7 +1372,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "quarzos",
@@ -1412,7 +1412,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "velas",
@@ -1452,7 +1452,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "velas pequenas",
@@ -1492,7 +1492,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "alumbre",
@@ -1532,7 +1532,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "ghee",
@@ -1572,7 +1572,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "nataraj",
@@ -1612,7 +1612,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "incienso jumbo",
@@ -1652,7 +1652,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "strap 1.8 m",
@@ -1692,7 +1692,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "strap 3 m",
@@ -1732,7 +1732,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "limpiador lengua",
@@ -1772,7 +1772,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "tetera 450 ml",
@@ -1812,7 +1812,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "incienso organico",
@@ -1852,7 +1852,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "tetera 1600 ml",
@@ -1892,7 +1892,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "bolster",
@@ -1932,7 +1932,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "te japones",
@@ -1972,7 +1972,7 @@ const products: WellnessProduct[] = [
         "healthAngle": "Producto de bienestar sin promesas medicas ni terapeuticas.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "billete 1 millon",

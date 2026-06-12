@@ -66,7 +66,7 @@ const kitchenCatalog: Product[] = [
             "producto estrella"
         ],
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "price": {
             "amount": 151.2,
@@ -131,7 +131,7 @@ const kitchenCatalog: Product[] = [
             "menos aceite"
         ],
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "price": {
             "amount": 75.6,
@@ -196,7 +196,7 @@ const kitchenCatalog: Product[] = [
             "menos aceite"
         ],
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "price": {
             "amount": 63.6,
@@ -261,7 +261,7 @@ const kitchenCatalog: Product[] = [
             "menos aceite"
         ],
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "price": {
             "amount": 62.4,
@@ -321,7 +321,7 @@ const kitchenCatalog: Product[] = [
             "cocina"
         ],
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "price": {
             "amount": 29.99,
@@ -1250,7 +1250,7 @@ const wellnessProducts: Product[] = wellnessCatalog.map((product) => ({
   careTips: "Confirmar cuidados y disponibilidad por WhatsApp.",
   healthAngle: "Producto de bienestar sin promesas medicas ni terapeuticas.",
   warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
-  sourceUrls: ["https://wa.me/c/593979854915"],
+  sourceUrls: ["https://wa.me/c/593979854905"],
   contentAngles: product.tags.slice(1, 4),
   certificationStatus: "Proveedor por confirmar",
   claimNote:

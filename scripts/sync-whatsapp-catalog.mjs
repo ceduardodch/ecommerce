@@ -2,7 +2,7 @@ import fs from "node:fs"
 import path from "node:path"
 
 const root = path.resolve(import.meta.dirname, "..")
-const whatsappSource = "https://wa.me/c/593979854915"
+const whatsappSource = "https://wa.me/c/593979854905"
 
 const kitchenProducts = [
   {

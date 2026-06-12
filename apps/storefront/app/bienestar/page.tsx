@@ -158,7 +158,7 @@ export default async function WellnessPage() {
   const products = await getWellnessProducts()
   const featured = products[0]
 
-  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854915"}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
+  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
 
   return (
     <div data-theme="bienestar">

@@ -176,7 +176,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const waHref = (() => {
     // Build the WhatsApp link to embed in StickyCTABar - we use the product's WhatsApp URL
     // The actual link generation happens via TrackedWhatsAppLink in the hero CTA
-    return `https://wa.me/593979854915`
+    return `https://wa.me/593979854905`
   })()
 
   return (

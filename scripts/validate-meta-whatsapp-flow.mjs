@@ -9,7 +9,7 @@ const defaults = {
   utmMedium: "paid_social",
   utmCampaign: "cuchillo_samurai_ec",
   utmContent: "video_01",
-  expectedPhone: "593979854915",
+  expectedPhone: "593979854905",
 }
 
 const config = {

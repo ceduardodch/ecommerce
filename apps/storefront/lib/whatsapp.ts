@@ -51,12 +51,12 @@ type WhatsappContext = {
 function normalizeWhatsappSellerNumber(value: string) {
   const digits = value.replace(/\D/g, "")
   if (digits === "593999999999" || digits === "9999999999") {
-    return "593979854915"
+    return "593979854905"
   }
   if (digits.startsWith("0") && digits.length === 10) {
     return `593${digits.slice(1)}`
   }
-  return digits || "593979854915"
+  return digits || "593979854905"
 }
 
 function isKnifeProduct(product: WhatsappProduct) {
@@ -107,7 +107,7 @@ export function whatsappLink(
       context.stoveCompatibility || product.stoveCompatibility,
   })
   const seller = normalizeWhatsappSellerNumber(
-    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "0979854915",
+    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905",
   )
   const fitQuestion =
     context.fitQuestion ||

@@ -272,7 +272,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const featured = starProducts[0] || products[0]
   const displayProducts = starProducts.length ? starProducts : products.slice(0, 4)
 
-  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854915"}?text=${encodeURIComponent("Hola, quiero asesoría sobre ollas de granito Eter Niu.")}`
+  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre ollas de granito Eter Niu.")}`
 
   return (
     <div data-theme="cocina">

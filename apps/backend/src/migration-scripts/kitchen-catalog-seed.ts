@@ -59,7 +59,7 @@ const products: KitchenProduct[] = [
         "healthAngle": "Opcion sin teflon para cocinar diario con una superficie antiadherente de granito.",
         "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "granito premium",
@@ -106,7 +106,7 @@ const products: KitchenProduct[] = [
         "healthAngle": "Alternativa a antiadherentes tradicionales para uso diario.",
         "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "olla 20 cm",
@@ -152,7 +152,7 @@ const products: KitchenProduct[] = [
         "healthAngle": "Olla compacta sin teflon para empezar con granito en la cocina diaria.",
         "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "olla 18 cm",
@@ -198,7 +198,7 @@ const products: KitchenProduct[] = [
         "healthAngle": "Alternativa a antiadherentes tradicionales para recetas de todos los dias.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "sarten 22 cm",
@@ -244,7 +244,7 @@ const products: KitchenProduct[] = [
         "healthAngle": "Complemento practico para preparar ingredientes antes de cocinar.",
         "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
         "sourceUrls": [
-            "https://wa.me/c/593979854915"
+            "https://wa.me/c/593979854905"
         ],
         "contentAngles": [
             "cuchillo todo uso",
