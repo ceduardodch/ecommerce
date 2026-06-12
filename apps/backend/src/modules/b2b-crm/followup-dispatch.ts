@@ -2,7 +2,7 @@ import type { MedusaContainer } from "@medusajs/framework/types"
 import { B2B_CRM_MODULE } from "./index"
 import type B2bCrmModuleService from "./service"
 
-export type DispatchMode = "draft" | "openclaw"
+export type DispatchMode = "draft" | "openclaw" | "meta"
 
 export type FollowupDispatchConfig = {
   enabled: boolean
@@ -16,6 +16,10 @@ export type FollowupDispatchConfig = {
   windowStartHour: number
   windowEndHour: number
   timezoneOffsetHours: number
+  // Meta Cloud API
+  whatsappPhoneNumberId?: string
+  whatsappAccessToken?: string
+  metaApiVersion: string
 }
 
 export function loadDispatchConfig(
@@ -25,12 +29,15 @@ export function loadDispatchConfig(
     .split("-")
     .map((value) => Number(value))
 
+  const rawMode = env.CRM_FOLLOWUP_DISPATCH_MODE
+  const mode: DispatchMode =
+    rawMode === "openclaw" ? "openclaw" : rawMode === "meta" ? "meta" : "draft"
+
   return {
     enabled: !["0", "false", "no"].includes(
       String(env.CRM_FOLLOWUP_ENABLED ?? "true").toLowerCase(),
     ),
-    mode:
-      env.CRM_FOLLOWUP_DISPATCH_MODE === "openclaw" ? "openclaw" : "draft",
+    mode,
     gatewayUrl: env.OPENCLAW_GATEWAY_URL,
     gatewayHookPath: env.OPENCLAW_GATEWAY_HOOK_PATH || "/hooks/agent",
     gatewayToken: env.OPENCLAW_HOOKS_TOKEN,
@@ -41,6 +48,10 @@ export function loadDispatchConfig(
     windowEndHour: Number.isFinite(windowEnd) ? windowEnd : 19,
     // America/Guayaquil es UTC-5 todo el año (sin horario de verano)
     timezoneOffsetHours: Number(env.CRM_FOLLOWUP_TZ_OFFSET_HOURS ?? -5),
+    // Meta Cloud API
+    whatsappPhoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID,
+    whatsappAccessToken: env.WHATSAPP_ACCESS_TOKEN,
+    metaApiVersion: env.META_API_VERSION || "v23.0",
   }
 }
 
@@ -185,6 +196,141 @@ export function templateKeyFromReason(reason?: string | null): string {
   return "generico"
 }
 
+// ---------------------------------------------------------------------------
+// Meta Cloud API: mapeo de templateKey → nombre de plantilla en Meta
+// ---------------------------------------------------------------------------
+
+const META_TEMPLATE_MAP: Record<string, string> = {
+  recompra: "eterniu_recompra",
+  complemento: "eterniu_complemento",
+  cuidado: "eterniu_cuidado",
+  estacional: "eterniu_estacional",
+  cross_sell_cocina: "eterniu_xsell_cocina",
+  cross_sell_bienestar: "eterniu_xsell_bienestar",
+  generico: "eterniu_recompra",
+}
+
+export type MetaTemplatePayload = {
+  messaging_product: "whatsapp"
+  to: string
+  type: "template"
+  template: {
+    name: string
+    language: { code: string }
+    components: Array<{
+      type: "body"
+      parameters: Array<{ type: "text"; text: string }>
+    }>
+  }
+}
+
+export type MetaFreeformPayload = {
+  messaging_product: "whatsapp"
+  to: string
+  type: "text"
+  text: { body: string }
+}
+
+/**
+ * Construye el payload de plantilla para la Cloud API de Meta.
+ * Variables {{1}}=nombre, {{2}}=producto, {{3}}=dias.
+ * Lógica pura: sin red.
+ */
+export function buildMetaTemplatePayload(
+  phone: string,
+  templateKey: string,
+  vars: { nombre: string; producto: string; dias: string },
+): MetaTemplatePayload {
+  const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
+
+  return {
+    messaging_product: "whatsapp",
+    to: phone,
+    type: "template",
+    template: {
+      name: templateName,
+      language: { code: "es" },
+      components: [
+        {
+          type: "body",
+          parameters: [
+            { type: "text", text: vars.nombre },
+            { type: "text", text: vars.producto },
+            { type: "text", text: vars.dias },
+          ],
+        },
+      ],
+    },
+  }
+}
+
+/**
+ * Construye el payload de mensaje free-form (texto libre) para Cloud API.
+ * Solo válido dentro de la ventana de servicio de 24h.
+ * Lógica pura: sin red.
+ */
+export function buildMetaFreeformPayload(
+  phone: string,
+  text: string,
+): MetaFreeformPayload {
+  return {
+    messaging_product: "whatsapp",
+    to: phone,
+    type: "text",
+    text: { body: text },
+  }
+}
+
+/**
+ * Envía un mensaje vía Cloud API de Meta (template o free-form).
+ * Ante error 131049 (frequency cap) o cualquier error HTTP/red → degrada a queued.
+ */
+export async function dispatchMetaMessage(
+  payload: MetaTemplatePayload | MetaFreeformPayload,
+  config: Pick<
+    FollowupDispatchConfig,
+    "whatsappPhoneNumberId" | "whatsappAccessToken" | "metaApiVersion"
+  >,
+): Promise<DispatchOutcome> {
+  if (!config.whatsappPhoneNumberId || !config.whatsappAccessToken) {
+    return { status: "queued", detail: "meta_credentials_missing" }
+  }
+
+  const url = `https://graph.facebook.com/${config.metaApiVersion}/${config.whatsappPhoneNumberId}/messages`
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 10_000)
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${config.whatsappAccessToken}`,
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({})) as Record<string, unknown>
+      const errorCode = (body as { error?: { code?: number } }).error?.code
+      if (errorCode === 131049) {
+        return { status: "queued", detail: "meta_frequency_cap" }
+      }
+      return { status: "queued", detail: `meta_http_${response.status}` }
+    }
+
+    return { status: "sent" }
+  } catch (cause) {
+    return {
+      status: "queued",
+      detail: `meta_error_${cause instanceof Error ? cause.name : "unknown"}`,
+    }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
 export type DispatchOutcome = {
   status: "sent" | "queued"
   detail?: string
@@ -194,7 +340,42 @@ export async function dispatchFollowup(
   customer: { phone: string; name?: string | null },
   message: string,
   config: FollowupDispatchConfig,
+  extra?: {
+    templateKey?: string
+    vars?: { nombre: string; producto: string; dias: string }
+    /** Si existe y < 24h desde ahora → free-form; si no → template */
+    lastInboundAt?: Date | null
+    now?: Date
+  },
 ): Promise<DispatchOutcome> {
+  if (config.mode === "meta") {
+    const now = extra?.now ?? new Date()
+    const windowOpen =
+      extra?.lastInboundAt instanceof Date &&
+      now.getTime() - extra.lastInboundAt.getTime() < 24 * 60 * 60 * 1000
+
+    if (windowOpen) {
+      // Ventana abierta → free-form (gratis)
+      return dispatchMetaMessage(
+        buildMetaFreeformPayload(customer.phone, message),
+        config,
+      )
+    }
+
+    // Fuera de ventana → plantilla
+    const templateKey = extra?.templateKey ?? "generico"
+    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const vars = extra?.vars ?? {
+      nombre: firstName,
+      producto: "tu compra",
+      dias: "30",
+    }
+    return dispatchMetaMessage(
+      buildMetaTemplatePayload(customer.phone, templateKey, vars),
+      config,
+    )
+  }
+
   if (config.mode !== "openclaw" || !config.gatewayUrl) {
     return { status: "queued", detail: "modo_draft" }
   }
@@ -238,7 +419,7 @@ export async function dispatchFollowup(
 }
 
 export type DispatchRunResult = {
-  mode: DispatchMode
+  mode: DispatchMode | "meta_template" | "meta_freeform"
   dryRun: boolean
   due: number
   sent: number
@@ -343,7 +524,37 @@ export async function runFollowupDispatch(
       continue
     }
 
-    const outcome = await dispatchFollowup(customer as any, message, config)
+    // Para modo meta: calcular ventana y variables de plantilla
+    const lastInboundRaw = (customer as any).metadata?.lastInboundAt as string | undefined
+    const lastInboundAt = lastInboundRaw ? new Date(lastInboundRaw) : null
+    const windowOpen =
+      lastInboundAt instanceof Date &&
+      now.getTime() - lastInboundAt.getTime() < 24 * 60 * 60 * 1000
+
+    const firstName = (customer as any).name
+      ? String((customer as any).name).split(" ")[0]
+      : "Cliente"
+    const lastPurchaseTitleForMeta =
+      ((customer as any).purchased_products as Array<{ title?: string }> | null)?.slice(-1)[0]?.title || "tu compra"
+    const daysSincePurchaseMeta = (customer as any).last_purchase_at
+      ? Math.floor((now.getTime() - new Date((customer as any).last_purchase_at).getTime()) / (1000 * 60 * 60 * 24))
+      : 30
+
+    const outcome = await dispatchFollowup(customer as any, message, config, {
+      templateKey,
+      vars: {
+        nombre: firstName,
+        producto: lastPurchaseTitleForMeta,
+        dias: String(daysSincePurchaseMeta),
+      },
+      lastInboundAt,
+      now,
+    })
+
+    const metaMode = config.mode === "meta"
+      ? (outcome.status === "sent" && windowOpen ? "meta_freeform" : "meta_template")
+      : config.mode
+
     const retryAt = new Date(now)
     retryAt.setDate(retryAt.getDate() + config.retryDays)
 
@@ -351,12 +562,12 @@ export async function runFollowupDispatch(
       phone: customer.phone,
       type: outcome.status === "sent" ? "followup_sent" : "followup_queued",
       at: now.toISOString(),
-      source: outcome.status === "sent" ? "openclaw-dispatch" : "crm-job",
+      source: outcome.status === "sent" ? (config.mode === "meta" ? "meta-dispatch" : "openclaw-dispatch") : "crm-job",
       nextFollowupAt: retryAt.toISOString(),
       payload: {
         suggestedMessage: message,
         reason: (customer as any).followup_reason || undefined,
-        mode: config.mode,
+        mode: metaMode,
         detail: outcome.detail,
       },
     })
