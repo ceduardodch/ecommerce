@@ -122,9 +122,9 @@ agendada automáticamente en noviembre.
 
 | ID | Historia | Esf. | Detalle |
 |---|---|---|---|
-| BMK-1 | Kanban por etapa | L | Vista drag & drop sobre `metadata.journeyStage` en la lista de leads. |
-| BMK-2 | Segmentos RFM | M | Score frecuencia/recencia/monto por cliente → tags automáticas (`vip`, `dormido`, `nuevo`); filtros y broadcasts por segmento. |
-| BMK-3 | NPS + referidos | M | Followup post-entrega (7d) vía plantilla; respuesta 9-10 → pedir referido con cupón. |
+| BMK-1 | Kanban por etapa | L | ✅ Vista drag & drop sobre `metadata.journeyStage` en la lista de leads. Página `crm-whatsapp/pipeline/page.tsx` con 5 columnas, HTML5 nativo, PATCH en drop, rfmSegment en tarjeta. |
+| BMK-2 | Segmentos RFM | M | ✅ Score frecuencia/recencia/monto por cliente → tags automáticas (`vip`, `dormido`, `nuevo`); filtros y broadcasts por segmento. Commit 822dc09. |
+| BMK-3 | NPS + referidos | M | ✅ Seeds plantillas nps/referido. Evento `delivered` agenda followup nps_postentrega +7d. parseNpsScore/npsDecision pure. Score ≥9 agenda referido +2d. 22 tests nuevos. |
 
 ---
 
@@ -137,7 +137,7 @@ agendada automáticamente en noviembre.
 | RPT (reportes LTV) | ✅ RPT-1..4 hechos |
 | BRC (broadcasts) | ✅ BRC-1, BRC-2 hechos |
 | XSELL | ✅ XS-1..4 completados |
-| BMK (P3) | ❌ Pendiente (espera datos de RPT) |
+| BMK (P3) | ✅ BMK-1, BMK-2, BMK-3 completados (jun 2026) |
 | EPIC 0 (operación) | ⚠️ Tareas del dueño — sin verificar (leads reales, hook OpenClaw) |
 
 **Decisión jun 2026**: se prioriza el frente VISUAL (ver
