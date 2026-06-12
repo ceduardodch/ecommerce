@@ -26,6 +26,7 @@ import { SiteHeader } from "../../components/ui/site-header"
 import { SpecTable } from "../../components/ui/spec-table"
 import { StickyCTABar } from "../../components/ui/sticky-cta-bar"
 import { VideoFrame } from "../../components/ui/video-frame"
+import { Breadcrumbs } from "../../components/ui/breadcrumbs"
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>
@@ -190,6 +191,17 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         backHref="/"
         vertical="cocina"
       />
+
+      {/* 1.5. Breadcrumbs (desktop-only) */}
+      <div className="px-4 pt-4">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: product.category || "Productos" },
+            { label: product.title },
+          ]}
+        />
+      </div>
 
       {/* 2. Gallery 4:5 radius 16 with position dots */}
       <div className="relative px-4 pt-4">
