@@ -1,3 +1,5 @@
+import { NewsletterSignup } from "./newsletter-signup"
+
 function InstagramIcon() {
   return (
     <svg
@@ -58,8 +60,8 @@ export function SiteFooter() {
           </p>
         </div>
 
-        {/* Desktop layout (4 columns) */}
-        <div className="hidden lg:grid lg:grid-cols-4 lg:gap-8">
+        {/* Desktop layout (4 columns + newsletter) */}
+        <div className="hidden lg:grid lg:grid-cols-5 lg:gap-8">
           {/* Column 1: Brand */}
           <div className="mb-6">
             <p
@@ -164,6 +166,9 @@ export function SiteFooter() {
               </li>
             </ul>
           </div>
+
+          {/* Column 5: Newsletter Signup */}
+          <NewsletterSignup />
         </div>
 
         {/* Bottom notice (both mobile & desktop) */}
