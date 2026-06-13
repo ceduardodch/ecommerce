@@ -1,5 +1,21 @@
 # WEB-DESIGN: Carrito WhatsApp Híbrido + Desktop Equilibrado
 
+> ⚠️ **Hallazgo de auditoría independiente (2026-06-13)** — verificado contra el
+> sitio levantado, no contra los mensajes de commit:
+>
+> Los componentes de CART y DESKTOP **se construyeron pero NO se cablearon**.
+> Existen, compilan y los archivos protegidos están intactos, pero son
+> **componentes huérfanos**: ninguna página real los usa. Resultado verificado:
+> - **El carrito es inaccesible para el usuario** (confirmado: las dos quejas del
+>   dueño son CORRECTAS). 3 eslabones rotos — ver Sprint 5.
+> - **Desktop se ve angosto** porque RSP-3 (grid 4 col) nunca entró en cocina y
+>   el footer/badge están huérfanos.
+>
+> El trabajo restante es **integración (cableado)**, no construcción. Detalle y
+> verdad por historia en "Estado real por historia" (abajo) y el plan en
+> **Sprint 5 — INTEG**. Los 7 commits RSP/DTP están en local SIN pushear; no
+> rompen nada, pero la épica no está "lista" hasta cablear.
+
 ## Contexto
 
 El storefront de Eter Niu está optimizado para móvil (~80% tráfico) pero tiene problemas en desktop:
@@ -325,6 +341,70 @@ El storefront de Eter Niu está optimizado para móvil (~80% tráfico) pero tien
 
 ---
 
+## Sprint 5: INTEG — Cableado de componentes huérfanos (P0)
+
+**Objetivo:** Conectar los componentes ya construidos a las páginas reales para
+que el carrito SEA usable y el desktop SE VEA bien. **No se construye nada nuevo
+de cero** — se enchufa lo que existe. Estimado total ~1 día de ejecutor.
+
+> Origen: auditoría independiente 2026-06-13 (las dos quejas del dueño
+> confirmadas). El verificador re-auditará este sprint antes del push.
+
+### INTEG-1: Montar el carrito y su trigger (P0 — desbloquea TODO el carrito)
+**Problema verificado:** `CartDrawer`/`CartModal` no los monta nadie; no hay
+estado `isOpen` ni botón para abrir el carrito.
+**Acceptance:**
+- Estado global de apertura del carrito (extender `CartContext` con `isOpen`/`openCart`/`closeCart`, o un `CartUI` provider en el layout).
+- El ícono de bolsa del header abre el drawer (mobile) / modal (desktop) en vez de enlazar a `/productos`.
+- `CartDrawer` montado para `<lg`, `CartModal` para `≥lg` (responsive, ya construidos ambos).
+- CA: en móvil y desktop, click en la bolsa abre el carrito y muestra los items.
+**Archivos:** `site-header.tsx`, `contexts/CartContext.tsx`, `app/layout.tsx`.
+
+### INTEG-2: AddToCartButton en las páginas de producto reales (P0)
+**Problema verificado:** el `ProductCard` compartido (con `AddToCartButton`) no
+se usa en `/` ni `/bienestar`; el home tiene un `ProductCard` local solo-WhatsApp.
+**Acceptance:**
+- En desktop (`hidden lg:block`) cada producto del home y de la ficha muestra `AddToCartButton`; en mobile se mantiene `TrackedWhatsAppLink` (coexistencia del plan, riesgo #3).
+- Decidir: reusar el `ProductCard` compartido en `app/page.tsx`/`bienestar` o añadir el botón a la card local. Lo más sobrio sin romper el diseño actual.
+- CA: un usuario en desktop puede agregar un producto y el contador del carrito sube.
+**Archivos:** `app/page.tsx`, `app/bienestar/page.tsx` (y/o `product-card.tsx`).
+
+### INTEG-3: CartBadge + enlace a /cart en el header (P0)
+**Problema verificado:** `CartBadge` no está en el header; cero `href="/cart"` en todo el sitio.
+**Acceptance:**
+- `CartBadge` en el header conectado a `totalItems` del CartContext (header pasa a `"use client"` o se aísla el badge en un client component).
+- Acceso a `/cart` desde el header y/o desde el botón "ver carrito" del drawer.
+- CA: con items en el carrito, el badge muestra el número y `/cart` es alcanzable navegando.
+**Archivos:** `site-header.tsx`, `cart-badge.tsx`.
+
+### INTEG-4: RSP-3 — grid de productos 4 columnas en cocina (P0 desktop)
+**Problema verificado:** `app/page.tsx` (cocina, el de más tráfico) no tiene
+`lg:grid-cols-4` en productos; bienestar sí. Esto causa el "se ve angosto".
+**Acceptance:**
+- Grid de productos de cocina: `grid-cols-2 md:grid-cols-3 lg:grid-cols-4` (mobile intacto, sin layout shift).
+- CA: a 1280px se ven 4 productos por fila sin franjas vacías.
+**Archivos:** `app/page.tsx`.
+
+### INTEG-5: Montar SiteFooter en páginas reales (P1)
+**Problema verificado:** `SiteFooter` (4 col + newsletter) solo está en `/dev/ui`.
+**Acceptance:**
+- `SiteFooter` en home cocina, bienestar y guías (o en un layout compartido).
+- CA: el footer de 4 columnas aparece al final de las páginas productivas.
+**Archivos:** `app/layout.tsx` o páginas individuales.
+
+### INTEG-6: QA en vivo a 390 / 768 / 1280 (P0, cierre)
+- Levantar el sitio (`ALLOW_DEMO_CATALOG=true`), recorrer el flujo completo:
+  agregar al carrito → abrir drawer/modal → ir a /cart → checkout WhatsApp con
+  mensaje multi-producto correcto. Capturas en `reports/`.
+- Verificación de tracking: `add_to_cart` y `InitiateCheckout` disparan (cubre
+  PLN-2). El verificador re-audita antes del push.
+
+**Dependencias:** INTEG-1..5 son mayormente independientes; INTEG-6 va al final.
+**Nota:** PLN-1/PLN-3/PLN-4 (Safari, WhatsApp real, Lighthouse) siguen siendo del
+dueño/manual tras el cableado.
+
+---
+
 ## Sprint 4: Pulido & Testing (PLN-1..4)
 
 **Objetivo:** Validar que todo funciona correctamente en producción.
@@ -565,12 +645,34 @@ useEffect(() => {
 
 ---
 
+## Estado real por historia (auditado 2026-06-13)
+
+| Historia | Componente construido | ¿Cableado a página real? | Veredicto |
+|---|---|---|---|
+| CART-1 CartContext | ✅ | ✅ montado en layout | OK |
+| CART-2 AddToCartButton | ✅ | ❌ ProductCard compartido no se usa | INTEG-2 |
+| CART-3 CartDrawer | ✅ | ❌ huérfano, sin trigger | INTEG-1 |
+| CART-4 /cart page | ✅ compila | ❌ cero enlaces a /cart | INTEG-3 |
+| CART-5 checkout WhatsApp | ✅ wa.me válido | ⚠️ solo alcanzable si llegas a /cart | INTEG-3 |
+| RSP-1 breakpoints | ✅ | ✅ | OK |
+| RSP-2 containers max-w | ✅ | ✅ home+bienestar | OK |
+| RSP-3 grid 4 col productos | ❌ no implementado en cocina | — | INTEG-4 |
+| RSP-4 nav desktop | ✅ nav | ⚠️ badge no montado | INTEG-3 |
+| DTP-1 CartModal | ✅ | ❌ huérfano | INTEG-1 |
+| DTP-2 Breadcrumbs | ✅ | ✅ en products/[slug] | OK |
+| DTP-3 Footer 4 col | ✅ | ❌ solo en /dev/ui | INTEG-5 |
+| DTP-4 Newsletter | ✅ | ❌ depende del footer | INTEG-5 |
+
 ## Estado del Épica
 
-**Estado:** Pendiente de inicio
+**Estado:** Componentes construidos (Sprints 1-3) — **falta cableado (Sprint 5 INTEG)**
 
-**Progreso:** 0/4 sprints completados
+**Progreso real:** infra completa pero carrito inaccesible y desktop incompleto;
+las dos quejas del dueño verificadas como correctas.
 
-**Sprint activo:** Ninguno
+**Sprint activo:** Sprint 5 — INTEG (planificado, no iniciado)
 
-**Última actualización:** 2026-06-12
+**Pendiente de pushear:** 7 commits RSP/DTP en local (no rompen nada; esperar a
+cablear antes de push para que la épica llegue completa a release/main).
+
+**Última actualización:** 2026-06-13 (auditoría independiente)
