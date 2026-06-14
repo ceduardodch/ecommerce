@@ -23,6 +23,7 @@ import { PromoBar } from "../components/ui/promo-bar"
 import { SiteHeader } from "../components/ui/site-header"
 import { SectionHead } from "../components/ui/section"
 import { StickyCTABar } from "../components/ui/sticky-cta-bar"
+import { SiteFooter } from "../components/ui/site-footer"
 import { WellnessAnalytics } from "./components/wellness-interactions"
 
 export const metadata: Metadata = {
@@ -372,6 +373,9 @@ export default async function WellnessPage() {
 
         </div>
       </main>
+
+      {/* Footer 4 columnas — INTEG-5 */}
+      <SiteFooter />
 
       {/* Sticky advisory bar — no product on home, generic fallback */}
       <StickyCTABar

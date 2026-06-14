@@ -12,6 +12,7 @@ import {
 } from "../components/analytics"
 import { PromoBar } from "../components/ui/promo-bar"
 import { SiteHeader } from "../components/ui/site-header"
+import { SiteFooter } from "../components/ui/site-footer"
 
 export const metadata: Metadata = {
   title: "Guías de cocina saludable | Eter Niu Cocina",
@@ -164,6 +165,9 @@ export default async function GuidesPage() {
 
         </div>
       </main>
+
+      {/* Footer 4 columnas — INTEG-5 */}
+      <SiteFooter />
     </div>
   )
 }
