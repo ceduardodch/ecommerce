@@ -12,6 +12,8 @@ import { SiteHeader } from "./components/ui/site-header"
 import { VideoStories } from "./components/ui/video-stories"
 import { SectionHead } from "./components/ui/section"
 import { StickyCTABar } from "./components/ui/sticky-cta-bar"
+import { AddToCartButton } from "./components/ui/add-to-cart-button"
+import { SiteFooter } from "./components/ui/site-footer"
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
@@ -229,8 +231,9 @@ function ProductCard({ product }: { product: Product }) {
               {money(product.price.amount)}
             </span>
           </div>
+          {/* Mobile: direct WhatsApp (mantiene flujo actual) — INTEG-2 */}
           <TrackedWhatsAppLink
-            className="flex items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-[12px] font-semibold text-white"
+            className="flex lg:hidden items-center gap-1.5 rounded-full bg-[#25D366] px-3 py-1.5 text-[12px] font-semibold text-white"
             eventType="product_interest"
             metadata={{
               journeyStage: "cotizacion_pendiente",
@@ -248,6 +251,12 @@ function ProductCard({ product }: { product: Product }) {
             <MessageCircle size={13} />
             Pedir
           </TrackedWhatsAppLink>
+          {/* Desktop: add to cart (nuevo flujo) — INTEG-2 */}
+          <AddToCartButton
+            product={product}
+            className="hidden lg:flex items-center gap-1.5 rounded-full bg-[var(--accent)] px-3 py-1.5 text-[12px] font-semibold text-white"
+            label="Agregar"
+          />
         </div>
       </div>
     </article>
@@ -327,6 +336,16 @@ export default async function Home({ searchParams }: HomeProps) {
         <section className="px-4 pb-8" id="productos" aria-label="Categorías">
           <SectionHead eyebrow="Comprar por categoría" title="Elige tu pieza" />
           <CategoryGrid />
+        </section>
+
+        {/* 6b. Product grid — RSP-3 / INTEG-4: grid-cols-2 md:3 lg:4 */}
+        <section className="px-4 pb-8" aria-label="Productos de cocina">
+          <SectionHead eyebrow="Todos los productos" title="Elige tu olla de granito." />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
+            {displayProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </section>
 
         {/* 7a. Quiz recomendador — lógica intacta, envuelto en nuevo estilo */}
@@ -440,6 +459,9 @@ export default async function Home({ searchParams }: HomeProps) {
 
         </div>
       </main>
+
+      {/* 9. Footer 4 columnas — INTEG-5 */}
+      <SiteFooter />
 
       {/* 8. Sticky bar — asesoría genérica en home (sin product, fallback permitido) */}
       <StickyCTABar
