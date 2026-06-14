@@ -75,18 +75,18 @@ export default function BrandPortalPage() {
   }
 
   return (
-    <main className="brand-portal min-h-screen bg-[#FAF7F2] px-5 py-10 text-[#1A1A18] sm:py-14">
+    <main className="brand-portal min-h-screen bg-[#2B2E2B] px-5 py-10 text-[#FAF7F2] sm:py-14">
       <style>{`.brand-portal a { text-decoration: none; color: inherit; }`}</style>
 
       <header className="mx-auto flex max-w-4xl flex-col items-center text-center">
-        <Isotipo size={56} color="#1A1A18" />
+        <Isotipo size={56} color="#93E29A" />
         <h1 className="mt-4 text-[40px] font-medium leading-none [font-family:var(--font-display)]">
           Eter Niu
         </h1>
-        <p className="mt-2 text-[14px] text-[#6B6B66]">
+        <p className="mt-2 text-[14px] text-[#A9ADA6]">
           Bienestar &amp; Cocina Consciente · Quito, Ecuador
         </p>
-        <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] text-[#6B6B66]">
+        <p className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[12px] text-[#A9ADA6]">
           <span>+7.000 nos siguen en @eter.niu</span>
           <span aria-hidden="true">·</span>
           <span>Envío gratis por Servientrega</span>
@@ -165,7 +165,7 @@ export default function BrandPortalPage() {
             ¿No sabes por dónde empezar? Escríbenos
           </span>
         </TrackedEventLink>
-        <p className="text-[12px] text-[#6B6B66]">
+        <p className="text-[12px] text-[#A9ADA6]">
           Te asesoramos por WhatsApp, sin compromiso · Elevan tu alma y tu hogar
         </p>
       </section>

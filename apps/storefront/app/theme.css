@@ -12,6 +12,17 @@
   --color-wa:     #25D366;
   --color-white:  #FFFFFF;
 
+  /* ─── Marca (BRAND): grafito + menta + esmeralda ───
+     El logo es menta sobre grafito. Dos verdes del mismo tono:
+     - menta: realce SOLO sobre grafito (logo en dark, highlights). AA ~8.8:1.
+     - esmeralda: color de ACCIÓN sobre superficies claras (precios, CTAs,
+       eyebrows), unificado en ambas líneas. AA ~6:1 sobre marfil. */
+  --color-graphite:     #2B2E2B;
+  --color-graphite-700: #3A3E3A;
+  --color-graphite-fg:  #A9ADA6;
+  --color-menta:        #93E29A;
+  --color-emerald:      #236B4A;
+
   /* Granito collection chips */
   --color-granito-negro:     #2B2B28;
   --color-granito-sage:      #B7C4B1;
@@ -29,13 +40,21 @@
   --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ─── Accent per vertical ─── */
+/* ─── Acento de marca unificado (BRAND) ───
+   Una sola marca: esmeralda es el color de acción en ambas líneas.
+   Cocina y bienestar se diferencian por FOTOGRAFÍA, no por color.
+   Se mantiene data-theme por si en el futuro se quiere matizar. */
 [data-theme="cocina"] {
-  --accent: var(--color-clay);
+  --accent: var(--color-emerald);
 }
 
 [data-theme="bienestar"] {
-  --accent: var(--color-moss);
+  --accent: var(--color-emerald);
+}
+
+/* Acento por defecto cuando no hay data-theme (portal, guías, etc.) */
+:root {
+  --accent: var(--color-emerald);
 }
 
 /* ─── Base typography ─── */

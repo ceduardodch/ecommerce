@@ -1,4 +1,5 @@
 import { NewsletterSignup } from "./newsletter-signup"
+import { Isotipo } from "./isotipo"
 import { kitchenBaseUrl, wellnessBaseUrl } from "../../../lib/domains"
 
 function InstagramIcon() {
@@ -21,42 +22,53 @@ function InstagramIcon() {
   )
 }
 
+function BrandLockup() {
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <Isotipo size={28} color="#93E29A" />
+        <span
+          className="text-[20px] font-medium text-[#FAF7F2]"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          Eter Niu
+        </span>
+      </div>
+      <p className="mt-2 text-[13px] text-[#A9ADA6]">
+        Bienestar &amp; Cocina Consciente
+      </p>
+      <p className="mt-1 text-[12px] text-[#A9ADA6]">
+        Elevan tu alma y tu hogar · Quito, Ecuador
+      </p>
+    </div>
+  )
+}
+
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#E8E2D8] bg-[#FAF7F2] px-4 py-12">
+    <footer className="border-t border-[#3A3E3A] bg-[#2B2E2B] px-4 py-12">
       <div className="mx-auto max-w-5xl">
         {/* Mobile layout (single column) */}
         <div className="lg:hidden">
           <div className="mb-6">
-            <p
-              className="text-[20px] font-medium text-[#1A1A18]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Eter Niu
-            </p>
-            <p className="mt-1 text-[13px] text-[#6B6B66]">
-              Bienestar &amp; Cocina Consciente
-            </p>
-            <p className="text-[12px] text-[#6B6B66]">
-              Elevan tu alma y tu hogar · Quito, Ecuador
-            </p>
+            <BrandLockup />
           </div>
 
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[#6B6B66]">
-            <a href="/guias" className="hover:text-[#1A1A18] transition-colors">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[#A9ADA6]">
+            <a href="/guias" className="hover:text-[#FAF7F2] transition-colors">
               Guías
             </a>
             <a
               href="https://instagram.com/eter.niu"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-[#1A1A18] transition-colors"
+              className="text-[#93E29A] hover:text-[#FAF7F2] transition-colors"
             >
               @eter.niu
             </a>
           </div>
 
-          <p className="mt-8 text-[11px] text-[#6B6B66]">
+          <p className="mt-8 text-[11px] text-[#A9ADA6]">
             Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
           </p>
         </div>
@@ -65,31 +77,19 @@ export function SiteFooter() {
         <div className="hidden lg:grid lg:grid-cols-5 lg:gap-8">
           {/* Column 1: Brand */}
           <div className="mb-6">
-            <p
-              className="text-[20px] font-medium text-[#1A1A18]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              Eter Niu
-            </p>
-            <p className="mt-2 text-[13px] text-[#6B6B66]">
-              Bienestar &amp; Cocina Consciente
-            </p>
-            <p className="mt-1 text-[12px] text-[#6B6B66]">
-              Elevan tu alma y tu hogar
-            </p>
-            <p className="text-[12px] text-[#6B6B66]">Quito, Ecuador</p>
+            <BrandLockup />
           </div>
 
           {/* Column 2: Productos */}
           <div>
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#1A1A18]">
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#FAF7F2]">
               Productos
             </p>
             <ul className="space-y-2">
               <li>
                 <a
                   href={kitchenBaseUrl}
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Cocina
                 </a>
@@ -97,7 +97,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href={wellnessBaseUrl}
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Bienestar
                 </a>
@@ -107,14 +107,14 @@ export function SiteFooter() {
 
           {/* Column 3: Recursos */}
           <div>
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#1A1A18]">
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#FAF7F2]">
               Recursos
             </p>
             <ul className="space-y-2">
               <li>
                 <a
                   href="/guias"
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Guías
                 </a>
@@ -122,7 +122,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/guias/teflon-pfas"
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Guía PFAS
                 </a>
@@ -130,7 +130,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/marca"
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Marca
                 </a>
@@ -140,7 +140,7 @@ export function SiteFooter() {
 
           {/* Column 4: Contacto & Social */}
           <div>
-            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#1A1A18]">
+            <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#FAF7F2]">
               Contacto
             </p>
             <ul className="space-y-2">
@@ -149,7 +149,7 @@ export function SiteFooter() {
                   href="https://instagram.com/eter.niu"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-[#93E29A] hover:text-[#FAF7F2] transition-colors"
                 >
                   <InstagramIcon />
                   @eter.niu
@@ -160,7 +160,7 @@ export function SiteFooter() {
                   href="https://wa.me/593979854905"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   WhatsApp
                 </a>
@@ -173,7 +173,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom notice (both mobile & desktop) */}
-        <p className="mt-8 text-[11px] text-[#6B6B66]">
+        <p className="mt-8 text-[11px] text-[#A9ADA6]">
           Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
         </p>
       </div>

@@ -1,17 +1,25 @@
 /**
- * Isotipo interino de Eter Niu — vectorizado a mano desde la foto de perfil
- * de Instagram @eter.niu (jun 2026). Reemplazar cuando el dueño entregue el
- * archivo original SVG/PNG alta (ref: WEB_REDESIGN_PLAN §2.4.1).
+ * Isotipo Eter Niu — nudo pentagonal tejido (5 segmentos entrelazados).
+ * Vectorizado (interino) desde el sistema de logo del dueño (jun 2026):
+ * símbolo en línea menta sobre grafito. Reemplazar por el SVG original cuando
+ * el dueño lo entregue (ref: WEB_REDESIGN_PLAN BRAND-1).
  *
- * Hereda el color del contexto (monocromo): usa `color` prop o `currentColor`.
+ * Monocromo: hereda el color del contexto vía `color` prop o `currentColor`.
+ * Sobre grafito se pasa color menta; sobre marfil, tinta o esmeralda.
  */
 export function Isotipo({
   size = 32,
   color = "currentColor",
+  strokeWidth = 6,
 }: {
   size?: number
   color?: string
+  strokeWidth?: number
 }) {
+  // Cinco segmentos redondeados rotados 72° forman el nudo de 5 lados.
+  // Cada banda es un cuadrilátero con esquinas redondeadas; el solape crea
+  // la ilusión de tejido (over/under) del logo.
+  const strands = [0, 72, 144, 216, 288]
   return (
     <svg
       width={size}
@@ -20,18 +28,21 @@ export function Isotipo({
       fill="none"
       aria-hidden="true"
     >
-      <path
-        d="M50 8 L88 35 L74 80 L26 80 L12 35 Z"
+      <g
         stroke={color}
-        strokeWidth="5"
+        strokeWidth={strokeWidth}
         strokeLinejoin="round"
-      />
-      <path
-        d="M50 8 Q60 38 88 35 M88 35 Q58 48 74 80 M74 80 Q48 62 26 80 M26 80 Q42 50 12 35 M12 35 Q40 36 50 8"
-        stroke={color}
-        strokeWidth="4.5"
         strokeLinecap="round"
-      />
+      >
+        {strands.map((angle) => (
+          <path
+            key={angle}
+            d="M50 16 C70 16 80 30 80 48 C80 62 70 72 50 72 C30 72 20 62 20 48 C20 30 30 16 50 16 Z"
+            transform={`rotate(${angle} 50 50)`}
+            opacity="0.92"
+          />
+        ))}
+      </g>
     </svg>
   )
 }

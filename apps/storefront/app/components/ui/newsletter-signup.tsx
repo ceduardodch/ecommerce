@@ -35,7 +35,7 @@ export function NewsletterSignup() {
 
   return (
     <div className="hidden lg:block">
-      <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#1A1A18]">
+      <p className="mb-3 text-[12px] font-semibold uppercase tracking-wider text-[#FAF7F2]">
         Newsletter
       </p>
       <form onSubmit={handleSubmit} className="space-y-2">
@@ -51,19 +51,19 @@ export function NewsletterSignup() {
         <button
           type="submit"
           disabled={isLoading || status === "success"}
-          className="w-full rounded-full border border-[#1A1A18] bg-[#1A1A18] px-4 py-2 text-[13px] font-medium text-white hover:bg-[#2B2B28] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full rounded-full bg-[#236B4A] px-4 py-2 text-[13px] font-medium text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
         >
           {isLoading ? "Suscribiendo..." : "Suscribir"}
         </button>
 
         {/* Status messages */}
         {status === "success" && (
-          <p className="text-[12px] text-[#2F5D43]">
+          <p className="text-[12px] text-[#93E29A]">
             ¡Gracias! Te has suscrito correctamente.
           </p>
         )}
         {status === "error" && (
-          <p className="text-[12px] text-[#C4502A]">
+          <p className="text-[12px] text-[#F0997B]">
             Por favor ingresa un email válido.
           </p>
         )}
