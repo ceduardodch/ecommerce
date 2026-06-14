@@ -1,4 +1,5 @@
 import { NewsletterSignup } from "./newsletter-signup"
+import { kitchenBaseUrl, wellnessBaseUrl } from "../../../lib/domains"
 
 function InstagramIcon() {
   return (
@@ -87,7 +88,7 @@ export function SiteFooter() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="/"
+                  href={kitchenBaseUrl}
                   className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
                 >
                   Cocina
@@ -95,7 +96,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="/bienestar"
+                  href={wellnessBaseUrl}
                   className="text-[13px] text-[#6B6B66] hover:text-[#1A1A18] transition-colors"
                 >
                   Bienestar
