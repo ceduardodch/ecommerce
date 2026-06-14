@@ -114,6 +114,14 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
               </svg>
               Finalizar pedido por WhatsApp
             </button>
+            {/* INTEG-3: enlace directo a /cart */}
+            <a
+              href="/cart"
+              onClick={onClose}
+              className="mt-2 block text-center text-[12px] text-[#6B6B66] underline underline-offset-2 hover:text-[#1A1A18] transition-colors"
+            >
+              Ver carrito completo
+            </a>
           </div>
         )}
       </div>
