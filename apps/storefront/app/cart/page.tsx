@@ -24,6 +24,15 @@ export default function CartPage() {
     console.log("Checkout initiated via CheckoutButton")
   }
 
+  // Detect vertical from hostname (client-side)
+  const isWellness = typeof window !== "undefined" &&
+    (window.location.hostname.includes("bienestar") ||
+     window.location.hostname.includes("wellness"))
+
+  const homeLink = isWellness ? "/bienestar" : "/"
+  const homeLabel = isWellness ? "Bienestar" : "Home"
+  const verticalName = isWellness ? "Bienestar" : "Cocina"
+
   if (!loaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -38,8 +47,8 @@ export default function CartPage() {
       <div className="bg-white border-b border-[#E8E2D8]">
         <div className="max-w-4xl mx-auto px-4 py-3">
           <nav className="text-[12px] text-[#6B6B66]">
-            <a href="/" className="hover:text-[#1A1A18]">
-              Home
+            <a href={homeLink} className="hover:text-[#1A1A18]">
+              {homeLabel}
             </a>
             <span className="mx-2">›</span>
             <span className="text-[#1A1A18]">Carrito</span>
@@ -61,7 +70,7 @@ export default function CartPage() {
               Agrega productos para comenzar tu pedido
             </p>
             <a
-              href="/"
+              href={homeLink}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-[14px] font-semibold text-[#FAF7F2] hover:opacity-85 transition-opacity cursor-pointer"
             >
               Explorar productos
