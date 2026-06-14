@@ -22,6 +22,10 @@ type CartContextType = {
   totalItems: number
   totalAmount: number
   generateWhatsAppMessage: (customerName?: string, customerCity?: string) => string
+  // UI state (INTEG-1)
+  isOpen: boolean
+  openCart: () => void
+  closeCart: () => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -31,6 +35,10 @@ const CART_STORAGE_KEY = "eter_niu_cart"
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [loaded, setLoaded] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const openCart = () => setIsOpen(true)
+  const closeCart = () => setIsOpen(false)
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -151,6 +159,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         totalItems,
         totalAmount,
         generateWhatsAppMessage,
+        isOpen,
+        openCart,
+        closeCart,
       }}
     >
       {children}

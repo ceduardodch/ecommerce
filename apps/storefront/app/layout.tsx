@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google"
 import { kitchenBaseUrl } from "../lib/domains"
 import { MetaPixel } from "./components/analytics"
 import { CartProvider } from "../contexts/CartContext"
+import { CartController } from "./components/cart/cart-controller"
 import "./globals.css"
 import "./theme.css"
 
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           {children}
+          <CartController />
           <MetaPixel />
         </CartProvider>
       </body>

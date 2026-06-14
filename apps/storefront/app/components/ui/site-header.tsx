@@ -1,4 +1,5 @@
 import { Isotipo } from "./isotipo"
+import { CartBagButton } from "./cart-bag-button"
 
 type SiteHeaderProps = {
   vertical?: "cocina" | "bienestar"
@@ -7,26 +8,6 @@ type SiteHeaderProps = {
   /** Short name shown centered in compact mode */
   compactTitle?: string
   backHref?: string
-}
-
-function ShoppingBagIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-      <line x1="3" y1="6" x2="21" y2="6" />
-      <path d="M16 10a4 4 0 01-8 0" />
-    </svg>
-  )
 }
 
 function ShareIcon() {
@@ -134,13 +115,7 @@ export function SiteHeader({
 
       {/* Right actions */}
       <div className="flex items-center gap-1">
-        <a
-          href="/productos"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-[#1A1A18]"
-          aria-label="Productos"
-        >
-          <ShoppingBagIcon />
-        </a>
+        <CartBagButton />
       </div>
     </header>
   )
