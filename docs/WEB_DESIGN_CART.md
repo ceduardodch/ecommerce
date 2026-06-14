@@ -665,14 +665,23 @@ useEffect(() => {
 
 ## Estado del Épica
 
-**Estado:** Componentes construidos (Sprints 1-3) — **falta cableado (Sprint 5 INTEG)**
+**Estado:** Sprint 5 INTEG completado (build ✅, greps verificados) — listo para QA en vivo (INTEG-6, coordinador)
 
-**Progreso real:** infra completa pero carrito inaccesible y desktop incompleto;
-las dos quejas del dueño verificadas como correctas.
+**Progreso real INTEG (2026-06-14):**
+- ✅ INTEG-1: CartContext extendido (isOpen/openCart/closeCart); CartController monta CartDrawer (<lg) y CartModal (≥lg) en layout; CartBagButton client island en header abre overlay y muestra CartBadge con totalItems.
+- ✅ INTEG-2: ProductCard cocina — TrackedWhatsAppLink con `lg:hidden` (mobile) + AddToCartButton con `hidden lg:flex` (desktop). Coexistencia según riesgo #3.
+- ✅ INTEG-3: `href="/cart"` en CartDrawer y CartModal ("Ver carrito completo"). CartBadge en header vía CartBagButton.
+- ✅ INTEG-4: Grid productos cocina: `grid-cols-2 md:grid-cols-3 lg:grid-cols-4` — nueva sección en `app/page.tsx`.
+- ✅ INTEG-5: SiteFooter montado en cocina, bienestar y guías.
+- INTEG-6: QA en vivo (pendiente del coordinador con navegador).
 
-**Sprint activo:** Sprint 5 — INTEG (planificado, no iniciado)
+**Decisiones anotadas:**
+- CartController se montó en `app/layout.tsx` (una sola instancia global) con `<div className="lg:hidden">` y `<div className="hidden lg:block">` para separar drawer/modal.
+- `SiteHeader` sigue siendo server component; la bolsa se aisló en `CartBagButton` ("client island") para mantener la frontera server/client limpia.
+- INTEG-5 se aplicó individualmente a cocina/bienestar/guías (no en layout.tsx raíz) para no contaminar páginas de campaña y producto.
 
-**Pendiente de pushear:** 7 commits RSP/DTP en local (no rompen nada; esperar a
-cablear antes de push para que la épica llegue completa a release/main).
+**Sprint activo:** INTEG-6 (QA en vivo — coordinador)
 
-**Última actualización:** 2026-06-13 (auditoría independiente)
+**Pendiente de pushear:** commits en release local. No hacer push hasta INTEG-6.
+
+**Última actualización:** 2026-06-14 (Sprint 5 INTEG ejecutado)
