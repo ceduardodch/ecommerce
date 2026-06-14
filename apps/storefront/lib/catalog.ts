@@ -2461,6 +2461,32 @@ function isGeneratedPlaceholder(url?: string) {
   return !url || url.includes("placehold.co");
 }
 
+function localMediaUrl(url?: string) {
+  if (!url) return "";
+  if (url.startsWith("/media/")) return url;
+
+  try {
+    const parsed = new URL(url);
+    const legacyMediaHosts = new Set([
+      "shop.b2b.com.ec",
+      "cocina.b2b.com.ec",
+      "bienestar.b2b.com.ec",
+      "cocina.eter-niu.com",
+      "bienestar.eter-niu.com",
+      "www.eter-niu.com",
+      "eter-niu.com",
+    ]);
+
+    if (legacyMediaHosts.has(parsed.hostname) && parsed.pathname.startsWith("/media/")) {
+      return parsed.pathname;
+    }
+  } catch {
+    return url;
+  }
+
+  return url;
+}
+
 function generatedImageForProduct(product: Product) {
   const haystack = `${product.sku} ${product.title} ${product.category}`
     .normalize("NFD")
@@ -2534,7 +2560,7 @@ function generatedImageForProduct(product: Product) {
 }
 
 function placeholderForProduct(product: Product) {
-  if (!isGeneratedPlaceholder(product.imageUrl)) return product.imageUrl;
+  if (!isGeneratedPlaceholder(product.imageUrl)) return localMediaUrl(product.imageUrl);
   return generatedImageForProduct(product);
 }
 
