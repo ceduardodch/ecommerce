@@ -21,7 +21,7 @@ export class Migration20260611000000 extends Migration {
       ('crmtpl_07', 'generico', 'Hola {nombre}, tenemos nuevas opciones de ollas, cuchillos y combos de cocina. Te preparo una cotizacion corta por WhatsApp?', true),
       ('crmtpl_08', 'nps', 'Hola {nombre}, ¿llegó bien tu {producto}? Del 1 al 10, ¿qué tan probable es que nos recomiendes?', true),
       ('crmtpl_09', 'referido', '¡Gracias! ¿A quién le regalamos un cupón de bienvenida? Compárteme su contacto o reenvíale nuestro número.', true)
-      on conflict (key) do nothing;`,
+      on conflict (id) do nothing;`,
     )
   }
 
