@@ -235,16 +235,21 @@ ya existen) para que la venta entre al mismo timeline/recompra que el resto.
   "Pagar con tarjeta" en `app/cart/page.tsx`. **Build limpio.**
 - Flujo probado por API contra el backend corriendo: crear (amount 155, env test,
   código `000.100.112`) → pagado → rechazo. ✅
+- **Venta con tarjeta enlazada al CRM/recompra** (idempotente): al crear el
+  checkout se persiste el contexto en `datafast-checkouts.json`; al confirmarse el
+  pago se registra `trackCustomerEvent` source `datafast` con `lastPurchaseAt`,
+  `purchasedProducts`, `suggestedFrequencyDays` y `next_followup_at` (+90d por
+  defecto). Teléfono normalizado a `+593`. Verificado en vivo + tests
+  (`datafast-crm.test.ts`): registra, no duplica, rechazo no registra. ✅
 
 **PENDIENTE (requiere acción del dueño / credenciales):**
 - **7 credenciales Datafast** (entityId, accessToken, MID, TID, eCommerceId,
   serviceProviderId, customerName) → poner en envs y `DATAFAST_DRY_RUN=false`.
 - **Prueba del widget real** con tarjetas de test de Datafast (no se puede sin
   credenciales) — solo está verificado el carril de simulación.
-- **Registrar la venta en el CRM** (`markPaid` source `datafast`): hoy en éxito
-  se dispara el evento `Purchase` (tracking/atribución) pero **aún NO se escribe
-  la compra en el timeline de b2b-crm**. Falta cablear result→CRM con el teléfono
-  capturado en el form de pago.
+- **Persistencia del ledger en prod**: `datafast-checkouts.json` vive en
+  `TOOLS_DATA_DIR`; asegurar volumen persistente en Coolify para que un pago
+  confirmado tras un reinicio siga encontrando su contexto.
 - **Modelo de IVA**: hoy se asume precio IVA-incluido y todo gravado al 15%
   (`ECOMMERCE_TAX_RATE`). Confirmar con productos 0% si los hubiera.
 - **URL declarada** a Datafast (campo 12) + corrección stack (campo 28).
