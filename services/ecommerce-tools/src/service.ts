@@ -26,14 +26,21 @@ import {
 import {
   addCustomerEvent,
   findCustomer,
+  findDatafastCheckout,
   findOrder,
   findOrderByClientTransaction,
   listDueFollowups,
   readCustomers,
   readOrders,
   upsertCustomer,
+  upsertDatafastCheckout,
   upsertOrder,
 } from "./storage.js"
+import {
+  createDatafastCheckout,
+  getDatafastResult,
+  type DatafastCheckoutInput,
+} from "./datafast.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
 import type { SaleFeedbackInput, ToolsEventInput } from "./contracts.js"
 import type {
@@ -54,6 +61,17 @@ function nextReorderDays(items: Array<{ reorderAfterDays?: number }>) {
     .map((item) => item.reorderAfterDays)
     .filter((value): value is number => Number.isFinite(value))
   return days.length ? Math.min(...days) : 90
+}
+
+/** Normaliza teléfono ecuatoriano a formato +593 para casar con el CRM. */
+function toEcPhone(raw?: string): string | undefined {
+  if (!raw) return undefined
+  const digits = raw.replace(/[^\d+]/g, "")
+  if (digits.startsWith("+")) return digits
+  if (digits.startsWith("593")) return `+${digits}`
+  if (digits.startsWith("0") && digits.length === 10) return `+593${digits.slice(1)}`
+  if (digits.length === 9) return `+593${digits}`
+  return digits ? `+${digits}` : undefined
 }
 
 function isPaidStatus(status: string | undefined) {
@@ -664,6 +682,99 @@ export function createCommerceService(config: AppConfig) {
         )
       }
       return { matched: true, status: updated.status, order: updated }
+    },
+
+    // ─── Datafast: crear checkout + recordar contexto para confirmación ───
+    async datafastCheckout(input: {
+      reference?: string
+      items: DatafastCheckoutInput["items"]
+      customer?: DatafastCheckoutInput["customer"]
+    }) {
+      const reference = input.reference || `etn_${Date.now()}`
+      const checkout = await createDatafastCheckout(config, { ...input, reference })
+      const now = new Date().toISOString()
+      await upsertDatafastCheckout(config.dataDir, {
+        reference,
+        checkoutId: checkout.checkoutId,
+        amount: checkout.amount,
+        status: "pending",
+        registered: false,
+        customer: {
+          phone: toEcPhone(input.customer?.phone),
+          name: [input.customer?.givenName, input.customer?.surname]
+            .filter(Boolean)
+            .join(" ")
+            .trim() || undefined,
+          email: input.customer?.email,
+        },
+        items: input.items.map((it) => ({
+          title: it.title,
+          sku: it.sku,
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+        })),
+        createdAt: now,
+        updatedAt: now,
+      })
+      return { reference, ...checkout }
+    },
+
+    // ─── Datafast: consultar resultado + registrar venta en CRM (idempotente) ───
+    async datafastResult(checkoutId: string) {
+      const result = await getDatafastResult(config, checkoutId)
+      const record = await findDatafastCheckout(config.dataDir, checkoutId)
+
+      if (result.status === "paid" && record && !record.registered) {
+        const now = new Date().toISOString()
+        if (record.customer?.phone) {
+          const purchasedProducts: PurchasedProduct[] = record.items.map((it) => ({
+            productId: it.sku || it.title,
+            sku: it.sku || it.title,
+            title: it.title,
+            quantity: it.quantity,
+            purchasedAt: now,
+          }))
+          const freq = nextReorderDays(purchasedProducts)
+          await trackCustomerEvent(
+            config,
+            {
+              phone: record.customer.phone,
+              name: record.customer.name,
+              email: record.customer.email,
+            },
+            {
+              type: "paid",
+              at: now,
+              orderId: record.reference,
+              source: "datafast",
+              payload: { checkoutId, amount: record.amount, code: result.code },
+            },
+            {
+              lastPurchaseAt: now,
+              purchasedProducts,
+              suggestedFrequencyDays: freq,
+              nextFollowupAt: addDays(now, freq),
+              followupReason: "recompra_datafast",
+            },
+          )
+          // El evento Purchase de Meta lo dispara el storefront en /checkout/resultado;
+          // aquí solo registramos la venta en el CRM (recompra).
+        }
+        await upsertDatafastCheckout(config.dataDir, {
+          ...record,
+          status: "paid",
+          registered: true,
+          updatedAt: now,
+        })
+      } else if (result.status === "failed" && record && record.status === "pending") {
+        await upsertDatafastCheckout(config.dataDir, {
+          ...record,
+          status: "failed",
+          updatedAt: new Date().toISOString(),
+        })
+      }
+
+      return result
     },
 
     async metaCatalogCsv(input: { vertical?: "cocina" | "bienestar" } = {}) {

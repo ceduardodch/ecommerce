@@ -15,7 +15,6 @@ import {
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
-import { createDatafastCheckout, getDatafastResult } from "./datafast.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 import { mountWhatsappReplyRoute } from "./whatsapp-reply.js"
 
@@ -100,16 +99,14 @@ app.post("/webhooks/payphone", async (request) => {
 // ─── Datafast (botón de pagos con tarjeta) ───
 app.post("/tools/datafast/checkout", async (request) => {
   const input = datafastCheckoutSchema.parse(request.body)
-  const reference = input.reference || `etn_${Date.now()}`
   const ip =
     (request.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim() ||
     request.ip
-  const checkout = await createDatafastCheckout(config, {
-    reference,
+  return service.datafastCheckout({
+    reference: input.reference,
     items: input.items,
     customer: { ...(input.customer || {}), ip: input.customer?.ip || ip },
   })
-  return { reference, ...checkout }
 })
 
 app.get("/tools/datafast/result", async (request, reply) => {
@@ -118,7 +115,7 @@ app.get("/tools/datafast/result", async (request, reply) => {
   if (!checkoutId) {
     return reply.code(400).send({ error: "missing_checkout_id" })
   }
-  return getDatafastResult(config, checkoutId)
+  return service.datafastResult(checkoutId)
 })
 
 app.get("/feeds/meta/catalog.csv", async (request, reply) => {

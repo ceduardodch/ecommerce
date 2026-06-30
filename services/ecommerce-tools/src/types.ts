@@ -163,6 +163,23 @@ export type CustomerRecord = {
   events: CustomerEventRecord[]
 }
 
+export type DatafastCheckoutRecord = {
+  reference: string
+  checkoutId: string
+  amount: number
+  status: "pending" | "paid" | "failed"
+  registered: boolean
+  customer?: { phone?: string; name?: string; email?: string }
+  items: Array<{
+    title: string
+    sku?: string
+    quantity: number
+    unitPrice: number
+  }>
+  createdAt: string
+  updatedAt: string
+}
+
 export type OrderRecord = {
   id: string
   medusaOrderId?: string

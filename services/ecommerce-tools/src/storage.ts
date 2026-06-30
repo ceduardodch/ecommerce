@@ -4,6 +4,7 @@ import type {
   CustomerEventRecord,
   CustomerInput,
   CustomerRecord,
+  DatafastCheckoutRecord,
   OrderRecord,
   PurchasedProduct,
 } from "./types.js"
@@ -14,6 +15,10 @@ async function ensureDir(dataDir: string) {
 
 function ordersPath(dataDir: string) {
   return path.join(dataDir, "orders.json")
+}
+
+function datafastPath(dataDir: string) {
+  return path.join(dataDir, "datafast-checkouts.json")
 }
 
 function customersPath(dataDir: string) {
@@ -58,6 +63,37 @@ export async function upsertOrder(dataDir: string, order: OrderRecord) {
 export async function findOrder(dataDir: string, orderId: string) {
   const orders = await readOrders(dataDir)
   return orders.find((order) => order.id === orderId)
+}
+
+// ─── Ledger de checkouts Datafast (estado pendiente para confirmación) ───
+export async function readDatafastCheckouts(
+  dataDir: string,
+): Promise<DatafastCheckoutRecord[]> {
+  await ensureDir(dataDir)
+  try {
+    const raw = await readFile(datafastPath(dataDir), "utf8")
+    return JSON.parse(raw) as DatafastCheckoutRecord[]
+  } catch {
+    return []
+  }
+}
+
+export async function upsertDatafastCheckout(
+  dataDir: string,
+  record: DatafastCheckoutRecord,
+) {
+  await ensureDir(dataDir)
+  const all = await readDatafastCheckouts(dataDir)
+  const index = all.findIndex((c) => c.checkoutId === record.checkoutId)
+  if (index >= 0) all[index] = record
+  else all.push(record)
+  await writeFile(datafastPath(dataDir), `${JSON.stringify(all, null, 2)}\n`)
+  return record
+}
+
+export async function findDatafastCheckout(dataDir: string, checkoutId: string) {
+  const all = await readDatafastCheckouts(dataDir)
+  return all.find((c) => c.checkoutId === checkoutId)
 }
 
 export async function findOrderByClientTransaction(
