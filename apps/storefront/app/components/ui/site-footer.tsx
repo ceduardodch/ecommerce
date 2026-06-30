@@ -66,6 +66,9 @@ export function SiteFooter() {
             >
               @eter.niu
             </a>
+            <a href="/privacidad" className="hover:text-[#FAF7F2] transition-colors">
+              Privacidad
+            </a>
           </div>
 
           <p className="mt-8 text-[11px] text-[#A9ADA6]">
@@ -133,6 +136,14 @@ export function SiteFooter() {
                   className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Marca
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/privacidad"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                >
+                  Privacidad y datos
                 </a>
               </li>
             </ul>

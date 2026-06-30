@@ -178,7 +178,11 @@ export default function PagoTarjetaPage() {
           </button>
           <p className="text-[12px] text-[#6B6B66] text-center">
             Pago procesado por Datafast. Tus datos de tarjeta nunca pasan por
-            nuestros servidores.
+            nuestros servidores. Al continuar aceptas nuestra{" "}
+            <a href="/privacidad" className="text-[var(--accent)] underline">
+              Política de Privacidad
+            </a>
+            .
           </p>
           <a href="/cart" className="block text-center text-[13px] text-[#6B6B66] underline">
             Volver al carrito
