@@ -17,6 +17,16 @@ export type AppConfig = {
   payphoneToken?: string
   payphoneStoreId?: string
   payphoneDryRun: boolean
+  // Datafast (DataFast Ecuador / ACI oppwa) — botón de pagos con tarjeta
+  datafastEnv: "test" | "live"
+  datafastDryRun: boolean
+  datafastEntityId?: string
+  datafastAccessToken?: string
+  datafastMid?: string
+  datafastTid?: string
+  datafastEcommerceId?: string
+  datafastServiceProviderId?: string
+  datafastCustomerName?: string
   metaCatalogBrand: string
   metaApiVersion: string
   pixelEnabled: boolean
@@ -87,6 +97,16 @@ export function loadConfig(env = process.env): AppConfig {
     payphoneToken: env.PAYPHONE_TOKEN,
     payphoneStoreId: env.PAYPHONE_STORE_ID,
     payphoneDryRun: bool(env.PAYPHONE_DRY_RUN, true),
+    // Datafast: dry-run por defecto hasta tener credenciales aprobadas
+    datafastEnv: env.DATAFAST_ENV === "live" ? "live" : "test",
+    datafastDryRun: bool(env.DATAFAST_DRY_RUN, true),
+    datafastEntityId: env.DATAFAST_ENTITY_ID,
+    datafastAccessToken: env.DATAFAST_ACCESS_TOKEN,
+    datafastMid: env.DATAFAST_MID,
+    datafastTid: env.DATAFAST_TID,
+    datafastEcommerceId: env.DATAFAST_ECOMMERCE_ID,
+    datafastServiceProviderId: env.DATAFAST_SERVICE_PROVIDER_ID,
+    datafastCustomerName: env.DATAFAST_CUSTOMER_NAME,
     metaCatalogBrand: env.META_CATALOG_BRAND || "Eter Niu Cocina",
     metaApiVersion: env.META_API_VERSION || "v23.0",
     pixelEnabled: bool(env.PIXEL_ENABLED || env.NEXT_PUBLIC_PIXEL_ENABLED, true),

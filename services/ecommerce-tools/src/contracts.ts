@@ -30,6 +30,35 @@ export const payphoneInputSchema = z.object({
   description: z.string().optional(),
 })
 
+export const datafastCheckoutSchema = z.object({
+  reference: z.string().min(1).optional(),
+  items: z
+    .array(
+      z.object({
+        title: z.string().min(1),
+        sku: z.string().optional(),
+        quantity: z.number().int().positive().default(1),
+        unitPrice: z.number().nonnegative(),
+        description: z.string().optional(),
+      }),
+    )
+    .min(1),
+  customer: z
+    .object({
+      givenName: z.string().optional(),
+      middleName: z.string().optional(),
+      surname: z.string().optional(),
+      email: z.string().email().optional(),
+      phone: z.string().optional(),
+      idNumber: z.string().optional(),
+      ip: z.string().optional(),
+      street: z.string().optional(),
+      city: z.string().optional(),
+      countryCode: z.string().optional(),
+    })
+    .optional(),
+})
+
 export const metaDraftInputSchema = z.object({
   productIds: z.array(z.string()).min(1),
   angle: z.string().default("producto"),
