@@ -137,6 +137,18 @@ export function CartModal({ isOpen, onClose, onCheckout }: CartModalProps) {
                 </svg>
                 Finalizar pedido por WhatsApp
               </button>
+
+              <a
+                href="/checkout/pago"
+                onClick={onClose}
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-[var(--accent)] px-6 py-3 text-[14px] font-semibold text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[#FAF7F2] transition-colors cursor-pointer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>
+                Pagar con tarjeta
+              </a>
               {/* INTEG-3: enlace directo a /cart */}
               <a
                 href="/cart"

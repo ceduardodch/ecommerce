@@ -69,6 +69,12 @@ export function SiteFooter() {
             <a href="/privacidad" className="hover:text-[#FAF7F2] transition-colors">
               Privacidad
             </a>
+            <a href="/terminos" className="hover:text-[#FAF7F2] transition-colors">
+              Términos
+            </a>
+            <a href="/envios-devoluciones" className="hover:text-[#FAF7F2] transition-colors">
+              Envíos y devoluciones
+            </a>
           </div>
 
           <p className="mt-8 text-[11px] text-[#A9ADA6]">
@@ -144,6 +150,22 @@ export function SiteFooter() {
                   className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
                 >
                   Privacidad y datos
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terminos"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                >
+                  Términos y condiciones
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/envios-devoluciones"
+                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                >
+                  Envíos y devoluciones
                 </a>
               </li>
             </ul>

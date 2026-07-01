@@ -181,6 +181,10 @@ export default function PagoTarjetaPage() {
             nuestros servidores. Al continuar aceptas nuestra{" "}
             <a href="/privacidad" className="text-[var(--accent)] underline">
               Política de Privacidad
+            </a>{" "}
+            y los{" "}
+            <a href="/terminos" className="text-[var(--accent)] underline">
+              Términos
             </a>
             .
           </p>

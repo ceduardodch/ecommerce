@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, FormEvent } from "react"
+import { trackStorefrontEvent } from "../analytics"
 
 export function NewsletterSignup() {
   const [email, setEmail] = useState("")
@@ -19,18 +20,23 @@ export function NewsletterSignup() {
 
     setIsLoading(true)
 
-    // TODO: Integrate with actual newsletter service
-    // For now, simulate success
-    setTimeout(() => {
-      setStatus("success")
-      setEmail("")
-      setIsLoading(false)
+    // Captura el email como Lead en el pipeline de eventos/CRM (y Meta Lead).
+    // La integración con un proveedor de email marketing dedicado es un paso
+    // posterior (decisión del dueño).
+    trackStorefrontEvent({
+      eventName: "Lead",
+      type: "newsletter_signup",
+      source: "storefront",
+      cta: "newsletter",
+      placement: "footer",
+      customer: { email, whatsappConsent: true },
+      metadata: { channel: "newsletter" },
+    })
 
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setStatus("idle")
-      }, 5000)
-    }, 500)
+    setStatus("success")
+    setEmail("")
+    setIsLoading(false)
+    setTimeout(() => setStatus("idle"), 5000)
   }
 
   return (

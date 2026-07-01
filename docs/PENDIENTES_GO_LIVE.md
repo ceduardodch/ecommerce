@@ -1,0 +1,74 @@
+# Pendientes para una herramienta total funcional (go-live)
+
+> Junio 2026. Consolida lo que falta de CRM_BACKLOG, WHATSAPP_CLOUD_PLAN,
+> PAGOS_DATAFAST_PLAN, DOMAIN_PLAN y WEB_REDESIGN_PLAN + gaps de código.
+> Leyenda: 🔴 acción del dueño (trámites/credenciales/decisión) · 🟢 desarrollo
+> (lo puede hacer un agente) · 🟡 mixto.
+
+## A. PAGOS CON TARJETA (Datafast) — para cobrar de verdad
+Estado: código construido y verificado en dry-run + venta enlazada al CRM.
+1. 🔴 Conseguir de Datafast las **7 credenciales** (Entity ID, Access token, MID,
+   TID, E-Commerce ID, Service Provider ID, Customer name) — test y producción.
+2. 🔴 Corregir el formulario Datafast: **campo 12 (URL pública)** y **campo 28
+   (stack = Node/TS, no Python)**.
+3. 🟢 Cargar credenciales en envs + `DATAFAST_DRY_RUN=false`; activar widget real.
+4. 🟡 **Probar el widget real** con tarjetas de test de Datafast (pago OK, rechazo,
+   3DS, exceder límite $500/día).
+5. 🟢 Confirmar **modelo de IVA** (hoy se asume precio IVA-incluido, todo al 15%);
+   ajustar si hay productos con tarifa 0%.
+6. ✅ Botón **"Pagar con tarjeta" también en el cajón y el modal** del carrito.
+
+## B. WHATSAPP CLOUD API — iniciar conversaciones sin riesgo de ban
+Estado: dispatcher modo `meta` + webhook + reply construidos (W1–W4).
+7. 🔴 **W0 trámites Meta**: crear WABA, conseguir número nuevo, registrar en Cloud
+   API, generar `WHATSAPP_PHONE_NUMBER_ID/WABA_ID/ACCESS_TOKEN`.
+8. 🔴 **Someter plantillas** a aprobación de Meta (recompra, complemento, cuidado,
+   estacional, cross-sell) — aprobar textos antes.
+9. 🔴 Registrar la **URL del webhook** (ecommerce-tools público) en la app de Meta.
+10. 🟡 **W5 corte**: con número de prueba, ciclo completo template→respuesta→Vicky;
+    luego `CRM_FOLLOWUP_DISPATCH_MODE=meta` con `MAX_PER_RUN=5` la 1ª semana.
+
+## C. CRM / RECOMPRA — operar con datos reales
+Estado: importación, ficha, recompra, kanban, RFM, NPS, estacionales → hechos.
+11. 🔴 Subir el **archivo de leads históricos** (OPS-1) por el wizard de importación.
+12. 🔴 Configurar **token/URL del hook OpenClaw** (OPS-3) para que Vicky envíe.
+13. 🔴 **Aprobar textos** de plantillas, incluidas las de cross-sell (TPL-1, XS-2).
+14. 🔴 Dar las **frecuencias reales de recompra** de bienestar (XS-4).
+15. 🟡 **OPS-4**: línea base de métricas con datos reales (tras importar leads).
+
+## D. DOMINIO eter-niu.com
+Estado: plan D1–D5 definido; código de hosts/SEO listo.
+16. 🔴 **DNS** de eter-niu.com (D1) apuntando a Coolify.
+17. 🟢 Flip de envs `*_PUBLIC_URL` / `NEXT_PUBLIC_*_URL` a los subdominios nuevos (D2).
+18. 🔴 **D4 Meta/Instagram**: verificación de dominio + actualizar enlaces de bio/ads.
+19. 🟡 Redirecciones 301 de los hosts viejos a los nuevos.
+
+## E. WEB / MARCA — pulido premium
+20. 🔴 Entregar el **SVG real del isotipo** (hoy hay un placeholder) → BRAND-1.
+21. 🟢 **Foto dedicada de bienestar** estilo "producto en el páramo" (BRAND-5).
+22. 🟢 **QA visual** 390/768/1280 + contraste AA + Lighthouse en producción.
+23. ✅ Newsletter **captura el email** como Lead en el pipeline CRM/eventos (ya no
+    se descarta). Pendiente 🔴: conectar un proveedor de email marketing dedicado.
+
+## F. INFRA / DESPLIEGUE
+24. 🟡 Confirmar **auto-deploy** de Coolify desde `main` (el último cambio requirió
+    redeploy manual → revisar webhook).
+25. 🟢 **Volumen persistente** para `TOOLS_DATA_DIR` (ledger Datafast + datos json).
+26. 🔴 Revisar **variables de entorno** de producción (tokens Meta, payphone,
+    datafast, openclaw) en Coolify.
+27. 🟢 Healthchecks/monitoreo básico de los 3 servicios.
+
+## G. LEGAL / CONFIANZA
+Estado: política de privacidad LOPDP + banner publicados.
+28. 🔴 **Revisión legal** de la política (abogado) y, si aplica, registro de
+    delegado ante la Superintendencia de Protección de Datos.
+29. ✅ Páginas **/terminos** y **/envios-devoluciones** creadas y enlazadas (footer
+    + checkout). Pendiente 🔴: revisión legal y confirmar plazos/condiciones.
+
+## Orden sugerido para "vender de verdad" cuanto antes
+1. Desplegar lo ya hecho (F-24) y verificar rutas en prod.
+2. Datafast go-live: A-1..A-4 (credenciales → cobro real con tarjeta).
+3. Términos/envíos/devoluciones (G-29) — requisito típico de la pasarela.
+4. Leads + OpenClaw + plantillas (C-11..C-13) → recompra real por WhatsApp.
+5. WhatsApp Cloud API (B) para escalar sin riesgo de ban.
+6. Dominio eter-niu.com (D) y pulido de marca (E).
