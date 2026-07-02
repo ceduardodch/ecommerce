@@ -231,9 +231,9 @@ export default function PagoTarjetaPage() {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-[#10160e]">
       <div className="mx-auto max-w-md px-4 py-10">
-        <div className="rounded-2xl border border-[#E8E2D8] bg-white p-6">{children}</div>
+        <div className="rounded-2xl border border-white/10 bg-white p-6">{children}</div>
       </div>
     </div>
   )

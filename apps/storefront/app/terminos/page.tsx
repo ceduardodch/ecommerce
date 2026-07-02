@@ -19,29 +19,29 @@ const INFO = {
 
 function H2({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mt-10 text-[20px] font-semibold text-[#1A1A18] [font-family:var(--font-display)]">
+    <h2 className="mt-10 text-[20px] font-semibold text-white [font-family:var(--font-display)]">
       {children}
     </h2>
   )
 }
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="mt-3 text-[15px] leading-relaxed text-[#3A3E3A]">{children}</p>
+  return <p className="mt-3 text-[15px] leading-relaxed text-[#b8c2ae]">{children}</p>
 }
 function LI({ children }: { children: React.ReactNode }) {
-  return <li className="text-[15px] leading-relaxed text-[#3A3E3A]">{children}</li>
+  return <li className="text-[15px] leading-relaxed text-[#b8c2ae]">{children}</li>
 }
 
 export default function TerminosPage() {
   return (
-    <main className="min-h-screen bg-[#FAF7F2]">
+    <main className="min-h-screen bg-[#10160e]">
       <div className="mx-auto max-w-3xl px-5 py-12">
-        <a href="/" className="text-[13px] text-[#6B6B66] underline">
+        <a href="/" className="text-[13px] text-[#b8c2ae] underline">
           ← Volver al inicio
         </a>
-        <h1 className="mt-4 text-[32px] font-medium leading-tight text-[#1A1A18] [font-family:var(--font-display)]">
+        <h1 className="mt-4 text-[32px] font-medium leading-tight text-white [font-family:var(--font-display)]">
           Términos y Condiciones
         </h1>
-        <p className="mt-2 text-[13px] text-[#6B6B66]">
+        <p className="mt-2 text-[13px] text-[#b8c2ae]">
           Última actualización: {INFO.actualizacion}
         </p>
 
@@ -83,7 +83,7 @@ export default function TerminosPage() {
         <H2>5. Envíos y devoluciones</H2>
         <P>
           Los envíos y las devoluciones se rigen por nuestra{" "}
-          <a href="/envios-devoluciones" className="text-[var(--accent)] underline">
+          <a href="/envios-devoluciones" className="text-[#d3fa99] underline">
             Política de Envíos y Devoluciones
           </a>
           .
@@ -105,7 +105,7 @@ export default function TerminosPage() {
         <H2>8. Protección de datos</H2>
         <P>
           El tratamiento de tus datos se rige por nuestra{" "}
-          <a href="/privacidad" className="text-[var(--accent)] underline">
+          <a href="/privacidad" className="text-[#d3fa99] underline">
             Política de Privacidad y Protección de Datos
           </a>
           , conforme a la LOPDP del Ecuador.
@@ -121,7 +121,7 @@ export default function TerminosPage() {
         <H2>10. Contacto</H2>
         <P>
           Escríbenos a{" "}
-          <a className="text-[var(--accent)] underline" href={`mailto:${INFO.email}`}>
+          <a className="text-[#d3fa99] underline" href={`mailto:${INFO.email}`}>
             {INFO.email}
           </a>{" "}
           o por WhatsApp al {INFO.whatsapp}.

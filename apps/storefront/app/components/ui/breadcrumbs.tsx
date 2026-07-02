@@ -13,7 +13,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
       className="hidden lg:block mb-4"
       aria-label="Breadcrumbs"
     >
-      <ol className="flex items-center gap-2 text-[12px] text-[#6B6B66]">
+      <ol className="flex items-center gap-2 text-[12px] text-[#b8c2ae]">
         {items.map((item, index) => (
           <li key={index} className="flex items-center gap-2">
             {index > 0 && (
@@ -34,12 +34,12 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             {item.href ? (
               <a
                 href={item.href}
-                className="hover:text-[#1A1A18] hover:underline transition-colors"
+                className="hover:text-white hover:underline transition-colors"
               >
                 {item.label}
               </a>
             ) : (
-              <span className="text-[#1A1A18]">{item.label}</span>
+              <span className="text-white">{item.label}</span>
             )}
           </li>
         ))}

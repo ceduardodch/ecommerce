@@ -76,7 +76,7 @@ export function VideoStories({ items }: { items: StoryItem[] }) {
       {/* Inline video player for active story */}
       {activeIndex !== null && (
         <div className="mt-3 px-4">
-          <div className="relative aspect-[9/16] max-h-[60vh] overflow-hidden rounded-2xl bg-[#E8E2D8]">
+          <div className="relative aspect-[9/16] max-h-[60vh] md:max-h-[70vh] lg:max-w-[400px] lg:mx-auto overflow-hidden rounded-2xl bg-[#E8E2D8]">
             {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <video
               key={items[activeIndex].src}

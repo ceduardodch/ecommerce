@@ -5,6 +5,7 @@ import {
   CrmCustomerEvent,
   CrmCustomerProfile,
   CrmMessageTemplate,
+  ProductReview,
 } from "./models"
 import type {
   ConversationalOrderInput,
@@ -194,6 +195,7 @@ class B2bCrmModuleService extends MedusaService({
   CrmCustomerEvent,
   CrmCustomerProfile,
   CrmMessageTemplate,
+  ProductReview,
 }) {
   private service_() {
     return this as unknown as AnyB2bCrmService

@@ -39,6 +39,8 @@ type StickyCTABarProps = {
   product?: Product
   /** Tracking placement label; required when product is set */
   placement?: string
+  /** "dark" = barra sobre canvas night (landing cocina). Default light. */
+  surface?: "light" | "dark"
 }
 
 export function StickyCTABar({
@@ -48,7 +50,9 @@ export function StickyCTABar({
   alwaysVisible = false,
   product,
   placement = "sticky_cta",
+  surface = "light",
 }: StickyCTABarProps) {
+  const dark = surface === "dark"
   const [visible, setVisible] = useState(alwaysVisible)
 
   useEffect(() => {
@@ -62,15 +66,23 @@ export function StickyCTABar({
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed bottom-0 left-0 right-0 z-50 border-t border-[#E8E2D8] bg-white px-4 py-3 shadow-[0_-2px_12px_rgba(26,26,24,0.08)] transition-all duration-300 ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
-      }`}
+      className={`fixed bottom-0 left-0 right-0 z-50 px-4 py-3 transition-all duration-300 ${
+        dark
+          ? "border-t border-white/10 bg-[#16200f]/95 backdrop-blur"
+          : "border-t border-[#E8E2D8] bg-white shadow-[0_-2px_12px_rgba(26,26,24,0.08)]"
+      } ${visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
     >
       <div className="mx-auto flex max-w-lg items-center gap-3">
         {price && (
           <div className="flex flex-col leading-none">
-            <span className="text-[11px] text-[#6B6B66]">Hoy</span>
-            <span className="text-[16px] font-medium text-[var(--accent)]">
+            <span className={`text-[11px] ${dark ? "text-[#b8c2ae]" : "text-[#6B6B66]"}`}>
+              Hoy
+            </span>
+            <span
+              className={`text-[16px] font-medium ${
+                dark ? "text-[#d3fa99]" : "text-[var(--accent)]"
+              }`}
+            >
               {price}
             </span>
           </div>

@@ -3,20 +3,29 @@ import type { ReactNode } from "react"
 export function SectionHead({
   eyebrow,
   title,
+  surface = "light",
 }: {
   eyebrow?: string
   title?: string
+  surface?: "light" | "dark"
 }) {
+  const dark = surface === "dark"
   return (
     <div className="mb-6">
       {eyebrow && (
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        <p
+          className={`mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] ${
+            dark ? "text-[#d3fa99]" : "text-[var(--accent)]"
+          }`}
+        >
           {eyebrow}
         </p>
       )}
       {title && (
         <h2
-          className="text-[28px] font-medium leading-snug text-[#1A1A18]"
+          className={`text-[28px] font-medium leading-snug tracking-wide ${
+            dark ? "text-white" : "text-[#1A1A18]"
+          }`}
           style={{ fontFamily: "var(--font-display)" }}
         >
           {title}

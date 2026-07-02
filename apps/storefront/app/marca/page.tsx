@@ -144,7 +144,7 @@ export default function BrandPortalPage() {
                   <span className="text-[12px] text-[#FAF7F2]/80">
                     {door.anchor}
                   </span>
-                  <span className="rounded-full bg-[var(--accent)] px-4 py-2 text-[13px] font-semibold text-[#FAF7F2] transition-transform group-hover:scale-[1.03]">
+                  <span className="rounded-full bg-[#d3fa99] px-4 py-2 text-[13px] font-semibold text-[#10160e] transition-transform group-hover:scale-[1.03]">
                     {door.cta} →
                   </span>
                 </span>

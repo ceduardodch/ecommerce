@@ -23,32 +23,32 @@ const RESPONSABLE = {
 
 function H2({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mt-10 text-[20px] font-semibold text-[#1A1A18] [font-family:var(--font-display)]">
+    <h2 className="mt-10 text-[20px] font-semibold text-white [font-family:var(--font-display)]">
       {children}
     </h2>
   )
 }
 
 function P({ children }: { children: React.ReactNode }) {
-  return <p className="mt-3 text-[15px] leading-relaxed text-[#3A3E3A]">{children}</p>
+  return <p className="mt-3 text-[15px] leading-relaxed text-[#b8c2ae]">{children}</p>
 }
 
 function LI({ children }: { children: React.ReactNode }) {
-  return <li className="text-[15px] leading-relaxed text-[#3A3E3A]">{children}</li>
+  return <li className="text-[15px] leading-relaxed text-[#b8c2ae]">{children}</li>
 }
 
 export default function PrivacidadPage() {
   return (
-    <main className="min-h-screen bg-[#FAF7F2]">
+    <main className="min-h-screen bg-[#10160e]">
       <div className="mx-auto max-w-3xl px-5 py-12">
-        <a href="/" className="text-[13px] text-[#6B6B66] underline">
+        <a href="/" className="text-[13px] text-[#b8c2ae] underline">
           ← Volver al inicio
         </a>
 
-        <h1 className="mt-4 text-[32px] font-medium leading-tight text-[#1A1A18] [font-family:var(--font-display)]">
+        <h1 className="mt-4 text-[32px] font-medium leading-tight text-white [font-family:var(--font-display)]">
           Política de Privacidad y Protección de Datos
         </h1>
-        <p className="mt-2 text-[13px] text-[#6B6B66]">
+        <p className="mt-2 text-[13px] text-[#b8c2ae]">
           Última actualización: {RESPONSABLE.actualizacion}
         </p>
 
@@ -70,7 +70,7 @@ export default function PrivacidadPage() {
           <LI>Dirección: {RESPONSABLE.direccion}</LI>
           <LI>
             Contacto de protección de datos:{" "}
-            <a className="text-[var(--accent)] underline" href={`mailto:${RESPONSABLE.email}`}>
+            <a className="text-[#d3fa99] underline" href={`mailto:${RESPONSABLE.email}`}>
               {RESPONSABLE.email}
             </a>{" "}
             · WhatsApp {RESPONSABLE.whatsapp}
@@ -185,7 +185,7 @@ export default function PrivacidadPage() {
         </ul>
         <P>
           Para ejercerlos, escríbenos a{" "}
-          <a className="text-[var(--accent)] underline" href={`mailto:${RESPONSABLE.email}`}>
+          <a className="text-[#d3fa99] underline" href={`mailto:${RESPONSABLE.email}`}>
             {RESPONSABLE.email}
           </a>{" "}
           o por WhatsApp al {RESPONSABLE.whatsapp}. Responderemos en el plazo que
@@ -225,7 +225,7 @@ export default function PrivacidadPage() {
           misma página con su nueva fecha de actualización.
         </P>
 
-        <p className="mt-10 border-t border-[#E8E2D8] pt-6 text-[13px] text-[#6B6B66]">
+        <p className="mt-10 border-t border-white/15 pt-6 text-[13px] text-[#b8c2ae]">
           Al usar este sitio y proporcionarnos tus datos, confirmas que has leído
           y comprendido esta Política de Privacidad y Protección de Datos.
         </p>

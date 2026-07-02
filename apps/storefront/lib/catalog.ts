@@ -130,7 +130,7 @@ export const fallbackProducts: Product[] = [
     "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
     "reorderAfterDays": 180,
     "stock": 1,
-    "imageUrl": "/media/photo-receta-wok.jpg",
+    "imageUrl": "/media/product-wok-granito-32.jpg",
     "tags": [
       "wok",
       "granito",
@@ -302,7 +302,7 @@ export const fallbackProducts: Product[] = [
     "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
     "reorderAfterDays": 180,
     "stock": 1,
-    "imageUrl": "/media/photo-detalle-wok.jpg",
+    "imageUrl": "/media/product-sarten-granito-22.jpg",
     "tags": [
       "sarten",
       "granito",
@@ -2551,10 +2551,10 @@ function generatedImageForProduct(product: Product) {
     return "/media/photo-product-utensilios.jpg";
   }
   if (haystack.includes("sarten")) {
-    return "/media/photo-detalle-wok.jpg";
+    return "/media/product-sarten-granito-22.jpg";
   }
   if (haystack.includes("wok")) {
-    return "/media/photo-receta-wok.jpg";
+    return "/media/product-wok-granito-32.jpg";
   }
   return "/media/photo-hero-cocina.jpg";
 }

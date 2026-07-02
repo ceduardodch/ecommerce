@@ -57,7 +57,7 @@ function campaignPath(product: Product) {
 function TrustRow({ product }: { product?: Product }) {
   const commerce = commercialInfo(product)
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#6B6B66]">
+    <div className="flex flex-wrap gap-x-4 gap-y-2 text-[12px] text-[#b8c2ae]">
       <span className="flex items-center gap-1.5">
         <Truck size={14} />
         {commerce.freeShippingLabel}
@@ -74,9 +74,9 @@ function WellnessProductCard({ product }: { product: Product }) {
   const commerce = commercialInfo(product)
 
   return (
-    <article className="flex flex-col rounded-2xl border border-[#E8E2D8] bg-white overflow-hidden">
+    <article className="flex flex-col rounded-2xl border border-white/10 bg-[#16200f] overflow-hidden">
       <a href={campaignPath(product)} className="block">
-        <div className="relative w-full aspect-[4/5] bg-[#EFE9DD]">
+        <div className="relative w-full aspect-[4/5] bg-white">
           <Image
             src={product.imageUrl}
             alt={product.title}
@@ -85,7 +85,7 @@ function WellnessProductCard({ product }: { product: Product }) {
             className="object-cover"
           />
           {(product.promoLabel || product.category) && (
-            <span className="absolute top-2 left-2 rounded-full bg-[var(--accent)] px-2 py-0.5 text-[11px] font-medium text-white">
+            <span className="absolute top-2 left-2 rounded-full bg-[#1c3a13] px-2 py-0.5 text-[11px] font-medium text-[#d3fa99]">
               {product.promoLabel || product.category}
             </span>
           )}
@@ -93,19 +93,19 @@ function WellnessProductCard({ product }: { product: Product }) {
       </a>
       <div className="p-3 flex flex-col gap-2 flex-1">
         <div>
-          <p className="text-[11px] text-[#6B6B66]">{product.category}</p>
-          <h3 className="text-[14px] font-medium text-[#1A1A18] leading-snug line-clamp-2">
+          <p className="text-[11px] text-[#b8c2ae]">{product.category}</p>
+          <h3 className="text-[14px] font-medium text-white leading-snug line-clamp-2">
             {product.title}
           </h3>
           {product.description && (
-            <p className="mt-0.5 text-[11px] text-[#6B6B66] line-clamp-2">
+            <p className="mt-0.5 text-[11px] text-[#b8c2ae] line-clamp-2">
               {product.description}
             </p>
           )}
         </div>
         <div className="mt-auto space-y-2">
-          <div className="flex items-center gap-2 text-[11px] text-[#6B6B66]">
-            <span className="text-[14px] font-medium text-[var(--accent)]">
+          <div className="flex items-center gap-2 text-[11px] text-[#b8c2ae]">
+            <span className="text-[14px] font-semibold text-[#d3fa99]">
               {money(product.price.amount)}
             </span>
             {product.stockSignal && <span>· {product.stockSignal}</span>}
@@ -114,7 +114,7 @@ function WellnessProductCard({ product }: { product: Product }) {
           <div className="flex gap-2">
             <a
               href={campaignPath(product)}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-[#E8E2D8] px-3 py-2 text-[12px] font-medium text-[#1A1A18] hover:border-[var(--accent)] transition-colors"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-white/25 px-3 py-2 text-[12px] font-medium text-white hover:border-[#d3fa99] hover:text-[#d3fa99] transition-colors"
             >
               Ver landing
               <ArrowRight size={13} />
@@ -162,7 +162,7 @@ export default async function WellnessPage() {
   const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
 
   return (
-    <div data-theme="bienestar">
+    <div data-theme="bienestar" className="bg-[#10160e]">
       <WellnessAnalytics
         context={{
           vertical: "bienestar",
@@ -176,9 +176,9 @@ export default async function WellnessPage() {
       <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
 
       {/* 2. Header */}
-      <SiteHeader vertical="bienestar" />
+      <SiteHeader vertical="bienestar" surface="dark" />
 
-      <main className="bg-[#FAF7F2] pb-24">
+      <main className="bg-[#10160e] pb-24">
         <div className="mx-auto max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl">
 
         {/* 3. Hero */}
@@ -195,7 +195,7 @@ export default async function WellnessPage() {
             {/* Scrim for legibility — functional gradient (approved) */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A18]/70 via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-5">
-              <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#B7C4B1]">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#d3fa99]">
                 Eter Niu Bienestar
               </p>
               <h1
@@ -214,14 +214,14 @@ export default async function WellnessPage() {
           <div className="mt-5 flex flex-col gap-3">
             <a
               href="#productos"
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-[var(--accent)] px-5 py-3 text-[14px] font-semibold text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#d3fa99] px-5 py-3 text-[14px] font-semibold text-[#10160e]"
             >
               Ver productos bienestar
               <ArrowRight size={18} />
             </a>
             {featured ? (
               <TrackedWhatsAppLink
-                className="flex w-full items-center justify-center gap-2 rounded-full border border-[#E8E2D8] bg-white px-5 py-3 text-[14px] font-medium text-[#1A1A18]"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
                 cta="wellness_hero_whatsapp"
                 eventType="product_interest"
                 extraEventTypes={["whatsapp_opened"]}
@@ -257,34 +257,34 @@ export default async function WellnessPage() {
           id="rutinas"
           aria-label="Pilares de bienestar"
         >
-          <SectionHead eyebrow="Tu rutina" title="Tres pilares de bienestar." />
+          <SectionHead surface="dark" eyebrow="Tu rutina" title="Tres pilares de bienestar." />
           <div className="grid grid-cols-3 gap-3">
             {[
               {
-                icon: <Droplets size={22} className="text-[var(--accent)]" />,
+                icon: <Droplets size={22} className="text-[#d3fa99]" />,
                 label: "Hidratación",
                 desc: "Botellas y rutinas para oficina o movimiento.",
               },
               {
-                icon: <SunMedium size={22} className="text-[var(--accent)]" />,
+                icon: <SunMedium size={22} className="text-[#d3fa99]" />,
                 label: "Movimiento",
                 desc: "Mat, pausas activas y accesorios de yoga.",
               },
               {
-                icon: <Moon size={22} className="text-[var(--accent)]" />,
+                icon: <Moon size={22} className="text-[#d3fa99]" />,
                 label: "Pausa",
                 desc: "Aroma, sonido y regalos de autocuidado.",
               },
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center gap-2 rounded-[14px] bg-[#EFE9DD] p-3 text-center"
+                className="flex flex-col items-center gap-2 rounded-[14px] border border-white/10 bg-[#16200f] p-3 text-center"
               >
                 {item.icon}
-                <span className="text-[12px] font-medium text-[#1A1A18]">
+                <span className="text-[12px] font-medium text-white">
                   {item.label}
                 </span>
-                <span className="text-[11px] text-[#6B6B66] leading-snug">
+                <span className="text-[11px] text-[#b8c2ae] leading-snug">
                   {item.desc}
                 </span>
               </div>
@@ -295,6 +295,7 @@ export default async function WellnessPage() {
         {/* 5. Product grid */}
         <section className="px-4 pb-8" id="productos" aria-label="Catálogo de bienestar">
           <SectionHead
+            surface="dark"
             eyebrow="Catálogo piloto"
             title="Productos listos para pedir por WhatsApp."
           />
@@ -305,15 +306,15 @@ export default async function WellnessPage() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#E8E2D8] bg-white py-12 text-center">
-              <Leaf size={26} className="text-[var(--accent)]" />
+            <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-[#16200f] py-12 text-center">
+              <Leaf size={26} className="text-[#d3fa99]" />
               <h2
-                className="text-[20px] font-medium text-[#1A1A18]"
+                className="text-[20px] font-medium text-white"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 Bienestar está listo para productos reales.
               </h2>
-              <p className="text-[14px] text-[#6B6B66] max-w-[40ch]">
+              <p className="text-[14px] text-[#b8c2ae] max-w-[40ch]">
                 Carga productos en Medusa con tag o metadata{" "}
                 <code className="text-[12px]">bienestar</code> para que
                 aparezcan aquí sin mezclar con cocina.
@@ -330,26 +331,26 @@ export default async function WellnessPage() {
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {[
               {
-                icon: <Truck size={22} className="text-[var(--accent)]" />,
+                icon: <Truck size={22} className="text-[#d3fa99]" />,
                 title: "Envío y pago claros",
                 desc: "El cliente llega al chat sabiendo precio, envío y formas de pago.",
               },
               {
-                icon: <MessageCircle size={22} className="text-[var(--accent)]" />,
+                icon: <MessageCircle size={22} className="text-[#d3fa99]" />,
                 title: "Vicky sin menú genérico",
                 desc: "El primer mensaje incluye SKU, vertical, Lead y fuente.",
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-4"
+                className="flex gap-3 rounded-2xl border border-white/10 bg-[#16200f] p-4"
               >
                 <div className="flex-none pt-0.5">{item.icon}</div>
                 <div>
-                  <p className="text-[13px] font-semibold text-[#1A1A18]">
+                  <p className="text-[13px] font-semibold text-white">
                     {item.title}
                   </p>
-                  <p className="mt-0.5 text-[12px] text-[#6B6B66]">{item.desc}</p>
+                  <p className="mt-0.5 text-[12px] text-[#b8c2ae]">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -365,7 +366,7 @@ export default async function WellnessPage() {
         <div className="px-4 pb-4 text-center">
           <a
             href={kitchenBaseUrl}
-            className="text-[13px] text-[#6B6B66] underline underline-offset-2"
+            className="text-[13px] text-[#d3fa99] underline underline-offset-4"
           >
             Ver también: Cocina →
           </a>
@@ -379,6 +380,7 @@ export default async function WellnessPage() {
 
       {/* Sticky advisory bar — no product on home, generic fallback */}
       <StickyCTABar
+        surface="dark"
         waHref={waHref}
         waLabel="Asesoría por WhatsApp"
         alwaysVisible={false}

@@ -1,33 +1,55 @@
 @import "tailwindcss";
 
 @theme {
-  /* ─── Color palette ─── */
-  --color-ivory:  #FAF7F2;
-  --color-ink:    #1A1A18;
-  --color-stone:  #6B6B66;
-  --color-sand:   #E8E2D8;
-  --color-shell:  #EFE9DD;
-  --color-clay:   #C4502A;
-  --color-moss:   #2F5D43;
-  --color-wa:     #25D366;
-  --color-white:  #FFFFFF;
+  /* ─── SEED PALETTE ─── */
 
-  /* ─── Marca (BRAND): grafito + menta + esmeralda ───
-     El logo es menta sobre grafito. Dos verdes del mismo tono:
-     - menta: realce SOLO sobre grafito (logo en dark, highlights). AA ~8.8:1.
-     - esmeralda: color de ACCIÓN sobre superficies claras (precios, CTAs,
-       eyebrows), unificado en ambas líneas. AA ~6:1 sobre marfil. */
-  --color-graphite:     #2B2E2B;
-  --color-graphite-700: #3A3E3A;
-  --color-graphite-fg:  #A9ADA6;
-  --color-menta:        #93E29A;
-  --color-emerald:      #236B4A;
+  /* Primary - Forest Canopy */
+  --color-forest: #1c3a13;
+  --color-forest-900: #0f1e0a;
+  --color-forest-800: #15280e;
+  --color-forest-700: #1c3a13;
+  --color-forest-600: #2a5a1e;
 
-  /* Granito collection chips */
-  --color-granito-negro:     #2B2B28;
-  --color-granito-sage:      #B7C4B1;
-  --color-granito-crema:     #E8DFCE;
-  --color-granito-terracota: #C97B5A;
+  /* Accent - Lime Sprout */
+  --color-lime: #d3fa99;
+  --color-lime-400: #c4f586;
+  --color-lime-300: #b0ee6e;
+  --color-lime-200: #9be452;
+
+  /* Background - Warm Parchment */
+  --color-parchment: #fcfcf7;
+  --color-parchment-cream: #f7f7ed;
+  --color-parchment-sand: #f2f2e5;
+
+  /* Neutral text on Seed palette */
+  --color-ink: #1c1c18;
+  --color-stone: #5a5a52;
+  --color-sage: #8a8a78;
+
+  /* Semantic colors */
+  --color-accent: var(--color-forest);
+  --color-accent-hover: var(--color-forest-600);
+  --color-accent-light: var(--color-lime);
+
+  /* Component-specific */
+  --color-card-bg: #ffffff;
+  --color-border: #e8e5d8;
+  --color-border-light: #f0ede3;
+
+  /* WhatsApp (mantener) */
+  --color-whatsapp: #25D366;
+
+  /* ─── Dark landing (home cocina) ─── */
+  --color-night: #10160e;      /* canvas casi negro con base verdosa forest */
+  --color-night-800: #16200f;  /* superficies elevadas (sticky bar dark) */
+  --color-night-glow: #22331a; /* centro del vignette radial del hero */
+  --color-mist: #b8c2ae;       /* texto secundario sobre night (AA) */
+
+  /* Legacy colors para compatibilidad */
+  --color-ivory: #fcfcf7;
+  --color-white: #FFFFFF;
+  --color-sand: #e8e5d8;
+  --color-shell: #f7f7ed;
 
   /* ─── Breakpoints (RSP-1) ─── */
   --breakpoint-sm: 640px;
@@ -40,26 +62,26 @@
   --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ─── Acento de marca unificado (BRAND) ───
-   Una sola marca: esmeralda es el color de acción en ambas líneas.
+/* ─── Acento Seed unificado ───
+   Forest Canopy es el color de acción principal en ambas líneas.
    Cocina y bienestar se diferencian por FOTOGRAFÍA, no por color.
    Se mantiene data-theme por si en el futuro se quiere matizar. */
 [data-theme="cocina"] {
-  --accent: var(--color-emerald);
+  --accent: var(--color-forest);
 }
 
 [data-theme="bienestar"] {
-  --accent: var(--color-emerald);
+  --accent: var(--color-forest);
 }
 
 /* Acento por defecto cuando no hay data-theme (portal, guías, etc.) */
 :root {
-  --accent: var(--color-emerald);
+  --accent: var(--color-forest);
 }
 
 /* ─── Base typography ─── */
 html {
   font-family: var(--font-sans);
   color: var(--color-ink);
-  background: var(--color-ivory);
+  background: var(--color-parchment);
 }

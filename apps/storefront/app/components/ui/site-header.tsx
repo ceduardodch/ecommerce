@@ -8,6 +8,8 @@ type SiteHeaderProps = {
   /** Short name shown centered in compact mode */
   compactTitle?: string
   backHref?: string
+  /** "dark" = header sobre canvas night (landing cocina). Default light. */
+  surface?: "light" | "dark"
 }
 
 function ShareIcon() {
@@ -37,13 +39,23 @@ export function SiteHeader({
   compact = false,
   compactTitle,
   backHref = "/",
+  surface = "light",
 }: SiteHeaderProps) {
+  const dark = surface === "dark"
   if (compact) {
     return (
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#E8E2D8] bg-white px-4 py-3">
+      <header
+        className={`sticky top-0 z-40 flex items-center justify-between px-4 py-3 ${
+          dark
+            ? "border-b border-white/10 bg-[#10160e]/90 backdrop-blur"
+            : "border-b border-[#E8E2D8] bg-white"
+        }`}
+      >
         <a
           href={backHref}
-          className="flex h-9 w-9 items-center justify-center rounded-full text-[#1A1A18]"
+          className={`flex h-9 w-9 items-center justify-center rounded-full ${
+            dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"
+          }`}
           aria-label="Volver"
         >
           <svg
@@ -61,13 +73,19 @@ export function SiteHeader({
           </svg>
         </a>
         {compactTitle && (
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-[#1A1A18]">
+          <span
+            className={`text-[11px] font-semibold uppercase tracking-widest ${
+              dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"
+            }`}
+          >
             {compactTitle}
           </span>
         )}
         <button
           type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-[#1A1A18]"
+          className={`flex h-9 w-9 items-center justify-center rounded-full ${
+            dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"
+          }`}
           aria-label="Compartir"
         >
           <ShareIcon />
@@ -76,15 +94,31 @@ export function SiteHeader({
     )
   }
 
+  const navLinkClass = dark
+    ? "text-[13px] font-medium text-[#fcfcf7]/80 no-underline hover:text-[#d3fa99] transition-colors"
+    : "text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
+
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between border-b border-[#E8E2D8] bg-white px-4 py-3">
+    <header
+      className={`sticky top-0 z-40 flex items-center justify-between px-4 py-3 ${
+        dark
+          ? "border-b border-white/10 bg-[#10160e]/90 backdrop-blur"
+          : "border-b border-[#E8E2D8] bg-white"
+      }`}
+    >
       {/* Logo: isotipo + wordmark */}
       <a href="/" className="flex items-center gap-2 no-underline" aria-label="Eter Niu inicio">
-        <Isotipo size={28} color="#1A1A18" />
+        <Isotipo size={28} color={dark ? "#fcfcf7" : "#1A1A18"} />
         <span className="leading-none" style={{ fontFamily: "var(--font-display)" }}>
-          <span className="text-[18px] font-medium text-[#1A1A18]">Eter Niu</span>
+          <span className={`text-[18px] font-medium ${dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"}`}>
+            Eter Niu
+          </span>
           {vertical && (
-            <span className="ml-1.5 text-[13px] font-medium text-[var(--accent)]">
+            <span
+              className={`ml-1.5 text-[13px] font-medium ${
+                dark ? "text-[#d3fa99]" : "text-[var(--accent)]"
+              }`}
+            >
               {vertical === "cocina" ? "Cocina" : "Bienestar"}
             </span>
           )}
@@ -93,29 +127,20 @@ export function SiteHeader({
 
       {/* Desktop nav links (RSP-4) */}
       <nav className="hidden lg:flex items-center gap-6">
-        <a
-          href="#productos"
-          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
-        >
+        <a href="#productos" className={navLinkClass}>
           Productos
         </a>
-        <a
-          href="/guias"
-          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
-        >
+        <a href="/guias" className={navLinkClass}>
           Guías
         </a>
-        <a
-          href="/marca"
-          className="text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
-        >
+        <a href="/marca" className={navLinkClass}>
           Marca
         </a>
       </nav>
 
       {/* Right actions */}
       <div className="flex items-center gap-1">
-        <CartBagButton />
+        <CartBagButton surface={surface} />
       </div>
     </header>
   )

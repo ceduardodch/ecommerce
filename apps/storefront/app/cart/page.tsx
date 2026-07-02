@@ -35,29 +35,32 @@ export default function CartPage() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-[#6B6B66]">Cargando carrito...</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#10160e]">
+        <p className="text-[#b8c2ae]">Cargando carrito...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-[#10160e]">
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-[#E8E2D8]">
+      <div className="border-b border-white/10 bg-[#10160e]">
         <div className="max-w-4xl mx-auto px-4 py-3">
-          <nav className="text-[12px] text-[#6B6B66]">
-            <a href={homeLink} className="hover:text-[#1A1A18]">
+          <nav className="text-[12px] text-[#b8c2ae]">
+            <a href={homeLink} className="hover:text-white">
               {homeLabel}
             </a>
             <span className="mx-2">›</span>
-            <span className="text-[#1A1A18]">Carrito</span>
+            <span className="text-white">Carrito</span>
           </nav>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-[28px] font-semibold text-[#1A1A18] mb-6">
+        <h1
+          className="text-[28px] font-semibold tracking-wide text-white mb-6"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           Tu carrito
         </h1>
 

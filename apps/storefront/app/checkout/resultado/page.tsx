@@ -72,9 +72,9 @@ function Resultado() {
   }, [id, items, totalAmount, clearCart])
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-[#10160e]">
       <div className="mx-auto max-w-md px-4 py-12">
-        <div className="rounded-2xl border border-[#E8E2D8] bg-white p-8 text-center">
+        <div className="rounded-2xl border border-white/10 bg-white p-8 text-center">
           {state === "loading" && (
             <p className="text-[15px] text-[#6B6B66]">Confirmando tu pago…</p>
           )}

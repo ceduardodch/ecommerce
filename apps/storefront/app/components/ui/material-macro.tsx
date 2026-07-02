@@ -6,7 +6,7 @@ export function MaterialMacro({
   items: { image: string; caption: string }[]
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
       {items.map(({ image, caption }) => (
         <div key={caption} className="flex flex-col gap-1.5">
           <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#E8E2D8]">
@@ -18,7 +18,7 @@ export function MaterialMacro({
               className="object-cover"
             />
           </div>
-          <p className="text-[10px] leading-snug text-[#6B6B66] text-center">
+          <p className="text-[10px] leading-snug text-[#b8c2ae] text-center">
             {caption}
           </p>
         </div>

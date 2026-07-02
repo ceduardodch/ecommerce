@@ -29,14 +29,20 @@ function ShoppingBagIcon() {
   )
 }
 
-export function CartBagButton() {
+export function CartBagButton({
+  surface = "light",
+}: {
+  surface?: "light" | "dark"
+}) {
   const { openCart, totalItems } = useCart()
 
   return (
     <button
       type="button"
       onClick={openCart}
-      className="relative flex h-9 w-9 items-center justify-center rounded-full text-[#1A1A18]"
+      className={`relative flex h-9 w-9 items-center justify-center rounded-full ${
+        surface === "dark" ? "text-[#fcfcf7]" : "text-[#1A1A18]"
+      }`}
       aria-label={`Carrito${totalItems > 0 ? `, ${totalItems} productos` : ""}`}
     >
       <ShoppingBagIcon />

@@ -28,6 +28,11 @@ import { PromoBar } from "../../components/ui/promo-bar"
 import { SiteHeader } from "../../components/ui/site-header"
 import { VideoFrame } from "../../components/ui/video-frame"
 import { PriceTag } from "../../components/ui/price-tag"
+import { FloatingProduct } from "../../components/ui/floating-product"
+import { Product360Viewer } from "../../components/ui/product-360"
+import { get360Frames } from "../../../lib/product360"
+import { ScrollReveal } from "../../components/ui/scroll-reveal"
+import { ParallaxImage } from "../../components/ui/parallax-image"
 
 type CampaignPageProps = {
   params: Promise<{ slug: string }>
@@ -229,22 +234,22 @@ function TrustGrid({ product }: { product: Product }) {
   const complement = isKitchenComplement(product)
 
   return (
-    <div className="grid grid-cols-3 divide-x divide-[#E8E2D8] border-y border-[#E8E2D8]">
+    <div className="grid grid-cols-1 md:grid-cols-3 divide-x divide-white/10 border-y border-white/10">
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        <Truck size={20} className="text-[#1A1A18]" />
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        <Truck size={20} className="text-[#d3fa99]" />
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           {commerce.freeShippingLabel}
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        <BadgeDollarSign size={20} className="text-[#1A1A18]" />
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        <BadgeDollarSign size={20} className="text-[#d3fa99]" />
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           Pagas al recibir
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        {complement ? <Utensils size={20} className="text-[#1A1A18]" /> : <ShieldCheck size={20} className="text-[#1A1A18]" />}
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        {complement ? <Utensils size={20} className="text-[#d3fa99]" /> : <ShieldCheck size={20} className="text-[#d3fa99]" />}
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           Garantia 6 meses
         </span>
       </div>
@@ -265,13 +270,13 @@ function CampaignPhotoGallery({
 
   return (
     <section className="px-4 py-10" aria-label="Fotos reales">
-      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
         Mira el producto de cerca
       </p>
-      <h2 className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+      <h2 className="mb-4 text-[20px] font-medium leading-snug text-white" style={{ fontFamily: "var(--font-display)" }}>
         Fotos reales para confirmar antes de pedir.
       </h2>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
         {photos.map((photo) => (
           <div key={photo.file} className="overflow-hidden rounded-2xl">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -283,11 +288,11 @@ function CampaignPhotoGallery({
           </div>
         ))}
       </div>
-      <div className="mt-6 rounded-2xl border border-[#E8E2D8] bg-white p-4">
-        <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">
+      <div className="mt-6 rounded-2xl border border-white/10 bg-[#16200f] p-4">
+        <p className="mb-1 text-[14px] font-medium text-white">
           Oferta de lanzamiento: $29.99
         </p>
-        <p className="mb-4 text-[12px] text-[#6B6B66]">
+        <p className="mb-4 text-[12px] text-[#b8c2ae]">
           Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.
         </p>
         <TrackedWhatsAppLink
@@ -330,12 +335,12 @@ function CampaignFaq({ product }: { product: Product }) {
 
   const items = [
     {
-      icon: <Timer size={20} className="text-[var(--accent)]" />,
+      icon: <Timer size={20} className="text-[#d3fa99]" />,
       title: "Hay stock",
       body: `${product.stockSignal || `${product.stock} disponibles`}.`,
     },
     {
-      icon: <ShieldCheck size={20} className="text-[var(--accent)]" />,
+      icon: <ShieldCheck size={20} className="text-[#d3fa99]" />,
       title: complement ? "Para que sirve" : "Por que granito",
       body: complement
         ? product.bundleUseCase ||
@@ -344,7 +349,7 @@ function CampaignFaq({ product }: { product: Product }) {
           "Es una alternativa a antiadherentes tradicionales para cocinar con menos aceite.",
     },
     {
-      icon: <Leaf size={20} className="text-[var(--accent)]" />,
+      icon: <Leaf size={20} className="text-[#d3fa99]" />,
       title: "Como se cuida",
       body:
         product.careTips ||
@@ -353,7 +358,7 @@ function CampaignFaq({ product }: { product: Product }) {
           : "Usa utensilios suaves, fuego medio y esponja no abrasiva."),
     },
     {
-      icon: <CheckCircle2 size={20} className="text-[var(--accent)]" />,
+      icon: <CheckCircle2 size={20} className="text-[#d3fa99]" />,
       title: "Que incluye el cupon",
       body: `Cupon ${commerce.couponCode}, ${commerce.freeShippingLabel.toLowerCase()} y confirmacion de entrega por WhatsApp.`,
     },
@@ -361,19 +366,19 @@ function CampaignFaq({ product }: { product: Product }) {
 
   return (
     <section className="px-4 py-10" aria-label="Dudas frecuentes">
-      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
         FAQ
       </p>
-      <h2 className="mb-6 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+      <h2 className="mb-6 text-[20px] font-medium leading-snug text-white" style={{ fontFamily: "var(--font-display)" }}>
         Antes de escribir a Vicky.
       </h2>
       <div className="space-y-4">
         {items.map((item) => (
-          <div key={item.title} className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-4">
+          <div key={item.title} className="flex gap-3 rounded-2xl border border-white/10 bg-[#16200f] p-4">
             <div className="mt-0.5 shrink-0">{item.icon}</div>
             <div>
-              <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">{item.title}</p>
-              <p className="text-[13px] leading-snug text-[#6B6B66]">{item.body}</p>
+              <p className="mb-1 text-[14px] font-medium text-white">{item.title}</p>
+              <p className="text-[13px] leading-snug text-[#b8c2ae]">{item.body}</p>
             </div>
           </div>
         ))}
@@ -397,9 +402,9 @@ export default async function CampaignPage({
 
   if (!selectedProductCandidate) {
     return (
-      <main data-theme="cocina" className="min-h-screen bg-[#FAF7F2]">
+      <main data-theme="cocina" className="min-h-screen bg-[#10160e]">
         <PromoBar />
-        <section className="px-4 py-16 text-center text-[14px] text-[#6B6B66]">
+        <section className="px-4 py-16 text-center text-[14px] text-[#b8c2ae]">
           No hay productos de cocina disponibles para esta campana.
         </section>
       </main>
@@ -429,13 +434,14 @@ export default async function CampaignPage({
     promo && selectedProduct.originalPrice
       ? selectedProduct.originalPrice.amount - selectedProduct.price.amount
       : 0
+  const frames360 = get360Frames(selectedProduct.sku)
 
   const heroVideo = mediaPath(hero.video)
   const heroVideoSrc = heroVideo || undefined
   const heroPoster = hero.poster || selectedProduct.imageUrl
 
   return (
-    <main data-theme="cocina" className="min-h-screen bg-[#FAF7F2] pb-24">
+    <main data-theme="cocina" className="min-h-screen bg-[#10160e] pb-24">
       <CampaignAnalytics
         context={{
           ...attribution,
@@ -455,140 +461,146 @@ export default async function CampaignPage({
         compactTitle={selectedProduct.category}
         backHref={productPath(selectedProduct)}
         vertical="cocina"
+        surface="dark"
       />
 
-      {/* 3. Hero video 9:16 con pills */}
-      <div className="relative px-4 pt-4">
-        {heroVideoSrc ? (
-          <VideoFrame
-            src={heroVideoSrc}
-            poster={heroPoster}
-            ratio="9/16"
-            label="Ver en uso"
-          />
-        ) : (
-          <div className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              alt={hero.title}
-              src={heroPoster}
-              className="absolute inset-0 h-full w-full object-cover"
+      {/* 3. Hero: visor 360° si hay secuencia; si no, producto flotante */}
+      <section className="relative w-full bg-[#10160e] py-8 md:py-12 lg:py-16">
+        <div className="max-w-[1200px] mx-auto px-4">
+          {frames360 ? (
+            <Product360Viewer frames={frames360} alt={selectedProduct.title} />
+          ) : (
+            <FloatingProduct
+              variant="hero-dark"
+              priority
+              imageUrl={selectedProduct.imageUrl}
+              alt={selectedProduct.title}
+              className="mx-auto max-w-[min(92vw,560px)]"
             />
-          </div>
-        )}
+          )}
 
-        {/* Pill: discount badge top-left */}
-        {promo && savings > 0 && (
-          <div className="absolute left-6 top-6">
-            <Badge tone="accent">
-              -{Math.round((savings / selectedProduct.originalPrice!.amount) * 100)}% hoy
-            </Badge>
-          </div>
-        )}
-        {selectedProduct.promoLabel && !promo && (
-          <div className="absolute left-6 top-6">
-            <Badge tone="accent">{selectedProduct.promoLabel}</Badge>
-          </div>
-        )}
-      </div>
-
-      {/* 4. Eyebrow → H1 → subcopy */}
-      <div className="px-4 pt-6">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
-          {complement
-            ? `${selectedProduct.category} · todo uso`
-            : `Granito Eter Niu · ${selectedProduct.category}`}
-        </p>
-        <h1
-          className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-[#1A1A18]"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {selectedProduct.title}
-        </h1>
-        <p className="mb-5 text-[14px] leading-snug text-[#6B6B66]">
-          {complement
-            ? "Mira el producto real, confirma stock y reclama el cupon por WhatsApp sin pasar por catalogo largo."
-            : "Mira el producto real, confirma si sirve para tu cocina y reclama el cupon por WhatsApp sin pasar por catalogo largo."}
-        </p>
-
-        {/* 5. Price row */}
-        <div className="mb-5 flex items-end gap-3">
-          <PriceTag
-            price={money(selectedProduct.price.amount)}
-            originalPrice={
-              promo && selectedProduct.originalPrice
-                ? money(selectedProduct.originalPrice.amount)
-                : undefined
-            }
-            note="stock por WhatsApp"
-          />
-          {savings > 0 && (
-            <span className="text-[12px] text-[#6B6B66]">
-              Ahorra {money(savings)}
-            </span>
+          {/* Pill: discount badge top-left */}
+          {promo && savings > 0 && (
+            <div className="absolute left-6 top-6 md:left-10 md:top-10">
+              <ScrollReveal delay={0.2}>
+                <Badge tone="accent">
+                  -{Math.round((savings / selectedProduct.originalPrice!.amount) * 100)}% hoy
+                </Badge>
+              </ScrollReveal>
+            </div>
+          )}
+          {selectedProduct.promoLabel && !promo && (
+            <div className="absolute left-6 top-6 md:left-10 md:top-10">
+              <ScrollReveal delay={0.2}>
+                <Badge tone="accent">{selectedProduct.promoLabel}</Badge>
+              </ScrollReveal>
+            </div>
           )}
         </div>
+      </section>
 
-        {/* Hero CTA */}
-        <TrackedWhatsAppLink
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
-          cta="campaign_hero_whatsapp"
-          eventType="campaign_cta_click"
-          extraEventTypes={["whatsapp_opened"]}
-          leadId={`lead_${slug}_${selectedProduct.sku}_hero`}
-          metadata={{
-            ...attribution,
-            source: "meta_ads",
-            journeyStage: "cotizacion_pendiente",
-            productInterestSku: selectedProduct.sku,
-            recommendedSku: selectedProduct.sku,
-          }}
-          placement="campaign_hero"
-          product={selectedProduct}
-          source="meta_ads"
-          whatsappContext={{
-            ...attribution,
-            source: "meta_ads",
-            recommendation: "campana de un producto desde Meta Ads",
-            recommendedSku: selectedProduct.sku,
-            journeyStage: "cotizacion_pendiente",
-            videoSlot: hero.id,
-          }}
-        >
-          <MessageCircle size={19} />
-          Reclamar cupon y confirmar stock por WhatsApp
-        </TrackedWhatsAppLink>
-      </div>
+      {/* 4. Eyebrow → H1 → subcopy */}
+      <ScrollReveal delay={0.3}>
+        <div className="px-4 pt-6">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
+            {complement
+              ? `${selectedProduct.category} · todo uso`
+              : `Granito Eter Niu · ${selectedProduct.category}`}
+          </p>
+          <h1
+            className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-white"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {selectedProduct.title}
+          </h1>
+          <p className="mb-5 text-[14px] leading-snug text-[#b8c2ae]">
+            {complement
+              ? "Mira el producto real, confirma stock y reclama el cupon por WhatsApp sin pasar por catalogo largo."
+              : "Mira el producto real, confirma si sirve para tu cocina y reclama el cupon por WhatsApp sin pasar por catalogo largo."}
+          </p>
+
+          {/* 5. Price row */}
+          <div className="mb-5 flex items-end gap-3">
+            <PriceTag
+              price={money(selectedProduct.price.amount)}
+              originalPrice={
+                promo && selectedProduct.originalPrice
+                  ? money(selectedProduct.originalPrice.amount)
+                  : undefined
+              }
+              note="stock por WhatsApp"
+            />
+            {savings > 0 && (
+              <span className="text-[12px] text-[#b8c2ae]">
+                Ahorra {money(savings)}
+              </span>
+            )}
+          </div>
+
+          {/* Hero CTA */}
+          <TrackedWhatsAppLink
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
+            cta="campaign_hero_whatsapp"
+            eventType="campaign_cta_click"
+            extraEventTypes={["whatsapp_opened"]}
+            leadId={`lead_${slug}_${selectedProduct.sku}_hero`}
+            metadata={{
+              ...attribution,
+              source: "meta_ads",
+              journeyStage: "cotizacion_pendiente",
+              productInterestSku: selectedProduct.sku,
+              recommendedSku: selectedProduct.sku,
+            }}
+            placement="campaign_hero"
+            product={selectedProduct}
+            source="meta_ads"
+            whatsappContext={{
+              ...attribution,
+              source: "meta_ads",
+              recommendation: "campana de un producto desde Meta Ads",
+              recommendedSku: selectedProduct.sku,
+              journeyStage: "cotizacion_pendiente",
+              videoSlot: hero.id,
+            }}
+          >
+            <MessageCircle size={19} />
+            Reclamar cupon y confirmar stock por WhatsApp
+          </TrackedWhatsAppLink>
+        </div>
+      </ScrollReveal>
 
       {/* 6. Trust grid */}
-      <div className="mt-6">
-        <TrustGrid product={selectedProduct} />
-      </div>
+      <ScrollReveal delay={0.5}>
+        <div className="mt-6">
+          <TrustGrid product={selectedProduct} />
+        </div>
+      </ScrollReveal>
 
       {/* 7. Proof videos (when available) */}
       {proofs.length > 0 && (
         <div className="px-4 pt-10">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
             Pruebas rapidas
           </p>
-          <h2 className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="mb-4 text-[20px] font-medium leading-snug text-white" style={{ fontFamily: "var(--font-display)" }}>
             Antes de escribir, mira lo que vas a pedir.
           </h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {proofs.map((slot) => {
               const slotVideo = mediaPath(slot.video)
               return slotVideo ? (
-                <VideoFrame
-                  key={slot.id}
-                  src={slotVideo}
-                  poster={slot.poster}
-                  ratio="9/16"
-                  label={slot.label}
-                />
+                <div key={slot.id} className="mx-auto w-full max-w-[400px]">
+                  <VideoFrame
+                    src={slotVideo}
+                    poster={slot.poster}
+                    ratio="9/16"
+                    label={slot.label}
+                  />
+                </div>
               ) : (
                 <div
                   key={slot.id}
-                  className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]"
+                  className="relative mx-auto aspect-[9/16] w-full max-w-[400px] overflow-hidden rounded-[14px] bg-[#E8E2D8]"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img

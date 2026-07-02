@@ -96,22 +96,22 @@ function TrustGrid({ product }: { product: Product }) {
   const commerce = commercialInfo(product)
 
   return (
-    <div className="grid grid-cols-3 divide-x divide-[#E8E2D8] border-y border-[#E8E2D8]">
+    <div className="grid grid-cols-3 divide-x divide-white/10 border-y border-white/10">
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        <Truck size={20} className="text-[#1A1A18]" />
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        <Truck size={20} className="text-white" />
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           {commerce.freeShippingLabel}
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        <BadgeDollarSign size={20} className="text-[#1A1A18]" />
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        <BadgeDollarSign size={20} className="text-white" />
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           Pagas al recibir
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
-        <ShieldCheck size={20} className="text-[#1A1A18]" />
-        <span className="text-[10.5px] leading-snug text-[#6B6B66]">
+        <ShieldCheck size={20} className="text-white" />
+        <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
           Garantia y asesoria
         </span>
       </div>
@@ -125,22 +125,22 @@ function WellnessFaq({ product }: { product: Product }) {
 
   const items = [
     {
-      icon: <Droplets size={20} className="text-[var(--accent)]" />,
+      icon: <Droplets size={20} className="text-[#d3fa99]" />,
       title: "Para que sirve",
       body: product.bundleUseCase || product.description,
     },
     {
-      icon: <Leaf size={20} className="text-[var(--accent)]" />,
+      icon: <Leaf size={20} className="text-[#d3fa99]" />,
       title: "Como se cuida",
       body: product.careTips || "Cuidado simple segun material del producto.",
     },
     {
-      icon: <CheckCircle2 size={20} className="text-[var(--accent)]" />,
+      icon: <CheckCircle2 size={20} className="text-[#d3fa99]" />,
       title: "Stock y precio",
       body: `${product.stockSignal || "Stock por confirmar en WhatsApp"}.`,
     },
     {
-      icon: <ShieldCheck size={20} className="text-[var(--accent)]" />,
+      icon: <ShieldCheck size={20} className="text-[#d3fa99]" />,
       title: "Cupon",
       body: `Cupon ${commerce.couponCode}, ${commerce.freeShippingLabel.toLowerCase()} y confirmacion por WhatsApp.`,
     },
@@ -148,11 +148,11 @@ function WellnessFaq({ product }: { product: Product }) {
 
   return (
     <section className="px-4 py-10" aria-label="Preguntas frecuentes">
-      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+      <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
         FAQ
       </p>
       <h2
-        className="mb-6 text-[20px] font-medium leading-snug text-[#1A1A18]"
+        className="mb-6 text-[20px] font-medium leading-snug text-white"
         style={{ fontFamily: "var(--font-display)" }}
       >
         Antes de escribir a Vicky.
@@ -161,14 +161,14 @@ function WellnessFaq({ product }: { product: Product }) {
         {items.map((item) => (
           <div
             key={item.title}
-            className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-4"
+            className="flex gap-3 rounded-2xl border border-white/10 bg-[#16200f] p-4"
           >
             <div className="mt-0.5 shrink-0">{item.icon}</div>
             <div>
-              <p className="mb-1 text-[14px] font-medium text-[#1A1A18]">
+              <p className="mb-1 text-[14px] font-medium text-white">
                 {item.title}
               </p>
-              <p className="text-[13px] leading-snug text-[#6B6B66]">
+              <p className="text-[13px] leading-snug text-[#b8c2ae]">
                 {item.body}
               </p>
             </div>
@@ -193,17 +193,17 @@ export default async function WellnessCampaignPage({
 
   if (!selectedProduct) {
     return (
-      <main data-theme="bienestar" className="min-h-screen bg-[#FAF7F2]">
+      <main data-theme="bienestar" className="min-h-screen bg-[#10160e]">
         <PromoBar message="Bienestar consciente · Envío gratis a todo Ecuador" />
         <section className="flex flex-col items-center gap-4 px-4 py-16 text-center">
-          <HeartHandshake size={26} className="text-[var(--accent)]" />
+          <HeartHandshake size={26} className="text-[#d3fa99]" />
           <h1
-            className="text-[20px] font-medium text-[#1A1A18]"
+            className="text-[20px] font-medium text-white"
             style={{ fontFamily: "var(--font-display)" }}
           >
             No hay productos de bienestar disponibles.
           </h1>
-          <p className="text-[14px] text-[#6B6B66]">
+          <p className="text-[14px] text-[#b8c2ae]">
             Carga productos reales en Medusa con tag bienestar para activar esta campana.
           </p>
         </section>
@@ -233,7 +233,7 @@ export default async function WellnessCampaignPage({
       : 0
 
   return (
-    <main data-theme="bienestar" className="min-h-screen bg-[#FAF7F2] pb-24">
+    <main data-theme="bienestar" className="min-h-screen bg-[#10160e] pb-24">
       <WellnessAnalytics
         context={{
           ...attribution,
@@ -254,11 +254,12 @@ export default async function WellnessCampaignPage({
         compactTitle={selectedProduct.category}
         backHref={wellnessBaseUrl}
         vertical="bienestar"
+        surface="dark"
       />
 
       {/* 3. Hero image 9:16 con pill de promo */}
       <div className="relative px-4 pt-4">
-        <div className="relative aspect-[9/16] overflow-hidden rounded-[14px] bg-[#E8E2D8]">
+        <div className="relative mx-auto aspect-[9/16] w-full max-w-[440px] overflow-hidden rounded-[14px] bg-[#E8E2D8]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={selectedProduct.title}
@@ -283,16 +284,16 @@ export default async function WellnessCampaignPage({
 
       {/* 4. Eyebrow → H1 → subcopy */}
       <div className="px-4 pt-6">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           {`${selectedProduct.category} · bienestar consciente`}
         </p>
         <h1
-          className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-[#1A1A18]"
+          className="mb-2 text-[clamp(28px,8vw,40px)] font-medium leading-[1.15] text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {selectedProduct.title}
         </h1>
-        <p className="mb-5 text-[14px] leading-snug text-[#6B6B66]">
+        <p className="mb-5 text-[14px] leading-snug text-[#b8c2ae]">
           {selectedProduct.description}
         </p>
 
@@ -308,7 +309,7 @@ export default async function WellnessCampaignPage({
             note="stock por WhatsApp"
           />
           {savings > 0 && (
-            <span className="text-[12px] text-[#6B6B66]">
+            <span className="text-[12px] text-[#b8c2ae]">
               Ahorra {money(savings)}
             </span>
           )}
@@ -368,11 +369,11 @@ export default async function WellnessCampaignPage({
       {/* 9. Other products (preserved, re-styled) */}
       {products.filter((p) => p.sku !== selectedProduct.sku).length > 0 && (
         <section className="px-4 py-10">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
             Cambiar producto
           </p>
           <h2
-            className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+            className="mb-4 text-[20px] font-medium leading-snug text-white"
             style={{ fontFamily: "var(--font-display)" }}
           >
             La misma landing sirve para otro SKU.
@@ -385,7 +386,7 @@ export default async function WellnessCampaignPage({
                 <a
                   href={campaignPath(product)}
                   key={product.sku}
-                  className="flex min-w-[120px] flex-col gap-2 rounded-2xl border border-[#E8E2D8] bg-white p-2"
+                  className="flex min-w-[120px] flex-col gap-2 rounded-2xl border border-white/10 bg-[#16200f] p-2"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -393,7 +394,7 @@ export default async function WellnessCampaignPage({
                     src={product.imageUrl}
                     className="aspect-square w-full rounded-xl object-cover"
                   />
-                  <span className="text-[11px] leading-snug text-[#1A1A18]">
+                  <span className="text-[11px] leading-snug text-white">
                     {product.title}
                   </span>
                 </a>

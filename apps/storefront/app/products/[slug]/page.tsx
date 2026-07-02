@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import {
   BookOpen,
   MessageCircle,
+  Star,
 } from "lucide-react"
 import {
   getProductBySlug,
@@ -20,6 +21,7 @@ import {
   TrackedEventLink,
   TrackedWhatsAppLink,
 } from "../../components/analytics"
+import { AddToCartButton } from "../../components/ui/add-to-cart-button"
 import { MaterialMacro } from "../../components/ui/material-macro"
 import { Photo } from "../../components/ui/photo"
 import { SiteHeader } from "../../components/ui/site-header"
@@ -27,6 +29,7 @@ import { SpecTable } from "../../components/ui/spec-table"
 import { StickyCTABar } from "../../components/ui/sticky-cta-bar"
 import { VideoFrame } from "../../components/ui/video-frame"
 import { Breadcrumbs } from "../../components/ui/breadcrumbs"
+import { CustomerReviews } from "../../components/ui/customer-reviews"
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>
@@ -181,7 +184,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   })()
 
   return (
-    <main data-theme="cocina" className="min-h-screen bg-[#FAF7F2] pb-28">
+    <main data-theme="cocina" className="min-h-screen bg-[#10160e] pb-28">
       <PageAnalytics featured={product} />
 
       {/* 1. Mini-header: back · name uppercase · share */}
@@ -190,6 +193,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         compactTitle={product.category}
         backHref="/"
         vertical="cocina"
+        surface="dark"
       />
 
       {/* 1.5. Breadcrumbs (desktop-only) */}
@@ -203,8 +207,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         />
       </div>
 
-      {/* 2. Gallery 4:5 radius 16 with position dots */}
-      <div className="relative px-4 pt-4">
+      {/* 2. Gallery: ancho acotado en desktop (9:16 a todo el ancho = gigante) */}
+      <div className="relative mx-auto w-full max-w-[440px] px-4 pt-4">
         {video ? (
           /* VideoFrame handles lazy load + viewport detection */
           <VideoFrame
@@ -235,11 +239,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* 3. Title Fraunces 28 + 5 stars + social proof */}
       <div className="px-4 pt-5">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           {product.category}
         </p>
         <h1
-          className="mb-2 text-[28px] font-medium leading-snug text-[#1A1A18]"
+          className="mb-2 text-[28px] font-medium leading-snug text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           {product.title}
@@ -255,34 +259,34 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 height="14"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="text-[var(--accent)]"
+                className="text-[#d3fa99]"
                 aria-hidden="true"
               >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             ))}
           </div>
-          <span className="text-[11px] text-[#6B6B66]">
+          <span className="text-[11px] text-[#b8c2ae]">
             Clientes reales por WhatsApp
           </span>
         </div>
 
         {/* 4. Description */}
-        <p className="mb-5 text-[13px] leading-snug text-[#6B6B66]">
+        <p className="mb-5 text-[13px] leading-snug text-[#b8c2ae]">
           {product.bundleUseCase || product.description}
         </p>
 
         {/* Price */}
         <div className="mb-5 flex items-baseline gap-3">
           {promo && product.originalPrice && (
-            <span className="text-[15px] text-[#6B6B66] line-through">
+            <span className="text-[15px] text-[#b8c2ae] line-through">
               {money(product.originalPrice.amount)}
             </span>
           )}
-          <span className="text-[26px] font-medium leading-none text-[var(--accent)]">
+          <span className="text-[26px] font-medium leading-none text-[#d3fa99]">
             {money(product.price.amount)}
           </span>
-          <span className="text-[12px] text-[#6B6B66]">stock por WhatsApp</span>
+          <span className="text-[12px] text-[#b8c2ae]">stock por WhatsApp</span>
         </div>
 
         {/* Hero CTA */}
@@ -309,15 +313,20 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <MessageCircle size={19} />
           Reclamar cupon y consultar stock
         </TrackedWhatsAppLink>
+        <AddToCartButton
+          product={product}
+          label="Agregar al carrito"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-[#d3fa99] px-5 py-3.5 text-[14px] font-semibold text-[#10160e] hover:opacity-90 transition-opacity cursor-pointer"
+        />
       </div>
 
       {/* 5. "El material, de cerca" (patrón Material Kitchen) */}
       <div className="px-4 pt-10">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           El material, de cerca
         </p>
         <h2
-          className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+          className="mb-4 text-[20px] font-medium leading-snug text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Mira lo que vas a recibir.
@@ -327,11 +336,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* 6. Spec table (patrón Caraway) */}
       <div className="px-4 pt-10">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           Especificaciones
         </p>
         <h2
-          className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+          className="mb-4 text-[20px] font-medium leading-snug text-white"
           style={{ fontFamily: "var(--font-display)" }}
         >
           Todo lo que necesitas saber.
@@ -342,11 +351,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       {/* Use cases */}
       {useCases.length > 0 && (
         <div className="px-4 pt-10">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
             Para que sirve
           </p>
           <h2
-            className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+            className="mb-4 text-[20px] font-medium leading-snug text-white"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Usos recomendados.
@@ -355,9 +364,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {useCases.map((item) => (
               <li
                 key={item}
-                className="flex gap-2 text-[14px] text-[#6B6B66]"
+                className="flex gap-2 text-[14px] text-[#b8c2ae]"
               >
-                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d3fa99]" />
                 {item}
               </li>
             ))}
@@ -367,15 +376,15 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* Health / safety note */}
       {product.healthAngle && (
-        <div className="mx-4 mt-8 rounded-2xl border border-[#E8E2D8] bg-white p-4">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#6B6B66]">
+        <div className="mx-4 mt-8 rounded-2xl border border-white/10 bg-[#16200f] p-4">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#b8c2ae]">
             Sin miedo, sin promesas medicas
           </p>
-          <p className="mb-3 text-[13px] leading-snug text-[#6B6B66]">
+          <p className="mb-3 text-[13px] leading-snug text-[#b8c2ae]">
             {product.healthAngle}. Claims como PFAS/PFOA/PTFE se publican solo con certificacion del proveedor.
           </p>
           <TrackedEventLink
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#1A1A18] px-4 py-2 text-[13px] font-medium text-[#1A1A18]"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/40 px-4 py-2 text-[13px] font-medium text-white"
             cta="product_detail_pfas_guide"
             href="/guias/teflon-pfas"
             placement="product_detail"
@@ -390,11 +399,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       {/* Related products */}
       {related.length > 0 && (
         <div className="px-4 pt-10">
-          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[var(--accent)]">
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
             Tambien combina con
           </p>
           <h2
-            className="mb-4 text-[20px] font-medium leading-snug text-[#1A1A18]"
+            className="mb-4 text-[20px] font-medium leading-snug text-white"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Arma tu cocina por piezas.
@@ -403,7 +412,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {related.map((item) => (
               <div
                 key={item.id}
-                className="flex gap-3 rounded-2xl border border-[#E8E2D8] bg-white p-3"
+                className="flex gap-3 rounded-2xl border border-white/10 bg-[#16200f] p-3"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -413,20 +422,20 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 />
                 <div className="flex min-w-0 flex-col justify-between py-0.5">
                   <div>
-                    <span className="block text-[11px] text-[#6B6B66]">
+                    <span className="block text-[11px] text-[#b8c2ae]">
                       {item.category}
                     </span>
-                    <p className="text-[14px] font-medium text-[#1A1A18] leading-snug">
+                    <p className="text-[14px] font-medium text-white leading-snug">
                       {item.title}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-[14px] font-medium text-[var(--accent)]">
+                    <span className="text-[14px] font-medium text-[#d3fa99]">
                       {money(item.price.amount)}
                     </span>
                     <a
                       href={productPath(item)}
-                      className="text-[12px] text-[#6B6B66] underline"
+                      className="text-[12px] text-[#b8c2ae] underline"
                     >
                       Ver ficha
                     </a>
@@ -457,10 +466,25 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </div>
       )}
 
-      {/* 7. Sticky CTA bar: precio izquierda + botón WA — siempre visible (alwaysVisible) */}
+      {/* 8. Customer Reviews Section */}
+      <section className="px-4 py-12" aria-label="Reseñas de clientes">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="mb-2 text-[24px] font-semibold text-[#b8c2ae]">
+            Lo que dicen nuestros clientes
+          </h2>
+          <p className="text-[13px] text-[#7a8a72] mb-6">
+            Reseñas reales de clientes que compraron este producto
+          </p>
+
+          <CustomerReviews productId={product.id} productSku={product.sku} productName={product.title} />
+        </div>
+      </section>
+
+      {/* 9. Sticky CTA bar: precio izquierda + botón WA — siempre visible (alwaysVisible) */}
       {/* La ficha tiene product en contexto, así que el sticky usa TrackedWhatsAppLink
           (regla #1: ninguna CTA de WhatsApp sin tracking). */}
       <StickyCTABar
+        surface="dark"
         alwaysVisible
         price={money(product.price.amount)}
         product={product}
