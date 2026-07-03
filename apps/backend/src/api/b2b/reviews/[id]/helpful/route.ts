@@ -1,11 +1,11 @@
-import { MedusaRequest, MedusaResponse } from "@medusajs/medusa"
+import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
-  const productReviewService = req.scope.resolve("productReviewService")
+  const b2bCrm = req.scope.resolve("b2bCrm")
   const { id } = req.params
 
   try {
-    const review = await productReviewService.markHelpful(id)
+    const review = await b2bCrm.markReviewHelpful(id)
     if (!review) {
       return res.status(404).json({ error: "Reseña no encontrada" })
     }

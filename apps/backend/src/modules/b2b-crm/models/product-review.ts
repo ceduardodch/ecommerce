@@ -13,8 +13,8 @@ const ProductReview = model
     photos: model.json().nullable(),
     verified_purchase: model.boolean().default(true),
     helpful_count: model.number().default(0),
-    created_at: model.dateTime().default(() => new Date()),
-    updated_at: model.dateTime().default(() => new Date()),
+    created_at: model.dateTime(),
+    updated_at: model.dateTime(),
   })
   .indexes([
     {
