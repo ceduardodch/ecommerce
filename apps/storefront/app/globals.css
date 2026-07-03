@@ -1,33 +1,37 @@
 /* Minimal reset — Sprint D (WCLN-1). All page styles live in theme.css + Tailwind. */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* En @layer base para que las utilidades de Tailwind (color de links, etc.)
+   ganen en la cascada: una regla sin capa le gana a @layer utilities. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-}
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
 
-img,
-video {
-  max-width: 100%;
-  display: block;
+  img,
+  video {
+    max-width: 100%;
+    display: block;
+  }
 }
