@@ -1,3 +1,4 @@
+import { PageAmbient } from "../../components/ui/page-ambient"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
@@ -441,7 +442,8 @@ export default async function CampaignPage({
   const heroPoster = hero.poster || selectedProduct.imageUrl
 
   return (
-    <main data-theme="cocina" className="min-h-screen bg-[#10160e] pb-24">
+    <main data-theme="cocina" className="relative isolate min-h-screen bg-[#10160e] pb-24">
+      <PageAmbient />
       <CampaignAnalytics
         context={{
           ...attribution,

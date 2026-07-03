@@ -1,3 +1,4 @@
+import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { TrackedEventLink } from "../components/analytics"
 import { Isotipo } from "../components/ui/isotipo"
@@ -75,7 +76,8 @@ export default function BrandPortalPage() {
   }
 
   return (
-    <main className="brand-portal min-h-screen bg-[#2B2E2B] px-5 py-10 text-[#FAF7F2] sm:py-14">
+    <main className="brand-portal relative isolate min-h-screen bg-[#10160e] px-5 py-10 text-[#FAF7F2] sm:py-14">
+      <PageAmbient />
       <style>{`.brand-portal a { text-decoration: none; color: inherit; }`}</style>
 
       <header className="mx-auto flex max-w-4xl flex-col items-center text-center">

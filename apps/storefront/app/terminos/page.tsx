@@ -1,3 +1,4 @@
+import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { brandBaseUrl } from "../../lib/domains"
 
@@ -33,7 +34,8 @@ function LI({ children }: { children: React.ReactNode }) {
 
 export default function TerminosPage() {
   return (
-    <main className="min-h-screen bg-[#10160e]">
+    <main className="relative isolate min-h-screen bg-[#10160e]">
+      <PageAmbient />
       <div className="mx-auto max-w-3xl px-5 py-12">
         <a href="/" className="text-[13px] text-[#b8c2ae] underline">
           ← Volver al inicio

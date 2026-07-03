@@ -7,7 +7,7 @@ import { ScrollReveal } from "./scroll-reveal"
 
 export function ProductShowcaseGrid({ products }: { products: Product[] }) {
   return (
-    <section id="productos" className="bg-[#10160e] px-4 pb-24 pt-8">
+    <section id="productos" className="px-4 pb-24 pt-8">
       <div className="mx-auto max-w-6xl">
         <ScrollReveal distance={40}>
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#d3fa99]">

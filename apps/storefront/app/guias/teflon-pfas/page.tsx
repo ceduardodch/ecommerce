@@ -1,3 +1,4 @@
+import { PageAmbient } from "../../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { BookOpen, MessageCircle, ShieldCheck } from "lucide-react"
 import { getProducts } from "../../../lib/catalog"
@@ -31,7 +32,8 @@ export default async function TeflonPfasGuidePage() {
         compactTitle="PFAS y Teflón"
       />
 
-      <main className="bg-[#10160e] pb-20">
+      <main className="relative isolate bg-[#10160e] pb-20">
+        <PageAmbient />
         {/* Reading layout: max-w-[65ch], centred */}
         <div className="mx-auto max-w-[65ch] px-4">
 

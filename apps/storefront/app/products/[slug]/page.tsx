@@ -1,3 +1,4 @@
+import { PageAmbient } from "../../components/ui/page-ambient"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
@@ -184,7 +185,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   })()
 
   return (
-    <main data-theme="cocina" className="min-h-screen bg-[#10160e] pb-28">
+    <main data-theme="cocina" className="relative isolate min-h-screen bg-[#10160e] pb-28">
+      <PageAmbient />
       <PageAnalytics featured={product} />
 
       {/* 1. Mini-header: back · name uppercase · share */}

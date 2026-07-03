@@ -1,5 +1,7 @@
 "use client"
 
+import { PageAmbient } from "../components/ui/page-ambient"
+
 import { useState } from "react"
 import { useCart } from "../../contexts/CartContext"
 import { CartItemComponent } from "../components/cart/cart-item"
@@ -35,14 +37,16 @@ export default function CartPage() {
 
   if (!loaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#10160e]">
+      <div className="relative isolate min-h-screen flex items-center justify-center bg-[#10160e]">
+        <PageAmbient />
         <p className="text-[#b8c2ae]">Cargando carrito...</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#10160e]">
+    <div className="relative isolate min-h-screen bg-[#10160e]">
+      <PageAmbient />
       {/* Breadcrumb */}
       <div className="border-b border-white/10 bg-[#10160e]">
         <div className="max-w-4xl mx-auto px-4 py-3">

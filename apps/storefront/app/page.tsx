@@ -1,3 +1,4 @@
+import { PageAmbient } from "./components/ui/page-ambient"
 import type { Metadata } from "next"
 import { getProducts, type Product } from "../lib/catalog"
 import { kitchenBaseUrl } from "../lib/domains"
@@ -64,7 +65,8 @@ export default async function Home({ searchParams }: HomeProps) {
   const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre ollas de granito Eter Niu.")}`
 
   return (
-    <div data-theme="cocina" className="bg-[#10160e]">
+    <div data-theme="cocina" className="relative isolate bg-[#10160e]">
+      <PageAmbient />
       <PageAnalytics
         category={selectedCategory}
         featured={hero}

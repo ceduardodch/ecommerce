@@ -1,3 +1,4 @@
+import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import {
   BookOpen,
@@ -29,7 +30,8 @@ export default async function GuidesPage() {
       <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
       <SiteHeader vertical="cocina" compact surface="dark" backHref="/" compactTitle="Guías" />
 
-      <main className="bg-[#10160e] pb-20">
+      <main className="relative isolate bg-[#10160e] pb-20">
+        <PageAmbient />
         {/* Reading layout: max-w-[65ch], centred */}
         <div className="mx-auto max-w-[65ch] px-4">
 

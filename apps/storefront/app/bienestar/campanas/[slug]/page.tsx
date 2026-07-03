@@ -1,3 +1,4 @@
+import { PageAmbient } from "../../../components/ui/page-ambient"
 import type { Metadata } from "next"
 import {
   BadgeDollarSign,
@@ -233,7 +234,8 @@ export default async function WellnessCampaignPage({
       : 0
 
   return (
-    <main data-theme="bienestar" className="min-h-screen bg-[#10160e] pb-24">
+    <main data-theme="bienestar" className="relative isolate min-h-screen bg-[#10160e] pb-24">
+      <PageAmbient />
       <WellnessAnalytics
         context={{
           ...attribution,
