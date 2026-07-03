@@ -57,14 +57,14 @@ export function NewsletterSignup() {
         <button
           type="submit"
           disabled={isLoading || status === "success"}
-          className="w-full rounded-full bg-[#236B4A] px-4 py-2 text-[13px] font-medium text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+          className="w-full rounded-full bg-[#d3fa99] px-4 py-2 text-[13px] font-semibold text-[#10160e] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
         >
           {isLoading ? "Suscribiendo..." : "Suscribir"}
         </button>
 
         {/* Status messages */}
         {status === "success" && (
-          <p className="text-[12px] text-[#93E29A]">
+          <p className="text-[12px] text-[#d3fa99]">
             ¡Gracias! Te has suscrito correctamente.
           </p>
         )}

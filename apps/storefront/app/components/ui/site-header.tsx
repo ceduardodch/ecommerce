@@ -95,7 +95,7 @@ export function SiteHeader({
   }
 
   const navLinkClass = dark
-    ? "text-[13px] font-medium text-[#fcfcf7]/80 no-underline hover:text-[#d3fa99] transition-colors"
+    ? "text-[13px] font-medium text-[#fcfcf7] no-underline hover:text-[#d3fa99] transition-colors"
     : "text-[13px] font-medium text-[#1A1A18] no-underline hover:text-[var(--accent)] transition-colors"
 
   return (

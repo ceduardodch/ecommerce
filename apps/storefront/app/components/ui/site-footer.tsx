@@ -26,7 +26,7 @@ function BrandLockup() {
   return (
     <div>
       <div className="flex items-center gap-2">
-        <Isotipo size={28} color="#93E29A" />
+        <Isotipo size={28} color="#d3fa99" />
         <span
           className="text-[20px] font-medium text-[#FAF7F2]"
           style={{ fontFamily: "var(--font-display)" }}
@@ -34,10 +34,10 @@ function BrandLockup() {
           Eter Niu
         </span>
       </div>
-      <p className="mt-2 text-[13px] text-[#A9ADA6]">
+      <p className="mt-2 text-[13px] text-[#b8c2ae]">
         Bienestar &amp; Cocina Consciente
       </p>
-      <p className="mt-1 text-[12px] text-[#A9ADA6]">
+      <p className="mt-1 text-[12px] text-[#b8c2ae]">
         Elevan tu alma y tu hogar · Quito, Ecuador
       </p>
     </div>
@@ -46,7 +46,7 @@ function BrandLockup() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#3A3E3A] bg-[#2B2E2B] px-4 py-12">
+    <footer className="border-t border-white/10 bg-[#10160e] px-4 py-12">
       <div className="mx-auto max-w-5xl">
         {/* Mobile layout (single column) */}
         <div className="lg:hidden">
@@ -54,30 +54,30 @@ export function SiteFooter() {
             <BrandLockup />
           </div>
 
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[#A9ADA6]">
-            <a href="/guias" className="hover:text-[#FAF7F2] transition-colors">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[#b8c2ae]">
+            <a href="/guias" className="hover:text-[#d3fa99] transition-colors">
               Guías
             </a>
             <a
               href="https://instagram.com/eter.niu"
               target="_blank"
               rel="noreferrer"
-              className="text-[#93E29A] hover:text-[#FAF7F2] transition-colors"
+              className="text-[#d3fa99] hover:text-[#FAF7F2] transition-colors"
             >
               @eter.niu
             </a>
-            <a href="/privacidad" className="hover:text-[#FAF7F2] transition-colors">
+            <a href="/privacidad" className="hover:text-[#d3fa99] transition-colors">
               Privacidad
             </a>
-            <a href="/terminos" className="hover:text-[#FAF7F2] transition-colors">
+            <a href="/terminos" className="hover:text-[#d3fa99] transition-colors">
               Términos
             </a>
-            <a href="/envios-devoluciones" className="hover:text-[#FAF7F2] transition-colors">
+            <a href="/envios-devoluciones" className="hover:text-[#d3fa99] transition-colors">
               Envíos y devoluciones
             </a>
           </div>
 
-          <p className="mt-8 text-[11px] text-[#A9ADA6]">
+          <p className="mt-8 text-[11px] text-[#b8c2ae]">
             Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
           </p>
         </div>
@@ -98,7 +98,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href={kitchenBaseUrl}
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Cocina
                 </a>
@@ -106,7 +106,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href={wellnessBaseUrl}
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Bienestar
                 </a>
@@ -123,7 +123,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/guias"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Guías
                 </a>
@@ -131,7 +131,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/guias/teflon-pfas"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Guía PFAS
                 </a>
@@ -139,7 +139,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/marca"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Marca
                 </a>
@@ -147,7 +147,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/privacidad"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Privacidad y datos
                 </a>
@@ -155,7 +155,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/terminos"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Términos y condiciones
                 </a>
@@ -163,7 +163,7 @@ export function SiteFooter() {
               <li>
                 <a
                   href="/envios-devoluciones"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Envíos y devoluciones
                 </a>
@@ -182,7 +182,7 @@ export function SiteFooter() {
                   href="https://instagram.com/eter.niu"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[13px] text-[#93E29A] hover:text-[#FAF7F2] transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[13px] text-[#d3fa99] hover:text-[#FAF7F2] transition-colors"
                 >
                   <InstagramIcon />
                   @eter.niu
@@ -193,7 +193,7 @@ export function SiteFooter() {
                   href="https://wa.me/593979854905"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[13px] text-[#A9ADA6] hover:text-[#FAF7F2] transition-colors"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   WhatsApp
                 </a>
@@ -206,7 +206,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom notice (both mobile & desktop) */}
-        <p className="mt-8 text-[11px] text-[#A9ADA6]">
+        <p className="mt-8 text-[11px] text-[#b8c2ae]">
           Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
         </p>
       </div>
