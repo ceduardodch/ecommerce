@@ -1,6 +1,12 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { reviewsWriteAuth } from "../../_shared"
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
+  const denied = reviewsWriteAuth(req)
+  if (denied) {
+    return res.status(denied.status).json({ error: denied.error })
+  }
+
   const b2bCrm = req.scope.resolve("b2bCrm")
   const { id } = req.params
 

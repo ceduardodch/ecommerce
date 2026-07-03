@@ -33,6 +33,10 @@ type AnyB2bCrmService = {
   createCrmMessageTemplates: (data: unknown) => Promise<any>
   updateCrmMessageTemplates: (data: unknown) => Promise<any>
   listProductReviews: (filters?: unknown, config?: unknown) => Promise<any[]>
+  listAndCountProductReviews: (
+    filters?: unknown,
+    config?: unknown,
+  ) => Promise<[any[], number]>
   createProductReviews: (data: unknown) => Promise<any>
   updateProductReviews: (data: unknown) => Promise<any>
 }
@@ -815,6 +819,17 @@ class B2bCrmModuleService extends MedusaService({
       { product_id: productId },
       { take: limit, order: { created_at: "DESC" } },
     )
+  }
+
+  /**
+   * Reviews de un producto + total real (para paginación/summary).
+   */
+  async getProductReviewsWithCount(productId: string, limit = 10) {
+    const [reviews, count] = await this.service_().listAndCountProductReviews(
+      { product_id: productId },
+      { take: limit, order: { created_at: "DESC" } },
+    )
+    return { reviews, count }
   }
 
   /**

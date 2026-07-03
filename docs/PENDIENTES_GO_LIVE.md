@@ -72,3 +72,14 @@ Estado: política de privacidad LOPDP + banner publicados.
 4. Leads + OpenClaw + plantillas (C-11..C-13) → recompra real por WhatsApp.
 5. WhatsApp Cloud API (B) para escalar sin riesgo de ban.
 6. Dominio eter-niu.com (D) y pulido de marca (E).
+
+## H. Reseñas (jul 2026 — flujo reparado, requiere envs)
+
+- [ ] 🔴 DUEÑO: definir `REVIEWS_API_TOKEN` (mismo valor en backend Medusa y
+  storefront, Coolify) — sin él, publicar reseñas queda deshabilitado
+  (fail-closed; leer reseñas sí funciona).
+- [ ] 🔴 DUEÑO: definir `MEDUSA_INTERNAL_URL` en el storefront (URL interna del
+  backend Medusa en Coolify, ej. http://medusa-api:9000).
+- [x] 🟢 Flujo reparado: proxy `/api/reviews` (rate limit + honeypot), backend
+  con validación zod + verificación de compra por teléfono normalizado,
+  UI con campos reales de nombre/celular.

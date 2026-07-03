@@ -23,7 +23,8 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch(`/admin/b2b/reviews?product_id=${productId}`)
+        const response = await fetch(`/api/reviews?product_id=${productId}`)
+        if (!response.ok) throw new Error(`reviews HTTP ${response.status}`)
         const data = await response.json()
         setReviews(data.reviews || [])
         setAverageRating(data.average_rating || 0)
@@ -63,7 +64,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
 
     // Recargar reviews
     const fetchReviews = async () => {
-      const response = await fetch(`/admin/b2b/reviews?product_id=${productId}`)
+      const response = await fetch(`/api/reviews?product_id=${productId}`)
       const data = await response.json()
       setReviews(data.reviews || [])
       setAverageRating(data.average_rating || 0)
@@ -84,7 +85,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
   if (formSubmitted) {
     return (
       <div className="text-center py-12">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#3fa99] mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#d3fa99] mb-4">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-8 h-8 text-white">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
@@ -92,7 +93,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
         <h3 className="text-xl font-semibold text-[#b8c2ae] mb-2">
           ¡Gracias por tu reseña!
         </h3>
-        <p className="text-[13px] text-[#7a8a72]">
+        <p className="text-[13px] text-[#b8c2ae]">
           Tu opinión ayuda a otros clientes a decidir.
         </p>
       </div>
@@ -104,7 +105,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
       <div>
         <button
           onClick={() => setShowForm(false)}
-          className="mb-4 text-[13px] text-[#b8c2ae] hover:text-[#3fa99] transition-colors"
+          className="mb-4 text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
         >
           ← Volver a reseñas
         </button>
@@ -122,8 +123,8 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
     <div>
       {/* Rating Summary */}
       {totalCount > 0 ? (
-        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-[#3a3a36]">
-          <div className="text-[48px] font-bold text-[#3fa99]">
+        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/10">
+          <div className="text-[48px] font-bold text-[#d3fa99]">
             {averageRating}
           </div>
           <div>
@@ -132,11 +133,11 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
                 <Star
                   key={i}
                   size={20}
-                  className={i < Math.round(averageRating) ? "fill-[#3fa99] text-[#3fa99]" : "text-[#5a5a52]"}
+                  className={i < Math.round(averageRating) ? "fill-[#d3fa99] text-[#d3fa99]" : "text-[#5a5a52]"}
                 />
               ))}
             </div>
-            <p className="text-[13px] text-[#7a8a72]">
+            <p className="text-[13px] text-[#b8c2ae]">
               Basado en {totalCount} {totalCount === 1 ? "reseña" : "reseñas"}
             </p>
           </div>
@@ -150,7 +151,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
       {/* Reviews List */}
       <div className="space-y-4 mb-8">
         {reviews.length === 0 ? (
-          <p className="text-center text-[#7a8a72] py-8">
+          <p className="text-center text-[#b8c2ae] py-8">
             Sé el primero en dejar tu opinión
           </p>
         ) : (
@@ -163,7 +164,7 @@ export function CustomerReviews({ productId, productSku, productName }: Customer
       {/* Write Review Button */}
       <button
         onClick={handleWriteReview}
-        className="w-full rounded-full border-2 border-[#3fa99] px-5 py-3 text-[14px] font-semibold text-[#3fa99] hover:bg-[#3fa99] hover:text-[#10160e] transition-colors"
+        className="w-full rounded-full border-2 border-[#d3fa99] px-5 py-3 text-[14px] font-semibold text-[#d3fa99] hover:bg-[#d3fa99] hover:text-[#10160e] transition-colors"
       >
         Escribir una reseña
       </button>

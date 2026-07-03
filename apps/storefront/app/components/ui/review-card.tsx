@@ -24,9 +24,10 @@ export function ReviewCard({ review }: { review: Review }) {
     if (helpful) return // Prevent double clicks
 
     try {
-      await fetch(`/admin/b2b/reviews/${review.id}/helpful`, {
+      const res = await fetch(`/api/reviews/${review.id}/helpful`, {
         method: 'POST',
       })
+      if (!res.ok) return
       setHelpful(true)
     } catch (error) {
       console.error('Error al marcar útil:', error)
