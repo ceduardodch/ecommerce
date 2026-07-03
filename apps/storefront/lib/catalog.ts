@@ -2559,7 +2559,16 @@ function generatedImageForProduct(product: Product) {
   return "/media/photo-hero-cocina.jpg";
 }
 
+// Fotos limpias de producto servidas por el storefront: puentean las imágenes
+// viejas que aún tenga el catálogo del backend (Medusa) hasta actualizarlas ahí.
+const IMAGE_OVERRIDES: Record<string, string> = {
+  "MGC-WOK-GRANITO-32": "/media/product-wok-granito-32.jpg",
+  "COC-SARTEN-PLANO-GRANITO-22": "/media/product-sarten-granito-22.jpg",
+};
+
 function placeholderForProduct(product: Product) {
+  const override = IMAGE_OVERRIDES[product.sku?.toUpperCase?.() || ""];
+  if (override) return override;
   if (!isGeneratedPlaceholder(product.imageUrl)) return localMediaUrl(product.imageUrl);
   return generatedImageForProduct(product);
 }
