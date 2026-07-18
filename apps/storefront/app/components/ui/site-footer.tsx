@@ -77,7 +77,17 @@ export function SiteFooter() {
             </a>
           </div>
 
-          <p className="mt-8 text-[11px] text-[#b8c2ae]">
+          <p className="mt-6 text-[12px] text-[#b8c2ae]">
+            Contacto:{" "}
+            <a href="tel:+593979854905" className="hover:text-[#d3fa99]">
+              +593 97 985 4905
+            </a>{" "}
+            ·{" "}
+            <a href="mailto:carlos.diaz@b2b.com.ec" className="hover:text-[#d3fa99]">
+              carlos.diaz@b2b.com.ec
+            </a>
+          </p>
+          <p className="mt-3 text-[11px] text-[#b8c2ae]">
             Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
           </p>
         </div>
@@ -196,6 +206,22 @@ export function SiteFooter() {
                   className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   WhatsApp
+                </a>
+              </li>
+              <li>
+                <a
+                  href="tel:+593979854905"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
+                >
+                  +593 97 985 4905
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:carlos.diaz@b2b.com.ec"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
+                >
+                  carlos.diaz@b2b.com.ec
                 </a>
               </li>
             </ul>

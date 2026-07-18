@@ -2,9 +2,11 @@ import type { AppConfig } from "./config.js"
 
 // ---------------------------------------------------------------------------
 // Datafast (DataFast Ecuador / ACI oppwa Copy&Pay)
-// Lógica portada del módulo Odoo `payment_payon` del dueño (producción).
-// Hosts, endpoints, códigos de éxito y el TLV de IVA del SRI están verificados
-// contra ese módulo. Ver docs/PAGOS_DATAFAST_PLAN.md.
+// Alineado a la "Guía de implementación Dataweb v3.2.2" (certificación):
+//  - Endpoints eu-test / eu-prod (los hosts sin "eu-" fueron desactivados, v3.2)
+//  - Campos obligatorios fase 2 (customer.*, cart.items[n].*, shipping/billing)
+//  - customParameters SHOPPER_VAL_BASE0/BASEIMP/IVA + SHOPPER_MID/TID +
+//    SHOPPER_ECI/PSERV/VERSIONDF + risk.parameters[USER_DATA2]
 // ---------------------------------------------------------------------------
 
 export type DatafastCartItem = {
@@ -47,8 +49,8 @@ export type IvaBreakdown = {
   baseZero: number
 }
 
-const HOST_LIVE = "https://oppwa.com"
-const HOST_TEST = "https://test.oppwa.com"
+const HOST_LIVE = "https://eu-prod.oppwa.com"
+const HOST_TEST = "https://eu-test.oppwa.com"
 
 export function datafastHost(config: AppConfig) {
   return config.datafastEnv === "live" ? HOST_LIVE : HOST_TEST
@@ -72,42 +74,6 @@ export function computeIva(items: DatafastCartItem[], taxRate: number): IvaBreak
   const baseTaxed = round2(total / (1 + taxRate))
   const tax = round2(total - baseTaxed)
   return { total, baseTaxed, tax, baseZero: 0 }
-}
-
-/** Codifica un número a 13 chars "013.2f" y le quita el punto (formato Datafast). */
-function money13(n: number): string {
-  // p.ej. 100 → "0000000100.00" (13 chars) → "000000010000" (12 dígitos)
-  const s = n.toFixed(2).padStart(13, "0")
-  return s.replace(".", "")
-}
-
-function tlvField(code: string, value: string): string {
-  // code(3) + length(3) + value
-  return code + String(value.length).padStart(3, "0") + value
-}
-
-/**
- * Construye el `customParameters[{MID}_{TID}]` con el desglose de IVA que exige
- * el SRI (Ecuador). Portado 1:1 del módulo Odoo `payon_payment_acquirer.py`:
- * TLV 004=IVA, 052=base 0%, 003=eCommerceId, 051=serviceProviderId, 053=base gravada.
- */
-export function buildIvaCustomParameter(
-  iva: IvaBreakdown,
-  ecommerceId: string,
-  serviceProviderId: string,
-): string {
-  const tax = money13(iva.tax)
-  const baseZero = money13(iva.baseZero)
-  const baseTaxed = money13(iva.baseTaxed)
-
-  let inner = ""
-  inner += tlvField("004", tax)
-  inner += tlvField("052", baseZero)
-  inner += tlvField("003", ecommerceId)
-  inner += tlvField("051", serviceProviderId)
-  inner += tlvField("053", baseTaxed)
-  // prefijo de longitud total (4 dígitos)
-  return String(inner.length).padStart(4, "0") + inner
 }
 
 /**
@@ -135,9 +101,19 @@ export function buildCheckoutForm(
   if (c.phone) params.set("customer.phone", c.phone)
   if (c.ip) params.set("customer.ip", c.ip)
   if (c.idNumber) {
+    // Guía 3.2.1.9: siempre 10 caracteres; RUC se corta, cortos se rellenan
+    // con ceros a la izquierda. Debe coexistir con identificationDocType.
+    const doc = c.idNumber.replace(/\D/g, "").slice(0, 10).padStart(10, "0")
     params.set("customer.identificationDocType", "IDCARD")
-    params.set("customer.identificationDocId", c.idNumber.slice(0, 10))
+    params.set("customer.identificationDocId", doc)
   }
+  // Guía 3.2.1.5: id único del cliente en el comercio (máx. 16).
+  const merchantCustomerId = (
+    c.idNumber?.replace(/\D/g, "") ||
+    c.phone?.replace(/\D/g, "") ||
+    input.reference
+  ).slice(0, 16)
+  params.set("customer.merchantCustomerId", merchantCustomerId)
   if (c.street) {
     params.set("shipping.street1", c.street)
     params.set("billing.street1", c.street)
@@ -147,31 +123,46 @@ export function buildCheckoutForm(
   params.set("billing.country", country)
 
   input.items.forEach((it, idx) => {
-    params.set(`cart.items[${idx}].name`, it.title.slice(0, 250))
+    // Guía 3.2.1.10.1: el nombre no acepta "&".
+    params.set(`cart.items[${idx}].name`, it.title.replace(/&/g, "y").slice(0, 250))
     params.set(
       `cart.items[${idx}].description`,
-      (it.description || it.title).slice(0, 250),
+      (it.description || it.title).replace(/&/g, "y").slice(0, 250),
     )
-    params.set(
-      `cart.items[${idx}].price`,
-      round2(it.unitPrice * it.quantity).toFixed(2),
-    )
+    // Guía 3.2.1.10.3: precio UNITARIO del producto (la cantidad va aparte).
+    params.set(`cart.items[${idx}].price`, round2(it.unitPrice).toFixed(2))
     params.set(`cart.items[${idx}].quantity`, String(it.quantity))
   })
 
-  if (config.datafastCustomerName) {
-    params.set("risk.parameters[USER_DATA2]", config.datafastCustomerName)
-  }
+  // Guía 3.2.1.18: nombre del comercio, obligatorio para antifraude.
+  params.set(
+    "risk.parameters[USER_DATA2]",
+    (config.datafastCustomerName || "ETERNIU").slice(0, 30),
+  )
 
-  const customParam = buildIvaCustomParameter(
-    iva,
-    config.datafastEcommerceId || "",
-    config.datafastServiceProviderId || "",
+  // Guía 3.2.1.17.1: desglose de impuestos (formato #.##, 2 decimales).
+  // Regla: BASE0 + BASEIMP + IVA debe ser exactamente igual a amount
+  // (código 800.100.199 si no cuadra).
+  params.set("customParameters[SHOPPER_VAL_BASE0]", iva.baseZero.toFixed(2))
+  params.set("customParameters[SHOPPER_VAL_BASEIMP]", iva.baseTaxed.toFixed(2))
+  params.set("customParameters[SHOPPER_VAL_IVA]", iva.tax.toFixed(2))
+
+  // Guía 3.2.1.17.2: MID/TID (en fase 2 son 1000000406 / PD100406; en
+  // producción los entrega Datafast).
+  if (config.datafastMid) params.set("customParameters[SHOPPER_MID]", config.datafastMid)
+  if (config.datafastTid) params.set("customParameters[SHOPPER_TID]", config.datafastTid)
+
+  // Guía 3.2.1.17.3: identificadores fijos de seguridad y proveedor.
+  params.set(
+    "customParameters[SHOPPER_ECI]",
+    config.datafastEcommerceId || "0103910",
   )
   params.set(
-    `customParameters[${config.datafastMid || ""}_${config.datafastTid || ""}]`,
-    customParam,
+    "customParameters[SHOPPER_PSERV]",
+    config.datafastServiceProviderId || "17913101",
   )
+  // Guía 3.2.1.17.4: versión del esquema de campos.
+  params.set("customParameters[SHOPPER_VERSIONDF]", "2")
 
   if (config.datafastEnv !== "live") {
     params.set("testMode", "EXTERNAL")

@@ -7,6 +7,32 @@
 
 ## A. PAGOS CON TARJETA (Datafast) — para cobrar de verdad
 Estado: código construido y verificado en dry-run + venta enlazada al CRM.
+**Jul/2026: código alineado a la guía v3.2.2 para certificación** — endpoints
+`eu-test`/`eu-prod` (los viejos sin `eu-` están desactivados), bloque completo
+`customParameters[SHOPPER_*]` (VAL_BASE0/VAL_BASEIMP/VAL_IVA, MID/TID,
+ECI=0103910, PSERV=17913101, VERSIONDF=2), `risk.parameters[USER_DATA2]`,
+`customer.merchantCustomerId`, cédula 10 dígitos con relleno de ceros, precio
+unitario por ítem, `dfAdditionalValidations1.js`, validación de cardholder y
+sello "verified" de Datafast en live. Form completo ACEPTADO por el gateway
+eu-test real (`000.200.100`, prueba ejecutada 18/jul/2026).
+
+### A-bis. Certificación Datafast — pendientes del DUEÑO
+- 🔴 **Cloudflare: subir Minimum TLS Version a 1.2** (SSL/TLS → Edge
+  Certificates → Minimum TLS Version). Hoy prod acepta TLS 1.0/1.1 →
+  REPRUEBA el escaneo de seguridad de Datafast (verificado 18/jul/2026).
+- 🔴 Pedir a Datafast las credenciales de **fase 2** por correo (entityId +
+  Bearer de pruebas + tarjeta de test). MID/TID de fase 2: 1000000406 /
+  PD100406 (ya son los defaults documentados).
+- 🟡 En fase 2 las transacciones de prueba deben ser **< $50**.
+- 🟡 Preguntar a Datafast si los 4 dominios (cocina/bienestar ×
+  eter-niu/b2b) en la misma IP cumplen su requisito "IP única que no aloje
+  otros dominios" (Anexo H.6) — es el mismo comercio, pero que quede por
+  escrito.
+- 🟢 Escaneo DigiCert (digicert.com → SSL Installation Diagnostics) tras el
+  cambio de TLS en Cloudflare, antes de pedir el escaneo oficial.
+- Paso a producción (Anexo I): `DATAFAST_ENV=live` ya elimina `testMode`,
+  cambia host a eu-prod y muestra el sello; solo faltará cargar credenciales
+  productivas (entityId/token/MID/TID reales).
 1. 🔴 Conseguir de Datafast las **7 credenciales** (Entity ID, Access token, MID,
    TID, E-Commerce ID, Service Provider ID, Customer name) — test y producción.
 2. 🔴 Corregir el formulario Datafast: **campo 12 (URL pública)** y **campo 28

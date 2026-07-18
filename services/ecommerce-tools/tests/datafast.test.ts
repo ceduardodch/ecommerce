@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest"
 import { loadConfig } from "../src/config.js"
 import {
   buildCheckoutForm,
-  buildIvaCustomParameter,
   computeIva,
   createDatafastCheckout,
+  datafastHost,
   getDatafastResult,
   isDatafastSuccess,
 } from "../src/datafast.js"
@@ -26,18 +26,23 @@ describe("datafast — IVA / desglose SRI", () => {
     expect(Math.round((iva.baseTaxed + iva.tax) * 100) / 100).toBe(155)
   })
 
-  it("construye el TLV de customParameters con prefijo de longitud correcto", () => {
-    const iva = computeIva(items, 0.15)
-    const tlv = buildIvaCustomParameter(iva, "EC123", "SP456")
-    // prefijo = 4 dígitos con la longitud del resto
-    const declaredLen = Number(tlv.slice(0, 4))
-    expect(tlv.length - 4).toBe(declaredLen)
-    // contiene los códigos TLV esperados (004 IVA, 052 base0, 003 eComm, 051 SP, 053 base)
-    expect(tlv).toContain("003005EC123") // code 003, len 005, value EC123
-    expect(tlv).toContain("051005SP456")
-    // los montos van como 12 dígitos sin punto
-    const taxDigits = iva.tax.toFixed(2).replace(".", "").padStart(12, "0")
-    expect(tlv).toContain(taxDigits)
+  it("BASE0 + BASEIMP + IVA reconstruyen exactamente el amount (regla 800.100.199)", () => {
+    // montos con decimales que fuerzan redondeo
+    const tricky = [{ title: "X", quantity: 3, unitPrice: 33.33 }]
+    const iva = computeIva(tricky, 0.15)
+    const sum = Math.round((iva.baseZero + iva.baseTaxed + iva.tax) * 100) / 100
+    expect(sum).toBe(iva.total)
+  })
+})
+
+describe("datafast — endpoints guía v3.2.2", () => {
+  it("usa eu-test / eu-prod (los hosts sin 'eu-' fueron desactivados)", () => {
+    expect(datafastHost(loadConfig({ DATAFAST_ENV: "test" }))).toBe(
+      "https://eu-test.oppwa.com",
+    )
+    expect(datafastHost(loadConfig({ DATAFAST_ENV: "live" }))).toBe(
+      "https://eu-prod.oppwa.com",
+    )
   })
 })
 
@@ -73,13 +78,45 @@ describe("datafast — payload del checkout", () => {
     expect(form.get("paymentType")).toBe("DB")
     expect(form.get("currency")).toBe("USD")
     expect(form.get("testMode")).toBe("EXTERNAL")
-    // cédula recortada a 10 dígitos
+    // RUC recortado a 10 dígitos
     expect(form.get("customer.identificationDocId")).toBe("1712345678")
-    // el customParameters va con la clave MID_TID
-    expect(form.get("customParameters[MID1_TID1]")).toBeTruthy()
-    // items
+    expect(form.get("customer.identificationDocType")).toBe("IDCARD")
+    // id del cliente en el comercio (máx. 16)
+    expect(form.get("customer.merchantCustomerId")).toBe("1712345678901")
+    // items: precio UNITARIO y sin "&" en el nombre
     expect(form.get("cart.items[0].name")).toBe("Olla de granito 24cm")
+    expect(form.get("cart.items[1].price")).toBe("30.00")
     expect(form.get("cart.items[1].quantity")).toBe("2")
+    // desglose de impuestos SHOPPER_* (guía 3.2.1.17.1)
+    expect(form.get("customParameters[SHOPPER_VAL_BASE0]")).toBe("0.00")
+    expect(form.get("customParameters[SHOPPER_VAL_BASEIMP]")).toBe("134.78")
+    expect(form.get("customParameters[SHOPPER_VAL_IVA]")).toBe("20.22")
+    // MID/TID + identificadores fijos + versión
+    expect(form.get("customParameters[SHOPPER_MID]")).toBe("MID1")
+    expect(form.get("customParameters[SHOPPER_TID]")).toBe("TID1")
+    expect(form.get("customParameters[SHOPPER_ECI]")).toBe("0103910")
+    expect(form.get("customParameters[SHOPPER_PSERV]")).toBe("17913101")
+    expect(form.get("customParameters[SHOPPER_VERSIONDF]")).toBe("2")
+    // comercio para antifraude
+    expect(form.get("risk.parameters[USER_DATA2]")).toBeTruthy()
+    // el customParameters TLV viejo (clave MID_TID) ya no debe existir
+    expect(form.get("customParameters[MID1_TID1]")).toBeNull()
+  })
+
+  it("rellena la cédula corta con ceros a la izquierda (guía 3.2.1.9)", () => {
+    const config = loadConfig({ DATAFAST_ENV: "test", DATAFAST_ENTITY_ID: "e" })
+    const form = buildCheckoutForm(config, {
+      reference: "etn_2",
+      items,
+      customer: { idNumber: "917345678" },
+    })
+    expect(form.get("customer.identificationDocId")).toBe("0917345678")
+  })
+
+  it("en live NO envía testMode (Anexo I)", () => {
+    const config = loadConfig({ DATAFAST_ENV: "live", DATAFAST_ENTITY_ID: "e" })
+    const form = buildCheckoutForm(config, { reference: "etn_3", items })
+    expect(form.get("testMode")).toBeNull()
   })
 })
 

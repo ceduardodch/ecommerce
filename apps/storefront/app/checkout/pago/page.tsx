@@ -17,6 +17,7 @@ type CheckoutResponse = {
 
 type Form = {
   givenName: string
+  middleName: string
   surname: string
   idNumber: string
   email: string
@@ -27,6 +28,7 @@ type Form = {
 
 const EMPTY: Form = {
   givenName: "",
+  middleName: "",
   surname: "",
   idNumber: "",
   email: "",
@@ -49,20 +51,47 @@ export default function PagoTarjetaPage() {
     const resultUrl = `${window.location.origin}/checkout/resultado?ref=${encodeURIComponent(
       checkout.reference,
     )}`
-    // wpwlOptions debe existir antes de cargar el script
+    // wpwlOptions debe existir antes de cargar el script (guía v3.2.2:
+    // validación de cardholder §5.3 y sello Datafast en producción, Anexo I).
     ;(window as unknown as { wpwlOptions?: unknown }).wpwlOptions = {
       style: "card",
       locale: "es",
+      labels: { cvv: "CVV", cardHolder: "Nombre (igual que en la tarjeta)" },
+      onReady: function () {
+        if (checkout.env !== "live") return
+        const button = document.querySelector("form.wpwl-form-card .wpwl-button")
+        button?.insertAdjacentHTML(
+          "beforebegin",
+          '<br/><br/><img src="https://www.datafast.com.ec/images/verified.png" style="display:block;margin:0 auto;width:100%;" alt="Powered by Datafast"/>',
+        )
+      },
+      onBeforeSubmitCard: function () {
+        const holder = document.querySelector<HTMLInputElement>(
+          ".wpwl-control-cardHolder",
+        )
+        if (!holder || holder.value.trim().length < 2) {
+          holder?.classList.add("wpwl-has-error")
+          alert("Ingresa el nombre tal como aparece en la tarjeta.")
+          return false
+        }
+        return true
+      },
     }
     const script = document.createElement("script")
     script.src = checkout.widgetUrl
     script.async = true
     document.body.appendChild(script)
+    // Validaciones adicionales exigidas por Datafast (guía §3, ambas fases).
+    const dfValidations = document.createElement("script")
+    dfValidations.src = "https://www.datafast.com.ec/js/dfAdditionalValidations1.js"
+    dfValidations.async = true
+    document.body.appendChild(dfValidations)
     if (widgetRef.current) {
       widgetRef.current.innerHTML = `<form action="${resultUrl}" class="paymentWidgets" data-brands="VISA MASTER AMEX DINERS DISCOVER"></form>`
     }
     return () => {
       script.remove()
+      dfValidations.remove()
     }
   }, [checkout])
 
@@ -77,13 +106,22 @@ export default function PagoTarjetaPage() {
     )
   }
 
-  const required: (keyof Form)[] = ["givenName", "surname", "idNumber", "phone"]
+  // Datafast exige todos estos campos reales en la fase 2 (guía §3.2.1:
+  // "obligatorios y no se puede poner valores por defecto").
+  const required: (keyof Form)[] = [
+    "givenName",
+    "surname",
+    "idNumber",
+    "phone",
+    "email",
+    "street",
+  ]
   const missing = required.filter((k) => !form[k].trim())
 
   const startCheckout = async () => {
     setError(null)
     if (missing.length) {
-      setError("Completa nombre, apellido, cédula y teléfono.")
+      setError("Completa nombre, apellido, cédula, teléfono, email y dirección.")
       return
     }
     setLoading(true)
@@ -122,11 +160,12 @@ export default function PagoTarjetaPage() {
           })),
           customer: {
             givenName: form.givenName,
+            middleName: form.middleName || undefined,
             surname: form.surname,
             idNumber: form.idNumber,
-            email: form.email || undefined,
+            email: form.email,
             phone: form.phone,
-            street: form.street || undefined,
+            street: form.street,
             city: form.city || undefined,
             countryCode: "EC",
           },
@@ -155,15 +194,18 @@ export default function PagoTarjetaPage() {
       {!checkout && (
         <div className="mt-6 space-y-3">
           <Row>
-            <Field label="Nombres" value={form.givenName} onChange={(v) => setForm({ ...form, givenName: v })} />
-            <Field label="Apellidos" value={form.surname} onChange={(v) => setForm({ ...form, surname: v })} />
+            <Field label="Primer nombre" value={form.givenName} onChange={(v) => setForm({ ...form, givenName: v })} />
+            <Field label="Segundo nombre" value={form.middleName} onChange={(v) => setForm({ ...form, middleName: v })} />
           </Row>
           <Row>
+            <Field label="Apellidos" value={form.surname} onChange={(v) => setForm({ ...form, surname: v })} />
             <Field label="Cédula" value={form.idNumber} onChange={(v) => setForm({ ...form, idNumber: v })} />
-            <Field label="Teléfono" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
           </Row>
-          <Field label="Email (opcional)" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-          <Field label="Dirección (opcional)" value={form.street} onChange={(v) => setForm({ ...form, street: v })} />
+          <Row>
+            <Field label="Teléfono" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+            <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+          </Row>
+          <Field label="Dirección" value={form.street} onChange={(v) => setForm({ ...form, street: v })} />
           <Field label="Ciudad (opcional)" value={form.city} onChange={(v) => setForm({ ...form, city: v })} />
 
           {error && <p className="text-[13px] text-[#C4502A]">{error}</p>}
