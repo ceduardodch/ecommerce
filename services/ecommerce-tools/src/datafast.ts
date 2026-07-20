@@ -245,17 +245,36 @@ export type DatafastResult = {
   description?: string
   reference?: string
   amount?: number
+  paymentBrand?: string
+  paymentId?: string
+  ndc?: string
+  authorizationCode?: string
   raw?: unknown
+}
+
+export function normalizeDatafastResourcePath(resourcePath: string | undefined) {
+  if (!resourcePath) return undefined
+  let pathname = resourcePath
+  try {
+    const parsed = new URL(resourcePath)
+    pathname = parsed.pathname
+  } catch {
+    // Datafast normally returns a path, not an absolute URL.
+  }
+  if (!/^\/v1\/checkouts\/[^/]+\/payment$/.test(pathname)) return undefined
+  return pathname
 }
 
 /**
  * Consulta el estado de un checkout: GET /v1/checkouts/{id}/payment?entityId=...
+ * Si Datafast devuelve resourcePath en el retorno, se prefiere esa ruta validada.
  * En dry-run, un checkoutId que empieza con "dryrun." se considera pagado
  * (para validar el carril de éxito del front sin cobrar de verdad).
  */
 export async function getDatafastResult(
   config: AppConfig,
   checkoutId: string,
+  resourcePath?: string,
 ): Promise<DatafastResult> {
   const env = config.datafastEnv === "live" ? "live" : "test"
 
@@ -272,23 +291,39 @@ export async function getDatafastResult(
   }
 
   const host = datafastHost(config)
-  const url = `${host}/v1/checkouts/${encodeURIComponent(checkoutId)}/payment?entityId=${encodeURIComponent(config.datafastEntityId)}`
+  const normalizedResourcePath = normalizeDatafastResourcePath(resourcePath)
+  const path =
+    normalizedResourcePath ||
+    `/v1/checkouts/${encodeURIComponent(checkoutId)}/payment`
+  const url = `${host}${path}?entityId=${encodeURIComponent(config.datafastEntityId)}`
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${config.datafastAccessToken}` },
   })
   const text = await response.text()
   const json = JSON.parse(text) as {
+    id?: string
     result?: { code?: string; description?: string }
     merchantTransactionId?: string
     amount?: string
+    paymentBrand?: string
+    ndc?: string
+    resultDetails?: Record<string, string | undefined>
   }
   const code = json.result?.code
+  const authorizationCode =
+    json.resultDetails?.AuthorizationCode ||
+    json.resultDetails?.authorizationCode ||
+    json.resultDetails?.AuthCode
   return {
     status: isDatafastSuccess(code, env) ? "paid" : "failed",
     code,
     description: json.result?.description,
     reference: json.merchantTransactionId,
     amount: json.amount ? Number(json.amount) : undefined,
+    paymentBrand: json.paymentBrand,
+    paymentId: json.id,
+    ndc: json.ndc,
+    authorizationCode,
     raw: json,
   }
 }

@@ -169,6 +169,13 @@ export type DatafastCheckoutRecord = {
   amount: number
   status: "pending" | "paid" | "failed"
   registered: boolean
+  resultCode?: string
+  resultDescription?: string
+  resultReference?: string
+  paymentBrand?: string
+  paymentId?: string
+  ndc?: string
+  authorizationCode?: string
   customer?: { phone?: string; name?: string; email?: string }
   items: Array<{
     title: string

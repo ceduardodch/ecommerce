@@ -4,7 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { loadConfig } from "../src/config.js"
 import { createCommerceService } from "../src/service.js"
-import { readCustomers } from "../src/storage.js"
+import { readCustomers, readDatafastCheckouts } from "../src/storage.js"
 
 describe("datafast → registro de venta en CRM (recompra)", () => {
   let dir: string
@@ -38,6 +38,12 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
 
     const result = await service.datafastResult(checkout.checkoutId)
     expect(result.status).toBe("paid")
+
+    const records = await readDatafastCheckouts(dir)
+    expect(records[0]?.status).toBe("paid")
+    expect(records[0]?.registered).toBe(true)
+    expect(records[0]?.resultCode).toBe("000.100.112")
+    expect(records[0]?.resultDescription).toBe("DRY-RUN approved")
 
     const customers = await readCustomers(dir)
     const maria = customers.find((c) => c.phone === "+593991234567")

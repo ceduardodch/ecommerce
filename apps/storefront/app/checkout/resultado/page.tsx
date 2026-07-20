@@ -21,6 +21,7 @@ function Resultado() {
   const settled = useRef(false)
 
   const id = params.get("id")
+  const resourcePath = params.get("resourcePath")
 
   useEffect(() => {
     if (settled.current) return
@@ -31,8 +32,10 @@ function Resultado() {
     settled.current = true
     ;(async () => {
       try {
+        const resultParams = new URLSearchParams({ id })
+        if (resourcePath) resultParams.set("resourcePath", resourcePath)
         const res = await fetch(
-          `/api/checkout/datafast/result?id=${encodeURIComponent(id)}`,
+          `/api/checkout/datafast/result?${resultParams.toString()}`,
           { cache: "no-store" },
         )
         const data = (await res.json()) as Result
@@ -40,7 +43,7 @@ function Resultado() {
         if (data.status === "paid") {
           trackStorefrontEvent({
             eventName: "Purchase",
-            type: "purchase",
+            type: "purchase_confirmed",
             source: "storefront",
             value: data.amount || totalAmount,
             cta: "datafast_paid",
@@ -69,7 +72,7 @@ function Resultado() {
         setState("failed")
       }
     })()
-  }, [id, items, totalAmount, clearCart])
+  }, [id, resourcePath, items, totalAmount, clearCart])
 
   return (
     <div className="min-h-screen bg-[#10160e]">

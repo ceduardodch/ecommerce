@@ -6,6 +6,10 @@ Create one Docker Compose application in Coolify from this repository and use `d
 
 Public routing:
 
+- `eter-niu.com` -> `storefront:3000`
+- `www.eter-niu.com` -> `storefront:3000`
+- `cocina.eter-niu.com` -> `storefront:3000`
+- `bienestar.eter-niu.com` -> `storefront:3000`
 - `cocina.b2b.com.ec` -> `storefront:3000`
 - `bienestar.b2b.com.ec` -> `storefront:3000`
 - `shop.b2b.com.ec` -> `storefront:3000` as legacy fallback during migration
@@ -47,8 +51,27 @@ Set these in Coolify environment variables, not in Git:
 - `META_ACCESS_TOKEN`
 - `META_CAPI_TEST_EVENT_CODE` for Events Manager test mode
 - `NEXT_PUBLIC_PIXEL_CONSENT_MODE=banner`
+- `DATAFAST_ENV=test` for certification review; switch to `live` only with productive credentials.
+- `DATAFAST_DRY_RUN=false` once test credentials are configured.
+- `DATAFAST_ENTITY_ID`, `DATAFAST_ACCESS_TOKEN`, `DATAFAST_MID`, `DATAFAST_TID`.
+- `DATAFAST_ECOMMERCE_ID`, `DATAFAST_SERVICE_PROVIDER_ID`, `DATAFAST_CUSTOMER_NAME` if Datafast provides values different from defaults.
+- `REVIEWS_API_TOKEN` shared by `medusa-api` and `storefront` to enable review submission.
+- `MEDUSA_INTERNAL_URL=http://medusa-api:9000` for storefront server-side review proxy.
 
 The compose file intentionally fails if the required core secrets are missing.
+
+For Eter Niu go-live, set public URLs to:
+
+```text
+STORE_PUBLIC_URL=https://eter-niu.com
+COCINA_PUBLIC_URL=https://cocina.eter-niu.com
+BIENESTAR_PUBLIC_URL=https://bienestar.eter-niu.com
+NEXT_PUBLIC_STORE_URL=https://eter-niu.com
+NEXT_PUBLIC_COCINA_URL=https://cocina.eter-niu.com
+NEXT_PUBLIC_BIENESTAR_URL=https://bienestar.eter-niu.com
+NEXT_PUBLIC_TOOLS_API_URL=https://eter-niu.com
+NEXT_PUBLIC_BRAND_URL=https://www.eter-niu.com
+```
 
 ## First run
 
@@ -72,6 +95,10 @@ curl "http://ecommerce-tools:8787/tools/search-products?vertical=bienestar"
 curl "http://ecommerce-tools:8787/feeds/meta/catalog.csv?vertical=cocina"
 curl "http://ecommerce-tools:8787/feeds/meta/catalog.csv?vertical=bienestar"
 ```
+
+`GET http://ecommerce-tools:8787/healthz` must show `crmBackend: "medusa"`,
+`allowDemoCatalog: false`, `datafastMode: "test"` and `datafastConfigured: true`
+for Datafast certification review.
 
 ## OpenClaw dedicated gateway
 

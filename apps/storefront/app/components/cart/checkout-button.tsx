@@ -23,7 +23,7 @@ export function CheckoutButton({
     // Track InitiateCheckout event
     const result = trackStorefrontEvent({
       eventName: "InitiateCheckout",
-      type: "initiate_checkout",
+      type: "checkout_started",
       source: "storefront",
       products: items.map((item) => ({
         id: item.id,

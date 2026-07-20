@@ -128,7 +128,7 @@ export default function PagoTarjetaPage() {
     try {
       trackStorefrontEvent({
         eventName: "InitiateCheckout",
-        type: "initiate_checkout",
+        type: "checkout_started",
         source: "storefront",
         value: totalAmount,
         cta: "checkout_card",
