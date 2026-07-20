@@ -761,6 +761,98 @@ export function createCommerceService(config: AppConfig) {
           // El evento Purchase de Meta lo dispara el storefront en /checkout/resultado;
           // aquí solo registramos la venta en el CRM (recompra).
         }
+        // Pedido en el módulo de órdenes (misma tubería que Vicky) para poder
+        // gestionar la logística de entrega desde el admin + aviso por WhatsApp.
+        try {
+          const products = await loadProducts(config)
+          const orderItems = record.items
+            .filter((it) =>
+              it.sku
+                ? products.some((p) => p.sku === it.sku || p.id === it.sku)
+                : false,
+            )
+            .map((it) => ({ productId: it.sku as string, quantity: it.quantity }))
+          if (orderItems.length > 0) {
+            const quote = buildQuote(config, products, orderItems)
+            // El pedido refleja lo COBRADO por Datafast (precio promo del
+            // storefront), no el precio de lista del catálogo.
+            const paidBySku = new Map(record.items.map((it) => [it.sku, it]))
+            quote.lines = quote.lines.map((line) => {
+              const paidItem = line.sku ? paidBySku.get(line.sku) : undefined
+              if (!paidItem) return line
+              return {
+                ...line,
+                unitPrice: { amount: paidItem.unitPrice, currency: "USD" },
+                lineTotal: {
+                  amount:
+                    Math.round(paidItem.unitPrice * paidItem.quantity * 100) / 100,
+                  currency: "USD",
+                },
+              }
+            })
+            quote.subtotal = { amount: record.amount, currency: "USD" }
+            quote.tax = { amount: 0, currency: "USD" }
+            quote.total = { amount: record.amount, currency: "USD" }
+            const orderCustomer = record.customer?.phone
+              ? {
+                  phone: record.customer.phone,
+                  name: record.customer.name,
+                  email: record.customer.email,
+                }
+              : undefined
+            const notes = `PAGADO con tarjeta (Datafast ${result.code}). Ref ${record.reference}${
+              result.paymentId ? ` · paymentId ${result.paymentId}` : ""
+            }${result.authorizationCode ? ` · aut. ${result.authorizationCode}` : ""}`
+            let orderId: string
+            if (config.crmBackend === "medusa") {
+              const order = await createMedusaOrder(config, {
+                quote,
+                customer: orderCustomer,
+                source: "datafast_web",
+                notes,
+              })
+              orderId = order.id
+            } else {
+              const order: OrderRecord = {
+                id: `ETN-${Date.now().toString(36).toUpperCase()}`,
+                quote,
+                customer: orderCustomer || {},
+                status: "paid",
+                createdAt: now,
+                updatedAt: now,
+                events: [
+                  {
+                    type: "created",
+                    at: now,
+                    payload: { source: "datafast_web", reference: record.reference },
+                  },
+                  {
+                    type: "paid",
+                    at: now,
+                    payload: { code: result.code, paymentId: result.paymentId },
+                  },
+                ],
+              }
+              await upsertOrder(config.dataDir, order)
+              orderId = order.id
+            }
+            if (record.customer?.phone) {
+              await notifyPurchaseByWhatsapp(config, {
+                phone: record.customer.phone,
+                name: record.customer.name,
+                orderId,
+                total: record.amount,
+                items: record.items.map((it) => ({
+                  title: it.title,
+                  quantity: it.quantity,
+                })),
+              })
+            }
+          }
+        } catch {
+          // El pedido/aviso no debe romper la confirmación del pago:
+          // la venta ya quedó registrada en el CRM y en el ledger.
+        }
         await upsertDatafastCheckout(config.dataDir, {
           ...record,
           status: "paid",
@@ -1069,5 +1161,59 @@ export function createCommerceService(config: AppConfig) {
           })),
       }
     },
+  }
+}
+
+// ─── Aviso de compra por WhatsApp (vía Vicky / OpenClaw) ────────────────────
+// Mismo contrato del gateway que usa el dispatcher de recompra del CRM.
+// Nunca lanza: si Vicky no está disponible, el pago se confirma igual.
+async function notifyPurchaseByWhatsapp(
+  config: AppConfig,
+  input: {
+    phone: string
+    name?: string
+    orderId: string
+    total?: number
+    items: Array<{ title: string; quantity: number }>
+  },
+) {
+  if (!config.openclawGatewayUrl) return
+  const url = `${config.openclawGatewayUrl.replace(/\/$/, "")}${config.openclawHookPath}`
+  const firstName = input.name?.trim().split(/\s+/)[0]
+  const lines = input.items
+    .map((it) => `• ${it.quantity}× ${it.title}`)
+    .join("\n")
+  const message =
+    `¡Hola${firstName ? ` ${firstName}` : ""}! Soy Vicky de Eter Niu 🌿\n` +
+    `Tu pago con tarjeta fue aprobado ✅\n\n` +
+    `Pedido ${input.orderId}${
+      typeof input.total === "number" ? ` · $${input.total.toFixed(2)}` : ""
+    }\n${lines}\n\n` +
+    `Por este chat te aviso apenas tu pedido salga con Servientrega. ` +
+    `¡Gracias por tu compra!`
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 5_000)
+  try {
+    await fetch(url, {
+      method: "POST",
+      signal: controller.signal,
+      headers: {
+        "Content-Type": "application/json",
+        ...(config.openclawHooksToken
+          ? { Authorization: `Bearer ${config.openclawHooksToken}` }
+          : {}),
+      },
+      body: JSON.stringify({
+        name: "purchase-confirmation",
+        channel: "whatsapp",
+        to: input.phone.startsWith("+") ? input.phone : `+${input.phone}`,
+        deliver: true,
+        message,
+      }),
+    })
+  } catch {
+    // Vicky caída no debe romper la confirmación del pago.
+  } finally {
+    clearTimeout(timeout)
   }
 }
