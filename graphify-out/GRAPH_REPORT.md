@@ -1,16 +1,16 @@
 # Graph Report - ecommerce  (2026-07-20)
 
 ## Corpus Check
-- 243 files · ~441,008 words
+- 243 files · ~441,972 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1593 nodes · 2732 edges · 110 communities (93 shown, 17 thin omitted)
+- 1597 nodes · 2743 edges · 113 communities (97 shown, 16 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 70 edges (avg confidence: 0.81)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f591eccd`
+- Built from commit: `12ad8766`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -115,6 +115,9 @@
 - meta.ts
 - datafast-certification-probe.mjs
 - @medusajs/admin-sdk
+- cart-bag-button.tsx
+- video-stories.tsx
+- @medusajs/cli
 
 ## God Nodes (most connected - your core abstractions)
 1. `crmService()` - 36 edges
@@ -154,7 +157,11 @@
 - **Sprint 4 Validation Suite** — reports_sprint_4_completion_report_sprint_4_completion, reports_pln_1_cross_browser_testing_cross_browser_testing_report, reports_pln_2_meta_pixel_validation_meta_pixel_events_validation, reports_pln_3_whatsapp_message_testing_whatsapp_multi_product_message_testing, reports_pln_4_performance_audit_performance_audit_report, reports_sprint_4_completion_report_manual_testing_pending [EXTRACTED 1.00]
 - **Commerce Agent Operational Boundary** — skills_ecommerce_sales_skill_ecommerce_sales_skill, skills_meta_marketplace_assistant_skill_meta_marketplace_assistant_skill, skills_payphone_reconciliation_skill_payphone_reconciliation_skill, skills_meta_marketplace_assistant_skill_marketplace_human_approval_boundary, skills_payphone_reconciliation_skill_human_review_handoff, skills_ecommerce_sales_skill_payphone_link_generation [INFERRED 0.85]
 
-## Communities (110 total, 17 thin omitted)
+## Communities (113 total, 16 thin omitted)
+
+### Community 0 - "B2B CRM Models"
+Cohesion: 0.06
+Nodes (35): ConversationalOrder, CrmCustomerEvent, CrmCustomerProfile, CrmMessageTemplate, ProductReview, calculateAttributedSales(), calculateAverageLTV(), calculateRepurchaseRates() (+27 more)
 
 ### Community 1 - "Agent Governance"
 Cohesion: 0.06
@@ -162,7 +169,7 @@ Nodes (55): Agent governance rules, CI/CD and Coolify deployment boundary, Forbi
 
 ### Community 2 - "Tools Contracts"
 Cohesion: 0.07
-Nodes (43): authHook(), publicPaths, attributionSchema, customerEventInputSchema, customerImportSchema, customerSchema, datafastCheckoutSchema, eventProductSchema (+35 more)
+Nodes (44): authHook(), publicPaths, attributionSchema, customerEventInputSchema, customerImportSchema, customerSchema, datafastCheckoutSchema, datafastVoidSchema (+36 more)
 
 ### Community 3 - "Architecture Docs"
 Cohesion: 0.05
@@ -173,20 +180,20 @@ Cohesion: 0.07
 Nodes (29): scripts, backend:build, backend:dev, backend:seed, backend:start, biblioteca:metadata, build, campaign:readiness (+21 more)
 
 ### Community 5 - "Followup Dispatch API"
-Cohesion: 0.10
-Nodes (24): DispatchBody, POST(), config, dispatchDueFollowupsJob(), buildFollowupMessage(), buildMetaFreeformPayload(), buildMetaTemplatePayload(), CustomerLike (+16 more)
+Cohesion: 0.11
+Nodes (21): DispatchBody, POST(), config, dispatchDueFollowupsJob(), buildMetaFreeformPayload(), buildMetaTemplatePayload(), CustomerLike, dispatchFollowup() (+13 more)
 
 ### Community 6 - "Wellness Campaign Pages"
-Cohesion: 0.12
-Nodes (31): campaignPath(), hasPromo(), money(), paramValue(), productBySku(), TrustGrid(), WellnessCampaignPage(), WellnessCampaignPageProps (+23 more)
+Cohesion: 0.13
+Nodes (26): campaignPath(), hasPromo(), money(), paramValue(), productBySku(), WellnessCampaignPage(), WellnessCampaignPageProps, compactContext() (+18 more)
 
 ### Community 7 - "Ambient UI Pages"
-Cohesion: 0.07
-Nodes (12): HALO_RGB, HALOS, HaloSpec, PageAmbient(), SHAPES, ShapeSpec, INFO, metadata (+4 more)
+Cohesion: 0.06
+Nodes (18): HALO_RGB, HALOS, HaloSpec, PageAmbient(), SHAPES, ShapeSpec, Photo(), INFO (+10 more)
 
 ### Community 8 - "Kitchen Campaign Pages"
-Cohesion: 0.09
-Nodes (30): CampaignFaq(), CampaignPage(), CampaignPageProps, CampaignPhoto, CampaignPhotoGallery(), campaignPhotos(), campaignProduct(), campaignSlots() (+22 more)
+Cohesion: 0.10
+Nodes (28): CampaignPage(), CampaignPageProps, CampaignPhoto, CampaignPhotoGallery(), campaignPhotos(), campaignProduct(), campaignSlots(), generateMetadata() (+20 more)
 
 ### Community 9 - "Lead Import Admin"
 Cohesion: 0.10
@@ -197,8 +204,8 @@ Cohesion: 0.06
 Nodes (34): dependencies, lucide-react, next, postcss, react, react-dom, tailwindcss, @tailwindcss/postcss (+26 more)
 
 ### Community 11 - "Tools CRM Service"
-Cohesion: 0.21
-Nodes (21): addMedusaCustomerEvent(), trackCustomerEvent(), addCustomerEvent(), customersPath(), datafastPath(), ensureDir(), findCustomer(), findDatafastCheckout() (+13 more)
+Cohesion: 0.23
+Nodes (20): trackCustomerEvent(), addCustomerEvent(), customersPath(), datafastPath(), ensureDir(), findCustomer(), findDatafastCheckout(), findOrder() (+12 more)
 
 ### Community 12 - "Backend Dependencies"
 Cohesion: 0.06
@@ -217,20 +224,20 @@ Cohesion: 0.08
 Nodes (25): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+17 more)
 
 ### Community 16 - "Cart Checkout UI"
-Cohesion: 0.06
-Nodes (40): CartPage(), FormData, CheckoutResponse, EMPTY, Form, PagoTarjetaPage(), Result, Resultado() (+32 more)
+Cohesion: 0.18
+Nodes (16): CartPage(), FormData, Result, Resultado(), CartController(), CartDrawer(), CartDrawerProps, CartItemComponent() (+8 more)
 
 ### Community 17 - "Brand Navigation UI"
-Cohesion: 0.14
-Nodes (16): Isotipo(), NewsletterSignup(), PromoBar(), SiteFooter(), SiteHeader(), SiteHeaderProps, GuidesPage(), metadata (+8 more)
+Cohesion: 0.15
+Nodes (15): Isotipo(), PromoBar(), SiteFooter(), SiteHeader(), SiteHeaderProps, GuidesPage(), metadata, metadata (+7 more)
 
 ### Community 18 - "Tools Catalog Logic"
 Cohesion: 0.16
 Nodes (24): baseUrlForVertical(), booleanFromMetadata(), defaultPaymentMethods, generatedImageForProduct(), imageForProduct(), inferVertical(), isGeneratedPlaceholder(), isKitchenProduct() (+16 more)
 
 ### Community 19 - "Meta Pixel Analytics"
-Cohesion: 0.10
-Nodes (32): consentModeDisabled(), currentAttribution(), fbcFromAttribution(), metaCustomData(), MetaEventName, MetaPixel(), PageAnalytics(), pixelConfigured() (+24 more)
+Cohesion: 0.17
+Nodes (22): consentModeDisabled(), currentAttribution(), fbcFromAttribution(), metaCustomData(), MetaEventName, MetaPixel(), PageAnalytics(), pixelConfigured() (+14 more)
 
 ### Community 20 - "Media Metadata Script"
 Cohesion: 0.11
@@ -245,24 +252,24 @@ Cohesion: 0.09
 Nodes (21): compilerOptions, allowImportingTsExtensions, isolatedModules, jsx, lib, module, moduleResolution, noEmit (+13 more)
 
 ### Community 23 - "Storefront Catalog Logic"
-Cohesion: 0.13
-Nodes (23): absoluteImageLink(), baseUrlForVertical(), csv(), fallbackCsv(), GET(), verticalFromRequest(), fallbackProducts, fetchProducts() (+15 more)
+Cohesion: 0.18
+Nodes (15): fetchProducts(), generatedImageForProduct(), getAllProducts(), getProductsForVertical(), IMAGE_OVERRIDES, isGeneratedPlaceholder(), isWellnessProduct(), kitchenTerms (+7 more)
 
 ### Community 24 - "CRM Leads Admin"
 Cohesion: 0.12
 Nodes (18): buttonStyle, CampaignFilter, cardStyle, cellStyle, config, CustomerRow, CustomersResponse, DryRunResult (+10 more)
 
 ### Community 25 - "Shared Product UI"
-Cohesion: 0.14
-Nodes (11): AddToCartButton(), AddToCartButtonProps, FloatingProduct(), FloatingProductProps, SPARKLES, HeroShowcase(), ImageReveal(), ProductShowcaseGrid() (+3 more)
+Cohesion: 0.15
+Nodes (9): AddToCartButton(), AddToCartButtonProps, FloatingProduct(), FloatingProductProps, SPARKLES, HeroShowcase(), ImageReveal(), ProductShowcaseGrid() (+1 more)
 
 ### Community 26 - "Product Detail Pages"
-Cohesion: 0.14
-Nodes (20): BreadcrumbItem, Breadcrumbs(), BreadcrumbsProps, StickyCTABar(), StickyCTABarProps, VideoFrame(), generateMetadata(), hasPromo() (+12 more)
+Cohesion: 0.16
+Nodes (19): BreadcrumbItem, Breadcrumbs(), BreadcrumbsProps, SpecTable(), VideoFrame(), generateMetadata(), hasPromo(), macroItems() (+11 more)
 
 ### Community 27 - "UI Component Library"
-Cohesion: 0.07
-Nodes (24): Badge(), Button(), variantClass, WhatsAppButton(), ColorOption, ColorPicker(), FormField(), MaterialMacro() (+16 more)
+Cohesion: 0.08
+Nodes (21): Badge(), Button(), variantClass, WhatsAppButton(), ColorOption, ColorPicker(), FormField(), MaterialMacro() (+13 more)
 
 ### Community 28 - "Tools Runtime Config"
 Cohesion: 0.28
@@ -273,8 +280,8 @@ Cohesion: 0.19
 Nodes (18): buildCustomData(), crmPayloadForEvent(), eventIdFor(), eventProducts(), eventTypeFor(), eventValue(), identityForEvent(), leadIdentity() (+10 more)
 
 ### Community 30 - "CRM Feature Slice"
-Cohesion: 0.13
-Nodes (19): ImportBody, POST(), POST(), PurchaseBody, GET(), PATCH(), ProfilePatchBody, POST() (+11 more)
+Cohesion: 0.15
+Nodes (14): POST(), PurchaseBody, GET(), PATCH(), ProfilePatchBody, POST(), SnoozeBody, POST() (+6 more)
 
 ### Community 31 - "Automation Scripts"
 Cohesion: 0.20
@@ -290,39 +297,39 @@ Nodes (16): addDays(), boolFromText(), buildFollowupAction(), buildFollowupDraft
 
 ### Community 34 - "Backend Feature Slice"
 Cohesion: 0.12
-Nodes (17): dependencies, @medusajs/admin-shared, @medusajs/caching, @medusajs/cli, @medusajs/framework, @medusajs/ui, react-i18next, react-router-dom (+9 more)
+Nodes (17): dependencies, @medusajs/admin-shared, @medusajs/caching, @medusajs/draft-order, @medusajs/framework, @medusajs/ui, react-i18next, react-router-dom (+9 more)
 
 ### Community 35 - "CRM Feature Slice"
 Cohesion: 0.14
 Nodes (16): buttonStyle, cardStyle, Column, columnContainerStyle, columnHeaderStyle, COLUMNS, config, CustomerCard() (+8 more)
 
 ### Community 36 - "CRM Feature Slice"
-Cohesion: 0.33
-Nodes (6): POST(), GET(), isPaidStatus(), POST(), iso(), serializeOrder()
+Cohesion: 0.21
+Nodes (11): ImportBody, POST(), GET(), GET(), PATCH(), POST(), GET(), isPaidStatus() (+3 more)
 
 ### Community 37 - "Automation Scripts"
 Cohesion: 0.12
 Nodes (11): checks, dirtyOwnerDecision, dirtyPaths, dirtyRequired, failures, ownerDecisionPaths, requiredAssets, requiredFiles (+3 more)
 
 ### Community 38 - "Tools Feature Slice"
-Cohesion: 0.24
-Nodes (15): buildCheckoutForm(), computeIva(), createDatafastCheckout(), DatafastCartItem, DatafastCheckout, DatafastCheckoutInput, DatafastCustomer, datafastHost() (+7 more)
+Cohesion: 0.21
+Nodes (18): buildCheckoutForm(), buildVoidForm(), computeIva(), createDatafastCheckout(), DatafastCartItem, DatafastCheckout, DatafastCheckoutInput, DatafastCustomer (+10 more)
 
 ### Community 39 - "Tools Feature Slice"
 Cohesion: 0.12
 Nodes (18): demoCatalog, kitchenCatalog, kitchenDefaults, wellnessCatalog, wellnessDefaults, wellnessProducts, buildQuote(), formatUsd() (+10 more)
 
 ### Community 40 - "CRM Feature Slice"
-Cohesion: 0.16
-Nodes (9): calculateRfm(), RFM_THRESHOLDS, RfmInput, RfmScore, RfmSegment, computeRfmSegment(), customerVerticals(), detectVertical() (+1 more)
+Cohesion: 0.19
+Nodes (10): boolParam(), GET(), ImportBody, VALID_RFM_SEGMENTS, calculateRfmFromProfile(), RFM_THRESHOLDS, RfmInput, RfmScore (+2 more)
 
 ### Community 41 - "Tools Feature Slice"
 Cohesion: 0.13
 Nodes (14): node, src/**/*.ts, compilerOptions, esModuleInterop, module, moduleResolution, outDir, resolveJsonModule (+6 more)
 
 ### Community 42 - "Storefront Feature Slice"
-Cohesion: 0.13
-Nodes (13): ConversationalOrder, CrmCustomerEvent, CrmCustomerProfile, CrmMessageTemplate, ProductReview, AnyB2bCrmService, CustomerImportResult, CustomerProfilePatch (+5 more)
+Cohesion: 0.26
+Nodes (12): CheckoutButton(), CheckoutButtonProps, CartItem, defaultOpeningLine(), generateCartMessage(), isKitchenComplement(), isKnifeProduct(), normalizeWhatsappSellerNumber() (+4 more)
 
 ### Community 43 - "Automation Scripts"
 Cohesion: 0.21
@@ -341,8 +348,8 @@ Cohesion: 0.31
 Nodes (12): argValue(), backupTable(), countRows(), CRM_TABLES, csvCell(), hasArg(), main(), quoteIdentifier() (+4 more)
 
 ### Community 47 - "Tools Feature Slice"
-Cohesion: 0.14
-Nodes (16): attachMedusaPaymentLink(), authHeader(), createMedusaOrder(), forwardPayphoneWebhook(), getMedusaCustomer(), getMedusaDashboard(), getMedusaOrder(), importMedusaCustomers() (+8 more)
+Cohesion: 0.13
+Nodes (17): addMedusaCustomerEvent(), attachMedusaPaymentLink(), authHeader(), createMedusaOrder(), forwardPayphoneWebhook(), getMedusaCustomer(), getMedusaDashboard(), getMedusaOrder() (+9 more)
 
 ### Community 48 - "CRM Feature Slice"
 Cohesion: 0.23
@@ -381,16 +388,16 @@ Cohesion: 0.22
 Nodes (8): author, description, engines, node, license, name, packageManager, version
 
 ### Community 57 - "Storefront Feature Slice"
-Cohesion: 0.36
-Nodes (8): CampaignAnalytics(), CampaignAttribution, CampaignContext, CampaignStickyCta(), CampaignWhatsAppPanel(), compactContext(), isKitchenComplement(), money()
+Cohesion: 0.15
+Nodes (18): TrustGrid(), WellnessFaq(), TrustRow(), CampaignAnalytics(), CampaignAttribution, CampaignContext, CampaignStickyCta(), CampaignWhatsAppPanel() (+10 more)
 
 ### Community 58 - "Storefront Feature Slice"
-Cohesion: 0.23
-Nodes (8): addDays(), asDate(), normalizePhone(), uniqueTags(), ConversationalOrderInput, CrmCustomerEventInput, CrmCustomerInput, PurchasedProduct
+Cohesion: 0.28
+Nodes (6): CustomerReviews(), CustomerReviewsProps, Review, ReviewCard(), ReviewForm(), ReviewFormProps
 
 ### Community 59 - "Storefront Feature Slice"
-Cohesion: 0.29
-Nodes (9): broadcastSchema, GET(), POST(), POST(), GET(), predictedMode(), loadDispatchConfig(), selectDispatchTargets() (+1 more)
+Cohesion: 0.21
+Nodes (12): broadcastSchema, GET(), POST(), POST(), GET(), predictedMode(), buildFollowupMessage(), isWithinSendWindow() (+4 more)
 
 ### Community 60 - "Storefront Feature Slice"
 Cohesion: 0.28
@@ -409,12 +416,12 @@ Cohesion: 0.32
 Nodes (7): commercialMetadata, ensureCategories(), legacyWellnessHandles, products, updateVariantInput(), wellnessCatalogSeed(), WellnessProduct
 
 ### Community 64 - "Storefront Feature Slice"
-Cohesion: 0.35
-Nodes (9): calculateAttributedSales(), calculateAverageLTV(), calculateRepurchaseRates(), CustomerLike, EventLike, FollowupEvent, generateCohortsByFirstPurchase(), PaidEvent (+1 more)
+Cohesion: 0.36
+Nodes (8): absoluteImageLink(), baseUrlForVertical(), csv(), fallbackCsv(), GET(), verticalFromRequest(), fallbackProducts, wellnessFallbackProducts
 
 ### Community 65 - "Storefront Feature Slice"
-Cohesion: 0.28
-Nodes (7): TrackedEventLink(), Photo(), BrandPortalPage(), Door, doors, metadata, sellerNumber()
+Cohesion: 0.25
+Nodes (4): CheckoutResponse, EMPTY, Form, PagoTarjetaPage()
 
 ### Community 66 - "Order Creation"
 Cohesion: 0.25
@@ -445,8 +452,8 @@ Cohesion: 0.29
 Nodes (7): devDependencies, pg, prettier, turbo, turbo, pg, prettier
 
 ### Community 73 - "Storefront Feature Slice"
-Cohesion: 0.53
-Nodes (5): boolParam(), GET(), ImportBody, VALID_RFM_SEGMENTS, calculateRfmFromProfile()
+Cohesion: 0.29
+Nodes (5): PrivacyConsent(), fraunces, inter, metadata, CartProvider()
 
 ### Community 74 - "Storefront Feature Slice"
 Cohesion: 0.40
@@ -484,29 +491,41 @@ Nodes (3): xlsx, readWorkbook(), xlsx
 Cohesion: 0.40
 Nodes (5): workspaces, apps/**, !apps/backend/.medusa/**, !apps/storefront/.next/**, services/**
 
+### Community 90 - "Backend Feature Slice"
+Cohesion: 0.47
+Nodes (5): FormState, LeadCaptureForm(), ProductOption, randomLeadId(), skuFromInterest()
+
 ### Community 107 - "meta.ts"
 Cohesion: 0.70
 Nodes (4): buildMetaCatalogCsv(), buildMetaDraft(), csv(), withUtm()
 
+### Community 110 - "cart-bag-button.tsx"
+Cohesion: 0.40
+Nodes (3): CartBadge(), CartBadgeProps, CartBagButton()
+
+### Community 111 - "video-stories.tsx"
+Cohesion: 0.40
+Nodes (4): StoryItem, VideoStories(), STORIES, VideoStoriesDemo()
+
 ## Knowledge Gaps
-- **541 isolated node(s):** `{ loadEnv }`, `name`, `version`, `description`, `author` (+536 more)
+- **542 isolated node(s):** `{ loadEnv }`, `name`, `version`, `description`, `author` (+537 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `readWorkbook()` connect `Backend Feature Slice` to `Lead Import Admin`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `Backend Feature Slice` to `@medusajs/admin-sdk`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`?**
+- **Why does `dependencies` connect `Backend Feature Slice` to `@medusajs/admin-sdk`, `@medusajs/cli`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`, `Backend Feature Slice`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
 - **Why does `xlsx` connect `Backend Feature Slice` to `Backend Feature Slice`?**
   _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `{ loadEnv }`, `name`, `version` to the rest of the system?**
-  _541 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _542 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `B2B CRM Models` be split into smaller, more focused modules?**
+  _Cohesion score 0.05775638652350981 - nodes in this community are weakly interconnected._
 - **Should `Agent Governance` be split into smaller, more focused modules?**
   _Cohesion score 0.05656565656565657 - nodes in this community are weakly interconnected._
 - **Should `Tools Contracts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
-- **Should `Architecture Docs` be split into smaller, more focused modules?**
-  _Cohesion score 0.052244897959183675 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06561085972850679 - nodes in this community are weakly interconnected._

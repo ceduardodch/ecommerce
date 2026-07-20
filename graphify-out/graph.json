@@ -550,8 +550,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "apps_backend_package_dependencies_medusajs_cli",
-      "community": 34,
-      "community_name": "Backend Feature Slice",
+      "community": 112,
+      "community_name": "@medusajs/cli",
       "norm_label": "@medusajs/cli"
     },
     {
@@ -561,8 +561,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "medusajs_cli",
-      "community": 34,
-      "community_name": "Backend Feature Slice",
+      "community": 112,
+      "community_name": "@medusajs/cli",
       "norm_label": "@medusajs/cli"
     },
     {
@@ -594,7 +594,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "apps_backend_package_dependencies_medusajs_draft_order",
-      "community": 90,
+      "community": 34,
       "community_name": "Backend Feature Slice",
       "norm_label": "@medusajs/draft-order"
     },
@@ -605,7 +605,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "medusajs_draft_order",
-      "community": 90,
+      "community": 34,
       "community_name": "Backend Feature Slice",
       "norm_label": "@medusajs/draft-order"
     },
@@ -2717,7 +2717,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_shared_crmservice",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "crmservice()"
     },
@@ -2739,7 +2739,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_shared_iso",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "iso()"
     },
@@ -3058,7 +3058,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "route.ts"
     },
@@ -3069,7 +3069,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route_importbody",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "importbody"
     },
@@ -3080,7 +3080,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route_post",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "post()"
     },
@@ -3091,8 +3091,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "route.ts"
     },
     {
@@ -3102,8 +3102,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_importbody",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "importbody"
     },
     {
@@ -3113,8 +3113,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_boolparam",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "boolparam()"
     },
     {
@@ -3124,8 +3124,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_valid_rfm_segments",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "valid_rfm_segments"
     },
     {
@@ -3135,8 +3135,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_get",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "get()"
     },
     {
@@ -3267,7 +3267,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_reports_recompra_route",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "route.ts"
     },
@@ -3278,7 +3278,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_reports_recompra_route_get",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "get()"
     },
@@ -3289,7 +3289,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "route.ts"
     },
@@ -3300,7 +3300,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route_get",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "get()"
     },
@@ -3311,7 +3311,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route_patch",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "patch()"
     },
@@ -4026,8 +4026,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_followup_dispatch_unit_spec",
-      "community": 5,
-      "community_name": "Followup Dispatch API",
+      "community": 59,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "followup-dispatch.unit.spec.ts"
     },
     {
@@ -4037,8 +4037,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_followup_dispatch_unit_spec_now",
-      "community": 5,
-      "community_name": "Followup Dispatch API",
+      "community": 59,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "now"
     },
     {
@@ -4081,8 +4081,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_recompra_metrics_unit_spec",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "recompra-metrics.unit.spec.ts"
     },
     {
@@ -4180,8 +4180,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_followup_dispatch_iswithinsendwindow",
-      "community": 5,
-      "community_name": "Followup Dispatch API",
+      "community": 59,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "iswithinsendwindow()"
     },
     {
@@ -4235,8 +4235,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_followup_dispatch_buildfollowupmessage",
-      "community": 5,
-      "community_name": "Followup Dispatch API",
+      "community": 59,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "buildfollowupmessage()"
     },
     {
@@ -4521,8 +4521,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_conversational_order",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "conversational-order.ts"
     },
     {
@@ -4532,8 +4532,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_conversational_order_conversationalorder",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "conversationalorder"
     },
     {
@@ -4543,8 +4543,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_event",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crm-customer-event.ts"
     },
     {
@@ -4554,8 +4554,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_event_crmcustomerevent",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crmcustomerevent"
     },
     {
@@ -4565,8 +4565,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_profile",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crm-customer-profile.ts"
     },
     {
@@ -4576,8 +4576,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_profile_crmcustomerprofile",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crmcustomerprofile"
     },
     {
@@ -4587,8 +4587,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_message_template",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crm-message-template.ts"
     },
     {
@@ -4598,8 +4598,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_message_template_crmmessagetemplate",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crmmessagetemplate"
     },
     {
@@ -4609,8 +4609,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_index",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "index.ts"
     },
     {
@@ -4620,8 +4620,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_product_review",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "product-review.ts"
     },
     {
@@ -4631,8 +4631,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_product_review_productreview",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "productreview"
     },
     {
@@ -4642,8 +4642,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "recompra-metrics.ts"
     },
     {
@@ -4653,8 +4653,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_paidevent",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "paidevent"
     },
     {
@@ -4664,8 +4664,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_customerlike",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "customerlike"
     },
     {
@@ -4675,8 +4675,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_eventlike",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "eventlike"
     },
     {
@@ -4686,8 +4686,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_followupevent",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "followupevent"
     },
     {
@@ -4697,8 +4697,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculaterepurchaserates",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "calculaterepurchaserates()"
     },
     {
@@ -4708,8 +4708,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculateaverageltv",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "calculateaverageltv()"
     },
     {
@@ -4719,8 +4719,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculateattributedsales",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "calculateattributedsales()"
     },
     {
@@ -4730,8 +4730,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_generatecohortsbyfirstpurchase",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "generatecohortsbyfirstpurchase()"
     },
     {
@@ -4741,8 +4741,8 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_recomprametrics",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "recomprametrics()"
     },
     {
@@ -4807,8 +4807,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_rfm_calculaterfmfromprofile",
-      "community": 73,
-      "community_name": "Storefront Feature Slice",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "calculaterfmfromprofile()"
     },
     {
@@ -4818,8 +4818,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_rfm_calculaterfm",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "calculaterfm()"
     },
     {
@@ -4829,8 +4829,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "service.ts"
     },
     {
@@ -4840,8 +4840,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_anyb2bcrmservice",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "anyb2bcrmservice"
     },
     {
@@ -4851,8 +4851,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customersearchinput",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "customersearchinput"
     },
     {
@@ -4862,8 +4862,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_computerfmsegment",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "computerfmsegment()"
     },
     {
@@ -4873,8 +4873,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerprofilepatch",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "customerprofilepatch"
     },
     {
@@ -4884,8 +4884,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerimportresult",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "customerimportresult"
     },
     {
@@ -4895,8 +4895,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_normalizephone",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "normalizephone()"
     },
     {
@@ -4906,8 +4906,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_asdate",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "asdate()"
     },
     {
@@ -4917,8 +4917,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_iso",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "iso()"
     },
     {
@@ -4928,8 +4928,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_uniquetags",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "uniquetags()"
     },
     {
@@ -4939,8 +4939,8 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_adddays",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "adddays()"
     },
     {
@@ -4950,8 +4950,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_nextreorderdays",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "nextreorderdays()"
     },
     {
@@ -4961,8 +4961,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerverticals",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "customerverticals()"
     },
     {
@@ -4972,8 +4972,8 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_detectvertical",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "detectvertical()"
     },
     {
@@ -4983,8 +4983,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_eventmetadata",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "eventmetadata()"
     },
     {
@@ -4994,8 +4994,8 @@
       "source_location": "L178",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_payloadwithmetadata",
-      "community": 42,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "payloadwithmetadata()"
     },
     {
@@ -5027,8 +5027,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_upsertcustomer",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".upsertcustomer()"
     },
     {
@@ -5060,8 +5060,8 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_searchcustomers",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".searchcustomers()"
     },
     {
@@ -5082,8 +5082,8 @@
       "source_location": "L387",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_importcustomers",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".importcustomers()"
     },
     {
@@ -5093,8 +5093,8 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_recordmanualpurchase",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".recordmanualpurchase()"
     },
     {
@@ -5126,8 +5126,8 @@
       "source_location": "L464",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_addcustomerevent",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".addcustomerevent()"
     },
     {
@@ -5137,8 +5137,8 @@
       "source_location": "L526",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_markpaid",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".markpaid()"
     },
     {
@@ -5148,8 +5148,8 @@
       "source_location": "L564",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_createconversationalorder",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": ".createconversationalorder()"
     },
     {
@@ -5335,8 +5335,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "types.ts"
     },
     {
@@ -5346,8 +5346,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_purchasedproduct",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "purchasedproduct"
     },
     {
@@ -5357,8 +5357,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_crmcustomerinput",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crmcustomerinput"
     },
     {
@@ -5368,8 +5368,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_crmcustomereventinput",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "crmcustomereventinput"
     },
     {
@@ -5379,8 +5379,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_conversationalorderinput",
-      "community": 58,
-      "community_name": "Storefront Feature Slice",
+      "community": 0,
+      "community_name": "B2B CRM Models",
       "norm_label": "conversationalorderinput"
     },
     {
@@ -6061,8 +6061,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "apps_storefront_app_bienestar_campanas_slug_page_trustgrid",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "trustgrid()"
     },
     {
@@ -6072,8 +6072,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "apps_storefront_app_bienestar_campanas_slug_page_wellnessfaq",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "wellnessfaq()"
     },
     {
@@ -6226,8 +6226,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "apps_storefront_app_bienestar_page_trustrow",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "trustrow()"
     },
     {
@@ -6512,8 +6512,8 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "apps_storefront_app_campanas_slug_page_trustgrid",
-      "community": 8,
-      "community_name": "Kitchen Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "trustgrid()"
     },
     {
@@ -6534,8 +6534,8 @@
       "source_location": "L333",
       "_origin": "ast",
       "id": "apps_storefront_app_campanas_slug_page_campaignfaq",
-      "community": 8,
-      "community_name": "Kitchen Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "campaignfaq()"
     },
     {
@@ -6589,8 +6589,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "page.tsx"
     },
     {
@@ -6600,8 +6600,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_checkoutresponse",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "checkoutresponse"
     },
     {
@@ -6611,8 +6611,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_form",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "form"
     },
     {
@@ -6622,8 +6622,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_empty",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "empty"
     },
     {
@@ -6633,41 +6633,41 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_pagotarjetapage",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "pagotarjetapage()"
     },
     {
       "label": "Shell()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L274",
+      "source_location": "L300",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_shell",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "shell()"
     },
     {
       "label": "Row()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L284",
+      "source_location": "L310",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_row",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "row()"
     },
     {
       "label": "Field()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L288",
+      "source_location": "L314",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_field",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 65,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "field()"
     },
     {
@@ -6707,7 +6707,7 @@
       "label": "ResultadoPage()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/resultado/page.tsx",
-      "source_location": "L142",
+      "source_location": "L147",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_resultado_page_resultadopage",
       "community": 16,
@@ -6952,8 +6952,8 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "apps_storefront_app_components_analytics_trackedwhatsapplink",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "trackedwhatsapplink()"
     },
     {
@@ -6963,8 +6963,8 @@
       "source_location": "L569",
       "_origin": "ast",
       "id": "apps_storefront_app_components_analytics_trackedeventlink",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 19,
+      "community_name": "Meta Pixel Analytics",
       "norm_label": "trackedeventlink()"
     },
     {
@@ -7117,8 +7117,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_cart_checkout_button",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "checkout-button.tsx"
     },
     {
@@ -7128,8 +7128,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_storefront_app_components_cart_checkout_button_checkoutbuttonprops",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "checkoutbuttonprops"
     },
     {
@@ -7139,8 +7139,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_storefront_app_components_cart_checkout_button_checkoutbutton",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "checkoutbutton()"
     },
     {
@@ -7150,8 +7150,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "lead-capture-form.tsx"
     },
     {
@@ -7161,8 +7161,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form_productoption",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "productoption"
     },
     {
@@ -7172,8 +7172,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form_formstate",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "formstate"
     },
     {
@@ -7183,8 +7183,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form_randomleadid",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "randomleadid()"
     },
     {
@@ -7194,8 +7194,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form_skufrominterest",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "skufrominterest()"
     },
     {
@@ -7205,8 +7205,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "apps_storefront_app_components_lead_capture_form_leadcaptureform",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 90,
+      "community_name": "Backend Feature Slice",
       "norm_label": "leadcaptureform()"
     },
     {
@@ -7502,8 +7502,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_badge",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "cart-badge.tsx"
     },
     {
@@ -7513,8 +7513,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_badge_cartbadgeprops",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "cartbadgeprops"
     },
     {
@@ -7524,8 +7524,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_badge_cartbadge",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "cartbadge()"
     },
     {
@@ -7535,8 +7535,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_bag_button",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "cart-bag-button.tsx"
     },
     {
@@ -7546,8 +7546,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_bag_button_shoppingbagicon",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "shoppingbagicon()"
     },
     {
@@ -7557,8 +7557,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_cart_bag_button_cartbagbutton",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 110,
+      "community_name": "cart-bag-button.tsx",
       "norm_label": "cartbagbutton()"
     },
     {
@@ -7601,8 +7601,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_customer_reviews",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customer-reviews.tsx"
     },
     {
@@ -7612,8 +7612,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_customer_reviews_customerreviewsprops",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customerreviewsprops"
     },
     {
@@ -7623,8 +7623,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_customer_reviews_customerreviews",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customerreviews()"
     },
     {
@@ -7799,8 +7799,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_newsletter_signup",
-      "community": 17,
-      "community_name": "Brand Navigation UI",
+      "community": 19,
+      "community_name": "Meta Pixel Analytics",
       "norm_label": "newsletter-signup.tsx"
     },
     {
@@ -7810,8 +7810,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_newsletter_signup_newslettersignup",
-      "community": 17,
-      "community_name": "Brand Navigation UI",
+      "community": 19,
+      "community_name": "Meta Pixel Analytics",
       "norm_label": "newslettersignup()"
     },
     {
@@ -7964,8 +7964,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_photo",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "photo.tsx"
     },
     {
@@ -7975,8 +7975,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_photo_photo",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "photo()"
     },
     {
@@ -8008,8 +8008,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_privacy_consent",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "privacy-consent.tsx"
     },
     {
@@ -8019,8 +8019,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_privacy_consent_privacyconsent",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "privacyconsent()"
     },
     {
@@ -8129,8 +8129,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_card",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "review-card.tsx"
     },
     {
@@ -8140,8 +8140,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_card_review",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "review"
     },
     {
@@ -8151,8 +8151,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_card_reviewcard",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "reviewcard()"
     },
     {
@@ -8162,8 +8162,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_form",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "review-form.tsx"
     },
     {
@@ -8173,8 +8173,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_form_reviewformprops",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "reviewformprops"
     },
     {
@@ -8184,8 +8184,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_review_form_reviewform",
-      "community": 19,
-      "community_name": "Meta Pixel Analytics",
+      "community": 58,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "reviewform()"
     },
     {
@@ -8195,8 +8195,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal",
-      "community": 25,
-      "community_name": "Shared Product UI",
+      "community": 27,
+      "community_name": "UI Component Library",
       "norm_label": "scroll-reveal.tsx"
     },
     {
@@ -8206,8 +8206,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal_scrollrevealprops",
-      "community": 25,
-      "community_name": "Shared Product UI",
+      "community": 27,
+      "community_name": "UI Component Library",
       "norm_label": "scrollrevealprops"
     },
     {
@@ -8217,8 +8217,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal_scrollreveal",
-      "community": 25,
-      "community_name": "Shared Product UI",
+      "community": 27,
+      "community_name": "UI Component Library",
       "norm_label": "scrollreveal()"
     },
     {
@@ -8382,8 +8382,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_spec_table",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "spec-table.tsx"
     },
     {
@@ -8393,8 +8393,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_spec_table_spectable",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "spectable()"
     },
     {
@@ -8404,8 +8404,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "sticky-cta-bar.tsx"
     },
     {
@@ -8415,8 +8415,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_whatsappicon",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "whatsappicon()"
     },
     {
@@ -8426,8 +8426,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_stickyctabarprops",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "stickyctabarprops"
     },
     {
@@ -8437,8 +8437,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_stickyctabar",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "stickyctabar()"
     },
     {
@@ -8470,8 +8470,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_video_stories",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "video-stories.tsx"
     },
     {
@@ -8481,8 +8481,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_video_stories_storyitem",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "storyitem"
     },
     {
@@ -8492,8 +8492,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_video_stories_videostories",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "videostories()"
     },
     {
@@ -8613,8 +8613,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_video_stories_demo",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "video-stories-demo.tsx"
     },
     {
@@ -8624,8 +8624,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_video_stories_demo_stories",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "stories"
     },
     {
@@ -8635,8 +8635,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_video_stories_demo_videostoriesdemo",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 111,
+      "community_name": "video-stories.tsx",
       "norm_label": "videostoriesdemo()"
     },
     {
@@ -8723,8 +8723,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "route.ts"
     },
     {
@@ -8734,8 +8734,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_csv",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "csv()"
     },
     {
@@ -8745,8 +8745,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_verticalfromrequest",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "verticalfromrequest()"
     },
     {
@@ -8756,8 +8756,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_baseurlforvertical",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "baseurlforvertical()"
     },
     {
@@ -8767,8 +8767,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_absoluteimagelink",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "absoluteimagelink()"
     },
     {
@@ -8778,8 +8778,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_fallbackcsv",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "fallbackcsv()"
     },
     {
@@ -8789,8 +8789,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_get",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "get()"
     },
     {
@@ -8866,8 +8866,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_layout",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "layout.tsx"
     },
     {
@@ -8877,8 +8877,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_storefront_app_layout_fraunces",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "fraunces"
     },
     {
@@ -8888,8 +8888,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "apps_storefront_app_layout_inter",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "inter"
     },
     {
@@ -8899,8 +8899,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "apps_storefront_app_layout_metadata",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "metadata"
     },
     {
@@ -8910,8 +8910,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_storefront_app_layout_rootlayout",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "rootlayout()"
     },
     {
@@ -8921,8 +8921,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "page.tsx"
     },
     {
@@ -8932,8 +8932,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page_metadata",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "metadata"
     },
     {
@@ -8943,8 +8943,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page_sellernumber",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "sellernumber()"
     },
     {
@@ -8954,8 +8954,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page_door",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "door"
     },
     {
@@ -8965,8 +8965,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page_doors",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "doors"
     },
     {
@@ -8976,8 +8976,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "apps_storefront_app_marca_page_brandportalpage",
-      "community": 65,
-      "community_name": "Storefront Feature Slice",
+      "community": 7,
+      "community_name": "Ambient UI Pages",
       "norm_label": "brandportalpage()"
     },
     {
@@ -9394,8 +9394,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "apps_storefront_contexts_cartcontext_cartprovider",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 73,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "cartprovider()"
     },
     {
@@ -9471,8 +9471,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_fallbackproducts",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "fallbackproducts"
     },
     {
@@ -9504,8 +9504,8 @@
       "source_location": "L2445",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_wellnessfallbackproducts",
-      "community": 23,
-      "community_name": "Storefront Catalog Logic",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "wellnessfallbackproducts"
     },
     {
@@ -9691,8 +9691,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "commercial.ts"
     },
     {
@@ -9702,8 +9702,8 @@
       "source_location": "L2",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial_defaultpaymentmethods",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "defaultpaymentmethods"
     },
     {
@@ -9713,8 +9713,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial_commercialproduct",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "commercialproduct"
     },
     {
@@ -9724,8 +9724,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial_paymentlabel",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "paymentlabel()"
     },
     {
@@ -9735,8 +9735,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial_formatpaymentmethods",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "formatpaymentmethods()"
     },
     {
@@ -9746,8 +9746,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "apps_storefront_lib_commercial_commercialinfo",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 57,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "commercialinfo()"
     },
     {
@@ -9966,8 +9966,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "whatsapp.ts"
     },
     {
@@ -9977,8 +9977,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_cartitem",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "cartitem"
     },
     {
@@ -9988,8 +9988,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_whatsappproduct",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "whatsappproduct"
     },
     {
@@ -9999,8 +9999,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_whatsappcontext",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "whatsappcontext"
     },
     {
@@ -10010,8 +10010,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_normalizewhatsappsellernumber",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "normalizewhatsappsellernumber()"
     },
     {
@@ -10021,8 +10021,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_isknifeproduct",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "isknifeproduct()"
     },
     {
@@ -10032,8 +10032,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_iskitchencomplement",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "iskitchencomplement()"
     },
     {
@@ -10043,8 +10043,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_defaultopeningline",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "defaultopeningline()"
     },
     {
@@ -10054,8 +10054,8 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_whatsapplink",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "whatsapplink()"
     },
     {
@@ -10065,8 +10065,8 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_generatecartmessage",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "generatecartmessage()"
     },
     {
@@ -10076,8 +10076,8 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "apps_storefront_lib_whatsapp_whatsappcartlink",
-      "community": 16,
-      "community_name": "Cart Checkout UI",
+      "community": 42,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "whatsappcartlink()"
     },
     {
@@ -13392,10 +13392,21 @@
       "norm_label": "datafastcheckoutschema"
     },
     {
+      "label": "datafastVoidSchema",
+      "file_type": "code",
+      "source_file": "services/ecommerce-tools/src/contracts.ts",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "services_ecommerce_tools_src_contracts_datafastvoidschema",
+      "community": 2,
+      "community_name": "Tools Contracts",
+      "norm_label": "datafastvoidschema"
+    },
+    {
       "label": "metaDraftInputSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L62",
+      "source_location": "L70",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_metadraftinputschema",
       "community": 2,
@@ -13406,7 +13417,7 @@
       "label": "customerImportSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L68",
+      "source_location": "L76",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_customerimportschema",
       "community": 2,
@@ -13417,7 +13428,7 @@
       "label": "customerEventInputSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L99",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_customereventinputschema",
       "community": 2,
@@ -13428,7 +13439,7 @@
       "label": "attributionSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L162",
+      "source_location": "L170",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_attributionschema",
       "community": 2,
@@ -13439,7 +13450,7 @@
       "label": "eventProductSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L173",
+      "source_location": "L181",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_eventproductschema",
       "community": 2,
@@ -13450,7 +13461,7 @@
       "label": "toolsEventInputSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L194",
+      "source_location": "L202",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_toolseventinputschema",
       "community": 2,
@@ -13461,7 +13472,7 @@
       "label": "ToolsEventInput",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L270",
+      "source_location": "L278",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_toolseventinput",
       "community": 2,
@@ -13472,7 +13483,7 @@
       "label": "saleFeedbackInputSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L272",
+      "source_location": "L280",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_salefeedbackinputschema",
       "community": 2,
@@ -13483,7 +13494,7 @@
       "label": "SaleFeedbackInput",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L297",
+      "source_location": "L305",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_salefeedbackinput",
       "community": 2,
@@ -13494,7 +13505,7 @@
       "label": "payphoneWebhookSchema",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L299",
+      "source_location": "L307",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_contracts_payphonewebhookschema",
       "community": 2,
@@ -13714,7 +13725,7 @@
       "label": "DatafastCustomer",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L21",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_datafastcustomer",
       "community": 38,
@@ -13725,7 +13736,7 @@
       "label": "DatafastCheckoutInput",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L35",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_datafastcheckoutinput",
       "community": 38,
@@ -13736,7 +13747,7 @@
       "label": "IvaBreakdown",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_ivabreakdown",
       "community": 38,
@@ -13747,7 +13758,7 @@
       "label": "datafastHost()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L55",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_datafasthost",
       "community": 38,
@@ -13758,7 +13769,7 @@
       "label": "round2()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L59",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_round2",
       "community": 38,
@@ -13769,7 +13780,7 @@
       "label": "computeIva()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L70",
+      "source_location": "L72",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_computeiva",
       "community": 38,
@@ -13780,7 +13791,7 @@
       "label": "buildCheckoutForm()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L83",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_buildcheckoutform",
       "community": 38,
@@ -13791,7 +13802,7 @@
       "label": "isDatafastSuccess()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L179",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_isdatafastsuccess",
       "community": 38,
@@ -13802,7 +13813,7 @@
       "label": "DatafastCheckout",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L185",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_datafastcheckout",
       "community": 38,
@@ -13813,7 +13824,7 @@
       "label": "createDatafastCheckout()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L197",
+      "source_location": "L201",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_createdatafastcheckout",
       "community": 38,
@@ -13824,7 +13835,7 @@
       "label": "DatafastResult",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L242",
+      "source_location": "L246",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_datafastresult",
       "community": 38,
@@ -13835,7 +13846,7 @@
       "label": "normalizeDatafastResourcePath()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L255",
+      "source_location": "L259",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_normalizedatafastresourcepath",
       "community": 38,
@@ -13846,12 +13857,45 @@
       "label": "getDatafastResult()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L274",
+      "source_location": "L278",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_datafast_getdatafastresult",
       "community": 38,
       "community_name": "Tools Feature Slice",
       "norm_label": "getdatafastresult()"
+    },
+    {
+      "label": "DatafastVoidResult",
+      "file_type": "code",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L335",
+      "_origin": "ast",
+      "id": "services_ecommerce_tools_src_datafast_datafastvoidresult",
+      "community": 38,
+      "community_name": "Tools Feature Slice",
+      "norm_label": "datafastvoidresult"
+    },
+    {
+      "label": "buildVoidForm()",
+      "file_type": "code",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L344",
+      "_origin": "ast",
+      "id": "services_ecommerce_tools_src_datafast_buildvoidform",
+      "community": 38,
+      "community_name": "Tools Feature Slice",
+      "norm_label": "buildvoidform()"
+    },
+    {
+      "label": "voidDatafastPayment()",
+      "file_type": "code",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L365",
+      "_origin": "ast",
+      "id": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
+      "community": 38,
+      "community_name": "Tools Feature Slice",
+      "norm_label": "voiddatafastpayment()"
     },
     {
       "label": "demo-catalog.ts",
@@ -14154,7 +14198,7 @@
       "label": "config",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L21",
+      "source_location": "L22",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_index_config",
       "community": 2,
@@ -14165,7 +14209,7 @@
       "label": "service",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L22",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_index_service",
       "community": 2,
@@ -14176,7 +14220,7 @@
       "label": "app",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L23",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_index_app",
       "community": 2,
@@ -14344,8 +14388,8 @@
       "source_location": "L123",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_medusa_admin_addmedusacustomerevent",
-      "community": 11,
-      "community_name": "Tools CRM Service",
+      "community": 47,
+      "community_name": "Tools Feature Slice",
       "norm_label": "addmedusacustomerevent()"
     },
     {
@@ -14517,7 +14561,7 @@
       "label": "addDays()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L53",
+      "source_location": "L54",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_adddays",
       "community": 47,
@@ -14528,7 +14572,7 @@
       "label": "nextReorderDays()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L59",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_nextreorderdays",
       "community": 47,
@@ -14539,7 +14583,7 @@
       "label": "toEcPhone()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L67",
+      "source_location": "L68",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_toecphone",
       "community": 47,
@@ -14550,7 +14594,7 @@
       "label": "isPaidStatus()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L77",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_ispaidstatus",
       "community": 47,
@@ -14561,7 +14605,7 @@
       "label": "orderPurchaseEvent()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L83",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_orderpurchaseevent",
       "community": 47,
@@ -14572,7 +14616,7 @@
       "label": "recentEventsFromCustomer()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L111",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_recenteventsfromcustomer",
       "community": 47,
@@ -14583,7 +14627,7 @@
       "label": "customerTags()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L117",
+      "source_location": "L118",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_customertags",
       "community": 47,
@@ -14594,7 +14638,7 @@
       "label": "eventTypes()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L125",
+      "source_location": "L126",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_eventtypes",
       "community": 47,
@@ -14605,7 +14649,7 @@
       "label": "suggestNextAction()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L135",
+      "source_location": "L136",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_suggestnextaction",
       "community": 47,
@@ -14616,7 +14660,7 @@
       "label": "payloadObject()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L196",
+      "source_location": "L197",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_payloadobject",
       "community": 47,
@@ -14627,7 +14671,7 @@
       "label": "payloadWithMetadata()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L204",
+      "source_location": "L205",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_payloadwithmetadata",
       "community": 47,
@@ -14638,7 +14682,7 @@
       "label": "customerLifecycleSummary()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L226",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_customerlifecyclesummary",
       "community": 47,
@@ -14649,7 +14693,7 @@
       "label": "trackCustomerEvent()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L277",
+      "source_location": "L278",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_trackcustomerevent",
       "community": 11,
@@ -14660,7 +14704,7 @@
       "label": "createCommerceService()",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L306",
+      "source_location": "L307",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_createcommerceservice",
       "community": 28,
@@ -15265,7 +15309,7 @@
       "label": "items",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/tests/datafast.test.ts",
-      "source_location": "L13",
+      "source_location": "L15",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_datafast_test_items",
       "community": 38,
@@ -15877,8 +15921,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "sprint-executor",
-      "id": "claude_agents_sprint_executor_sprint_executor",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_sprint_executor_sprint_executor"
     },
     {
       "label": "Executable sprint plans",
@@ -15891,8 +15935,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "executable sprint plans",
-      "id": "claude_agents_sprint_executor_executable_plans",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_sprint_executor_executable_plans"
     },
     {
       "label": "Protected storefront and campaign surfaces",
@@ -15905,8 +15949,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "protected storefront and campaign surfaces",
-      "id": "claude_agents_sprint_executor_protected_surfaces",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_sprint_executor_protected_surfaces"
     },
     {
       "label": "verificador",
@@ -15919,8 +15963,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "verificador",
-      "id": "claude_agents_verificador_verificador",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_verificador_verificador"
     },
     {
       "label": "Independent evidence audit",
@@ -15933,8 +15977,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "independent evidence audit",
-      "id": "claude_agents_verificador_independent_audit",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_verificador_independent_audit"
     },
     {
       "label": "Protected file audit command",
@@ -15947,8 +15991,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "protected file audit command",
-      "id": "claude_agents_verificador_protected_file_audit",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_agents_verificador_protected_file_audit"
     },
     {
       "label": "Copilot Instructions",
@@ -15961,8 +16005,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "copilot instructions",
-      "id": "github_copilot_instructions_copilot_instructions",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "github_copilot_instructions_copilot_instructions"
     },
     {
       "label": "GitHub Actions CI workflow",
@@ -15975,8 +16019,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "github actions ci workflow",
-      "id": "github_workflows_ci_ci_workflow",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "github_workflows_ci_ci_workflow"
     },
     {
       "label": "Agent governance rules",
@@ -15989,8 +16033,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "agent governance rules",
-      "id": "agents_agent_governance",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_agent_governance"
     },
     {
       "label": "release branch default policy",
@@ -16003,8 +16047,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "release branch default policy",
-      "id": "agents_release_branch_policy",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_release_branch_policy"
     },
     {
       "label": "CI/CD and Coolify deployment boundary",
@@ -16017,8 +16061,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "ci/cd and coolify deployment boundary",
-      "id": "agents_ci_cd_deployment_boundary",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_ci_cd_deployment_boundary"
     },
     {
       "label": "Forbidden repository operations",
@@ -16031,8 +16075,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "forbidden repository operations",
-      "id": "agents_forbidden_operations",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_forbidden_operations"
     },
     {
       "label": "OpenClaw PayPhone Meta boundary separation",
@@ -16045,8 +16089,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "openclaw payphone meta boundary separation",
-      "id": "agents_integration_boundaries",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_integration_boundaries"
     },
     {
       "label": "AI Handoff",
@@ -16059,8 +16103,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "ai handoff",
-      "id": "ai_handoff_ai_handoff",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "ai_handoff_ai_handoff"
     },
     {
       "label": "Operational ecommerce architecture",
@@ -16073,8 +16117,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "operational ecommerce architecture",
-      "id": "ai_handoff_operational_architecture",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "ai_handoff_operational_architecture"
     },
     {
       "label": "OpenClaw separate Coolify app",
@@ -16087,8 +16131,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "openclaw separate coolify app",
-      "id": "ai_handoff_openclaw_separate_runtime",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "ai_handoff_openclaw_separate_runtime"
     },
     {
       "label": "Internal services exposure policy",
@@ -16101,8 +16145,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "internal services exposure policy",
-      "id": "ai_handoff_internal_services_policy",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "ai_handoff_internal_services_policy"
     },
     {
       "label": "Explicit verification rule",
@@ -16115,8 +16159,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "explicit verification rule",
-      "id": "claude_explicit_verification_rule",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_explicit_verification_rule"
     },
     {
       "label": "Repository map",
@@ -16129,8 +16173,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "repository map",
-      "id": "claude_repo_map",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "claude_repo_map"
     },
     {
       "label": "Eter Niu AI Native Social Commerce",
@@ -16143,8 +16187,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "eter niu ai native social commerce",
-      "id": "readme_eter_niu_ai_native_social_commerce",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "readme_eter_niu_ai_native_social_commerce"
     },
     {
       "label": "Public vertical storefronts",
@@ -16157,8 +16201,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "public vertical storefronts",
-      "id": "readme_public_verticals",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "readme_public_verticals"
     },
     {
       "label": "OpenClaw ecommerce tool endpoints",
@@ -16171,8 +16215,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "openclaw ecommerce tool endpoints",
-      "id": "readme_openclaw_tools",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "readme_openclaw_tools"
     },
     {
       "label": "Medusa source of truth",
@@ -16185,8 +16229,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa source of truth",
-      "id": "readme_medusa_source_of_truth",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "readme_medusa_source_of_truth"
     },
     {
       "label": "CRM WhatsApp module",
@@ -16199,8 +16243,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "crm whatsapp module",
-      "id": "readme_crm_whatsapp",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "readme_crm_whatsapp"
     },
     {
       "label": "OpenClaw Ecommerce Seller",
@@ -16213,8 +16257,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "openclaw ecommerce seller",
-      "id": "agents_openclaw_ecommerce_seller_openclaw_ecommerce_seller",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_openclaw_ecommerce_seller_openclaw_ecommerce_seller"
     },
     {
       "label": "Seller tool flow",
@@ -16227,8 +16271,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "seller tool flow",
-      "id": "agents_openclaw_ecommerce_seller_seller_tool_flow",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_openclaw_ecommerce_seller_seller_tool_flow"
     },
     {
       "label": "Customer data capture",
@@ -16241,8 +16285,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "customer data capture",
-      "id": "agents_openclaw_ecommerce_seller_customer_data_capture",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_openclaw_ecommerce_seller_customer_data_capture"
     },
     {
       "label": "Human escalation policy",
@@ -16255,8 +16299,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "human escalation policy",
-      "id": "agents_openclaw_ecommerce_seller_human_escalation",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_openclaw_ecommerce_seller_human_escalation"
     },
     {
       "label": "Vicky Sales Bot",
@@ -16269,8 +16313,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "vicky sales bot",
-      "id": "agents_vicky_sales_bot_vicky_sales_bot",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_vicky_sales_bot_vicky_sales_bot"
     },
     {
       "label": "Vicky tools source of truth",
@@ -16283,8 +16327,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "vicky tools source of truth",
-      "id": "agents_vicky_sales_bot_tools_source_of_truth",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_vicky_sales_bot_tools_source_of_truth"
     },
     {
       "label": "Product-triggered WhatsApp flow",
@@ -16297,8 +16341,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "product-triggered whatsapp flow",
-      "id": "agents_vicky_sales_bot_product_triggered_whatsapp_flow",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_vicky_sales_bot_product_triggered_whatsapp_flow"
     },
     {
       "label": "Payment proof human review policy",
@@ -16311,8 +16355,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "payment proof human review policy",
-      "id": "agents_vicky_sales_bot_payment_proof_review",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "agents_vicky_sales_bot_payment_proof_review"
     },
     {
       "label": "Medusa",
@@ -16325,8 +16369,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa",
-      "id": "apps_backend_readme_medusa",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_readme_medusa"
     },
     {
       "label": "Medusa Admin Customizations",
@@ -16339,8 +16383,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa admin customizations",
-      "id": "apps_backend_src_admin_readme_admin_customizations",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_admin_readme_admin_customizations"
     },
     {
       "label": "Medusa Admin i18n translations",
@@ -16353,8 +16397,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa admin i18n translations",
-      "id": "apps_backend_src_admin_i18n_readme_admin_i18n",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_admin_i18n_readme_admin_i18n"
     },
     {
       "label": "Medusa custom API routes",
@@ -16367,8 +16411,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa custom api routes",
-      "id": "apps_backend_src_api_readme_custom_api_routes",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_api_readme_custom_api_routes"
     },
     {
       "label": "Medusa scheduled jobs",
@@ -16381,8 +16425,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa scheduled jobs",
-      "id": "apps_backend_src_jobs_readme_scheduled_jobs",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_jobs_readme_scheduled_jobs"
     },
     {
       "label": "Medusa module links",
@@ -16395,8 +16439,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa module links",
-      "id": "apps_backend_src_links_readme_module_links",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_links_readme_module_links"
     },
     {
       "label": "Medusa custom modules",
@@ -16409,8 +16453,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa custom modules",
-      "id": "apps_backend_src_modules_readme_custom_modules",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_modules_readme_custom_modules"
     },
     {
       "label": "Medusa custom subscribers",
@@ -16423,8 +16467,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa custom subscribers",
-      "id": "apps_backend_src_subscribers_readme_custom_subscribers",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_subscribers_readme_custom_subscribers"
     },
     {
       "label": "Medusa custom workflows",
@@ -16437,8 +16481,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa custom workflows",
-      "id": "apps_backend_src_workflows_readme_custom_workflows",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_backend_src_workflows_readme_custom_workflows"
     },
     {
       "label": "Storefront media slots",
@@ -16451,8 +16495,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "storefront media slots",
-      "id": "apps_storefront_public_media_readme_storefront_media_slots",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_storefront_public_media_readme_storefront_media_slots"
     },
     {
       "label": "Owned or approved media policy",
@@ -16465,8 +16509,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "owned or approved media policy",
-      "id": "apps_storefront_public_media_readme_owned_approved_media_policy",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "apps_storefront_public_media_readme_owned_approved_media_policy"
     },
     {
       "label": "Docker Compose stack",
@@ -16479,8 +16523,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "docker compose stack",
-      "id": "docker_compose_compose_stack",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_compose_stack"
     },
     {
       "label": "postgres service",
@@ -16493,8 +16537,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "postgres service",
-      "id": "docker_compose_postgres",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_postgres"
     },
     {
       "label": "redis service",
@@ -16507,8 +16551,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "redis service",
-      "id": "docker_compose_redis",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_redis"
     },
     {
       "label": "medusa-api service",
@@ -16521,8 +16565,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "medusa-api service",
-      "id": "docker_compose_medusa_api",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_medusa_api"
     },
     {
       "label": "ecommerce-tools service",
@@ -16535,8 +16579,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "ecommerce-tools service",
-      "id": "docker_compose_ecommerce_tools",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_ecommerce_tools"
     },
     {
       "label": "admin-redirect service",
@@ -16549,8 +16593,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "admin-redirect service",
-      "id": "docker_compose_admin_redirect",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_admin_redirect"
     },
     {
       "label": "storefront service",
@@ -16563,8 +16607,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "storefront service",
-      "id": "docker_compose_storefront",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_storefront"
     },
     {
       "label": "Production environment boundaries",
@@ -16577,8 +16621,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "production environment boundaries",
-      "id": "docker_compose_environment_boundaries",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docker_compose_environment_boundaries"
     },
     {
       "label": "Agent workflow and token strategy",
@@ -16591,8 +16635,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "agent workflow and token strategy",
-      "id": "docs_agent_workflow_agent_workflow",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docs_agent_workflow_agent_workflow"
     },
     {
       "label": "Coordinator model",
@@ -16605,8 +16649,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "coordinator model",
-      "id": "docs_agent_workflow_coordinator_model",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docs_agent_workflow_coordinator_model"
     },
     {
       "label": "Batch delegation strategy",
@@ -16619,8 +16663,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "batch delegation strategy",
-      "id": "docs_agent_workflow_batch_delegation",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docs_agent_workflow_batch_delegation"
     },
     {
       "label": "Verification before push",
@@ -16633,8 +16677,8 @@
       "contributor": null,
       "community": 1,
       "norm_label": "verification before push",
-      "id": "docs_agent_workflow_verification_before_push",
-      "community_name": "Agent Governance"
+      "community_name": "Agent Governance",
+      "id": "docs_agent_workflow_verification_before_push"
     },
     {
       "label": "Eter Niu Social Commerce Stack",
@@ -16647,8 +16691,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "eter niu social commerce stack",
-      "id": "docs_architecture_eter_niu_social_commerce_stack",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_eter_niu_social_commerce_stack"
     },
     {
       "label": "Medusa Commerce Core",
@@ -16661,8 +16705,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "medusa commerce core",
-      "id": "docs_architecture_medusa_commerce_core",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_medusa_commerce_core"
     },
     {
       "label": "Next.js Storefront",
@@ -16675,8 +16719,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "next.js storefront",
-      "id": "docs_architecture_nextjs_storefront",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_nextjs_storefront"
     },
     {
       "label": "ecommerce-tools Service",
@@ -16689,8 +16733,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "ecommerce-tools service",
-      "id": "docs_architecture_ecommerce_tools_service",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_ecommerce_tools_service"
     },
     {
       "label": "B2B CRM Module",
@@ -16703,8 +16747,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "b2b crm module",
-      "id": "docs_architecture_b2b_crm_module",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_b2b_crm_module"
     },
     {
       "label": "WhatsApp Sales Flow",
@@ -16717,8 +16761,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "whatsapp sales flow",
-      "id": "docs_architecture_whatsapp_sales_flow",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_whatsapp_sales_flow"
     },
     {
       "label": "Channel Boundaries",
@@ -16731,8 +16775,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "channel boundaries",
-      "id": "docs_architecture_channel_boundaries",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_architecture_channel_boundaries"
     },
     {
       "label": "Release Branch Workflow",
@@ -16745,8 +16789,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "release branch workflow",
-      "id": "docs_branch_strategy_release_branch_workflow",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_branch_strategy_release_branch_workflow"
     },
     {
       "label": "Main Production Boundary",
@@ -16759,8 +16803,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "main production boundary",
-      "id": "docs_branch_strategy_main_production_boundary",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_branch_strategy_main_production_boundary"
     },
     {
       "label": "CI Validation Only",
@@ -16773,8 +16817,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "ci validation only",
-      "id": "docs_ci_branch_protection_ci_validation_only",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_ci_branch_protection_ci_validation_only"
     },
     {
       "label": "Approved Kitchen Assets",
@@ -16787,8 +16831,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "approved kitchen assets",
-      "id": "docs_content_matrix_approved_kitchen_assets",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_content_matrix_approved_kitchen_assets"
     },
     {
       "label": "Publishing Rules",
@@ -16801,8 +16845,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "publishing rules",
-      "id": "docs_content_matrix_publishing_rules",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_content_matrix_publishing_rules"
     },
     {
       "label": "Coolify Compose App",
@@ -16815,8 +16859,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "coolify compose app",
-      "id": "docs_coolify_deployment_coolify_compose_app",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_coolify_deployment_coolify_compose_app"
     },
     {
       "label": "Internal Services Boundary",
@@ -16829,8 +16873,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "internal services boundary",
-      "id": "docs_coolify_deployment_internal_services_boundary",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_coolify_deployment_internal_services_boundary"
     },
     {
       "label": "Required Coolify Secrets",
@@ -16843,8 +16887,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "required coolify secrets",
-      "id": "docs_coolify_deployment_required_coolify_secrets",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_coolify_deployment_required_coolify_secrets"
     },
     {
       "label": "CRM Benchmark Backlog",
@@ -16857,8 +16901,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "crm benchmark backlog",
-      "id": "docs_crm_backlog_crm_benchmark_backlog",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_crm_backlog_crm_benchmark_backlog"
     },
     {
       "label": "CRM Completed State",
@@ -16871,8 +16915,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "crm completed state",
-      "id": "docs_crm_backlog_crm_completed_state",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_crm_backlog_crm_completed_state"
     },
     {
       "label": "Owner Operational Inputs",
@@ -16885,8 +16929,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "owner operational inputs",
-      "id": "docs_crm_backlog_owner_operational_inputs",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_crm_backlog_owner_operational_inputs"
     },
     {
       "label": "Repurchase and LTV Goal",
@@ -16899,8 +16943,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "repurchase and ltv goal",
-      "id": "docs_crm_benchmark_roadmap_repurchase_ltv_goal",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_crm_benchmark_roadmap_repurchase_ltv_goal"
     },
     {
       "label": "Kommo Gap",
@@ -16913,8 +16957,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "kommo gap",
-      "id": "docs_crm_benchmark_roadmap_kommo_gap",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_crm_benchmark_roadmap_kommo_gap"
     },
     {
       "label": "Cuchillo Launch Scope",
@@ -16927,8 +16971,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "cuchillo launch scope",
-      "id": "docs_cuchillo_campaign_release_files_cuchillo_launch_scope",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_cuchillo_campaign_release_files_cuchillo_launch_scope"
     },
     {
       "label": "Cuchillo Release Gates",
@@ -16941,8 +16985,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "cuchillo release gates",
-      "id": "docs_cuchillo_campaign_release_files_cuchillo_release_gates",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_cuchillo_campaign_release_files_cuchillo_release_gates"
     },
     {
       "label": "Cuchillo Release Pathspec",
@@ -16955,8 +16999,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "cuchillo release pathspec",
-      "id": "docs_cuchillo_campaign_release_pathspec_cuchillo_release_pathspec",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_cuchillo_campaign_release_pathspec_cuchillo_release_pathspec"
     },
     {
       "label": "Current State Snapshot",
@@ -16969,8 +17013,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "current state snapshot",
-      "id": "docs_current_state_current_state_snapshot",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_current_state_current_state_snapshot"
     },
     {
       "label": "Available Tools Flow",
@@ -16983,8 +17027,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "available tools flow",
-      "id": "docs_current_state_available_tools_flow",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_current_state_available_tools_flow"
     },
     {
       "label": "Payments State",
@@ -16997,8 +17041,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "payments state",
-      "id": "docs_current_state_payments_state",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_current_state_payments_state"
     },
     {
       "label": "eter-niu.com Domain Migration",
@@ -17011,8 +17055,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "eter-niu.com domain migration",
-      "id": "docs_domain_plan_eter_niu_domain_migration",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_domain_plan_eter_niu_domain_migration"
     },
     {
       "label": "Brand Portal and Niche Subdomains",
@@ -17025,8 +17069,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "brand portal and niche subdomains",
-      "id": "docs_domain_plan_brand_portal_and_niche_subdomains",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_domain_plan_brand_portal_and_niche_subdomains"
     },
     {
       "label": "Old Domain 301 Safety",
@@ -17039,8 +17083,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "old domain 301 safety",
-      "id": "docs_domain_plan_old_domain_301_safety",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_domain_plan_old_domain_301_safety"
     },
     {
       "label": "Verify Before Claiming",
@@ -17053,8 +17097,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "verify before claiming",
-      "id": "docs_lessons_learned_verify_before_claiming",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_lessons_learned_verify_before_claiming"
     },
     {
       "label": "Closed Product Decisions",
@@ -17067,8 +17111,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "closed product decisions",
-      "id": "docs_lessons_learned_closed_product_decisions",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_lessons_learned_closed_product_decisions"
     },
     {
       "label": "Meta WhatsApp Cuchillo Flow",
@@ -17081,8 +17125,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "meta whatsapp cuchillo flow",
-      "id": "docs_meta_whatsapp_launch_checklist_meta_whatsapp_cuchillo_flow",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_meta_whatsapp_launch_checklist_meta_whatsapp_cuchillo_flow"
     },
     {
       "label": "Public Production Blockers",
@@ -17095,8 +17139,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "public production blockers",
-      "id": "docs_meta_whatsapp_launch_checklist_public_production_blockers",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_meta_whatsapp_launch_checklist_public_production_blockers"
     },
     {
       "label": "OpenClaw Separate Coolify App",
@@ -17109,8 +17153,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "openclaw separate coolify app",
-      "id": "docs_openclaw_handoff_openclaw_separate_coolify_app",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_openclaw_handoff_openclaw_separate_coolify_app"
     },
     {
       "label": "Vicky Sales Flow",
@@ -17123,8 +17167,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "vicky sales flow",
-      "id": "docs_openclaw_handoff_vicky_sales_flow",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_openclaw_handoff_vicky_sales_flow"
     },
     {
       "label": "Agent Limits",
@@ -17137,8 +17181,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "agent limits",
-      "id": "docs_openclaw_handoff_agent_limits",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_openclaw_handoff_agent_limits"
     },
     {
       "label": "Canonical Seller Prompt",
@@ -17151,8 +17195,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "canonical seller prompt",
-      "id": "docs_openclaw_seller_prompt_canonical_seller_prompt",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_openclaw_seller_prompt_canonical_seller_prompt"
     },
     {
       "label": "Datafast Card Payment Plan",
@@ -17165,8 +17209,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "datafast card payment plan",
-      "id": "docs_pagos_datafast_plan_datafast_card_payment_plan",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_pagos_datafast_plan_datafast_card_payment_plan"
     },
     {
       "label": "Copy&Pay Security Boundary",
@@ -17179,8 +17223,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "copy&pay security boundary",
-      "id": "docs_pagos_datafast_plan_copyandpay_security_boundary",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_pagos_datafast_plan_copyandpay_security_boundary"
     },
     {
       "label": "Go Live Pending Work",
@@ -17193,8 +17237,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "go live pending work",
-      "id": "docs_pendientes_go_live_go_live_pending_work",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_pendientes_go_live_go_live_pending_work"
     },
     {
       "label": "Datafast Certification Blockers",
@@ -17207,8 +17251,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "datafast certification blockers",
-      "id": "docs_pendientes_go_live_datafast_certification_blockers",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_pendientes_go_live_datafast_certification_blockers"
     },
     {
       "label": "Repository Map",
@@ -17221,8 +17265,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "repository map",
-      "id": "docs_project_map_repository_map",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_project_map_repository_map"
     },
     {
       "label": "Primary API Surface",
@@ -17235,8 +17279,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "primary api surface",
-      "id": "docs_project_map_primary_api_surface",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_project_map_primary_api_surface"
     },
     {
       "label": "Vicky Bot Runbook",
@@ -17249,8 +17293,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "vicky bot runbook",
-      "id": "docs_vicky_bot_vicky_bot_runbook",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_vicky_bot_vicky_bot_runbook"
     },
     {
       "label": "Message Logging",
@@ -17263,8 +17307,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "message logging",
-      "id": "docs_vicky_bot_message_logging",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_vicky_bot_message_logging"
     },
     {
       "label": "WhatsApp Hybrid Cart",
@@ -17277,8 +17321,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "whatsapp hybrid cart",
-      "id": "docs_web_design_cart_whatsapp_hybrid_cart",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_web_design_cart_whatsapp_hybrid_cart"
     },
     {
       "label": "Sprint 5 INTEG State",
@@ -17291,8 +17335,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "sprint 5 integ state",
-      "id": "docs_web_design_cart_sprint_5_integ_state",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_web_design_cart_sprint_5_integ_state"
     },
     {
       "label": "Cart Validation",
@@ -17305,8 +17349,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "cart validation",
-      "id": "docs_web_design_validation_cart_validation",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_web_design_validation_cart_validation"
     },
     {
       "label": "Premium Editorial Redesign",
@@ -17319,8 +17363,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "premium editorial redesign",
-      "id": "docs_web_redesign_plan_premium_editorial_redesign",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_web_redesign_plan_premium_editorial_redesign"
     },
     {
       "label": "Tracked Sticky CTA",
@@ -17333,8 +17377,8 @@
       "contributor": null,
       "community": 3,
       "norm_label": "tracked sticky cta",
-      "id": "docs_web_redesign_plan_tracked_sticky_cta",
-      "community_name": "Architecture Docs"
+      "community_name": "Architecture Docs",
+      "id": "docs_web_redesign_plan_tracked_sticky_cta"
     },
     {
       "label": "WhatsApp Cloud API Plan",
@@ -17347,8 +17391,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "whatsapp cloud api plan",
-      "id": "docs_whatsapp_cloud_plan_whatsapp_cloud_api_plan",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_whatsapp_cloud_api_plan"
     },
     {
       "label": "Meta Official WhatsApp Business Platform",
@@ -17361,8 +17405,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "meta official whatsapp business platform",
-      "id": "docs_whatsapp_cloud_plan_meta_official_business_platform",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_meta_official_business_platform"
     },
     {
       "label": "Hybrid WhatsApp Architecture",
@@ -17375,8 +17419,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "hybrid whatsapp architecture",
-      "id": "docs_whatsapp_cloud_plan_hybrid_whatsapp_architecture",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_hybrid_whatsapp_architecture"
     },
     {
       "label": "Business Initiated Conversations",
@@ -17389,8 +17433,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "business initiated conversations",
-      "id": "docs_whatsapp_cloud_plan_business_initiated_conversations",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_business_initiated_conversations"
     },
     {
       "label": "Vicky OpenClaw Conversation Brain",
@@ -17403,8 +17447,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "vicky openclaw conversation brain",
-      "id": "docs_whatsapp_cloud_plan_vicky_openclaw_brain",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_vicky_openclaw_brain"
     },
     {
       "label": "Dispatcher Meta Mode",
@@ -17417,8 +17461,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "dispatcher meta mode",
-      "id": "docs_whatsapp_cloud_plan_dispatcher_meta_mode",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_dispatcher_meta_mode"
     },
     {
       "label": "WhatsApp Webhook",
@@ -17431,8 +17475,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "whatsapp webhook",
-      "id": "docs_whatsapp_cloud_plan_whatsapp_webhook",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_whatsapp_webhook"
     },
     {
       "label": "Cloud API Free Form Reply",
@@ -17445,8 +17489,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "cloud api free form reply",
-      "id": "docs_whatsapp_cloud_plan_cloud_api_freeform_reply",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_cloud_api_freeform_reply"
     },
     {
       "label": "24 Hour Service Window",
@@ -17459,8 +17503,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "24 hour service window",
-      "id": "docs_whatsapp_cloud_plan_service_window_24h",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_service_window_24h"
     },
     {
       "label": "New Dedicated Cloud API Number",
@@ -17473,8 +17517,8 @@
       "contributor": null,
       "community": 101,
       "norm_label": "new dedicated cloud api number",
-      "id": "docs_whatsapp_cloud_plan_new_cloud_api_number",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_new_cloud_api_number"
     },
     {
       "label": "Current OpenClaw WhatsApp Number",
@@ -17487,8 +17531,8 @@
       "contributor": null,
       "community": 101,
       "norm_label": "current openclaw whatsapp number",
-      "id": "docs_whatsapp_cloud_plan_current_openclaw_number",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_current_openclaw_number"
     },
     {
       "label": "WABA Credentials",
@@ -17501,8 +17545,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "waba credentials",
-      "id": "docs_whatsapp_cloud_plan_waba_credentials",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_waba_credentials"
     },
     {
       "label": "Meta Approved Templates",
@@ -17515,8 +17559,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "meta approved templates",
-      "id": "docs_whatsapp_cloud_plan_meta_templates",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_meta_templates"
     },
     {
       "label": "WhatsApp Messaging Guardrails",
@@ -17529,8 +17573,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "whatsapp messaging guardrails",
-      "id": "docs_whatsapp_cloud_plan_whatsapp_guardrails",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_whatsapp_guardrails"
     },
     {
       "label": "CONV Timeline Events",
@@ -17543,8 +17587,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "conv timeline events",
-      "id": "docs_whatsapp_cloud_plan_conv_timeline",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_conv_timeline"
     },
     {
       "label": "Smart WhatsApp Channel Selector",
@@ -17557,8 +17601,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "smart whatsapp channel selector",
-      "id": "docs_whatsapp_cloud_plan_channel_selector",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "docs_whatsapp_cloud_plan_channel_selector"
     },
     {
       "label": "Cross Browser Testing Report",
@@ -17571,8 +17615,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "cross browser testing report",
-      "id": "reports_pln_1_cross_browser_testing_cross_browser_testing_report",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_pln_1_cross_browser_testing_cross_browser_testing_report"
     },
     {
       "label": "Cart Modal And Drawer Browser Compatibility",
@@ -17585,8 +17629,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "cart modal and drawer browser compatibility",
-      "id": "reports_pln_1_cross_browser_testing_cart_modal_drawer_compatibility",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_pln_1_cross_browser_testing_cart_modal_drawer_compatibility"
     },
     {
       "label": "Manual Safari And Chrome Device Testing",
@@ -17599,8 +17643,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "manual safari and chrome device testing",
-      "id": "reports_pln_1_cross_browser_testing_manual_device_testing",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_pln_1_cross_browser_testing_manual_device_testing"
     },
     {
       "label": "Meta Pixel Events Validation",
@@ -17613,8 +17657,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "meta pixel events validation",
-      "id": "reports_pln_2_meta_pixel_validation_meta_pixel_events_validation",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "reports_pln_2_meta_pixel_validation_meta_pixel_events_validation"
     },
     {
       "label": "Add To Cart Lead Event",
@@ -17627,8 +17671,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "add to cart lead event",
-      "id": "reports_pln_2_meta_pixel_validation_add_to_cart_lead_event",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "reports_pln_2_meta_pixel_validation_add_to_cart_lead_event"
     },
     {
       "label": "Initiate Checkout Event",
@@ -17641,8 +17685,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "initiate checkout event",
-      "id": "reports_pln_2_meta_pixel_validation_initiate_checkout_event",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "reports_pln_2_meta_pixel_validation_initiate_checkout_event"
     },
     {
       "label": "Event ID Deduplication",
@@ -17655,8 +17699,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "event id deduplication",
-      "id": "reports_pln_2_meta_pixel_validation_event_id_deduplication",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "reports_pln_2_meta_pixel_validation_event_id_deduplication"
     },
     {
       "label": "Meta Pixel Helper Manual Testing",
@@ -17669,8 +17713,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "meta pixel helper manual testing",
-      "id": "reports_pln_2_meta_pixel_validation_meta_pixel_helper_testing",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "reports_pln_2_meta_pixel_validation_meta_pixel_helper_testing"
     },
     {
       "label": "WhatsApp Multi Product Message Testing",
@@ -17683,8 +17727,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "whatsapp multi product message testing",
-      "id": "reports_pln_3_whatsapp_message_testing_whatsapp_multi_product_message_testing",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_pln_3_whatsapp_message_testing_whatsapp_multi_product_message_testing"
     },
     {
       "label": "generateCartMessage",
@@ -17697,8 +17741,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "generatecartmessage",
-      "id": "reports_pln_3_whatsapp_message_testing_generate_cart_message",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "reports_pln_3_whatsapp_message_testing_generate_cart_message"
     },
     {
       "label": "whatsappCartLink",
@@ -17711,8 +17755,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "whatsappcartlink",
-      "id": "reports_pln_3_whatsapp_message_testing_whatsapp_cart_link",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "reports_pln_3_whatsapp_message_testing_whatsapp_cart_link"
     },
     {
       "label": "Vicky Format Validation",
@@ -17725,8 +17769,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "vicky format validation",
-      "id": "reports_pln_3_whatsapp_message_testing_vicky_format_validation",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "reports_pln_3_whatsapp_message_testing_vicky_format_validation"
     },
     {
       "label": "Real WhatsApp Message Testing",
@@ -17739,8 +17783,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "real whatsapp message testing",
-      "id": "reports_pln_3_whatsapp_message_testing_real_whatsapp_testing",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "reports_pln_3_whatsapp_message_testing_real_whatsapp_testing"
     },
     {
       "label": "Test Data Calculation Error",
@@ -17753,8 +17797,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "test data calculation error",
-      "id": "reports_pln_3_whatsapp_message_testing_test_data_calculation_error",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_pln_3_whatsapp_message_testing_test_data_calculation_error"
     },
     {
       "label": "Performance Audit Report",
@@ -17767,8 +17811,8 @@
       "contributor": null,
       "community": 77,
       "norm_label": "performance audit report",
-      "id": "reports_pln_4_performance_audit_performance_audit_report",
-      "community_name": "Code Splitting"
+      "community_name": "Code Splitting",
+      "id": "reports_pln_4_performance_audit_performance_audit_report"
     },
     {
       "label": "Next.js Image Optimization",
@@ -17781,8 +17825,8 @@
       "contributor": null,
       "community": 77,
       "norm_label": "next.js image optimization",
-      "id": "reports_pln_4_performance_audit_next_image_optimization",
-      "community_name": "Code Splitting"
+      "community_name": "Code Splitting",
+      "id": "reports_pln_4_performance_audit_next_image_optimization"
     },
     {
       "label": "Layout Shift Prevention",
@@ -17795,8 +17839,8 @@
       "contributor": null,
       "community": 77,
       "norm_label": "layout shift prevention",
-      "id": "reports_pln_4_performance_audit_layout_shift_prevention",
-      "community_name": "Code Splitting"
+      "community_name": "Code Splitting",
+      "id": "reports_pln_4_performance_audit_layout_shift_prevention"
     },
     {
       "label": "Route Code Splitting",
@@ -17809,8 +17853,8 @@
       "contributor": null,
       "community": 77,
       "norm_label": "route code splitting",
-      "id": "reports_pln_4_performance_audit_code_splitting",
-      "community_name": "Code Splitting"
+      "community_name": "Code Splitting",
+      "id": "reports_pln_4_performance_audit_code_splitting"
     },
     {
       "label": "Lighthouse Manual Audit",
@@ -17823,8 +17867,8 @@
       "contributor": null,
       "community": 77,
       "norm_label": "lighthouse manual audit",
-      "id": "reports_pln_4_performance_audit_lighthouse_manual_audit",
-      "community_name": "Code Splitting"
+      "community_name": "Code Splitting",
+      "id": "reports_pln_4_performance_audit_lighthouse_manual_audit"
     },
     {
       "label": "Sprint 4 Completion Report",
@@ -17837,8 +17881,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "sprint 4 completion report",
-      "id": "reports_sprint_4_completion_report_sprint_4_completion",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_sprint_4_completion_report_sprint_4_completion"
     },
     {
       "label": "Storefront Build Verification",
@@ -17851,8 +17895,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "storefront build verification",
-      "id": "reports_sprint_4_completion_report_build_verification",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_sprint_4_completion_report_build_verification"
     },
     {
       "label": "Manual Testing Pending",
@@ -17865,8 +17909,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "manual testing pending",
-      "id": "reports_sprint_4_completion_report_manual_testing_pending",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_sprint_4_completion_report_manual_testing_pending"
     },
     {
       "label": "Release Branch",
@@ -17879,8 +17923,8 @@
       "contributor": null,
       "community": 61,
       "norm_label": "release branch",
-      "id": "reports_sprint_4_completion_report_release_branch",
-      "community_name": "Cart Modal And"
+      "community_name": "Cart Modal And",
+      "id": "reports_sprint_4_completion_report_release_branch"
     },
     {
       "label": "Ecommerce Sales Skill",
@@ -17893,8 +17937,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "ecommerce sales skill",
-      "id": "skills_ecommerce_sales_skill_ecommerce_sales_skill",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "skills_ecommerce_sales_skill_ecommerce_sales_skill"
     },
     {
       "label": "Buyer Context Lookup",
@@ -17907,8 +17951,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "buyer context lookup",
-      "id": "skills_ecommerce_sales_skill_buyer_context_lookup",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "skills_ecommerce_sales_skill_buyer_context_lookup"
     },
     {
       "label": "Product Search",
@@ -17921,8 +17965,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "product search",
-      "id": "skills_ecommerce_sales_skill_product_search",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "skills_ecommerce_sales_skill_product_search"
     },
     {
       "label": "Quote Creation",
@@ -17935,8 +17979,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "quote creation",
-      "id": "skills_ecommerce_sales_skill_quote_creation",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "skills_ecommerce_sales_skill_quote_creation"
     },
     {
       "label": "Order Creation",
@@ -17949,8 +17993,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "order creation",
-      "id": "skills_ecommerce_sales_skill_order_creation",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_ecommerce_sales_skill_order_creation"
     },
     {
       "label": "PayPhone Link Generation",
@@ -17963,8 +18007,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payphone link generation",
-      "id": "skills_ecommerce_sales_skill_payphone_link_generation",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_ecommerce_sales_skill_payphone_link_generation"
     },
     {
       "label": "Customer And Web Events",
@@ -17977,8 +18021,8 @@
       "contributor": null,
       "community": 75,
       "norm_label": "customer and web events",
-      "id": "skills_ecommerce_sales_skill_customer_events",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_ecommerce_sales_skill_customer_events"
     },
     {
       "label": "Ecommerce Sales OpenAI Agent",
@@ -17991,8 +18035,8 @@
       "contributor": null,
       "community": 62,
       "norm_label": "ecommerce sales openai agent",
-      "id": "skills_ecommerce_sales_agents_openai_ecommerce_sales_openai_agent",
-      "community_name": "GenerateCartMessage"
+      "community_name": "GenerateCartMessage",
+      "id": "skills_ecommerce_sales_agents_openai_ecommerce_sales_openai_agent"
     },
     {
       "label": "Meta Marketplace Assistant Skill",
@@ -18005,8 +18049,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "meta marketplace assistant skill",
-      "id": "skills_meta_marketplace_assistant_skill_meta_marketplace_assistant_skill",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_meta_marketplace_assistant_skill_meta_marketplace_assistant_skill"
     },
     {
       "label": "Meta Post Draft Endpoint",
@@ -18019,8 +18063,8 @@
       "contributor": null,
       "community": 76,
       "norm_label": "meta post draft endpoint",
-      "id": "skills_meta_marketplace_assistant_skill_meta_post_draft_endpoint",
-      "community_name": "Add To Cart"
+      "community_name": "Add To Cart",
+      "id": "skills_meta_marketplace_assistant_skill_meta_post_draft_endpoint"
     },
     {
       "label": "Marketplace Human Approval Boundary",
@@ -18033,8 +18077,8 @@
       "contributor": null,
       "community": 70,
       "norm_label": "marketplace human approval boundary",
-      "id": "skills_meta_marketplace_assistant_skill_marketplace_human_approval_boundary",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_meta_marketplace_assistant_skill_marketplace_human_approval_boundary"
     },
     {
       "label": "Meta Catalog Feed",
@@ -18047,8 +18091,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "meta catalog feed",
-      "id": "skills_meta_marketplace_assistant_skill_meta_catalog_feed",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_meta_marketplace_assistant_skill_meta_catalog_feed"
     },
     {
       "label": "WhatsApp Conversion Path",
@@ -18061,8 +18105,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "whatsapp conversion path",
-      "id": "skills_meta_marketplace_assistant_skill_whatsapp_conversion_path",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_meta_marketplace_assistant_skill_whatsapp_conversion_path"
     },
     {
       "label": "Meta Marketplace OpenAI Agent",
@@ -18075,8 +18119,8 @@
       "contributor": null,
       "community": 69,
       "norm_label": "meta marketplace openai agent",
-      "id": "skills_meta_marketplace_assistant_agents_openai_meta_marketplace_openai_agent",
-      "community_name": "Project Documentation"
+      "community_name": "Project Documentation",
+      "id": "skills_meta_marketplace_assistant_agents_openai_meta_marketplace_openai_agent"
     },
     {
       "label": "PayPhone Reconciliation Skill",
@@ -18089,8 +18133,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payphone reconciliation skill",
-      "id": "skills_payphone_reconciliation_skill_payphone_reconciliation_skill",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_skill_payphone_reconciliation_skill"
     },
     {
       "label": "PayPhone Webhook",
@@ -18103,8 +18147,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payphone webhook",
-      "id": "skills_payphone_reconciliation_skill_payphone_webhook",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_skill_payphone_webhook"
     },
     {
       "label": "Client Transaction Match",
@@ -18117,8 +18161,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "client transaction match",
-      "id": "skills_payphone_reconciliation_skill_client_transaction_match",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_skill_client_transaction_match"
     },
     {
       "label": "Payment Status Rules",
@@ -18131,8 +18175,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payment status rules",
-      "id": "skills_payphone_reconciliation_skill_payment_status_rules",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_skill_payment_status_rules"
     },
     {
       "label": "Payment Human Review Handoff",
@@ -18145,8 +18189,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payment human review handoff",
-      "id": "skills_payphone_reconciliation_skill_human_review_handoff",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_skill_human_review_handoff"
     },
     {
       "label": "PayPhone Reconciliation OpenAI Agent",
@@ -18159,8 +18203,8 @@
       "contributor": null,
       "community": 66,
       "norm_label": "payphone reconciliation openai agent",
-      "id": "skills_payphone_reconciliation_agents_openai_payphone_reconciliation_openai_agent",
-      "community_name": "Order Creation"
+      "community_name": "Order Creation",
+      "id": "skills_payphone_reconciliation_agents_openai_payphone_reconciliation_openai_agent"
     }
   ],
   "links": [
@@ -30451,7 +30495,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L288",
+      "source_location": "L314",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30484,7 +30528,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L284",
+      "source_location": "L310",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30495,7 +30539,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L274",
+      "source_location": "L300",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30556,7 +30600,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L129",
+      "source_location": "L150",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page_pagotarjetapage",
@@ -30600,7 +30644,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/resultado/page.tsx",
-      "source_location": "L142",
+      "source_location": "L147",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_resultado_page",
@@ -30661,7 +30705,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/storefront/app/checkout/resultado/page.tsx",
-      "source_location": "L44",
+      "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_resultado_page_resultado",
@@ -42286,7 +42330,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L162",
+      "source_location": "L170",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42297,7 +42341,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L99",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42308,7 +42352,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L68",
+      "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42341,7 +42385,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L173",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_contracts",
+      "target": "services_ecommerce_tools_src_contracts_datafastvoidschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/contracts.ts",
+      "source_location": "L181",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42363,7 +42418,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L62",
+      "source_location": "L70",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42396,7 +42451,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L299",
+      "source_location": "L307",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42418,7 +42473,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L297",
+      "source_location": "L305",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42429,7 +42484,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L272",
+      "source_location": "L280",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42440,7 +42495,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L270",
+      "source_location": "L278",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42451,7 +42506,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/contracts.ts",
-      "source_location": "L194",
+      "source_location": "L202",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_contracts",
@@ -42499,7 +42554,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -42599,6 +42654,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
+      "target": "services_ecommerce_tools_src_contracts_datafastvoidschema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/index.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_index",
       "target": "services_ecommerce_tools_src_contracts_metadraftinputschema",
       "confidence_score": 1.0
     },
@@ -42703,7 +42770,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -42727,7 +42794,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -43154,7 +43221,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L83",
+      "source_location": "L87",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43165,7 +43232,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L70",
+      "source_location": "L344",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast",
+      "target": "services_ecommerce_tools_src_datafast_buildvoidform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L72",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43176,7 +43254,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L197",
+      "source_location": "L201",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43198,7 +43276,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L185",
+      "source_location": "L189",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43209,7 +43287,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L35",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43220,7 +43298,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L21",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43231,7 +43309,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L55",
+      "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43242,7 +43320,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L242",
+      "source_location": "L246",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43253,7 +43331,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L274",
+      "source_location": "L335",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast",
+      "target": "services_ecommerce_tools_src_datafast_datafastvoidresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L278",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43264,7 +43353,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L179",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43275,7 +43364,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L41",
+      "source_location": "L43",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43286,7 +43375,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L255",
+      "source_location": "L259",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
@@ -43297,11 +43386,22 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L59",
+      "source_location": "L61",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast",
       "target": "services_ecommerce_tools_src_datafast_round2",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L365",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast",
+      "target": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
       "confidence_score": 1.0
     },
     {
@@ -43345,7 +43445,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L202",
+      "source_location": "L206",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_createdatafastcheckout",
@@ -43357,10 +43457,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L293",
+      "source_location": "L297",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_getdatafastresult",
+      "target": "services_ecommerce_tools_src_datafast_datafasthost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L385",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
       "target": "services_ecommerce_tools_src_datafast_datafasthost",
       "confidence_score": 1.0
     },
@@ -43381,7 +43493,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L133",
+      "source_location": "L137",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_buildcheckoutform",
@@ -43393,7 +43505,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L71",
+      "source_location": "L74",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_computeiva",
@@ -43405,7 +43517,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L87",
+      "source_location": "L91",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_buildcheckoutform",
@@ -43417,7 +43529,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L201",
+      "source_location": "L205",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_createdatafastcheckout",
@@ -43441,7 +43553,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L216",
+      "source_location": "L220",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_createdatafastcheckout",
@@ -43465,10 +43577,22 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L318",
+      "source_location": "L322",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_getdatafastresult",
+      "target": "services_ecommerce_tools_src_datafast_isdatafastsuccess",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L404",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
       "target": "services_ecommerce_tools_src_datafast_isdatafastsuccess",
       "confidence_score": 1.0
     },
@@ -43513,7 +43637,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/datafast.ts",
-      "source_location": "L294",
+      "source_location": "L298",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_datafast_getdatafastresult",
@@ -43554,6 +43678,54 @@
       "_origin": "ast",
       "source": "services_ecommerce_tools_tests_datafast_test",
       "target": "services_ecommerce_tools_src_datafast_getdatafastresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/datafast.ts",
+      "source_location": "L394",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
+      "target": "services_ecommerce_tools_src_datafast_buildvoidform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/tests/datafast.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_tests_datafast_test",
+      "target": "services_ecommerce_tools_src_datafast_buildvoidform",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/service.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_service",
+      "target": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/tests/datafast.test.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_tests_datafast_test",
+      "target": "services_ecommerce_tools_src_datafast_voiddatafastpayment",
       "confidence_score": 1.0
     },
     {
@@ -44160,7 +44332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44171,7 +44343,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44182,7 +44354,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44218,7 +44390,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44230,7 +44402,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44242,7 +44414,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44254,7 +44426,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/index.ts",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_index",
@@ -44647,7 +44819,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L286",
+      "source_location": "L287",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_trackcustomerevent",
@@ -44751,7 +44923,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -44811,7 +44983,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -44835,7 +45007,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45105,7 +45277,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45116,7 +45288,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L306",
+      "source_location": "L307",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45127,7 +45299,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L226",
+      "source_location": "L227",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45138,7 +45310,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L117",
+      "source_location": "L118",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45149,7 +45321,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L125",
+      "source_location": "L126",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45160,7 +45332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45171,7 +45343,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L59",
+      "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45182,7 +45354,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L83",
+      "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45193,7 +45365,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L196",
+      "source_location": "L197",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45204,7 +45376,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L204",
+      "source_location": "L205",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45215,7 +45387,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L111",
+      "source_location": "L112",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45226,7 +45398,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L135",
+      "source_location": "L136",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45237,7 +45409,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45248,7 +45420,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L277",
+      "source_location": "L278",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45404,7 +45576,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45416,7 +45588,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45428,7 +45600,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45440,7 +45612,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45452,7 +45624,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service",
@@ -45488,7 +45660,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_suggestnextaction",
@@ -45500,7 +45672,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L228",
+      "source_location": "L229",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_customerlifecyclesummary",
@@ -45512,7 +45684,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_suggestnextaction",
@@ -45524,7 +45696,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L231",
+      "source_location": "L232",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_customerlifecyclesummary",
@@ -45536,7 +45708,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L303",
+      "source_location": "L304",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_trackcustomerevent",
@@ -45548,7 +45720,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
-      "source_location": "L302",
+      "source_location": "L303",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_src_service_trackcustomerevent",
@@ -46759,7 +46931,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/tests/datafast.test.ts",
-      "source_location": "L13",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_ecommerce_tools_tests_datafast_test",
@@ -49526,5 +49698,5 @@
       "source_file": "skills/ecommerce-sales/SKILL.md"
     }
   ],
-  "built_at_commit": "f591eccd44c7978fe10e80896213ed5564b0bda5"
+  "built_at_commit": "12ad8766bddd391766e4a6848ca0c7d7263254e0"
 }
