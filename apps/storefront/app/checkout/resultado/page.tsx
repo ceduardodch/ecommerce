@@ -41,6 +41,10 @@ function Resultado() {
         const data = (await res.json()) as Result
         setResult(data)
         if (data.status === "paid") {
+          // El Purchase a Meta solo se dispara con la aprobación de PRODUCCIÓN
+          // (000.000.000). Los códigos de prueba (000.100.11x, certificación
+          // Datafast) muestran éxito al usuario pero no contaminan campañas.
+          if (data.code === "000.000.000") {
           trackStorefrontEvent({
             eventName: "Purchase",
             type: "purchase_confirmed",
@@ -63,6 +67,7 @@ function Resultado() {
             })),
             metadata: { reference: data.reference, provider: "datafast" },
           })
+          }
           clearCart()
           setState("paid")
         } else {
