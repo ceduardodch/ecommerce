@@ -51,6 +51,8 @@ app.get("/healthz", async () => ({
   allowDemoCatalog: config.allowDemoCatalog,
   medusaAdminApiKeyConfigured: Boolean(config.medusaAdminApiKey),
   payphoneMode: config.payphoneDryRun ? "dry-run" : "live",
+  datafastMode: config.datafastDryRun ? "dry-run" : config.datafastEnv,
+  datafastConfigured: Boolean(config.datafastEntityId && config.datafastAccessToken),
 }))
 
 app.get("/tools/search-products", async (request) => {
@@ -115,7 +117,7 @@ app.get("/tools/datafast/result", async (request, reply) => {
   if (!checkoutId) {
     return reply.code(400).send({ error: "missing_checkout_id" })
   }
-  return service.datafastResult(checkoutId)
+  return service.datafastResult(checkoutId, query.resourcePath)
 })
 
 app.get("/feeds/meta/catalog.csv", async (request, reply) => {

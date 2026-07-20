@@ -7,6 +7,9 @@
 
 ## A. PAGOS CON TARJETA (Datafast) — para cobrar de verdad
 Estado: código construido y verificado en dry-run + venta enlazada al CRM.
+**Go-live inmediato definido:** producción en `eter-niu.com` con Datafast en
+`DATAFAST_ENV=test` y `DATAFAST_DRY_RUN=false` para revisión/certificación. El
+cobro real por tarjeta se activa después con credenciales productivas.
 **Jul/2026: código alineado a la guía v3.2.2 para certificación** — endpoints
 `eu-test`/`eu-prod` (los viejos sin `eu-` están desactivados), bloque completo
 `customParameters[SHOPPER_*]` (VAL_BASE0/VAL_BASEIMP/VAL_IVA, MID/TID,
@@ -30,6 +33,9 @@ eu-test real (`000.200.100`, prueba ejecutada 18/jul/2026).
   escrito.
 - 🟢 Escaneo DigiCert (digicert.com → SSL Installation Diagnostics) tras el
   cambio de TLS en Cloudflare, antes de pedir el escaneo oficial.
+- 🟢 En Coolify, configurar `DATAFAST_*` de pruebas, `DATAFAST_ENV=test` y
+  `DATAFAST_DRY_RUN=false`; verificar `/healthz` con `datafastMode=test` y
+  `datafastConfigured=true`.
 - Paso a producción (Anexo I): `DATAFAST_ENV=live` ya elimina `testMode`,
   cambia host a eu-prod y muestra el sello; solo faltará cargar credenciales
   productivas (entityId/token/MID/TID reales).

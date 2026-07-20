@@ -7,6 +7,7 @@ import {
   datafastHost,
   getDatafastResult,
   isDatafastSuccess,
+  normalizeDatafastResourcePath,
 } from "../src/datafast.js"
 
 const items = [
@@ -56,6 +57,23 @@ describe("datafast — códigos de resultado", () => {
     expect(isDatafastSuccess("000.100.110", "test")).toBe(true)
     expect(isDatafastSuccess("800.400.500", "test")).toBe(false)
     expect(isDatafastSuccess(undefined, "test")).toBe(false)
+  })
+})
+
+describe("datafast — resourcePath de retorno", () => {
+  it("acepta solo rutas de resultado de checkout", () => {
+    expect(
+      normalizeDatafastResourcePath(
+        "/v1/checkouts/ABC123.uat01-vm-tx01/payment",
+      ),
+    ).toBe("/v1/checkouts/ABC123.uat01-vm-tx01/payment")
+    expect(
+      normalizeDatafastResourcePath(
+        "https://eu-test.oppwa.com/v1/checkouts/ABC123.uat01-vm-tx01/payment",
+      ),
+    ).toBe("/v1/checkouts/ABC123.uat01-vm-tx01/payment")
+    expect(normalizeDatafastResourcePath("/v1/registrations/abc")).toBeUndefined()
+    expect(normalizeDatafastResourcePath("https://example.com/pay")).toBeUndefined()
   })
 })
 

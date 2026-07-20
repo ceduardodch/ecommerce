@@ -720,8 +720,8 @@ export function createCommerceService(config: AppConfig) {
     },
 
     // ─── Datafast: consultar resultado + registrar venta en CRM (idempotente) ───
-    async datafastResult(checkoutId: string) {
-      const result = await getDatafastResult(config, checkoutId)
+    async datafastResult(checkoutId: string, resourcePath?: string) {
+      const result = await getDatafastResult(config, checkoutId, resourcePath)
       const record = await findDatafastCheckout(config.dataDir, checkoutId)
 
       if (result.status === "paid" && record && !record.registered) {
@@ -764,12 +764,26 @@ export function createCommerceService(config: AppConfig) {
           ...record,
           status: "paid",
           registered: true,
+          resultCode: result.code,
+          resultDescription: result.description,
+          resultReference: result.reference,
+          paymentBrand: result.paymentBrand,
+          paymentId: result.paymentId,
+          ndc: result.ndc,
+          authorizationCode: result.authorizationCode,
           updatedAt: now,
         })
       } else if (result.status === "failed" && record && record.status === "pending") {
         await upsertDatafastCheckout(config.dataDir, {
           ...record,
           status: "failed",
+          resultCode: result.code,
+          resultDescription: result.description,
+          resultReference: result.reference,
+          paymentBrand: result.paymentBrand,
+          paymentId: result.paymentId,
+          ndc: result.ndc,
+          authorizationCode: result.authorizationCode,
           updatedAt: new Date().toISOString(),
         })
       }

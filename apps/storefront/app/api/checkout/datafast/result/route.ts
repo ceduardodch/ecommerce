@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
   if (!id) {
     return NextResponse.json({ error: "missing_checkout_id" }, { status: 400 })
   }
+  const resourcePath = request.nextUrl.searchParams.get("resourcePath")
 
   const headers: Record<string, string> = {}
   if (process.env.TOOLS_API_TOKEN) {
@@ -23,8 +24,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const params = new URLSearchParams({ id })
+    if (resourcePath) params.set("resourcePath", resourcePath)
     const response = await fetch(
-      `${toolsUrl()}/tools/datafast/result?id=${encodeURIComponent(id)}`,
+      `${toolsUrl()}/tools/datafast/result?${params.toString()}`,
       { headers, cache: "no-store" },
     )
     const body = await response
