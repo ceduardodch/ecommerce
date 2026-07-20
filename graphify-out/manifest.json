@@ -1,0 +1,1707 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1783025957.8307326,
+    "ast_hash": "9ce0f7c4e9197efa712fd19dd8469c0a",
+    "semantic_hash": "9ce0f7c4e9197efa712fd19dd8469c0a"
+  },
+  "apps/backend/instrumentation.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "e9da63ec9b0828204cca3e09e65b2298",
+    "semantic_hash": "e9da63ec9b0828204cca3e09e65b2298"
+  },
+  "apps/backend/integration-tests/setup.js": {
+    "mtime": 1781193999.490963,
+    "ast_hash": "4af765c94ffdc3495fe9c7086e4e1cba",
+    "semantic_hash": "4af765c94ffdc3495fe9c7086e4e1cba"
+  },
+  "apps/backend/jest.config.js": {
+    "mtime": 1779848712.0,
+    "ast_hash": "c9e0cff41022183a42b4f8fecfd3c26e",
+    "semantic_hash": "c9e0cff41022183a42b4f8fecfd3c26e"
+  },
+  "apps/backend/medusa-config.ts": {
+    "mtime": 1779897406.2233143,
+    "ast_hash": "da549b5b1eb4abb9d44be9d10756ca95",
+    "semantic_hash": "da549b5b1eb4abb9d44be9d10756ca95"
+  },
+  "apps/backend/package.json": {
+    "mtime": 1781193999.4913034,
+    "ast_hash": "a015a4991061a8e72bf3c8bc9963ba48",
+    "semantic_hash": "a015a4991061a8e72bf3c8bc9963ba48"
+  },
+  "apps/backend/scripts/patch-admin-cache-reload.mjs": {
+    "mtime": 1779932464.4380758,
+    "ast_hash": "308f2bc75ef3d4e4f86cede0dcfd03dd",
+    "semantic_hash": "308f2bc75ef3d4e4f86cede0dcfd03dd"
+  },
+  "apps/backend/src/admin/i18n/index.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "a10b4978dbbf03e8bab090cc9cabd934",
+    "semantic_hash": "a10b4978dbbf03e8bab090cc9cabd934"
+  },
+  "apps/backend/src/admin/lib/lead-import.ts": {
+    "mtime": 1781193999.491686,
+    "ast_hash": "8d3f818dd990040e7eaadec016485cbe",
+    "semantic_hash": "8d3f818dd990040e7eaadec016485cbe"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/import/page.tsx": {
+    "mtime": 1781193999.4921825,
+    "ast_hash": "c0c6fb80cd9fb5af9afea08cd7ac5f16",
+    "semantic_hash": "c0c6fb80cd9fb5af9afea08cd7ac5f16"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/leads/[phone]/page.tsx": {
+    "mtime": 1781193999.4926054,
+    "ast_hash": "9938835a02c484567150ab0377d31103",
+    "semantic_hash": "9938835a02c484567150ab0377d31103"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/leads/page.tsx": {
+    "mtime": 1781308147.057868,
+    "ast_hash": "144cff2d84043e116bec587d37599767",
+    "semantic_hash": "144cff2d84043e116bec587d37599767"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/page.tsx": {
+    "mtime": 1781308147.0582743,
+    "ast_hash": "cf3b6292916ad0b9845ed0875f7174fd",
+    "semantic_hash": "cf3b6292916ad0b9845ed0875f7174fd"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/pipeline/page.tsx": {
+    "mtime": 1781308147.0585794,
+    "ast_hash": "efd604e0fb0b2b76aac3b1a9b6ace598",
+    "semantic_hash": "efd604e0fb0b2b76aac3b1a9b6ace598"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/recompra/page.tsx": {
+    "mtime": 1781193999.4936867,
+    "ast_hash": "63b5f575b8b6aa899bb6f1f37cf5e0cf",
+    "semantic_hash": "63b5f575b8b6aa899bb6f1f37cf5e0cf"
+  },
+  "apps/backend/src/admin/routes/crm-whatsapp/templates/page.tsx": {
+    "mtime": 1781193999.4941168,
+    "ast_hash": "788040652935548fd3dcc632a651eea3",
+    "semantic_hash": "788040652935548fd3dcc632a651eea3"
+  },
+  "apps/backend/src/admin/tsconfig.json": {
+    "mtime": 1779848712.0,
+    "ast_hash": "d97b598d854ea05353210675c2f5cd09",
+    "semantic_hash": "d97b598d854ea05353210675c2f5cd09"
+  },
+  "apps/backend/src/admin/vite-env.d.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "db266f67270495e5478804f291146e99",
+    "semantic_hash": "db266f67270495e5478804f291146e99"
+  },
+  "apps/backend/src/api/admin/b2b/_shared.ts": {
+    "mtime": 1781308147.0589075,
+    "ast_hash": "e84ae36671a2893388a7ed0b89849e1b",
+    "semantic_hash": "e84ae36671a2893388a7ed0b89849e1b"
+  },
+  "apps/backend/src/api/admin/b2b/crm/broadcasts/route.ts": {
+    "mtime": 1781308146.995659,
+    "ast_hash": "642c56332fb295ad3becceef72a45c6d",
+    "semantic_hash": "642c56332fb295ad3becceef72a45c6d"
+  },
+  "apps/backend/src/api/admin/b2b/crm/customers/[phone]/purchase/route.ts": {
+    "mtime": 1781193999.4948106,
+    "ast_hash": "2bb41c033170b900ef30f8bb208eff3f",
+    "semantic_hash": "2bb41c033170b900ef30f8bb208eff3f"
+  },
+  "apps/backend/src/api/admin/b2b/crm/customers/[phone]/route.ts": {
+    "mtime": 1781193999.4951074,
+    "ast_hash": "2690ccd750eeff04df96c52ceb5e2ffc",
+    "semantic_hash": "2690ccd750eeff04df96c52ceb5e2ffc"
+  },
+  "apps/backend/src/api/admin/b2b/crm/customers/[phone]/snooze/route.ts": {
+    "mtime": 1781193999.4954016,
+    "ast_hash": "42acce302488f86eb3735fb8dd0cd76c",
+    "semantic_hash": "42acce302488f86eb3735fb8dd0cd76c"
+  },
+  "apps/backend/src/api/admin/b2b/crm/customers/import/route.ts": {
+    "mtime": 1781193999.4957502,
+    "ast_hash": "66e56a97d654fa10293ea32ddc08ee6c",
+    "semantic_hash": "66e56a97d654fa10293ea32ddc08ee6c"
+  },
+  "apps/backend/src/api/admin/b2b/crm/customers/route.ts": {
+    "mtime": 1781308147.0591981,
+    "ast_hash": "74d739d642df70a83a8799904e747d9e",
+    "semantic_hash": "74d739d642df70a83a8799904e747d9e"
+  },
+  "apps/backend/src/api/admin/b2b/crm/dashboard/route.ts": {
+    "mtime": 1781308146.996086,
+    "ast_hash": "e056dfe550b2799e8b458269f9c3f4a8",
+    "semantic_hash": "e056dfe550b2799e8b458269f9c3f4a8"
+  },
+  "apps/backend/src/api/admin/b2b/crm/events/route.ts": {
+    "mtime": 1781193999.1885495,
+    "ast_hash": "a0474530c68b788aff22d919b2db47cc",
+    "semantic_hash": "a0474530c68b788aff22d919b2db47cc"
+  },
+  "apps/backend/src/api/admin/b2b/crm/followups/dispatch/route.ts": {
+    "mtime": 1781193999.4963229,
+    "ast_hash": "a54ef025a7bb7b249bfa7d8b34b77368",
+    "semantic_hash": "a54ef025a7bb7b249bfa7d8b34b77368"
+  },
+  "apps/backend/src/api/admin/b2b/crm/followups/due/route.ts": {
+    "mtime": 1779897406.2249615,
+    "ast_hash": "2f3b4006db58d58a6489477c9d7150d9",
+    "semantic_hash": "2f3b4006db58d58a6489477c9d7150d9"
+  },
+  "apps/backend/src/api/admin/b2b/crm/reports/recompra/route.ts": {
+    "mtime": 1781193999.4966555,
+    "ast_hash": "9d4f3d9509a2214502cba29981c660ab",
+    "semantic_hash": "9d4f3d9509a2214502cba29981c660ab"
+  },
+  "apps/backend/src/api/admin/b2b/crm/templates/route.ts": {
+    "mtime": 1781193999.4969492,
+    "ast_hash": "77e60aa562cad2c39096175b48714670",
+    "semantic_hash": "77e60aa562cad2c39096175b48714670"
+  },
+  "apps/backend/src/api/admin/b2b/orders/[id]/payment-link/route.ts": {
+    "mtime": 1779897406.225251,
+    "ast_hash": "0fb9269dc463eb0ff7845b1a260eb1a4",
+    "semantic_hash": "0fb9269dc463eb0ff7845b1a260eb1a4"
+  },
+  "apps/backend/src/api/admin/b2b/orders/[id]/route.ts": {
+    "mtime": 1779897406.2253907,
+    "ast_hash": "748d518df6a5e871e7d6ad653c7e0368",
+    "semantic_hash": "748d518df6a5e871e7d6ad653c7e0368"
+  },
+  "apps/backend/src/api/admin/b2b/orders/payphone-webhook/route.ts": {
+    "mtime": 1779897406.2255867,
+    "ast_hash": "89e9c1ede33e89bf66f474c056263568",
+    "semantic_hash": "89e9c1ede33e89bf66f474c056263568"
+  },
+  "apps/backend/src/api/admin/b2b/orders/route.ts": {
+    "mtime": 1779897406.2257288,
+    "ast_hash": "1d99571e01367078e4b757bd94d407ad",
+    "semantic_hash": "1d99571e01367078e4b757bd94d407ad"
+  },
+  "apps/backend/src/api/admin/custom/route.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "94d4a08c1218a6e412993538d5c6cbd1",
+    "semantic_hash": "94d4a08c1218a6e412993538d5c6cbd1"
+  },
+  "apps/backend/src/api/b2b/reviews/[id]/helpful/route.ts": {
+    "mtime": 1783041824.323234,
+    "ast_hash": "41505c01746ed49ebd0f9c908ab91b6d",
+    "semantic_hash": "41505c01746ed49ebd0f9c908ab91b6d"
+  },
+  "apps/backend/src/api/b2b/reviews/_shared.ts": {
+    "mtime": 1783041818.7859414,
+    "ast_hash": "653951e5c87d2faec60a7784f103942d",
+    "semantic_hash": "653951e5c87d2faec60a7784f103942d"
+  },
+  "apps/backend/src/api/b2b/reviews/route.ts": {
+    "mtime": 1783041822.5137346,
+    "ast_hash": "61ceef7e86935118281bc0c90ed7e4e0",
+    "semantic_hash": "61ceef7e86935118281bc0c90ed7e4e0"
+  },
+  "apps/backend/src/api/store/b2b/status/route.ts": {
+    "mtime": 1779849082.3922613,
+    "ast_hash": "d5e46a4e83bbdbc89f00acb90f225956",
+    "semantic_hash": "d5e46a4e83bbdbc89f00acb90f225956"
+  },
+  "apps/backend/src/api/store/custom/route.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "94d4a08c1218a6e412993538d5c6cbd1",
+    "semantic_hash": "94d4a08c1218a6e412993538d5c6cbd1"
+  },
+  "apps/backend/src/jobs/__tests__/schedule-seasonal-followups.unit.spec.ts": {
+    "mtime": 1781230788.6497788,
+    "ast_hash": "8cd8a49fce428497be5e138200a08b40",
+    "semantic_hash": "8cd8a49fce428497be5e138200a08b40"
+  },
+  "apps/backend/src/jobs/dispatch-due-followups.ts": {
+    "mtime": 1781193999.497127,
+    "ast_hash": "5f46786af731addfada124a04d984651",
+    "semantic_hash": "5f46786af731addfada124a04d984651"
+  },
+  "apps/backend/src/jobs/schedule-seasonal-followups.ts": {
+    "mtime": 1781230788.6500287,
+    "ast_hash": "9a6b34e458b5208982f3b06a941760b7",
+    "semantic_hash": "9a6b34e458b5208982f3b06a941760b7"
+  },
+  "apps/backend/src/lib/__tests__/ec-phone.unit.spec.ts": {
+    "mtime": 1781193999.4973934,
+    "ast_hash": "bfaf2841e631088bdcd2268df38128a7",
+    "semantic_hash": "bfaf2841e631088bdcd2268df38128a7"
+  },
+  "apps/backend/src/lib/ec-phone.ts": {
+    "mtime": 1781193999.4975905,
+    "ast_hash": "91acea275ac88fdcfa390782517e2a13",
+    "semantic_hash": "91acea275ac88fdcfa390782517e2a13"
+  },
+  "apps/backend/src/migration-scripts/initial-data-seed.ts": {
+    "mtime": 1779848712.0,
+    "ast_hash": "b164cb72237768ec2ba93265570664a1",
+    "semantic_hash": "b164cb72237768ec2ba93265570664a1"
+  },
+  "apps/backend/src/migration-scripts/kitchen-catalog-seed.ts": {
+    "mtime": 1781308147.0595293,
+    "ast_hash": "d7598e7656e0ef255c093e9f32aa4216",
+    "semantic_hash": "d7598e7656e0ef255c093e9f32aa4216"
+  },
+  "apps/backend/src/migration-scripts/wellness-catalog-seed.ts": {
+    "mtime": 1781308147.0599916,
+    "ast_hash": "9b9fce7c5c9fc11369bd828b0e26fece",
+    "semantic_hash": "9b9fce7c5c9fc11369bd828b0e26fece"
+  },
+  "apps/backend/src/modules/b2b-crm/__tests__/bmk3-nps.unit.spec.ts": {
+    "mtime": 1781308147.0602646,
+    "ast_hash": "179c5838300e350381c1f7e3eb1f540c",
+    "semantic_hash": "179c5838300e350381c1f7e3eb1f540c"
+  },
+  "apps/backend/src/modules/b2b-crm/__tests__/followup-dispatch.unit.spec.ts": {
+    "mtime": 1781193999.4982538,
+    "ast_hash": "d5fc7eb9673dff48fa1ad70fc02ea0b9",
+    "semantic_hash": "d5fc7eb9673dff48fa1ad70fc02ea0b9"
+  },
+  "apps/backend/src/modules/b2b-crm/__tests__/meta-dispatch.unit.spec.ts": {
+    "mtime": 1781308146.9964921,
+    "ast_hash": "631bb3cceb0b1e3f550d0756d4854046",
+    "semantic_hash": "631bb3cceb0b1e3f550d0756d4854046"
+  },
+  "apps/backend/src/modules/b2b-crm/__tests__/recompra-metrics.unit.spec.ts": {
+    "mtime": 1781193999.4985151,
+    "ast_hash": "69af957158c782a5697d23373a47d591",
+    "semantic_hash": "69af957158c782a5697d23373a47d591"
+  },
+  "apps/backend/src/modules/b2b-crm/__tests__/rfm.unit.spec.ts": {
+    "mtime": 1781308147.0604544,
+    "ast_hash": "69f8db2c968201274cb259182ee3388c",
+    "semantic_hash": "69f8db2c968201274cb259182ee3388c"
+  },
+  "apps/backend/src/modules/b2b-crm/followup-dispatch.ts": {
+    "mtime": 1781308147.0607479,
+    "ast_hash": "569df4d4e091c32353e26accc0d26cf8",
+    "semantic_hash": "569df4d4e091c32353e26accc0d26cf8"
+  },
+  "apps/backend/src/modules/b2b-crm/index.ts": {
+    "mtime": 1783040375.899189,
+    "ast_hash": "5b73b53c2e108b63f50d5d2cecfef3f8",
+    "semantic_hash": "5b73b53c2e108b63f50d5d2cecfef3f8"
+  },
+  "apps/backend/src/modules/b2b-crm/migrations/Migration20260527000000.ts": {
+    "mtime": 1779897406.2262762,
+    "ast_hash": "53144cd76fce39edbed92b003a42f9d2",
+    "semantic_hash": "53144cd76fce39edbed92b003a42f9d2"
+  },
+  "apps/backend/src/modules/b2b-crm/migrations/Migration20260611000000.ts": {
+    "mtime": 1783025760.3740497,
+    "ast_hash": "224d536a237401d9125ec91a38875d05",
+    "semantic_hash": "224d536a237401d9125ec91a38875d05"
+  },
+  "apps/backend/src/modules/b2b-crm/migrations/Migration20260702000000.ts": {
+    "mtime": 1783025764.3166335,
+    "ast_hash": "f14f5a1cc64874c315f5db26c29a0010",
+    "semantic_hash": "f14f5a1cc64874c315f5db26c29a0010"
+  },
+  "apps/backend/src/modules/b2b-crm/models/conversational-order.ts": {
+    "mtime": 1779897406.2264433,
+    "ast_hash": "ad230a5d0b67facda7186c27dccbadf3",
+    "semantic_hash": "ad230a5d0b67facda7186c27dccbadf3"
+  },
+  "apps/backend/src/modules/b2b-crm/models/crm-customer-event.ts": {
+    "mtime": 1779897406.226603,
+    "ast_hash": "0ff978fd0d4e2b0673b199fab1d35543",
+    "semantic_hash": "0ff978fd0d4e2b0673b199fab1d35543"
+  },
+  "apps/backend/src/modules/b2b-crm/models/crm-customer-profile.ts": {
+    "mtime": 1779897406.22674,
+    "ast_hash": "9933ab0afd298cfb72d0ff43e1207b39",
+    "semantic_hash": "9933ab0afd298cfb72d0ff43e1207b39"
+  },
+  "apps/backend/src/modules/b2b-crm/models/crm-message-template.ts": {
+    "mtime": 1781193999.4992912,
+    "ast_hash": "a4c29788ef71cdb6735a37bdfa682678",
+    "semantic_hash": "a4c29788ef71cdb6735a37bdfa682678"
+  },
+  "apps/backend/src/modules/b2b-crm/models/index.ts": {
+    "mtime": 1783025764.3171546,
+    "ast_hash": "d53c2f250e6f3e9c702a55c3b2b55cfa",
+    "semantic_hash": "d53c2f250e6f3e9c702a55c3b2b55cfa"
+  },
+  "apps/backend/src/modules/b2b-crm/models/product-review.ts": {
+    "mtime": 1783041860.6096544,
+    "ast_hash": "edf49eb1bdd1589dd9b597c3cf085291",
+    "semantic_hash": "edf49eb1bdd1589dd9b597c3cf085291"
+  },
+  "apps/backend/src/modules/b2b-crm/recompra-metrics.ts": {
+    "mtime": 1781193999.4999528,
+    "ast_hash": "09bc8b5222e08764b7d3f4249dde24c9",
+    "semantic_hash": "09bc8b5222e08764b7d3f4249dde24c9"
+  },
+  "apps/backend/src/modules/b2b-crm/rfm.ts": {
+    "mtime": 1781308147.0612211,
+    "ast_hash": "0f904ccc3306f318cbd2285f4281b6ea",
+    "semantic_hash": "0f904ccc3306f318cbd2285f4281b6ea"
+  },
+  "apps/backend/src/modules/b2b-crm/service.ts": {
+    "mtime": 1783041846.084395,
+    "ast_hash": "c4e02ba8112c36085b6b920ae327f321",
+    "semantic_hash": "c4e02ba8112c36085b6b920ae327f321"
+  },
+  "apps/backend/src/modules/b2b-crm/types.ts": {
+    "mtime": 1781193999.1903665,
+    "ast_hash": "d19a2b0367c0adbf41cddfbb607af5ee",
+    "semantic_hash": "d19a2b0367c0adbf41cddfbb607af5ee"
+  },
+  "apps/backend/tsconfig.json": {
+    "mtime": 1779848712.0,
+    "ast_hash": "f495023b76539854a7171b5272ed1418",
+    "semantic_hash": "f495023b76539854a7171b5272ed1418"
+  },
+  "apps/storefront/app/api/checkout/datafast/result/route.ts": {
+    "mtime": 1784567737.6568658,
+    "ast_hash": "c78f9e5cd365e13a39c84c7acb499bb8",
+    "semantic_hash": ""
+  },
+  "apps/storefront/app/api/checkout/datafast/route.ts": {
+    "mtime": 1783025760.3751655,
+    "ast_hash": "7de2ff5313f6d735d2d10a2c45fa290a",
+    "semantic_hash": "7de2ff5313f6d735d2d10a2c45fa290a"
+  },
+  "apps/storefront/app/api/events/route.ts": {
+    "mtime": 1779905180.5115585,
+    "ast_hash": "5b5c86c0295d98362b6c004ecd0d0795",
+    "semantic_hash": "5b5c86c0295d98362b6c004ecd0d0795"
+  },
+  "apps/storefront/app/api/reviews/[id]/helpful/route.ts": {
+    "mtime": 1783041905.5015435,
+    "ast_hash": "599c55cdebacc6861d5cf5156eeeb756",
+    "semantic_hash": "599c55cdebacc6861d5cf5156eeeb756"
+  },
+  "apps/storefront/app/api/reviews/lib.ts": {
+    "mtime": 1783041885.3928766,
+    "ast_hash": "695ea2fb2a8dc8f83feb1c2f742bda6e",
+    "semantic_hash": "695ea2fb2a8dc8f83feb1c2f742bda6e"
+  },
+  "apps/storefront/app/api/reviews/route.ts": {
+    "mtime": 1783041900.8260493,
+    "ast_hash": "84b882503d3779ba29ef498f4712325a",
+    "semantic_hash": "84b882503d3779ba29ef498f4712325a"
+  },
+  "apps/storefront/app/bienestar/campanas/[slug]/page.tsx": {
+    "mtime": 1783098444.2718143,
+    "ast_hash": "f09d1cb2bc1666447608bd02a6b8c4ae",
+    "semantic_hash": "f09d1cb2bc1666447608bd02a6b8c4ae"
+  },
+  "apps/storefront/app/bienestar/components/wellness-interactions.tsx": {
+    "mtime": 1781231015.9161081,
+    "ast_hash": "e35fe7fa3c51bd4bf4a7f13254cf95ad",
+    "semantic_hash": "e35fe7fa3c51bd4bf4a7f13254cf95ad"
+  },
+  "apps/storefront/app/bienestar/page.tsx": {
+    "mtime": 1783098444.2673569,
+    "ast_hash": "49fcbc0dad7f8208c73beb7deece2173",
+    "semantic_hash": "49fcbc0dad7f8208c73beb7deece2173"
+  },
+  "apps/storefront/app/campanas/[slug]/components/campaign-interactions.tsx": {
+    "mtime": 1781308146.9972713,
+    "ast_hash": "f610ab5fe98aff52d3bedf743314db6d",
+    "semantic_hash": "f610ab5fe98aff52d3bedf743314db6d"
+  },
+  "apps/storefront/app/campanas/[slug]/page.tsx": {
+    "mtime": 1783098444.2713451,
+    "ast_hash": "c846bfd0172ffb03b87f4be3b2c4968c",
+    "semantic_hash": "c846bfd0172ffb03b87f4be3b2c4968c"
+  },
+  "apps/storefront/app/cart/page.tsx": {
+    "mtime": 1783098513.0824616,
+    "ast_hash": "eb8912cd05d96917f3b7bd734e409675",
+    "semantic_hash": "eb8912cd05d96917f3b7bd734e409675"
+  },
+  "apps/storefront/app/checkout/pago/page.tsx": {
+    "mtime": 1784565535.7288592,
+    "ast_hash": "cb951dce93e52135cfa63343660e34cd",
+    "semantic_hash": ""
+  },
+  "apps/storefront/app/checkout/resultado/page.tsx": {
+    "mtime": 1784567737.6572828,
+    "ast_hash": "437a0bf06626201307fe32ed5ca1e8ab",
+    "semantic_hash": ""
+  },
+  "apps/storefront/app/components/analytics.tsx": {
+    "mtime": 1781193999.1941977,
+    "ast_hash": "8888f89c70cd88e08a9ba91fc5a40a3a",
+    "semantic_hash": "8888f89c70cd88e08a9ba91fc5a40a3a"
+  },
+  "apps/storefront/app/components/cart/cart-controller.tsx": {
+    "mtime": 1781453294.1709232,
+    "ast_hash": "925a44d8f1de56b171dba3b95ee6aecc",
+    "semantic_hash": "925a44d8f1de56b171dba3b95ee6aecc"
+  },
+  "apps/storefront/app/components/cart/cart-drawer.tsx": {
+    "mtime": 1783025760.377089,
+    "ast_hash": "7e0bceaa21e976680719cffd65640961",
+    "semantic_hash": "7e0bceaa21e976680719cffd65640961"
+  },
+  "apps/storefront/app/components/cart/cart-item.tsx": {
+    "mtime": 1781308147.062526,
+    "ast_hash": "73c7c2a5fc8e8a263595e3fdb1745a88",
+    "semantic_hash": "73c7c2a5fc8e8a263595e3fdb1745a88"
+  },
+  "apps/storefront/app/components/cart/cart-modal.tsx": {
+    "mtime": 1783025760.3777428,
+    "ast_hash": "d55de9176fe05592e674cdabf5853d41",
+    "semantic_hash": "d55de9176fe05592e674cdabf5853d41"
+  },
+  "apps/storefront/app/components/cart/cart-summary.tsx": {
+    "mtime": 1781308147.0626862,
+    "ast_hash": "a25c6c32caebed7eb8e0ed7be27d62b7",
+    "semantic_hash": "a25c6c32caebed7eb8e0ed7be27d62b7"
+  },
+  "apps/storefront/app/components/cart/checkout-button.tsx": {
+    "mtime": 1784565535.7300575,
+    "ast_hash": "7847a19a1b26faf6fa9f77c8cdf2e540",
+    "semantic_hash": ""
+  },
+  "apps/storefront/app/components/lead-capture-form.tsx": {
+    "mtime": 1781308146.997873,
+    "ast_hash": "fc3da4ef2a8889b74998ef721be22e86",
+    "semantic_hash": "fc3da4ef2a8889b74998ef721be22e86"
+  },
+  "apps/storefront/app/components/pot-recommendation-quiz.tsx": {
+    "mtime": 1781308146.9984922,
+    "ast_hash": "4b283f6d290d5049474a4775d20fb36c",
+    "semantic_hash": "4b283f6d290d5049474a4775d20fb36c"
+  },
+  "apps/storefront/app/components/ui/add-to-cart-button.tsx": {
+    "mtime": 1781308147.0630398,
+    "ast_hash": "8073a5224a43376cc177b460ddc82ddf",
+    "semantic_hash": "8073a5224a43376cc177b460ddc82ddf"
+  },
+  "apps/storefront/app/components/ui/badge.tsx": {
+    "mtime": 1781193999.5010896,
+    "ast_hash": "2dcaaf698f75664eecc9a13bde5a6408",
+    "semantic_hash": "2dcaaf698f75664eecc9a13bde5a6408"
+  },
+  "apps/storefront/app/components/ui/breadcrumbs.tsx": {
+    "mtime": 1783025764.321822,
+    "ast_hash": "bd87e435392483b352d509d13ed09262",
+    "semantic_hash": "bd87e435392483b352d509d13ed09262"
+  },
+  "apps/storefront/app/components/ui/button.tsx": {
+    "mtime": 1781193999.5013297,
+    "ast_hash": "72bd16029f57f5111079498f3696946c",
+    "semantic_hash": "72bd16029f57f5111079498f3696946c"
+  },
+  "apps/storefront/app/components/ui/cart-badge.tsx": {
+    "mtime": 1781453294.1725893,
+    "ast_hash": "95356163152d3ffbbc35d9ba7d662e67",
+    "semantic_hash": "95356163152d3ffbbc35d9ba7d662e67"
+  },
+  "apps/storefront/app/components/ui/cart-bag-button.tsx": {
+    "mtime": 1783025764.3221936,
+    "ast_hash": "65911ef50cf27b36b53a66dfafc3fd82",
+    "semantic_hash": "65911ef50cf27b36b53a66dfafc3fd82"
+  },
+  "apps/storefront/app/components/ui/color-picker.tsx": {
+    "mtime": 1781193999.501581,
+    "ast_hash": "f7675551a0f055216c91ef2bc6f97c97",
+    "semantic_hash": "f7675551a0f055216c91ef2bc6f97c97"
+  },
+  "apps/storefront/app/components/ui/customer-reviews.tsx": {
+    "mtime": 1783041924.3921957,
+    "ast_hash": "1f0714adac3fd5b8d41205f3cb7238ac",
+    "semantic_hash": "1f0714adac3fd5b8d41205f3cb7238ac"
+  },
+  "apps/storefront/app/components/ui/floating-product.tsx": {
+    "mtime": 1783025764.3230996,
+    "ast_hash": "7f6cda208f4e7d59bb8223011085fc02",
+    "semantic_hash": "7f6cda208f4e7d59bb8223011085fc02"
+  },
+  "apps/storefront/app/components/ui/form-field.tsx": {
+    "mtime": 1781193999.501925,
+    "ast_hash": "90d00f7b27194f0f17a09962754ede83",
+    "semantic_hash": "90d00f7b27194f0f17a09962754ede83"
+  },
+  "apps/storefront/app/components/ui/hero-showcase.tsx": {
+    "mtime": 1783021229.9585,
+    "ast_hash": "e136f537c058c84229f48eeb1ff32c50",
+    "semantic_hash": "e136f537c058c84229f48eeb1ff32c50"
+  },
+  "apps/storefront/app/components/ui/image-reveal.tsx": {
+    "mtime": 1783025764.323399,
+    "ast_hash": "bf765a0da007318d4055012e881c2fdc",
+    "semantic_hash": "bf765a0da007318d4055012e881c2fdc"
+  },
+  "apps/storefront/app/components/ui/isotipo.tsx": {
+    "mtime": 1783025760.378177,
+    "ast_hash": "99f663820378b97a40e77687ddb81041",
+    "semantic_hash": "99f663820378b97a40e77687ddb81041"
+  },
+  "apps/storefront/app/components/ui/material-macro.tsx": {
+    "mtime": 1783025764.323649,
+    "ast_hash": "0dacaa2a7523c8a64b7c76ef9cf038f6",
+    "semantic_hash": "0dacaa2a7523c8a64b7c76ef9cf038f6"
+  },
+  "apps/storefront/app/components/ui/newsletter-signup.tsx": {
+    "mtime": 1783087713.6592383,
+    "ast_hash": "47f1bb37e5f56333920785041817ea9a",
+    "semantic_hash": "47f1bb37e5f56333920785041817ea9a"
+  },
+  "apps/storefront/app/components/ui/page-ambient.tsx": {
+    "mtime": 1783094911.222984,
+    "ast_hash": "fbb578df4b0f14b65652a3eb18f6ec98",
+    "semantic_hash": "fbb578df4b0f14b65652a3eb18f6ec98"
+  },
+  "apps/storefront/app/components/ui/parallax-image.tsx": {
+    "mtime": 1783025764.3238914,
+    "ast_hash": "065228ac32fa2df5158dafc7c065c6d5",
+    "semantic_hash": "065228ac32fa2df5158dafc7c065c6d5"
+  },
+  "apps/storefront/app/components/ui/photo.tsx": {
+    "mtime": 1781193999.502778,
+    "ast_hash": "3dfe5fedea86873cf1f35c585f0a52af",
+    "semantic_hash": "3dfe5fedea86873cf1f35c585f0a52af"
+  },
+  "apps/storefront/app/components/ui/price-tag.tsx": {
+    "mtime": 1781193999.5030053,
+    "ast_hash": "12cce666e1eb7fbf1f34d9ebcdc28d37",
+    "semantic_hash": "12cce666e1eb7fbf1f34d9ebcdc28d37"
+  },
+  "apps/storefront/app/components/ui/privacy-consent.tsx": {
+    "mtime": 1783025760.3792806,
+    "ast_hash": "0dec377ff74cd7ad7bc5ca7524fbc73b",
+    "semantic_hash": "0dec377ff74cd7ad7bc5ca7524fbc73b"
+  },
+  "apps/storefront/app/components/ui/product-360.tsx": {
+    "mtime": 1783008333.8990707,
+    "ast_hash": "366444d31ad8e44d146b83545add6199",
+    "semantic_hash": "366444d31ad8e44d146b83545add6199"
+  },
+  "apps/storefront/app/components/ui/product-card.tsx": {
+    "mtime": 1783025764.3241854,
+    "ast_hash": "d1cc8af02457b2378efd394e2fc8676d",
+    "semantic_hash": "d1cc8af02457b2378efd394e2fc8676d"
+  },
+  "apps/storefront/app/components/ui/product-showcase-grid.tsx": {
+    "mtime": 1783098444.2757998,
+    "ast_hash": "8b0991c09cf225b1ccb4dd99c1140809",
+    "semantic_hash": "8b0991c09cf225b1ccb4dd99c1140809"
+  },
+  "apps/storefront/app/components/ui/promo-bar.tsx": {
+    "mtime": 1781193999.503499,
+    "ast_hash": "44e627706c7c1060715d033b8fca5241",
+    "semantic_hash": "44e627706c7c1060715d033b8fca5241"
+  },
+  "apps/storefront/app/components/ui/review-card.tsx": {
+    "mtime": 1783041930.961931,
+    "ast_hash": "4a234f2ac6021cc090993d3f1b58ffcd",
+    "semantic_hash": "4a234f2ac6021cc090993d3f1b58ffcd"
+  },
+  "apps/storefront/app/components/ui/review-form.tsx": {
+    "mtime": 1783041963.6782398,
+    "ast_hash": "8ec8f72dc762b9777cb80b9199fd5d1a",
+    "semantic_hash": "8ec8f72dc762b9777cb80b9199fd5d1a"
+  },
+  "apps/storefront/app/components/ui/scroll-reveal.tsx": {
+    "mtime": 1783025764.3256037,
+    "ast_hash": "7f58aa61be3316d28364bd91bb2eac2e",
+    "semantic_hash": "7f58aa61be3316d28364bd91bb2eac2e"
+  },
+  "apps/storefront/app/components/ui/section.tsx": {
+    "mtime": 1783025764.326011,
+    "ast_hash": "7e81d91acd17fe5007d4d74b3ba928c6",
+    "semantic_hash": "7e81d91acd17fe5007d4d74b3ba928c6"
+  },
+  "apps/storefront/app/components/ui/showcase-tile.tsx": {
+    "mtime": 1783021179.246706,
+    "ast_hash": "18401c17ecd3de92ca13e04b09b68708",
+    "semantic_hash": "18401c17ecd3de92ca13e04b09b68708"
+  },
+  "apps/storefront/app/components/ui/site-footer.tsx": {
+    "mtime": 1784378561.6444433,
+    "ast_hash": "729e31f08e2ca3327122fbe656f4f987",
+    "semantic_hash": "729e31f08e2ca3327122fbe656f4f987"
+  },
+  "apps/storefront/app/components/ui/site-header.tsx": {
+    "mtime": 1783087682.3117566,
+    "ast_hash": "287576f829f0cedcc880d1d4d0e5125f",
+    "semantic_hash": "287576f829f0cedcc880d1d4d0e5125f"
+  },
+  "apps/storefront/app/components/ui/spec-table.tsx": {
+    "mtime": 1783025764.326935,
+    "ast_hash": "1511c6c4049a10e70287c16bdd153cfe",
+    "semantic_hash": "1511c6c4049a10e70287c16bdd153cfe"
+  },
+  "apps/storefront/app/components/ui/sticky-cta-bar.tsx": {
+    "mtime": 1783025764.327591,
+    "ast_hash": "450f17a5b2b4be93b9c27d29b5cccf27",
+    "semantic_hash": "450f17a5b2b4be93b9c27d29b5cccf27"
+  },
+  "apps/storefront/app/components/ui/video-frame.tsx": {
+    "mtime": 1781193999.506449,
+    "ast_hash": "76f67deb0d3590665a97c02caf176174",
+    "semantic_hash": "76f67deb0d3590665a97c02caf176174"
+  },
+  "apps/storefront/app/components/ui/video-stories.tsx": {
+    "mtime": 1783025764.32787,
+    "ast_hash": "bb6f76f309d95965a68abf6edb8202be",
+    "semantic_hash": "bb6f76f309d95965a68abf6edb8202be"
+  },
+  "apps/storefront/app/dev/ui/color-picker-demo.tsx": {
+    "mtime": 1781193999.5073855,
+    "ast_hash": "0a2c46f51d74f21a595eae4da57e0cef",
+    "semantic_hash": "0a2c46f51d74f21a595eae4da57e0cef"
+  },
+  "apps/storefront/app/dev/ui/page.tsx": {
+    "mtime": 1781308147.063747,
+    "ast_hash": "9764c71fc582bc9d0ab9a3df19b43ed6",
+    "semantic_hash": "9764c71fc582bc9d0ab9a3df19b43ed6"
+  },
+  "apps/storefront/app/dev/ui/video-stories-demo.tsx": {
+    "mtime": 1781193999.5081785,
+    "ast_hash": "9c1d09ec92a95534cd8188082372cc27",
+    "semantic_hash": "9c1d09ec92a95534cd8188082372cc27"
+  },
+  "apps/storefront/app/envios-devoluciones/page.tsx": {
+    "mtime": 1783098444.2746794,
+    "ast_hash": "c0d20f5cdb984cc6f55b8bc25bad6303",
+    "semantic_hash": "c0d20f5cdb984cc6f55b8bc25bad6303"
+  },
+  "apps/storefront/app/feeds/meta/catalog.csv/route.ts": {
+    "mtime": 1781193999.1953273,
+    "ast_hash": "5347b5704016b1fe3d646eaa5ffe5889",
+    "semantic_hash": "5347b5704016b1fe3d646eaa5ffe5889"
+  },
+  "apps/storefront/app/guias/page.tsx": {
+    "mtime": 1783098444.2724333,
+    "ast_hash": "ef509de6fed2ed51d1263ad6ca367387",
+    "semantic_hash": "ef509de6fed2ed51d1263ad6ca367387"
+  },
+  "apps/storefront/app/guias/teflon-pfas/page.tsx": {
+    "mtime": 1783098444.2731338,
+    "ast_hash": "3781411b98a08a400491550e6225778f",
+    "semantic_hash": "3781411b98a08a400491550e6225778f"
+  },
+  "apps/storefront/app/layout.tsx": {
+    "mtime": 1783025760.3806822,
+    "ast_hash": "e05a9b1f7bdb081e9b8a94e3c2a3b982",
+    "semantic_hash": "e05a9b1f7bdb081e9b8a94e3c2a3b982"
+  },
+  "apps/storefront/app/marca/page.tsx": {
+    "mtime": 1783098444.273533,
+    "ast_hash": "46fc1638fcb73083c61fd32ee9dd6ac4",
+    "semantic_hash": "46fc1638fcb73083c61fd32ee9dd6ac4"
+  },
+  "apps/storefront/app/page.tsx": {
+    "mtime": 1783098444.2664251,
+    "ast_hash": "50ddae3e5734f788be6bc8d442f2062c",
+    "semantic_hash": "50ddae3e5734f788be6bc8d442f2062c"
+  },
+  "apps/storefront/app/payphone/sandbox/[clientTransactionId]/page.tsx": {
+    "mtime": 1781308146.9990973,
+    "ast_hash": "712b505d4bf6b2e05762aa28a29a0fe3",
+    "semantic_hash": "712b505d4bf6b2e05762aa28a29a0fe3"
+  },
+  "apps/storefront/app/privacidad/page.tsx": {
+    "mtime": 1783098444.273942,
+    "ast_hash": "ab33b5d848be146a10648ee5bba8cbb8",
+    "semantic_hash": "ab33b5d848be146a10648ee5bba8cbb8"
+  },
+  "apps/storefront/app/products/[slug]/page.tsx": {
+    "mtime": 1783098444.268414,
+    "ast_hash": "8be6f470ce232f8ca92e8c13175f63b9",
+    "semantic_hash": "8be6f470ce232f8ca92e8c13175f63b9"
+  },
+  "apps/storefront/app/terminos/page.tsx": {
+    "mtime": 1783098444.27426,
+    "ast_hash": "1ccac12b86721dc54ebcce3ce5404176",
+    "semantic_hash": "1ccac12b86721dc54ebcce3ce5404176"
+  },
+  "apps/storefront/contexts/CartContext.tsx": {
+    "mtime": 1781453294.1767313,
+    "ast_hash": "cca019b175c31921f186700b5b39142c",
+    "semantic_hash": "cca019b175c31921f186700b5b39142c"
+  },
+  "apps/storefront/lib/catalog.ts": {
+    "mtime": 1783077864.8297532,
+    "ast_hash": "582448ab4fe5093258933110496bb8a0",
+    "semantic_hash": "582448ab4fe5093258933110496bb8a0"
+  },
+  "apps/storefront/lib/commercial.ts": {
+    "mtime": 1781193999.1976774,
+    "ast_hash": "2eff0a32d7366a06794b79b7dfda9daa",
+    "semantic_hash": "2eff0a32d7366a06794b79b7dfda9daa"
+  },
+  "apps/storefront/lib/content.ts": {
+    "mtime": 1781193999.5109558,
+    "ast_hash": "497a623b2bd1929b591fce6618838e44",
+    "semantic_hash": "497a623b2bd1929b591fce6618838e44"
+  },
+  "apps/storefront/lib/domains.ts": {
+    "mtime": 1781193999.5112922,
+    "ast_hash": "7bed1dcdd9dd79564e68d0fe454036c9",
+    "semantic_hash": "7bed1dcdd9dd79564e68d0fe454036c9"
+  },
+  "apps/storefront/lib/product360.ts": {
+    "mtime": 1783008345.0021095,
+    "ast_hash": "da72654a6bc62d00e8d9a40e0a020338",
+    "semantic_hash": "da72654a6bc62d00e8d9a40e0a020338"
+  },
+  "apps/storefront/lib/wellness.ts": {
+    "mtime": 1781193999.1984415,
+    "ast_hash": "a890330f9ef6b97e5c3b54a7372ab56a",
+    "semantic_hash": "a890330f9ef6b97e5c3b54a7372ab56a"
+  },
+  "apps/storefront/lib/whatsapp.ts": {
+    "mtime": 1781308147.0659628,
+    "ast_hash": "54a9ebfadf08eb44d437e0001d9432dc",
+    "semantic_hash": "54a9ebfadf08eb44d437e0001d9432dc"
+  },
+  "apps/storefront/middleware.ts": {
+    "mtime": 1781193999.5117435,
+    "ast_hash": "6f8df3d25e85701b6552cc2cb258e4f4",
+    "semantic_hash": "6f8df3d25e85701b6552cc2cb258e4f4"
+  },
+  "apps/storefront/next-env.d.ts": {
+    "mtime": 1779849990.8068962,
+    "ast_hash": "ba64ff7d54714a8f64db89b1003207d8",
+    "semantic_hash": "ba64ff7d54714a8f64db89b1003207d8"
+  },
+  "apps/storefront/next.config.ts": {
+    "mtime": 1781193999.5120447,
+    "ast_hash": "120f59b34a469560cd6cc6041b53f4e7",
+    "semantic_hash": "120f59b34a469560cd6cc6041b53f4e7"
+  },
+  "apps/storefront/package.json": {
+    "mtime": 1781193999.512441,
+    "ast_hash": "a80310a2048bb9cb64a96b0d2049baeb",
+    "semantic_hash": "a80310a2048bb9cb64a96b0d2049baeb"
+  },
+  "apps/storefront/postcss.config.mjs": {
+    "mtime": 1781193999.5127075,
+    "ast_hash": "a32d7b7ea32bacdef41803f34daf384a",
+    "semantic_hash": "a32d7b7ea32bacdef41803f34daf384a"
+  },
+  "apps/storefront/tsconfig.json": {
+    "mtime": 1779849990.8054383,
+    "ast_hash": "aef3e9fc240933aab98ac7cff51f8dd7",
+    "semantic_hash": "aef3e9fc240933aab98ac7cff51f8dd7"
+  },
+  "package.json": {
+    "mtime": 1784584496.57108,
+    "ast_hash": "19d24e5a320c21378a7a8b7ccaf5e5cb",
+    "semantic_hash": ""
+  },
+  "scripts/audit-wellness-reorder-cycles.ts": {
+    "mtime": 1781230788.6549087,
+    "ast_hash": "b581a4e714aaaf50302a37ba2178be4b",
+    "semantic_hash": "b581a4e714aaaf50302a37ba2178be4b"
+  },
+  "scripts/campaign-readiness-report.mjs": {
+    "mtime": 1781193999.3727894,
+    "ast_hash": "1bb8cab4e0b9a27cfe336e90aab3fe24",
+    "semantic_hash": "1bb8cab4e0b9a27cfe336e90aab3fe24"
+  },
+  "scripts/generate-biblioteca-metadata.mjs": {
+    "mtime": 1781193999.3731008,
+    "ast_hash": "5608b49729f527662cc7c9325abd16a1",
+    "semantic_hash": "5608b49729f527662cc7c9325abd16a1"
+  },
+  "scripts/reset-medusa-crm.mjs": {
+    "mtime": 1781193999.3734026,
+    "ast_hash": "61bb7b5f55081bf70cadaf04e31e5923",
+    "semantic_hash": "61bb7b5f55081bf70cadaf04e31e5923"
+  },
+  "scripts/sync-whatsapp-catalog.mjs": {
+    "mtime": 1781308147.066945,
+    "ast_hash": "d11a01e9b854ff738ad19062b5105fa3",
+    "semantic_hash": "d11a01e9b854ff738ad19062b5105fa3"
+  },
+  "scripts/validate-cuchillo-release-package.mjs": {
+    "mtime": 1781193999.3740165,
+    "ast_hash": "2ff71fb708ca8c5ab4df92118a978d5b",
+    "semantic_hash": "2ff71fb708ca8c5ab4df92118a978d5b"
+  },
+  "scripts/validate-meta-whatsapp-flow.mjs": {
+    "mtime": 1781308147.067311,
+    "ast_hash": "a56b12f45d5ed1bc7344b89e3ff3639f",
+    "semantic_hash": "a56b12f45d5ed1bc7344b89e3ff3639f"
+  },
+  "services/ecommerce-tools/package.json": {
+    "mtime": 1779849408.9010494,
+    "ast_hash": "3f108c25eb4a1245bcc16baded0cabd2",
+    "semantic_hash": "3f108c25eb4a1245bcc16baded0cabd2"
+  },
+  "services/ecommerce-tools/src/auth.ts": {
+    "mtime": 1781308147.027823,
+    "ast_hash": "eda0b7ceb3b67da65d3169f1853cb2cd",
+    "semantic_hash": "eda0b7ceb3b67da65d3169f1853cb2cd"
+  },
+  "services/ecommerce-tools/src/catalog.ts": {
+    "mtime": 1781193999.374827,
+    "ast_hash": "3607dc6220b7ab0392bf747163e146ea",
+    "semantic_hash": "3607dc6220b7ab0392bf747163e146ea"
+  },
+  "services/ecommerce-tools/src/config.ts": {
+    "mtime": 1783025760.3842757,
+    "ast_hash": "5a0c6b78fb4b05db0030638db1df6e07",
+    "semantic_hash": "5a0c6b78fb4b05db0030638db1df6e07"
+  },
+  "services/ecommerce-tools/src/contracts.ts": {
+    "mtime": 1783025760.3847446,
+    "ast_hash": "17d6dd1bb84026a8efc0fe431817c456",
+    "semantic_hash": "17d6dd1bb84026a8efc0fe431817c456"
+  },
+  "services/ecommerce-tools/src/customers.ts": {
+    "mtime": 1781193999.3761547,
+    "ast_hash": "5624eea0ee165d222b5f643cbff67110",
+    "semantic_hash": "5624eea0ee165d222b5f643cbff67110"
+  },
+  "services/ecommerce-tools/src/datafast.ts": {
+    "mtime": 1784567704.8133256,
+    "ast_hash": "f956e3129844fe5989ff8c0dad480a31",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/src/demo-catalog.ts": {
+    "mtime": 1781308147.067847,
+    "ast_hash": "a72d2e6dd539fbf39e58c3de127b046e",
+    "semantic_hash": "a72d2e6dd539fbf39e58c3de127b046e"
+  },
+  "services/ecommerce-tools/src/events.ts": {
+    "mtime": 1780107357.192349,
+    "ast_hash": "418988ed017c1d64d8b6159077af732f",
+    "semantic_hash": "418988ed017c1d64d8b6159077af732f"
+  },
+  "services/ecommerce-tools/src/index.ts": {
+    "mtime": 1784567737.6563978,
+    "ast_hash": "a70b08ef8dfd4d95f0c977709bc42c80",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/src/mcp-server.ts": {
+    "mtime": 1781193999.3776286,
+    "ast_hash": "6258c20bb3a8db58ec4525b4ea73af9a",
+    "semantic_hash": "6258c20bb3a8db58ec4525b4ea73af9a"
+  },
+  "services/ecommerce-tools/src/medusa-admin.ts": {
+    "mtime": 1781193999.3781264,
+    "ast_hash": "97c58b73f060c6c47ae54dcf2358cd01",
+    "semantic_hash": "97c58b73f060c6c47ae54dcf2358cd01"
+  },
+  "services/ecommerce-tools/src/meta.ts": {
+    "mtime": 1781193999.3784406,
+    "ast_hash": "41f630540d61cba7ab1c5d6653386c0c",
+    "semantic_hash": "41f630540d61cba7ab1c5d6653386c0c"
+  },
+  "services/ecommerce-tools/src/payphone.ts": {
+    "mtime": 1779849408.903215,
+    "ast_hash": "38c9a3b5a2b8a8b3dfab3ab428eb7358",
+    "semantic_hash": "38c9a3b5a2b8a8b3dfab3ab428eb7358"
+  },
+  "services/ecommerce-tools/src/quote.ts": {
+    "mtime": 1779891415.2698054,
+    "ast_hash": "fb16e1d8951c6e5dc6d25d40e59f5b1b",
+    "semantic_hash": "fb16e1d8951c6e5dc6d25d40e59f5b1b"
+  },
+  "services/ecommerce-tools/src/service.ts": {
+    "mtime": 1784567723.7473547,
+    "ast_hash": "650d06a7fe499a07ee07a17306d11660",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/src/storage.ts": {
+    "mtime": 1783025760.388313,
+    "ast_hash": "f32d27d3fb51d9e1089852f88aa52607",
+    "semantic_hash": "f32d27d3fb51d9e1089852f88aa52607"
+  },
+  "services/ecommerce-tools/src/types.ts": {
+    "mtime": 1784567710.5048344,
+    "ast_hash": "8c0761a5dcd1f0278be7f07168c2b9b3",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/src/whatsapp-reply.ts": {
+    "mtime": 1781308147.029031,
+    "ast_hash": "3fa77a1c973a041032d42d8a8ea9f861",
+    "semantic_hash": "3fa77a1c973a041032d42d8a8ea9f861"
+  },
+  "services/ecommerce-tools/src/whatsapp-webhook.ts": {
+    "mtime": 1781308147.068658,
+    "ast_hash": "eaee68c3a9639a385d80b5716fee3778",
+    "semantic_hash": "eaee68c3a9639a385d80b5716fee3778"
+  },
+  "services/ecommerce-tools/tests/datafast-crm.test.ts": {
+    "mtime": 1784567749.9202933,
+    "ast_hash": "c534a7132eadfd5f76f455c5b1c1ee3b",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/tests/datafast.test.ts": {
+    "mtime": 1784567749.9195461,
+    "ast_hash": "6177abd4a7715e4e1dfce171907a759a",
+    "semantic_hash": ""
+  },
+  "services/ecommerce-tools/tests/quote.test.ts": {
+    "mtime": 1781193999.52103,
+    "ast_hash": "147ac7e158c35615c7a707794e110c2d",
+    "semantic_hash": "147ac7e158c35615c7a707794e110c2d"
+  },
+  "services/ecommerce-tools/tests/whatsapp-webhook.test.ts": {
+    "mtime": 1781308147.0689673,
+    "ast_hash": "06bd794b21d5f0ab91cc202d453eaade",
+    "semantic_hash": "06bd794b21d5f0ab91cc202d453eaade"
+  },
+  "services/ecommerce-tools/tsconfig.json": {
+    "mtime": 1779849514.317016,
+    "ast_hash": "a905a2472fd9197b707628c9f0b53a44",
+    "semantic_hash": "a905a2472fd9197b707628c9f0b53a44"
+  },
+  "turbo.json": {
+    "mtime": 1779849063.8895879,
+    "ast_hash": "ba556ed1d11296bab1beb34dbaf13a46",
+    "semantic_hash": "ba556ed1d11296bab1beb34dbaf13a46"
+  },
+  ".claude/agents/sprint-executor.md": {
+    "mtime": 1781193999.4899611,
+    "ast_hash": "64a52a4d7f991988d4b15ef624e0e6c2",
+    "semantic_hash": "64a52a4d7f991988d4b15ef624e0e6c2"
+  },
+  ".claude/agents/verificador.md": {
+    "mtime": 1781193999.4903257,
+    "ast_hash": "32fa2e4b717d0f1151d84b05bd16ba91",
+    "semantic_hash": "32fa2e4b717d0f1151d84b05bd16ba91"
+  },
+  ".github/copilot-instructions.md": {
+    "mtime": 1779850932.3225667,
+    "ast_hash": "c467f8b68308f7ad84c62091bd29b28f",
+    "semantic_hash": "c467f8b68308f7ad84c62091bd29b28f"
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1779851657.5725088,
+    "ast_hash": "812b6b5077cc9a205e7171ec3f266cc1",
+    "semantic_hash": "812b6b5077cc9a205e7171ec3f266cc1"
+  },
+  "AGENTS.md": {
+    "mtime": 1779851594.7841077,
+    "ast_hash": "25281c7f38dc6346b495773d04c269dc",
+    "semantic_hash": "25281c7f38dc6346b495773d04c269dc"
+  },
+  "AI_HANDOFF.md": {
+    "mtime": 1779897406.2228029,
+    "ast_hash": "7d749b517e918082f0c293b97f412d9e",
+    "semantic_hash": "7d749b517e918082f0c293b97f412d9e"
+  },
+  "CLAUDE.md": {
+    "mtime": 1781193999.4906013,
+    "ast_hash": "b0a6b3d55f73cbe51f83781407d4f317",
+    "semantic_hash": "b0a6b3d55f73cbe51f83781407d4f317"
+  },
+  "README.md": {
+    "mtime": 1781193999.184515,
+    "ast_hash": "7493d822b88c4411428a28885cdc27f1",
+    "semantic_hash": "7493d822b88c4411428a28885cdc27f1"
+  },
+  "agents/openclaw-ecommerce-seller.md": {
+    "mtime": 1781193999.185299,
+    "ast_hash": "e29b644eff6d02d863d2ebc3c999e4f3",
+    "semantic_hash": "e29b644eff6d02d863d2ebc3c999e4f3"
+  },
+  "agents/vicky-sales-bot.md": {
+    "mtime": 1781193999.1861365,
+    "ast_hash": "dfa2f93881ec67b46391df05b33dd1c3",
+    "semantic_hash": "dfa2f93881ec67b46391df05b33dd1c3"
+  },
+  "apps/backend/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "5e78410d8965f8f76202a4441da3a9d5",
+    "semantic_hash": "5e78410d8965f8f76202a4441da3a9d5"
+  },
+  "apps/backend/src/admin/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "c5158f390330674a2ab4a26fd44a600f",
+    "semantic_hash": "c5158f390330674a2ab4a26fd44a600f"
+  },
+  "apps/backend/src/admin/i18n/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "52cc3f994b50560b591f83040a336a37",
+    "semantic_hash": "52cc3f994b50560b591f83040a336a37"
+  },
+  "apps/backend/src/api/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "0f47e242cf89c7227b392ff33b3e48a7",
+    "semantic_hash": "0f47e242cf89c7227b392ff33b3e48a7"
+  },
+  "apps/backend/src/jobs/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "6f36f79ab958b75e4fdaf581b92a1225",
+    "semantic_hash": "6f36f79ab958b75e4fdaf581b92a1225"
+  },
+  "apps/backend/src/links/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "5c588405d5ec9063f7a283107e5a8c9b",
+    "semantic_hash": "5c588405d5ec9063f7a283107e5a8c9b"
+  },
+  "apps/backend/src/modules/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "3736352b0b12967a63952d24515fe7e8",
+    "semantic_hash": "3736352b0b12967a63952d24515fe7e8"
+  },
+  "apps/backend/src/subscribers/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "eb3b87b29f922c68a5efd75de489634d",
+    "semantic_hash": "eb3b87b29f922c68a5efd75de489634d"
+  },
+  "apps/backend/src/workflows/README.md": {
+    "mtime": 1779848712.0,
+    "ast_hash": "12193dba4320e37ff0082ce18f3a6636",
+    "semantic_hash": "12193dba4320e37ff0082ce18f3a6636"
+  },
+  "apps/storefront/public/media/README.md": {
+    "mtime": 1781193999.1992612,
+    "ast_hash": "b95e00d660b318f94e0ef5fbac4f7545",
+    "semantic_hash": "b95e00d660b318f94e0ef5fbac4f7545"
+  },
+  "docker-compose.yml": {
+    "mtime": 1784567800.7988584,
+    "ast_hash": "be86d9316b972c2201eabf068249c372",
+    "semantic_hash": ""
+  },
+  "docs/AGENT_WORKFLOW.md": {
+    "mtime": 1781308147.0053463,
+    "ast_hash": "847e5c9bac4af52d95cfe67061183e56",
+    "semantic_hash": "847e5c9bac4af52d95cfe67061183e56"
+  },
+  "docs/ARCHITECTURE.md": {
+    "mtime": 1781193999.365621,
+    "ast_hash": "66f927bfdaac43a43c0b236991b2c2ed",
+    "semantic_hash": "66f927bfdaac43a43c0b236991b2c2ed"
+  },
+  "docs/BRANCH_STRATEGY.md": {
+    "mtime": 1779850932.3216667,
+    "ast_hash": "99fe0cb89d315c2462ef765fdf5f531a",
+    "semantic_hash": "99fe0cb89d315c2462ef765fdf5f531a"
+  },
+  "docs/CI_BRANCH_PROTECTION.md": {
+    "mtime": 1779850932.3220487,
+    "ast_hash": "72b55ebfcb8b38a6740f7417c8de826c",
+    "semantic_hash": "72b55ebfcb8b38a6740f7417c8de826c"
+  },
+  "docs/CONTENT_MATRIX.md": {
+    "mtime": 1781193999.3662958,
+    "ast_hash": "cab08ad43b5346e8590a950bbbb51091",
+    "semantic_hash": "cab08ad43b5346e8590a950bbbb51091"
+  },
+  "docs/COOLIFY_DEPLOYMENT.md": {
+    "mtime": 1784567872.8905613,
+    "ast_hash": "62f544c1e73281eb9f677e7b1964e883",
+    "semantic_hash": ""
+  },
+  "docs/CRM_BACKLOG.md": {
+    "mtime": 1781308147.0666811,
+    "ast_hash": "fffcd05a7b5a87cc95ad2f18c11117e4",
+    "semantic_hash": "fffcd05a7b5a87cc95ad2f18c11117e4"
+  },
+  "docs/CRM_BENCHMARK_ROADMAP.md": {
+    "mtime": 1781193999.5140147,
+    "ast_hash": "2ea153d8fb989d246088631734818744",
+    "semantic_hash": "2ea153d8fb989d246088631734818744"
+  },
+  "docs/CUCHILLO_CAMPAIGN_RELEASE_FILES.md": {
+    "mtime": 1781193999.366939,
+    "ast_hash": "05446c9cb4704a9a8b18451ffb4b5560",
+    "semantic_hash": "05446c9cb4704a9a8b18451ffb4b5560"
+  },
+  "docs/CUCHILLO_CAMPAIGN_RELEASE_PATHSPEC.txt": {
+    "mtime": 1781193999.367231,
+    "ast_hash": "263698285193f248a69dc9438e325fce",
+    "semantic_hash": "263698285193f248a69dc9438e325fce"
+  },
+  "docs/CURRENT_STATE.md": {
+    "mtime": 1781193999.3676138,
+    "ast_hash": "f39cf67fba5d350f731f6d6880a6cefc",
+    "semantic_hash": "f39cf67fba5d350f731f6d6880a6cefc"
+  },
+  "docs/DOMAIN_PLAN.md": {
+    "mtime": 1781193999.5143251,
+    "ast_hash": "d217a58c5cb2fefbe3e01f6aa2468b5c",
+    "semantic_hash": "d217a58c5cb2fefbe3e01f6aa2468b5c"
+  },
+  "docs/LESSONS_LEARNED.md": {
+    "mtime": 1781193999.5146081,
+    "ast_hash": "1982cd53bb759ba4839e51afba65a319",
+    "semantic_hash": "1982cd53bb759ba4839e51afba65a319"
+  },
+  "docs/META_WHATSAPP_LAUNCH_CHECKLIST.md": {
+    "mtime": 1781193999.5149791,
+    "ast_hash": "a653d2b639eec9e9b083f6722a59ee66",
+    "semantic_hash": "a653d2b639eec9e9b083f6722a59ee66"
+  },
+  "docs/OPENCLAW_HANDOFF.md": {
+    "mtime": 1781193999.368506,
+    "ast_hash": "57ec1f09d36701631e57c20099077916",
+    "semantic_hash": "57ec1f09d36701631e57c20099077916"
+  },
+  "docs/OPENCLAW_SELLER_PROMPT.md": {
+    "mtime": 1779905180.5147092,
+    "ast_hash": "68b67a6c744e63e216fd80be8c6f6582",
+    "semantic_hash": "68b67a6c744e63e216fd80be8c6f6582"
+  },
+  "docs/PAGOS_DATAFAST_PLAN.md": {
+    "mtime": 1783025760.383291,
+    "ast_hash": "2ac8aad2138526815a47803664b634e5",
+    "semantic_hash": "2ac8aad2138526815a47803664b634e5"
+  },
+  "docs/PENDIENTES_GO_LIVE.md": {
+    "mtime": 1784567884.5980422,
+    "ast_hash": "ca9d716318b68558a09d1c7ba2b9aa27",
+    "semantic_hash": ""
+  },
+  "docs/PROJECT_MAP.md": {
+    "mtime": 1781193999.368839,
+    "ast_hash": "820e2fea0732f61e1991ff74f64f80f0",
+    "semantic_hash": "820e2fea0732f61e1991ff74f64f80f0"
+  },
+  "docs/VICKY_BOT.md": {
+    "mtime": 1781308147.0139973,
+    "ast_hash": "a9668cc1c40d6e8ba973b7d5e8ae6d1a",
+    "semantic_hash": "a9668cc1c40d6e8ba973b7d5e8ae6d1a"
+  },
+  "docs/WEB_DESIGN_CART.md": {
+    "mtime": 1781453294.1770923,
+    "ast_hash": "5e9e693de44b07043777bc5aead387ed",
+    "semantic_hash": "5e9e693de44b07043777bc5aead387ed"
+  },
+  "docs/WEB_DESIGN_VALIDATION.md": {
+    "mtime": 1781453294.1774178,
+    "ast_hash": "5d0ca921bcc76545caaf79eaf8703e4c",
+    "semantic_hash": "5d0ca921bcc76545caaf79eaf8703e4c"
+  },
+  "docs/WEB_REDESIGN_PLAN.md": {
+    "mtime": 1781308147.0152729,
+    "ast_hash": "86d32a647889719a9890c25269e18f6b",
+    "semantic_hash": "86d32a647889719a9890c25269e18f6b"
+  },
+  "docs/WHATSAPP_CLOUD_PLAN.md": {
+    "mtime": 1781308147.0266685,
+    "ast_hash": "4aee593a6ea80ad631f1bc98351a2f34",
+    "semantic_hash": "4aee593a6ea80ad631f1bc98351a2f34"
+  },
+  "reports/PLN-1-cross-browser-testing.md": {
+    "mtime": 1781453294.1777017,
+    "ast_hash": "e099895d7b39e555dd0d46306a79aa81",
+    "semantic_hash": "e099895d7b39e555dd0d46306a79aa81"
+  },
+  "reports/PLN-2-meta-pixel-validation.md": {
+    "mtime": 1781453294.1781447,
+    "ast_hash": "a619b7227a8a17088bae9bb4f7c41574",
+    "semantic_hash": "a619b7227a8a17088bae9bb4f7c41574"
+  },
+  "reports/PLN-3-whatsapp-message-testing.md": {
+    "mtime": 1781453294.178428,
+    "ast_hash": "025a94686da4a3eabec150f269d7cbb5",
+    "semantic_hash": "025a94686da4a3eabec150f269d7cbb5"
+  },
+  "reports/PLN-4-performance-audit.md": {
+    "mtime": 1781453294.1787665,
+    "ast_hash": "0f1557e987f15fbdf23cace06246a85c",
+    "semantic_hash": "0f1557e987f15fbdf23cace06246a85c"
+  },
+  "reports/Sprint-4-Completion-Report.md": {
+    "mtime": 1781453294.1791208,
+    "ast_hash": "db9c201f7ccd23c51c41771cdf0f592b",
+    "semantic_hash": "db9c201f7ccd23c51c41771cdf0f592b"
+  },
+  "skills/ecommerce-sales/SKILL.md": {
+    "mtime": 1781193999.3814588,
+    "ast_hash": "0dc1e61d5365fc21807d70d48e985c99",
+    "semantic_hash": "0dc1e61d5365fc21807d70d48e985c99"
+  },
+  "skills/ecommerce-sales/agents/openai.yaml": {
+    "mtime": 1779850552.902853,
+    "ast_hash": "3d3170484f8ce58dde650cc48db82b8f",
+    "semantic_hash": "3d3170484f8ce58dde650cc48db82b8f"
+  },
+  "skills/meta-marketplace-assistant/SKILL.md": {
+    "mtime": 1779905180.5189092,
+    "ast_hash": "27361f2cad7184a91c4bb4c47fd8dc79",
+    "semantic_hash": "27361f2cad7184a91c4bb4c47fd8dc79"
+  },
+  "skills/meta-marketplace-assistant/agents/openai.yaml": {
+    "mtime": 1779850552.9288702,
+    "ast_hash": "4fe630784b94cefe75a199b22a9084f3",
+    "semantic_hash": "4fe630784b94cefe75a199b22a9084f3"
+  },
+  "skills/payphone-reconciliation/SKILL.md": {
+    "mtime": 1779905180.5190854,
+    "ast_hash": "ebaf9520af897cdbd0d046463f803b73",
+    "semantic_hash": "ebaf9520af897cdbd0d046463f803b73"
+  },
+  "skills/payphone-reconciliation/agents/openai.yaml": {
+    "mtime": 1779850552.926047,
+    "ast_hash": "b9f0bd3915bd0f4e1af912b43ae1f12c",
+    "semantic_hash": "b9f0bd3915bd0f4e1af912b43ae1f12c"
+  },
+  "apps/storefront/public/media/detalle-wok.mp4": {
+    "mtime": 1781193999.2061093,
+    "ast_hash": "e2c86e1c34f4b1277e8af2aba07262b8",
+    "semantic_hash": "e2c86e1c34f4b1277e8af2aba07262b8"
+  },
+  "apps/storefront/public/media/hero-cocina.mp4": {
+    "mtime": 1781193999.2127774,
+    "ast_hash": "155282ede3811c611278712b0356436e",
+    "semantic_hash": "155282ede3811c611278712b0356436e"
+  },
+  "apps/storefront/public/media/receta-wok.mp4": {
+    "mtime": 1781193999.2395122,
+    "ast_hash": "eaad4b29e04cc50f41bc484054f65e21",
+    "semantic_hash": "eaad4b29e04cc50f41bc484054f65e21"
+  },
+  "apps/storefront/public/media/set-mgc.mp4": {
+    "mtime": 1781193999.2468956,
+    "ast_hash": "4c00e9e33b48016043ba752f9c99606f",
+    "semantic_hash": "4c00e9e33b48016043ba752f9c99606f"
+  },
+  "apps/storefront/public/media/uso-diario-gas.mp4": {
+    "mtime": 1781193999.2498372,
+    "ast_hash": "a4e11e2e3f4728af76658c115418e12e",
+    "semantic_hash": "a4e11e2e3f4728af76658c115418e12e"
+  },
+  "apps/storefront/public/media/video-cuchillo-samurai-corte.mp4": {
+    "mtime": 1781193999.2880654,
+    "ast_hash": "09ef645ca3a9eb0d21c3c22c84fb71c7",
+    "semantic_hash": "09ef645ca3a9eb0d21c3c22c84fb71c7"
+  },
+  "apps/storefront/public/media/video-cuchillo-samurai-hero.mp4": {
+    "mtime": 1781193999.32481,
+    "ast_hash": "e065b0b81b9ee694e7e5a547db8a01d8",
+    "semantic_hash": "e065b0b81b9ee694e7e5a547db8a01d8"
+  },
+  "scripts/datafast-certification-probe.mjs": {
+    "mtime": 1784567841.5010087,
+    "ast_hash": "30cb7e49f287d017c2b8cda7f3721729",
+    "semantic_hash": ""
+  },
+  "docs/GO_LIVE_ETER_NIU.md": {
+    "mtime": 1784567872.892195,
+    "ast_hash": "766ac435f09c23812312055082a69921",
+    "semantic_hash": ""
+  },
+  "docs/GRAPHIFY.md": {
+    "mtime": 1784584496.5713887,
+    "ast_hash": "79773c63703ee8bf3e75d7ed4f33a827",
+    "semantic_hash": ""
+  },
+  "apps/storefront/app/icon.svg": {
+    "mtime": 1779862465.087243,
+    "ast_hash": "48b060703924f3cc95b546c0c0574705",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-01.svg": {
+    "mtime": 1783008296.5969288,
+    "ast_hash": "d23103376272a1532e4ec4a2eb5386fc",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-02.svg": {
+    "mtime": 1783008296.5970755,
+    "ast_hash": "4b5d6793196b004449c6aff62d1d897f",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-03.svg": {
+    "mtime": 1783008296.5971794,
+    "ast_hash": "6d30c5928099d15b562b5390d72c86d8",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-04.svg": {
+    "mtime": 1783008296.5972774,
+    "ast_hash": "03b1e9f478bf4f9f488c246205e59e7c",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-05.svg": {
+    "mtime": 1783008296.5973706,
+    "ast_hash": "f188f2cdca868b656a61e089a995b04a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-06.svg": {
+    "mtime": 1783008296.597465,
+    "ast_hash": "6e1a4a2da66f44b6c3df49f5d6569e92",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-07.svg": {
+    "mtime": 1783008296.5975535,
+    "ast_hash": "70617a11b09815f4ba72d1d26a69b8d0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-08.svg": {
+    "mtime": 1783008296.5977082,
+    "ast_hash": "3280d95109fb47c1a003c865b7593965",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-09.svg": {
+    "mtime": 1783008296.5978239,
+    "ast_hash": "98871d679a477a8aa7cb2e35670b009b",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-10.svg": {
+    "mtime": 1783008296.5979323,
+    "ast_hash": "7436bc0efec446557ca04a84ae07c5de",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-11.svg": {
+    "mtime": 1783008296.5981898,
+    "ast_hash": "fdb01715649a09e2995edd23391fbea8",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-12.svg": {
+    "mtime": 1783008296.5983815,
+    "ast_hash": "671301be46a6c538d0f4b058eacc8fcc",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-13.svg": {
+    "mtime": 1783008296.5985806,
+    "ast_hash": "6ae5f8b167020aa56fb6a675958eb0d6",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-14.svg": {
+    "mtime": 1783008296.5991223,
+    "ast_hash": "71639e3f4cfc64ab0698d0b62694d518",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-15.svg": {
+    "mtime": 1783008296.5992465,
+    "ast_hash": "de7cbf107e137a5ae03528507202fb13",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-16.svg": {
+    "mtime": 1783008296.599342,
+    "ast_hash": "9155fa076d151a8e59504a3219aa2678",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-17.svg": {
+    "mtime": 1783008296.59944,
+    "ast_hash": "9fff09db314640e3a4f76a27e9b349f0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-18.svg": {
+    "mtime": 1783008296.5996683,
+    "ast_hash": "7f20f890ab34d0d32d2a2c1f6bbb70d4",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-19.svg": {
+    "mtime": 1783008296.5998974,
+    "ast_hash": "784806c438075e89c9d9d447ac3aaa42",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-20.svg": {
+    "mtime": 1783008296.6000705,
+    "ast_hash": "83c34396736375f82f28c480921e7ab3",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-21.svg": {
+    "mtime": 1783008296.6001728,
+    "ast_hash": "143fff9c8a1c79b0bf7d6400e67c4122",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-22.svg": {
+    "mtime": 1783008296.6002722,
+    "ast_hash": "5c8ce1bba8c12b4adb479c8bf6a2ae11",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-23.svg": {
+    "mtime": 1783008296.6003668,
+    "ast_hash": "bf87c7a3dbc2cfdac1e82d5ddb7ba2ba",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/360/demo/frame-24.svg": {
+    "mtime": 1783008296.6007063,
+    "ast_hash": "f1d71a00a6b6c27bdeb2f093de9c4155",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/editorial-cuidado.svg": {
+    "mtime": 1779921688.7010334,
+    "ast_hash": "8bca6a621539c7f0028f1645caa48478",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/editorial-mesa.svg": {
+    "mtime": 1779921688.7012124,
+    "ast_hash": "46fe5e5caedbe40a3439e1ea8a90fb5a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/editorial-set.svg": {
+    "mtime": 1779921688.701394,
+    "ast_hash": "3eab8f15ec7dae567aa3cbf3931f6828",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-cuchillo-samurai-full.jpg": {
+    "mtime": 1781193999.2162452,
+    "ast_hash": "e58cbae96e0077e433780ab0b4c5ec71",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-cuchillo-samurai-hero.jpg": {
+    "mtime": 1781193999.2200239,
+    "ast_hash": "071de81179ca869930131c4e9e2a8e8a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-cuchillo-samurai-mango.jpg": {
+    "mtime": 1781193999.221168,
+    "ast_hash": "4f1eeddc0a46eb43adc54f07099ff4ff",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-cuchillo-samurai-textura.jpg": {
+    "mtime": 1781193999.2220838,
+    "ast_hash": "40e33178f722b55c70e424684631f8ae",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-cuchillo-samurai-vertical.jpg": {
+    "mtime": 1781193999.2228756,
+    "ast_hash": "b88c2890b3a4d764ec096371e2f517ec",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-detalle-wok.jpg": {
+    "mtime": 1781193999.2238853,
+    "ast_hash": "f3ff598c1b6f530b9b06c184b4436430",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-editorial-mesa.jpg": {
+    "mtime": 1781193999.2250385,
+    "ast_hash": "77b4aa1c29d41835a5755d948de6452e",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-hero-cocina.jpg": {
+    "mtime": 1781193999.226087,
+    "ast_hash": "359bc78352bf4bf841dbc1a2e2a3ad4d",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-limpieza-rapida.jpg": {
+    "mtime": 1781193999.227291,
+    "ast_hash": "2a72f6f75d202ae0d58b7329caa4597d",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-product-cuchillo-samurai.jpg": {
+    "mtime": 1781193999.2300692,
+    "ast_hash": "0a9f85ddc0ba08c5a16b63af23c437d8",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-product-olla-20.jpg": {
+    "mtime": 1781193999.231296,
+    "ast_hash": "44a65e03d0a976f674f073a6175c30f6",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-product-olla-24.jpg": {
+    "mtime": 1781193999.2323709,
+    "ast_hash": "f8a0c6ada438b457987daa6344fa449b",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-product-set-granito.jpg": {
+    "mtime": 1781193999.2335737,
+    "ast_hash": "3cc7ed6dcfc9f09821a7e37e7373d299",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-product-utensilios.jpg": {
+    "mtime": 1779926160.2270324,
+    "ast_hash": "6109020e697c3cf2b7454f140e91f4a0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-prueba-huevo.jpg": {
+    "mtime": 1781193999.234,
+    "ast_hash": "f3ff598c1b6f530b9b06c184b4436430",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-receta-wok.jpg": {
+    "mtime": 1781193999.2350254,
+    "ast_hash": "f3f61a4293da385b2b7e805477ba75b3",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/photo-uso-diario-gas.jpg": {
+    "mtime": 1781193999.2355351,
+    "ast_hash": "2a72f6f75d202ae0d58b7329caa4597d",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-detalle-wok.jpg": {
+    "mtime": 1781231015.9180245,
+    "ast_hash": "9eea7ac403891bb341376e2e93af914a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-hero-cocina.jpg": {
+    "mtime": 1781231015.9184263,
+    "ast_hash": "08d7a7ef437db9640db4dce93704ff83",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-hero.svg": {
+    "mtime": 1781193999.2360091,
+    "ast_hash": "e51225fc5f130772a0c7315a9fbb623d",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-huevo.svg": {
+    "mtime": 1781193999.236324,
+    "ast_hash": "4a551fee4ece025a489ad404c97f0075",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-limpieza.svg": {
+    "mtime": 1781193999.236611,
+    "ast_hash": "aed0222994cbca67c2e589d83a8052aa",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-receta-wok.jpg": {
+    "mtime": 1781231015.918792,
+    "ast_hash": "cd44242f1a94e6272630051ba58894cf",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-receta.svg": {
+    "mtime": 1779917473.1307318,
+    "ast_hash": "3cbbbdf3cdbb51015037be9aa9357951",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-set-mgc.jpg": {
+    "mtime": 1781231015.919073,
+    "ast_hash": "618550879c4016154aed82ecead597f3",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-uso-diario-gas.jpg": {
+    "mtime": 1781231015.9195318,
+    "ast_hash": "a2f1a60da25dae1bb0afda58db567dc0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-video-cuchillo-samurai-corte.jpg": {
+    "mtime": 1781231015.9199562,
+    "ast_hash": "6568d5f54df630808ecf3d58fc7b4f84",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/poster-video-cuchillo-samurai-hero.jpg": {
+    "mtime": 1781231015.9202654,
+    "ast_hash": "153958e305372c1c2faca672b2a62ccd",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/product-sarten-granito-22.jpg": {
+    "mtime": 1783010078.7092988,
+    "ast_hash": "c094eef6dbd5c592e49a9e36316c7155",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/product-wok-granito-32.jpg": {
+    "mtime": 1783010078.6440985,
+    "ast_hash": "bafbc47e9450cf4b929b3a1a62ac8d0e",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-aroma.svg": {
+    "mtime": 1781193999.3257906,
+    "ast_hash": "9b8fbb50657fab5b407b3434265ab437",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-billete-1-millon.jpg": {
+    "mtime": 1781193999.3277364,
+    "ast_hash": "168d718dae686807765e9f68a26a824c",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-botella.svg": {
+    "mtime": 1781193999.3282804,
+    "ast_hash": "edd8c63de102a2f2ca4c71b247edd92a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-bowl.svg": {
+    "mtime": 1781193999.3285966,
+    "ast_hash": "217169da1d05ba2ddc00a3e4b62859e0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-cascada-humo.jpg": {
+    "mtime": 1781193999.3302677,
+    "ast_hash": "de244e45af02d1a65f5a961f54a804fa",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-cuenco-bronce.jpg": {
+    "mtime": 1781193999.3322704,
+    "ast_hash": "3d998a751d81114ade545a601f207417",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-hero.svg": {
+    "mtime": 1781193999.3333018,
+    "ast_hash": "064cd72cb0911bc0f696f998c36ad3fb",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-incienso-ullas.jpg": {
+    "mtime": 1781193999.335079,
+    "ast_hash": "9ad47a893ba20ab2b6a4b3d35fac473f",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-juego-te-japones.jpg": {
+    "mtime": 1781193999.3372848,
+    "ast_hash": "9d495564dee850cfa2eb6db42e475f7a",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-lampara-ghee-bronce.jpg": {
+    "mtime": 1781193999.338353,
+    "ast_hash": "52b904121597185cedda1477675e294e",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-lampara-sal.jpg": {
+    "mtime": 1781193999.339469,
+    "ast_hash": "31d8f5aee38400377947bbaf24cea038",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-limpiador-lengua-cobre.jpg": {
+    "mtime": 1781193999.3405027,
+    "ast_hash": "3998950fab493565654603ea167254d0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-mat.svg": {
+    "mtime": 1781193999.3408737,
+    "ast_hash": "b79f4da424cdad72442e8ce404d25a79",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-meditador-mandala.jpg": {
+    "mtime": 1781193999.3428512,
+    "ast_hash": "802391a173bd2c244bf295fb8bc2e94f",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-moxas-chinas.jpg": {
+    "mtime": 1781193999.344144,
+    "ast_hash": "82c165fe09d7d5091b023eef3958eb02",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-nataraj-bronce.jpg": {
+    "mtime": 1781193999.3452086,
+    "ast_hash": "6d7ecec3611d8ee617c11546f5a945e7",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-piedra-alumbre.jpg": {
+    "mtime": 1781193999.3464808,
+    "ast_hash": "da9ef41c307113aee336576bded3a12d",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-pistola-percusion.jpg": {
+    "mtime": 1781193999.3475666,
+    "ast_hash": "7c6b5f03dc4d16e6dda542156c2166b0",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-portaincienso-metal.jpg": {
+    "mtime": 1781193999.3492756,
+    "ast_hash": "8c91b95555a98a6150861ecba5d05031",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-straps.jpg": {
+    "mtime": 1781193999.3503723,
+    "ast_hash": "77b0e8e245cb029be16b8ec7bbd914cc",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-tambor-lengua-real.jpg": {
+    "mtime": 1781193999.3520842,
+    "ast_hash": "fdc80ce66f5a1b8ab66aaf3eadcbe32f",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-tambor-lengua.jpg": {
+    "mtime": 1781193999.3540466,
+    "ast_hash": "7609d136962f0829e853cdb353b4ceb2",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-termo-sus304.jpg": {
+    "mtime": 1781193999.3561661,
+    "ast_hash": "4e4aa26a7948e3ede52af3b3eeca3c37",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-tetera-vidrio-1600.jpg": {
+    "mtime": 1781193999.3586676,
+    "ast_hash": "7e1032fe33da5c56b8c3a54b6278bc3e",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-tetera-vidrio-450.jpg": {
+    "mtime": 1781193999.3607059,
+    "ast_hash": "cfb85c5c8782b43dd4460329fb5b6c48",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-velas-mandala.jpg": {
+    "mtime": 1781193999.3623435,
+    "ast_hash": "e005cd6b0c734028005331c02ba69248",
+    "semantic_hash": ""
+  },
+  "apps/storefront/public/media/wellness-yoga-mat-suede.jpg": {
+    "mtime": 1781193999.3637753,
+    "ast_hash": "65162457761933c10e9ef216ce7b92b5",
+    "semantic_hash": ""
+  }
+}
