@@ -39,6 +39,29 @@ eu-test real (`000.200.100`, prueba ejecutada 18/jul/2026).
 - Paso a producción (Anexo I): `DATAFAST_ENV=live` ya elimina `testMode`,
   cambia host a eu-prod y muestra el sello; solo faltará cargar credenciales
   productivas (entityId/token/MID/TID reales).
+
+### A-ter. Runbook del TestScript (jul/2026 — 12 casos, todo implementado)
+Con credenciales de fase 2 cargadas (`DATAFAST_DRY_RUN=false`), MID del
+TestScript = **1000000505**, TID = PD100406:
+- **Crédito corriente ×2**: flujo normal del carrito; en el widget dejar
+  "Sin diferido" + "Corriente". El caso base 0 ($10, IVA $0):
+  `/checkout/pago?base0=1`.
+- **Diferido con interés ×2**: widget → 9 meses + "Diferido con intereses"
+  (SHOPPER_TIPOCREDITO=02).
+- **Diferido sin interés ×2**: widget → 3 meses + "Diferido sin intereses" (03).
+- **Diferido corriente especial ×2**: widget → "Diferido corriente" (01).
+- **Anulaciones ×4**: con el campo `id` del JSON de cada compra aprobada:
+  `curl -X POST $TOOLS/tools/datafast/void -H "authorization: Bearer $TOKEN"
+  -H "content-type: application/json"
+  -d '{"paymentId":"<id>","amount":<monto>}'`
+- Hoja CAMPOS: cardholder vacío se bloquea en el widget; cada reintento genera
+  `merchantTransactionId` nuevo; trx rechazada = pagar con CVV errado.
+- ⚠️ El ejemplo de IVA del TestScript está al 12% (plantilla vieja); nosotros
+  calculamos al 15% (`ECOMMERCE_TAX_RATE`). Confirmar tarifa con Datafast en
+  la videoconferencia.
+- 🟡 Hardening pendiente (antes del go-live real, no bloquea certificación):
+  el checkout confía en `unitPrice` enviado por el cliente — validar contra
+  el catálogo server-side para impedir manipulación de precios.
 1. 🔴 Conseguir de Datafast las **7 credenciales** (Entity ID, Access token, MID,
    TID, E-Commerce ID, Service Provider ID, Customer name) — test y producción.
 2. 🔴 Corregir el formulario Datafast: **campo 12 (URL pública)** y **campo 28

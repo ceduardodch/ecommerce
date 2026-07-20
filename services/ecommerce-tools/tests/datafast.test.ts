@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest"
 import { loadConfig } from "../src/config.js"
 import {
   buildCheckoutForm,
+  buildVoidForm,
   computeIva,
   createDatafastCheckout,
   datafastHost,
   getDatafastResult,
   isDatafastSuccess,
   normalizeDatafastResourcePath,
+  voidDatafastPayment,
 } from "../src/datafast.js"
 
 const items = [
@@ -33,6 +35,63 @@ describe("datafast — IVA / desglose SRI", () => {
     const iva = computeIva(tricky, 0.15)
     const sum = Math.round((iva.baseZero + iva.baseTaxed + iva.tax) * 100) / 100
     expect(sum).toBe(iva.total)
+  })
+})
+
+describe("datafast — tarifa 0 por ítem (caso base 0 del TestScript)", () => {
+  it("un ítem zeroRated va completo a BASE0 con IVA 0", () => {
+    const iva = computeIva([{ title: "X", quantity: 1, unitPrice: 10, zeroRated: true }], 0.15)
+    expect(iva).toEqual({ total: 10, baseTaxed: 0, tax: 0, baseZero: 10 })
+  })
+
+  it("mezcla de gravado y tarifa 0 cuadra exacto con el amount", () => {
+    const iva = computeIva(
+      [
+        { title: "A", quantity: 1, unitPrice: 10, zeroRated: true },
+        { title: "B", quantity: 2, unitPrice: 30 },
+      ],
+      0.15,
+    )
+    expect(iva.total).toBe(70)
+    expect(iva.baseZero).toBe(10)
+    expect(Math.round((iva.baseZero + iva.baseTaxed + iva.tax) * 100) / 100).toBe(70)
+  })
+
+  it("buildCheckoutForm refleja el desglose con base 0", () => {
+    const config = loadConfig({ ECOMMERCE_TAX_RATE: "0.15", DATAFAST_ENTITY_ID: "e" })
+    const form = buildCheckoutForm(config, {
+      reference: "etn_b0",
+      items: [{ title: "Base cero", quantity: 1, unitPrice: 10, zeroRated: true }],
+    })
+    expect(form.get("amount")).toBe("10.00")
+    expect(form.get("customParameters[SHOPPER_VAL_BASE0]")).toBe("10.00")
+    expect(form.get("customParameters[SHOPPER_VAL_BASEIMP]")).toBe("0.00")
+    expect(form.get("customParameters[SHOPPER_VAL_IVA]")).toBe("0.00")
+  })
+})
+
+describe("datafast — anulación (paymentType=RF, guía §7)", () => {
+  it("arma el cuerpo de la anulación con RF y testMode en test", () => {
+    const config = loadConfig({ DATAFAST_ENV: "test", DATAFAST_ENTITY_ID: "ent_1" })
+    const form = buildVoidForm(config, 45)
+    expect(form.get("paymentType")).toBe("RF")
+    expect(form.get("amount")).toBe("45.00")
+    expect(form.get("currency")).toBe("USD")
+    expect(form.get("entityId")).toBe("ent_1")
+    expect(form.get("testMode")).toBe("EXTERNAL")
+  })
+
+  it("en live no envía testMode", () => {
+    const config = loadConfig({ DATAFAST_ENV: "live", DATAFAST_ENTITY_ID: "ent_1" })
+    expect(buildVoidForm(config, 45).get("testMode")).toBeNull()
+  })
+
+  it("dry-run: anula un pago dryrun y rechaza uno desconocido", async () => {
+    const config = loadConfig({ DATAFAST_DRY_RUN: "true" })
+    const ok = await voidDatafastPayment(config, "dryrun.etn_X", 10)
+    expect(ok.status).toBe("voided")
+    const bad = await voidDatafastPayment(config, "algo.raro", 10)
+    expect(bad.status).toBe("failed")
   })
 })
 

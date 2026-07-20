@@ -40,6 +40,7 @@ export const datafastCheckoutSchema = z.object({
         quantity: z.number().int().positive().default(1),
         unitPrice: z.number().nonnegative(),
         description: z.string().optional(),
+        zeroRated: z.boolean().optional(),
       }),
     )
     .min(1),
@@ -57,6 +58,13 @@ export const datafastCheckoutSchema = z.object({
       countryCode: z.string().optional(),
     })
     .optional(),
+})
+
+export const datafastVoidSchema = z.object({
+  /** Campo `id` del JSON de la transacción aprobada. */
+  paymentId: z.string().min(8),
+  amount: z.number().positive(),
+  currency: z.string().length(3).default("USD"),
 })
 
 export const metaDraftInputSchema = z.object({

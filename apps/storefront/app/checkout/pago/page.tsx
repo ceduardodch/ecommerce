@@ -58,12 +58,33 @@ export default function PagoTarjetaPage() {
       locale: "es",
       labels: { cvv: "CVV", cardHolder: "Nombre (igual que en la tarjeta)" },
       onReady: function () {
-        if (checkout.env !== "live") return
         const button = document.querySelector("form.wpwl-form-card .wpwl-button")
-        button?.insertAdjacentHTML(
+        if (!button) return
+        // Diferidos y tipo de crédito (guía §5.1–5.2). El widget envía estos
+        // campos automáticamente por su atributo name; 0/00 = corriente.
+        button.insertAdjacentHTML(
           "beforebegin",
-          '<br/><br/><img src="https://www.datafast.com.ec/images/verified.png" style="display:block;margin:0 auto;width:100%;" alt="Powered by Datafast"/>',
+          '<div class="wpwl-label" style="margin-top:12px">Meses diferido</div>' +
+            '<div class="wpwl-wrapper"><select name="recurring.numberOfInstallments" style="width:100%;height:40px;border:1px solid #d0d0c8;border-radius:8px;padding:0 8px">' +
+            '<option value="0">Sin diferido (corriente)</option>' +
+            '<option value="3">3 meses</option>' +
+            '<option value="6">6 meses</option>' +
+            '<option value="9">9 meses</option>' +
+            "</select></div>" +
+            '<div class="wpwl-label" style="margin-top:8px">Tipo de crédito</div>' +
+            '<div class="wpwl-wrapper"><select name="customParameters[SHOPPER_TIPOCREDITO]" style="width:100%;height:40px;border:1px solid #d0d0c8;border-radius:8px;padding:0 8px">' +
+            '<option value="00">Corriente</option>' +
+            '<option value="01">Diferido corriente</option>' +
+            '<option value="02">Diferido con intereses</option>' +
+            '<option value="03">Diferido sin intereses</option>' +
+            "</select></div>",
         )
+        if (checkout.env === "live") {
+          button.insertAdjacentHTML(
+            "beforebegin",
+            '<br/><br/><img src="https://www.datafast.com.ec/images/verified.png" style="display:block;margin:0 auto;width:100%;" alt="Powered by Datafast"/>',
+          )
+        }
       },
       onBeforeSubmitCard: function () {
         const holder = document.querySelector<HTMLInputElement>(
@@ -157,6 +178,11 @@ export default function PagoTarjetaPage() {
             sku: i.sku,
             quantity: i.quantity,
             unitPrice: i.price,
+            // Atajo para el caso "base 0" del script de certificación de
+            // Datafast: /checkout/pago?base0=1 marca los ítems tarifa 0%.
+            ...(new URLSearchParams(window.location.search).get("base0") === "1"
+              ? { zeroRated: true }
+              : {}),
           })),
           customer: {
             givenName: form.givenName,

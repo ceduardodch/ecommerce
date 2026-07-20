@@ -7,6 +7,7 @@ import {
   customerEventInputSchema,
   customerImportSchema,
   datafastCheckoutSchema,
+  datafastVoidSchema,
   metaDraftInputSchema,
   orderInputSchema,
   payphoneInputSchema,
@@ -118,6 +119,12 @@ app.get("/tools/datafast/result", async (request, reply) => {
     return reply.code(400).send({ error: "missing_checkout_id" })
   }
   return service.datafastResult(checkoutId, query.resourcePath)
+})
+
+// Anulación de una transacción aprobada (script de certificación / operación).
+app.post("/tools/datafast/void", async (request) => {
+  const input = datafastVoidSchema.parse(request.body)
+  return service.datafastVoid(input)
 })
 
 app.get("/feeds/meta/catalog.csv", async (request, reply) => {

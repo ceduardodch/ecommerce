@@ -16,6 +16,8 @@ export type DatafastCartItem = {
   /** Precio UNITARIO final que paga el cliente (IVA incluido). */
   unitPrice: number
   description?: string
+  /** Ítem con tarifa 0% de IVA (va a SHOPPER_VAL_BASE0). */
+  zeroRated?: boolean
 }
 
 export type DatafastCustomer = {
@@ -68,12 +70,14 @@ function round2(n: number) {
  * NO se confía en ningún total enviado por el cliente: se recalcula aquí.
  */
 export function computeIva(items: DatafastCartItem[], taxRate: number): IvaBreakdown {
-  const total = round2(
-    items.reduce((sum, it) => sum + it.unitPrice * it.quantity, 0),
-  )
-  const baseTaxed = round2(total / (1 + taxRate))
-  const tax = round2(total - baseTaxed)
-  return { total, baseTaxed, tax, baseZero: 0 }
+  const sum = (list: DatafastCartItem[]) =>
+    round2(list.reduce((acc, it) => acc + it.unitPrice * it.quantity, 0))
+  const baseZero = sum(items.filter((it) => it.zeroRated))
+  const taxedTotal = sum(items.filter((it) => !it.zeroRated))
+  const baseTaxed = round2(taxedTotal / (1 + taxRate))
+  const tax = round2(taxedTotal - baseTaxed)
+  // Invariante Datafast (código 800.100.199): BASE0 + BASEIMP + IVA == amount.
+  return { total: round2(baseZero + taxedTotal), baseTaxed, tax, baseZero }
 }
 
 /**
@@ -324,6 +328,83 @@ export async function getDatafastResult(
     paymentId: json.id,
     ndc: json.ndc,
     authorizationCode,
+    raw: json,
+  }
+}
+
+export type DatafastVoidResult = {
+  status: "voided" | "failed"
+  code?: string
+  description?: string
+  voidId?: string
+  raw?: unknown
+}
+
+/** Cuerpo del método de anulación (guía §7, figura 32): paymentType=RF. */
+export function buildVoidForm(
+  config: AppConfig,
+  amount: number,
+  currency = "USD",
+): URLSearchParams {
+  const params = new URLSearchParams()
+  params.set("entityId", config.datafastEntityId || "")
+  params.set("amount", amount.toFixed(2))
+  params.set("currency", currency)
+  params.set("paymentType", "RF")
+  if (config.datafastEnv !== "live") {
+    params.set("testMode", "EXTERNAL")
+  }
+  return params
+}
+
+/**
+ * Anula una transacción aprobada: POST /v1/payments/{paymentId} con
+ * paymentType=RF. El paymentId es el campo `id` del JSON de la compra
+ * aprobada. Reverso ya anulado → 700.400.200.
+ */
+export async function voidDatafastPayment(
+  config: AppConfig,
+  paymentId: string,
+  amount: number,
+  currency = "USD",
+): Promise<DatafastVoidResult> {
+  const env = config.datafastEnv === "live" ? "live" : "test"
+
+  if (config.datafastDryRun || !config.datafastAccessToken || !config.datafastEntityId) {
+    if (paymentId.startsWith("dryrun.")) {
+      return {
+        status: "voided",
+        code: env === "live" ? "000.000.000" : "000.100.112",
+        description: "DRY-RUN voided",
+        voidId: `void.${paymentId}`,
+      }
+    }
+    return { status: "failed", code: "dryrun.unknown", description: "DRY-RUN unknown payment" }
+  }
+
+  const host = datafastHost(config)
+  const response = await fetch(
+    `${host}/v1/payments/${encodeURIComponent(paymentId)}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.datafastAccessToken}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: buildVoidForm(config, amount, currency).toString(),
+    },
+  )
+  const text = await response.text()
+  const json = JSON.parse(text) as {
+    id?: string
+    result?: { code?: string; description?: string }
+  }
+  const code = json.result?.code
+  return {
+    status: isDatafastSuccess(code, env) ? "voided" : "failed",
+    code,
+    description: json.result?.description,
+    voidId: json.id,
     raw: json,
   }
 }

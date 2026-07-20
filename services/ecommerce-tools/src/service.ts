@@ -39,6 +39,7 @@ import {
 import {
   createDatafastCheckout,
   getDatafastResult,
+  voidDatafastPayment,
   type DatafastCheckoutInput,
 } from "./datafast.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
@@ -789,6 +790,20 @@ export function createCommerceService(config: AppConfig) {
       }
 
       return result
+    },
+
+    // ─── Datafast: anulación (paymentType=RF, guía §7) — script de certificación ───
+    async datafastVoid(input: {
+      paymentId: string
+      amount: number
+      currency?: string
+    }) {
+      return voidDatafastPayment(
+        config,
+        input.paymentId,
+        input.amount,
+        input.currency || "USD",
+      )
     },
 
     async metaCatalogCsv(input: { vertical?: "cocina" | "bienestar" } = {}) {
