@@ -20,12 +20,11 @@ sello "verified" de Datafast en live. Form completo ACEPTADO por el gateway
 eu-test real (`000.200.100`, prueba ejecutada 18/jul/2026).
 
 ### A-bis. Certificación Datafast — pendientes del DUEÑO
-- 🔴 **Cloudflare: subir Minimum TLS Version a 1.2** (SSL/TLS → Edge
-  Certificates → Minimum TLS Version). Hoy prod acepta TLS 1.0/1.1 →
-  REPRUEBA el escaneo de seguridad de Datafast (verificado 18/jul/2026).
-- 🔴 Pedir a Datafast las credenciales de **fase 2** por correo (entityId +
-  Bearer de pruebas + tarjeta de test). MID/TID de fase 2: 1000000406 /
-  PD100406 (ya son los defaults documentados).
+- ✅ **Cloudflare Minimum TLS Version 1.2**: TLS 1.0/1.1 rechazados y TLS 1.2
+  aceptado en `eter-niu.com` (verificado 20/jul/2026).
+- ✅ Credenciales y tarjeta de **pruebas** cargadas en Coolify; `/healthz`
+  reporta `datafastMode=test` y `datafastConfigured=true`. Las credenciales
+  productivas siguen pendientes de la aprobación de Datafast.
 - 🟡 En fase 2 las transacciones de prueba deben ser **< $50**.
 - 🟡 Preguntar a Datafast si los 4 dominios (cocina/bienestar ×
   eter-niu/b2b) en la misma IP cumplen su requisito "IP única que no aloje
@@ -33,9 +32,8 @@ eu-test real (`000.200.100`, prueba ejecutada 18/jul/2026).
   escrito.
 - 🟢 Escaneo DigiCert (digicert.com → SSL Installation Diagnostics) tras el
   cambio de TLS en Cloudflare, antes de pedir el escaneo oficial.
-- 🟢 En Coolify, configurar `DATAFAST_*` de pruebas, `DATAFAST_ENV=test` y
-  `DATAFAST_DRY_RUN=false`; verificar `/healthz` con `datafastMode=test` y
-  `datafastConfigured=true`.
+- ✅ En Coolify: `DATAFAST_*` de pruebas, `DATAFAST_ENV=test` y
+  `DATAFAST_DRY_RUN=false` configurados.
 - Paso a producción (Anexo I): `DATAFAST_ENV=live` ya elimina `testMode`,
   cambia host a eu-prod y muestra el sello; solo faltará cargar credenciales
   productivas (entityId/token/MID/TID reales).
@@ -62,13 +60,17 @@ TestScript = **1000000505**, TID = PD100406:
 - 🟡 Hardening pendiente (antes del go-live real, no bloquea certificación):
   el checkout confía en `unitPrice` enviado por el cliente — validar contra
   el catálogo server-side para impedir manipulación de precios.
-1. 🔴 Conseguir de Datafast las **7 credenciales** (Entity ID, Access token, MID,
-   TID, E-Commerce ID, Service Provider ID, Customer name) — test y producción.
+1. 🟡 Credenciales de pruebas configuradas; conseguir de Datafast las **7
+   credenciales productivas** (Entity ID, Access token, MID, TID, E-Commerce
+   ID, Service Provider ID y Customer name) después de aprobar certificación.
 2. 🔴 Corregir el formulario Datafast: **campo 12 (URL pública)** y **campo 28
    (stack = Node/TS, no Python)**.
-3. 🟢 Cargar credenciales en envs + `DATAFAST_DRY_RUN=false`; activar widget real.
-4. 🟡 **Probar el widget real** con tarjetas de test de Datafast (pago OK, rechazo,
-   3DS, exceder límite $500/día).
+3. ✅ Credenciales test cargadas en envs, `DATAFAST_DRY_RUN=false` y widget real
+   de `eu-test.oppwa.com` activo.
+4. ✅ Widget real probado el 21/jul/2026: corriente y tres modalidades de
+   diferido con aprobaciones/rechazos; anulaciones `RF` aprobadas para las
+   cuatro modalidades y doble reverso rechazado con `700.400.200`. Quedan 3DS
+   y límite diario únicamente si Datafast los exige en la revisión.
 5. 🟢 Confirmar **modelo de IVA** (hoy se asume precio IVA-incluido, todo al 15%);
    ajustar si hay productos con tarifa 0%.
 6. ✅ Botón **"Pagar con tarjeta" también en el cajón y el modal** del carrito.
@@ -106,12 +108,11 @@ Estado: plan D1–D5 definido; código de hosts/SEO listo.
     se descarta). Pendiente 🔴: conectar un proveedor de email marketing dedicado.
 
 ## F. INFRA / DESPLIEGUE
-24. 🟡 Confirmar **auto-deploy** de Coolify desde `main` (el último cambio requirió
-    redeploy manual → revisar webhook).
-25. 🟢 **Volumen persistente** para `TOOLS_DATA_DIR` (ledger Datafast + datos json).
+24. ✅ **Auto-deploy** de Coolify desde `main` confirmado.
+25. ✅ **Volumen persistente** para `TOOLS_DATA_DIR=/data` (`tools-data`).
 26. 🔴 Revisar **variables de entorno** de producción (tokens Meta, payphone,
     datafast, openclaw) en Coolify.
-27. 🟢 Healthchecks/monitoreo básico de los 3 servicios.
+27. ✅ Healthchecks de storefront, Medusa y ecommerce-tools activos en Coolify.
 
 ## G. LEGAL / CONFIANZA
 Estado: política de privacidad LOPDP + banner publicados.

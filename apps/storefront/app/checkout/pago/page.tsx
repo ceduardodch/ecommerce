@@ -138,11 +138,25 @@ export default function PagoTarjetaPage() {
     "street",
   ]
   const missing = required.filter((k) => !form[k].trim())
+  // Ecuador: celular de 10 dígitos (09XXXXXXXX) — también acepta +593.
+  const phoneDigits = form.phone.replace(/[\s\-+]/g, "").replace(/^593/, "0")
+  const phoneOk = /^09\d{8}$/.test(phoneDigits)
+  // Cédula: exactamente 10 dígitos (Datafast rechaza otros formatos).
+  const cedulaDigits = form.idNumber.replace(/\D/g, "")
+  const cedulaOk = /^\d{10}$/.test(cedulaDigits)
 
   const startCheckout = async () => {
     setError(null)
     if (missing.length) {
       setError("Completa nombre, apellido, cédula, teléfono, email y dirección.")
+      return
+    }
+    if (!cedulaOk) {
+      setError("Cédula inválida: deben ser 10 dígitos.")
+      return
+    }
+    if (!phoneOk) {
+      setError("Celular inválido: usa 10 dígitos, ej. 0979854905.")
       return
     }
     setLoading(true)
@@ -188,9 +202,9 @@ export default function PagoTarjetaPage() {
             givenName: form.givenName,
             middleName: form.middleName || undefined,
             surname: form.surname,
-            idNumber: form.idNumber,
+            idNumber: cedulaDigits,
             email: form.email,
-            phone: form.phone,
+            phone: phoneDigits,
             street: form.street,
             city: form.city || undefined,
             countryCode: "EC",

@@ -203,7 +203,7 @@
       "norm_label": "medusa-config.ts"
     },
     {
-      "label": "package.json",
+      "label": "backend/package.json",
       "file_type": "code",
       "source_file": "apps/backend/package.json",
       "source_location": "L1",
@@ -211,7 +211,7 @@
       "id": "apps_backend_package",
       "community": 56,
       "community_name": "Backend Feature Slice",
-      "norm_label": "package.json"
+      "norm_label": "backend/package.json"
     },
     {
       "label": "name",
@@ -484,8 +484,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "apps_backend_package_dependencies_medusajs_admin_sdk",
-      "community": 109,
-      "community_name": "@medusajs/admin-sdk",
+      "community": 34,
+      "community_name": "Backend Feature Slice",
       "norm_label": "@medusajs/admin-sdk"
     },
     {
@@ -495,8 +495,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "medusajs_admin_sdk",
-      "community": 109,
-      "community_name": "@medusajs/admin-sdk",
+      "community": 34,
+      "community_name": "Backend Feature Slice",
       "norm_label": "@medusajs/admin-sdk"
     },
     {
@@ -594,8 +594,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "apps_backend_package_dependencies_medusajs_draft_order",
-      "community": 34,
-      "community_name": "Backend Feature Slice",
+      "community": 114,
+      "community_name": "@medusajs/draft-order",
       "norm_label": "@medusajs/draft-order"
     },
     {
@@ -605,8 +605,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "medusajs_draft_order",
-      "community": 34,
-      "community_name": "Backend Feature Slice",
+      "community": 114,
+      "community_name": "@medusajs/draft-order",
       "norm_label": "@medusajs/draft-order"
     },
     {
@@ -1193,7 +1193,7 @@
       "norm_label": "existingpatchpattern"
     },
     {
-      "label": "index.ts",
+      "label": "i18n/index.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/i18n/index.ts",
       "source_location": "L1",
@@ -1201,7 +1201,7 @@
       "id": "apps_backend_src_admin_i18n_index",
       "community": 105,
       "community_name": "Backend Feature Slice",
-      "norm_label": "index.ts"
+      "norm_label": "i18n/index.ts"
     },
     {
       "label": "lead-import.ts",
@@ -1347,7 +1347,7 @@
       "norm_label": "prepareimportrows()"
     },
     {
-      "label": "page.tsx",
+      "label": "import/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/import/page.tsx",
       "source_location": "L1",
@@ -1355,7 +1355,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_import_page",
       "community": 9,
       "community_name": "Lead Import Admin",
-      "norm_label": "page.tsx"
+      "norm_label": "import/page.tsx"
     },
     {
       "label": "cardStyle",
@@ -1457,7 +1457,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "[phone]/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/leads/[phone]/page.tsx",
       "source_location": "L1",
@@ -1465,7 +1465,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_leads_phone_page",
       "community": 44,
       "community_name": "CRM Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "[phone]/page.tsx"
     },
     {
       "label": "CustomerEvent",
@@ -1600,7 +1600,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "leads/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/leads/page.tsx",
       "source_location": "L1",
@@ -1608,7 +1608,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_leads_page",
       "community": 24,
       "community_name": "CRM Leads Admin",
-      "norm_label": "page.tsx"
+      "norm_label": "leads/page.tsx"
     },
     {
       "label": "CustomerRow",
@@ -1831,7 +1831,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "crm-whatsapp/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/page.tsx",
       "source_location": "L1",
@@ -1839,7 +1839,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_page",
       "community": 52,
       "community_name": "CRM Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "crm-whatsapp/page.tsx"
     },
     {
       "label": "CrmCustomerRow",
@@ -1952,7 +1952,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "pipeline/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/pipeline/page.tsx",
       "source_location": "L1",
@@ -1960,7 +1960,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_pipeline_page",
       "community": 35,
       "community_name": "CRM Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "pipeline/page.tsx"
     },
     {
       "label": "CustomerRow",
@@ -2139,7 +2139,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "recompra/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/recompra/page.tsx",
       "source_location": "L1",
@@ -2147,7 +2147,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_recompra_page",
       "community": 48,
       "community_name": "CRM Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "recompra/page.tsx"
     },
     {
       "label": "RepurchaseMetrics",
@@ -2271,7 +2271,7 @@
       "norm_label": "config"
     },
     {
-      "label": "page.tsx",
+      "label": "templates/page.tsx",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/routes/crm-whatsapp/templates/page.tsx",
       "source_location": "L1",
@@ -2279,7 +2279,7 @@
       "id": "apps_backend_src_admin_routes_crm_whatsapp_templates_page",
       "community": 45,
       "community_name": "CRM Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "templates/page.tsx"
     },
     {
       "label": "TemplateRow",
@@ -2414,7 +2414,7 @@
       "norm_label": "config"
     },
     {
-      "label": "tsconfig.json",
+      "label": "admin/tsconfig.json",
       "file_type": "code",
       "source_file": "apps/backend/src/admin/tsconfig.json",
       "source_location": "L1",
@@ -2422,7 +2422,7 @@
       "id": "apps_backend_src_admin_tsconfig",
       "community": 22,
       "community_name": "Admin TypeScript Config",
-      "norm_label": "tsconfig.json"
+      "norm_label": "admin/tsconfig.json"
     },
     {
       "label": "compilerOptions",
@@ -2667,7 +2667,7 @@
       "norm_label": "vite-env.d.ts"
     },
     {
-      "label": "_shared.ts",
+      "label": "b2b/_shared.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/_shared.ts",
       "source_location": "L1",
@@ -2675,7 +2675,7 @@
       "id": "apps_backend_src_api_admin_b2b_shared",
       "community": 32,
       "community_name": "Backend Feature Slice",
-      "norm_label": "_shared.ts"
+      "norm_label": "b2b/_shared.ts"
     },
     {
       "label": "CustomerPayload",
@@ -2717,7 +2717,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_shared_crmservice",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "crmservice()"
     },
@@ -2739,7 +2739,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_shared_iso",
-      "community": 30,
+      "community": 36,
       "community_name": "CRM Feature Slice",
       "norm_label": "iso()"
     },
@@ -2898,7 +2898,7 @@
       "norm_label": "customerinputfrompayload()"
     },
     {
-      "label": "route.ts",
+      "label": "broadcasts/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/broadcasts/route.ts",
       "source_location": "L1",
@@ -2906,7 +2906,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_broadcasts_route",
       "community": 59,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "broadcasts/route.ts"
     },
     {
       "label": "broadcastSchema",
@@ -2942,7 +2942,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "purchase/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/customers/[phone]/purchase/route.ts",
       "source_location": "L1",
@@ -2950,7 +2950,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_customers_phone_purchase_route",
       "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "purchase/route.ts"
     },
     {
       "label": "PurchaseBody",
@@ -2975,7 +2975,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "[phone]/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/customers/[phone]/route.ts",
       "source_location": "L1",
@@ -2983,7 +2983,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_customers_phone_route",
       "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "[phone]/route.ts"
     },
     {
       "label": "GET()",
@@ -3019,7 +3019,7 @@
       "norm_label": "patch()"
     },
     {
-      "label": "route.ts",
+      "label": "snooze/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/customers/[phone]/snooze/route.ts",
       "source_location": "L1",
@@ -3027,7 +3027,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_customers_phone_snooze_route",
       "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "snooze/route.ts"
     },
     {
       "label": "SnoozeBody",
@@ -3052,15 +3052,15 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "import/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/customers/import/route.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "import/route.ts"
     },
     {
       "label": "ImportBody",
@@ -3069,7 +3069,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route_importbody",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "importbody"
     },
@@ -3080,20 +3080,20 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_import_route_post",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "customers/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/customers/route.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "community": 113,
+      "community_name": "customers/route.ts",
+      "norm_label": "customers/route.ts"
     },
     {
       "label": "ImportBody",
@@ -3102,8 +3102,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_importbody",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 113,
+      "community_name": "customers/route.ts",
       "norm_label": "importbody"
     },
     {
@@ -3113,8 +3113,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_boolparam",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 113,
+      "community_name": "customers/route.ts",
       "norm_label": "boolparam()"
     },
     {
@@ -3124,8 +3124,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_valid_rfm_segments",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 113,
+      "community_name": "customers/route.ts",
       "norm_label": "valid_rfm_segments"
     },
     {
@@ -3135,8 +3135,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_customers_route_get",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 113,
+      "community_name": "customers/route.ts",
       "norm_label": "get()"
     },
     {
@@ -3151,7 +3151,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "dashboard/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/dashboard/route.ts",
       "source_location": "L1",
@@ -3159,7 +3159,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_dashboard_route",
       "community": 59,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "dashboard/route.ts"
     },
     {
       "label": "predictedMode()",
@@ -3184,7 +3184,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "crm/events/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/events/route.ts",
       "source_location": "L1",
@@ -3192,7 +3192,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_events_route",
       "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "crm/events/route.ts"
     },
     {
       "label": "POST()",
@@ -3206,7 +3206,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "dispatch/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/followups/dispatch/route.ts",
       "source_location": "L1",
@@ -3214,7 +3214,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_followups_dispatch_route",
       "community": 5,
       "community_name": "Followup Dispatch API",
-      "norm_label": "route.ts"
+      "norm_label": "dispatch/route.ts"
     },
     {
       "label": "DispatchBody",
@@ -3239,7 +3239,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "due/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/followups/due/route.ts",
       "source_location": "L1",
@@ -3247,7 +3247,7 @@
       "id": "apps_backend_src_api_admin_b2b_crm_followups_due_route",
       "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "due/route.ts"
     },
     {
       "label": "GET()",
@@ -3261,15 +3261,15 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "recompra/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/reports/recompra/route.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_reports_recompra_route",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "recompra/route.ts"
     },
     {
       "label": "GET()",
@@ -3278,20 +3278,20 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_reports_recompra_route_get",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "templates/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/crm/templates/route.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "templates/route.ts"
     },
     {
       "label": "GET()",
@@ -3300,7 +3300,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route_get",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "get()"
     },
@@ -3311,12 +3311,12 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "apps_backend_src_api_admin_b2b_crm_templates_route_patch",
-      "community": 36,
+      "community": 30,
       "community_name": "CRM Feature Slice",
       "norm_label": "patch()"
     },
     {
-      "label": "route.ts",
+      "label": "payment-link/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/orders/[id]/payment-link/route.ts",
       "source_location": "L1",
@@ -3324,7 +3324,7 @@
       "id": "apps_backend_src_api_admin_b2b_orders_id_payment_link_route",
       "community": 36,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "payment-link/route.ts"
     },
     {
       "label": "POST()",
@@ -3338,7 +3338,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "[id]/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/orders/[id]/route.ts",
       "source_location": "L1",
@@ -3346,7 +3346,7 @@
       "id": "apps_backend_src_api_admin_b2b_orders_id_route",
       "community": 36,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "[id]/route.ts"
     },
     {
       "label": "GET()",
@@ -3360,7 +3360,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "payphone-webhook/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/orders/payphone-webhook/route.ts",
       "source_location": "L1",
@@ -3368,7 +3368,7 @@
       "id": "apps_backend_src_api_admin_b2b_orders_payphone_webhook_route",
       "community": 36,
       "community_name": "CRM Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "payphone-webhook/route.ts"
     },
     {
       "label": "isPaidStatus()",
@@ -3393,7 +3393,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "orders/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/b2b/orders/route.ts",
       "source_location": "L1",
@@ -3401,7 +3401,7 @@
       "id": "apps_backend_src_api_admin_b2b_orders_route",
       "community": 32,
       "community_name": "Backend Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "orders/route.ts"
     },
     {
       "label": "externalOrderId()",
@@ -3426,7 +3426,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "admin/custom/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/admin/custom/route.ts",
       "source_location": "L1",
@@ -3434,7 +3434,7 @@
       "id": "apps_backend_src_api_admin_custom_route",
       "community": 93,
       "community_name": "Backend Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "admin/custom/route.ts"
     },
     {
       "label": "GET()",
@@ -3448,7 +3448,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "b2b/reviews/[id]/helpful/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/b2b/reviews/[id]/helpful/route.ts",
       "source_location": "L1",
@@ -3456,7 +3456,7 @@
       "id": "apps_backend_src_api_b2b_reviews_id_helpful_route",
       "community": 9,
       "community_name": "Lead Import Admin",
-      "norm_label": "route.ts"
+      "norm_label": "b2b/reviews/[id]/helpful/route.ts"
     },
     {
       "label": "POST()",
@@ -3470,7 +3470,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "_shared.ts",
+      "label": "reviews/_shared.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/b2b/reviews/_shared.ts",
       "source_location": "L1",
@@ -3478,7 +3478,7 @@
       "id": "apps_backend_src_api_b2b_reviews_shared",
       "community": 9,
       "community_name": "Lead Import Admin",
-      "norm_label": "_shared.ts"
+      "norm_label": "reviews/_shared.ts"
     },
     {
       "label": "reviewsWriteAuth()",
@@ -3492,7 +3492,7 @@
       "norm_label": "reviewswriteauth()"
     },
     {
-      "label": "route.ts",
+      "label": "b2b/reviews/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/b2b/reviews/route.ts",
       "source_location": "L1",
@@ -3500,7 +3500,7 @@
       "id": "apps_backend_src_api_b2b_reviews_route",
       "community": 9,
       "community_name": "Lead Import Admin",
-      "norm_label": "route.ts"
+      "norm_label": "b2b/reviews/route.ts"
     },
     {
       "label": "createReviewSchema",
@@ -3536,7 +3536,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "status/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/store/b2b/status/route.ts",
       "source_location": "L1",
@@ -3544,7 +3544,7 @@
       "id": "apps_backend_src_api_store_b2b_status_route",
       "community": 94,
       "community_name": "Backend Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "status/route.ts"
     },
     {
       "label": "GET()",
@@ -3558,7 +3558,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "store/custom/route.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/api/store/custom/route.ts",
       "source_location": "L1",
@@ -3566,7 +3566,7 @@
       "id": "apps_backend_src_api_store_custom_route",
       "community": 95,
       "community_name": "Backend Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "store/custom/route.ts"
     },
     {
       "label": "GET()",
@@ -4026,8 +4026,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_followup_dispatch_unit_spec",
-      "community": 59,
-      "community_name": "Storefront Feature Slice",
+      "community": 5,
+      "community_name": "Followup Dispatch API",
       "norm_label": "followup-dispatch.unit.spec.ts"
     },
     {
@@ -4037,8 +4037,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_followup_dispatch_unit_spec_now",
-      "community": 59,
-      "community_name": "Storefront Feature Slice",
+      "community": 5,
+      "community_name": "Followup Dispatch API",
       "norm_label": "now"
     },
     {
@@ -4081,8 +4081,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_tests_recompra_metrics_unit_spec",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "recompra-metrics.unit.spec.ts"
     },
     {
@@ -4180,8 +4180,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_followup_dispatch_iswithinsendwindow",
-      "community": 59,
-      "community_name": "Storefront Feature Slice",
+      "community": 5,
+      "community_name": "Followup Dispatch API",
       "norm_label": "iswithinsendwindow()"
     },
     {
@@ -4235,8 +4235,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_followup_dispatch_buildfollowupmessage",
-      "community": 59,
-      "community_name": "Storefront Feature Slice",
+      "community": 5,
+      "community_name": "Followup Dispatch API",
       "norm_label": "buildfollowupmessage()"
     },
     {
@@ -4372,7 +4372,7 @@
       "norm_label": "runfollowupdispatch()"
     },
     {
-      "label": "index.ts",
+      "label": "b2b-crm/index.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/modules/b2b-crm/index.ts",
       "source_location": "L1",
@@ -4380,7 +4380,7 @@
       "id": "apps_backend_src_modules_b2b_crm_index",
       "community": 5,
       "community_name": "Followup Dispatch API",
-      "norm_label": "index.ts"
+      "norm_label": "b2b-crm/index.ts"
     },
     {
       "label": "Migration20260527000000.ts",
@@ -4521,8 +4521,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_conversational_order",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "conversational-order.ts"
     },
     {
@@ -4532,8 +4532,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_conversational_order_conversationalorder",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "conversationalorder"
     },
     {
@@ -4543,8 +4543,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_event",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crm-customer-event.ts"
     },
     {
@@ -4554,8 +4554,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_event_crmcustomerevent",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crmcustomerevent"
     },
     {
@@ -4565,8 +4565,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_profile",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crm-customer-profile.ts"
     },
     {
@@ -4576,8 +4576,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_customer_profile_crmcustomerprofile",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crmcustomerprofile"
     },
     {
@@ -4587,8 +4587,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_message_template",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crm-message-template.ts"
     },
     {
@@ -4598,20 +4598,20 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_crm_message_template_crmmessagetemplate",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "crmmessagetemplate"
     },
     {
-      "label": "index.ts",
+      "label": "models/index.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/modules/b2b-crm/models/index.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_index",
-      "community": 0,
-      "community_name": "B2B CRM Models",
-      "norm_label": "index.ts"
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
+      "norm_label": "models/index.ts"
     },
     {
       "label": "product-review.ts",
@@ -4620,8 +4620,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_product_review",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "product-review.ts"
     },
     {
@@ -4631,8 +4631,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_models_product_review_productreview",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "productreview"
     },
     {
@@ -4642,8 +4642,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "recompra-metrics.ts"
     },
     {
@@ -4653,8 +4653,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_paidevent",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "paidevent"
     },
     {
@@ -4664,8 +4664,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_customerlike",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "customerlike"
     },
     {
@@ -4675,8 +4675,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_eventlike",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "eventlike"
     },
     {
@@ -4686,8 +4686,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_followupevent",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "followupevent"
     },
     {
@@ -4697,8 +4697,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculaterepurchaserates",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "calculaterepurchaserates()"
     },
     {
@@ -4708,8 +4708,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculateaverageltv",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "calculateaverageltv()"
     },
     {
@@ -4719,8 +4719,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_calculateattributedsales",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "calculateattributedsales()"
     },
     {
@@ -4730,8 +4730,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_generatecohortsbyfirstpurchase",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "generatecohortsbyfirstpurchase()"
     },
     {
@@ -4741,8 +4741,8 @@
       "source_location": "L257",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_recompra_metrics_recomprametrics",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 109,
+      "community_name": "@medusajs/admin-sdk",
       "norm_label": "recomprametrics()"
     },
     {
@@ -4807,8 +4807,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_rfm_calculaterfmfromprofile",
-      "community": 40,
-      "community_name": "CRM Feature Slice",
+      "community": 113,
+      "community_name": "customers/route.ts",
       "norm_label": "calculaterfmfromprofile()"
     },
     {
@@ -4818,20 +4818,20 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_rfm_calculaterfm",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "calculaterfm()"
     },
     {
-      "label": "service.ts",
+      "label": "b2b-crm/service.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/modules/b2b-crm/service.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service",
-      "community": 0,
-      "community_name": "B2B CRM Models",
-      "norm_label": "service.ts"
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
+      "norm_label": "b2b-crm/service.ts"
     },
     {
       "label": "AnyB2bCrmService",
@@ -4840,8 +4840,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_anyb2bcrmservice",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "anyb2bcrmservice"
     },
     {
@@ -4851,8 +4851,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customersearchinput",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customersearchinput"
     },
     {
@@ -4862,8 +4862,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_computerfmsegment",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "computerfmsegment()"
     },
     {
@@ -4873,8 +4873,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerprofilepatch",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customerprofilepatch"
     },
     {
@@ -4884,8 +4884,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerimportresult",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "customerimportresult"
     },
     {
@@ -4895,8 +4895,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_normalizephone",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "normalizephone()"
     },
     {
@@ -4906,8 +4906,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_asdate",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "asdate()"
     },
     {
@@ -4917,8 +4917,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_iso",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "iso()"
     },
     {
@@ -4928,8 +4928,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_uniquetags",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "uniquetags()"
     },
     {
@@ -4939,8 +4939,8 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_adddays",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "adddays()"
     },
     {
@@ -4950,8 +4950,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_nextreorderdays",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "nextreorderdays()"
     },
     {
@@ -4961,8 +4961,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_customerverticals",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "customerverticals()"
     },
     {
@@ -4972,8 +4972,8 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_detectvertical",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": "detectvertical()"
     },
     {
@@ -4983,8 +4983,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_eventmetadata",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "eventmetadata()"
     },
     {
@@ -4994,8 +4994,8 @@
       "source_location": "L178",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_payloadwithmetadata",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 64,
+      "community_name": "Storefront Feature Slice",
       "norm_label": "payloadwithmetadata()"
     },
     {
@@ -5027,8 +5027,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_upsertcustomer",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".upsertcustomer()"
     },
     {
@@ -5060,8 +5060,8 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_searchcustomers",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 40,
+      "community_name": "CRM Feature Slice",
       "norm_label": ".searchcustomers()"
     },
     {
@@ -5082,8 +5082,8 @@
       "source_location": "L387",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_importcustomers",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".importcustomers()"
     },
     {
@@ -5093,8 +5093,8 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_recordmanualpurchase",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".recordmanualpurchase()"
     },
     {
@@ -5126,8 +5126,8 @@
       "source_location": "L464",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_addcustomerevent",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".addcustomerevent()"
     },
     {
@@ -5137,8 +5137,8 @@
       "source_location": "L526",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_markpaid",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".markpaid()"
     },
     {
@@ -5148,8 +5148,8 @@
       "source_location": "L564",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_service_b2bcrmmoduleservice_createconversationalorder",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": ".createconversationalorder()"
     },
     {
@@ -5329,15 +5329,15 @@
       "norm_label": ".getproductaveragerating()"
     },
     {
-      "label": "types.ts",
+      "label": "b2b-crm/types.ts",
       "file_type": "code",
       "source_file": "apps/backend/src/modules/b2b-crm/types.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types",
-      "community": 0,
-      "community_name": "B2B CRM Models",
-      "norm_label": "types.ts"
+      "community": 107,
+      "community_name": "meta.ts",
+      "norm_label": "b2b-crm/types.ts"
     },
     {
       "label": "PurchasedProduct",
@@ -5346,8 +5346,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_purchasedproduct",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "purchasedproduct"
     },
     {
@@ -5357,8 +5357,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_crmcustomerinput",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "crmcustomerinput"
     },
     {
@@ -5368,8 +5368,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_crmcustomereventinput",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "crmcustomereventinput"
     },
     {
@@ -5379,12 +5379,12 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "apps_backend_src_modules_b2b_crm_types_conversationalorderinput",
-      "community": 0,
-      "community_name": "B2B CRM Models",
+      "community": 107,
+      "community_name": "meta.ts",
       "norm_label": "conversationalorderinput"
     },
     {
-      "label": "tsconfig.json",
+      "label": "backend/tsconfig.json",
       "file_type": "code",
       "source_file": "apps/backend/tsconfig.json",
       "source_location": "L1",
@@ -5392,7 +5392,7 @@
       "id": "apps_backend_tsconfig",
       "community": 13,
       "community_name": "Backend TypeScript Config",
-      "norm_label": "tsconfig.json"
+      "norm_label": "backend/tsconfig.json"
     },
     {
       "label": "compilerOptions",
@@ -5714,7 +5714,7 @@
       "norm_label": ".cache"
     },
     {
-      "label": "route.ts",
+      "label": "result/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/api/checkout/datafast/result/route.ts",
       "source_location": "L1",
@@ -5722,7 +5722,7 @@
       "id": "apps_storefront_app_api_checkout_datafast_result_route",
       "community": 86,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "result/route.ts"
     },
     {
       "label": "toolsUrl()",
@@ -5747,7 +5747,7 @@
       "norm_label": "get()"
     },
     {
-      "label": "route.ts",
+      "label": "datafast/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/api/checkout/datafast/route.ts",
       "source_location": "L1",
@@ -5755,7 +5755,7 @@
       "id": "apps_storefront_app_api_checkout_datafast_route",
       "community": 82,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "datafast/route.ts"
     },
     {
       "label": "toolsUrl()",
@@ -5791,7 +5791,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "api/events/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/api/events/route.ts",
       "source_location": "L1",
@@ -5799,7 +5799,7 @@
       "id": "apps_storefront_app_api_events_route",
       "community": 83,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "api/events/route.ts"
     },
     {
       "label": "toolsUrl()",
@@ -5835,7 +5835,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "route.ts",
+      "label": "api/reviews/[id]/helpful/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/api/reviews/[id]/helpful/route.ts",
       "source_location": "L1",
@@ -5843,7 +5843,7 @@
       "id": "apps_storefront_app_api_reviews_id_helpful_route",
       "community": 49,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "api/reviews/[id]/helpful/route.ts"
     },
     {
       "label": "POST()",
@@ -5923,7 +5923,7 @@
       "norm_label": "clientip()"
     },
     {
-      "label": "route.ts",
+      "label": "api/reviews/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/api/reviews/route.ts",
       "source_location": "L1",
@@ -5931,7 +5931,7 @@
       "id": "apps_storefront_app_api_reviews_route",
       "community": 49,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "norm_label": "api/reviews/route.ts"
     },
     {
       "label": "EMPTY",
@@ -5967,7 +5967,7 @@
       "norm_label": "post()"
     },
     {
-      "label": "page.tsx",
+      "label": "bienestar/campanas/[slug]/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/bienestar/campanas/[slug]/page.tsx",
       "source_location": "L1",
@@ -5975,7 +5975,7 @@
       "id": "apps_storefront_app_bienestar_campanas_slug_page",
       "community": 6,
       "community_name": "Wellness Campaign Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "bienestar/campanas/[slug]/page.tsx"
     },
     {
       "label": "WellnessCampaignPageProps",
@@ -6176,7 +6176,7 @@
       "norm_label": "wellnessemptycta()"
     },
     {
-      "label": "page.tsx",
+      "label": "bienestar/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/bienestar/page.tsx",
       "source_location": "L1",
@@ -6184,7 +6184,7 @@
       "id": "apps_storefront_app_bienestar_page",
       "community": 6,
       "community_name": "Wellness Campaign Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "bienestar/page.tsx"
     },
     {
       "label": "metadata",
@@ -6352,7 +6352,7 @@
       "norm_label": "campaignstickycta()"
     },
     {
-      "label": "page.tsx",
+      "label": "app/campanas/[slug]/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/campanas/[slug]/page.tsx",
       "source_location": "L1",
@@ -6360,7 +6360,7 @@
       "id": "apps_storefront_app_campanas_slug_page",
       "community": 8,
       "community_name": "Kitchen Campaign Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "app/campanas/[slug]/page.tsx"
     },
     {
       "label": "CampaignPageProps",
@@ -6512,8 +6512,8 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "apps_storefront_app_campanas_slug_page_trustgrid",
-      "community": 57,
-      "community_name": "Storefront Feature Slice",
+      "community": 8,
+      "community_name": "Kitchen Campaign Pages",
       "norm_label": "trustgrid()"
     },
     {
@@ -6534,8 +6534,8 @@
       "source_location": "L333",
       "_origin": "ast",
       "id": "apps_storefront_app_campanas_slug_page_campaignfaq",
-      "community": 57,
-      "community_name": "Storefront Feature Slice",
+      "community": 8,
+      "community_name": "Kitchen Campaign Pages",
       "norm_label": "campaignfaq()"
     },
     {
@@ -6550,7 +6550,7 @@
       "norm_label": "campaignpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "cart/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/cart/page.tsx",
       "source_location": "L1",
@@ -6558,7 +6558,7 @@
       "id": "apps_storefront_app_cart_page",
       "community": 16,
       "community_name": "Cart Checkout UI",
-      "norm_label": "page.tsx"
+      "norm_label": "cart/page.tsx"
     },
     {
       "label": "FormData",
@@ -6583,7 +6583,7 @@
       "norm_label": "cartpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "pago/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
       "source_location": "L1",
@@ -6591,7 +6591,7 @@
       "id": "apps_storefront_app_checkout_pago_page",
       "community": 65,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "pago/page.tsx"
     },
     {
       "label": "CheckoutResponse",
@@ -6641,7 +6641,7 @@
       "label": "Shell()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L300",
+      "source_location": "L314",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_shell",
       "community": 65,
@@ -6652,7 +6652,7 @@
       "label": "Row()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L310",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_row",
       "community": 65,
@@ -6663,7 +6663,7 @@
       "label": "Field()",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L314",
+      "source_location": "L328",
       "_origin": "ast",
       "id": "apps_storefront_app_checkout_pago_page_field",
       "community": 65,
@@ -6671,7 +6671,7 @@
       "norm_label": "field()"
     },
     {
-      "label": "page.tsx",
+      "label": "resultado/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/checkout/resultado/page.tsx",
       "source_location": "L1",
@@ -6679,7 +6679,7 @@
       "id": "apps_storefront_app_checkout_resultado_page",
       "community": 16,
       "community_name": "Cart Checkout UI",
-      "norm_label": "page.tsx"
+      "norm_label": "resultado/page.tsx"
     },
     {
       "label": "Result",
@@ -6952,8 +6952,8 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "apps_storefront_app_components_analytics_trackedwhatsapplink",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "trackedwhatsapplink()"
     },
     {
@@ -7381,8 +7381,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_badge",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "badge.tsx"
     },
     {
@@ -7392,8 +7392,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_badge_badge",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "badge()"
     },
     {
@@ -7447,8 +7447,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_button",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "button.tsx"
     },
     {
@@ -7458,8 +7458,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_button_variantclass",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "variantclass"
     },
     {
@@ -7469,8 +7469,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_button_whatsappicon",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "whatsappicon()"
     },
     {
@@ -7480,8 +7480,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_button_button",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "button()"
     },
     {
@@ -7491,8 +7491,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_button_whatsappbutton",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "whatsappbutton()"
     },
     {
@@ -7678,8 +7678,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_form_field",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "form-field.tsx"
     },
     {
@@ -7689,8 +7689,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_form_field_formfield",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "formfield()"
     },
     {
@@ -7777,8 +7777,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_material_macro",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "material-macro.tsx"
     },
     {
@@ -7788,8 +7788,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_material_macro_materialmacro",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "materialmacro()"
     },
     {
@@ -7986,8 +7986,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_price_tag",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 8,
+      "community_name": "Kitchen Campaign Pages",
       "norm_label": "price-tag.tsx"
     },
     {
@@ -7997,8 +7997,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_price_tag_pricetag",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 8,
+      "community_name": "Kitchen Campaign Pages",
       "norm_label": "pricetag()"
     },
     {
@@ -8052,8 +8052,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_product_card",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "product-card.tsx"
     },
     {
@@ -8063,8 +8063,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_product_card_productcarddata",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "productcarddata"
     },
     {
@@ -8074,8 +8074,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_product_card_productcard",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "productcard()"
     },
     {
@@ -8195,8 +8195,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "scroll-reveal.tsx"
     },
     {
@@ -8206,8 +8206,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal_scrollrevealprops",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "scrollrevealprops"
     },
     {
@@ -8217,8 +8217,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_scroll_reveal_scrollreveal",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "scrollreveal()"
     },
     {
@@ -8228,8 +8228,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_section",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "section.tsx"
     },
     {
@@ -8239,8 +8239,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_section_sectionhead",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "sectionhead()"
     },
     {
@@ -8250,8 +8250,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_section_section",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "section()"
     },
     {
@@ -8404,8 +8404,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "sticky-cta-bar.tsx"
     },
     {
@@ -8415,8 +8415,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_whatsappicon",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "whatsappicon()"
     },
     {
@@ -8426,8 +8426,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_stickyctabarprops",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "stickyctabarprops"
     },
     {
@@ -8437,8 +8437,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "apps_storefront_app_components_ui_sticky_cta_bar_stickyctabar",
-      "community": 6,
-      "community_name": "Wellness Campaign Pages",
+      "community": 26,
+      "community_name": "Product Detail Pages",
       "norm_label": "stickyctabar()"
     },
     {
@@ -8530,15 +8530,15 @@
       "norm_label": "colorpickerdemo()"
     },
     {
-      "label": "page.tsx",
+      "label": "ui/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/dev/ui/page.tsx",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page",
-      "community": 27,
-      "community_name": "UI Component Library",
-      "norm_label": "page.tsx"
+      "community": 17,
+      "community_name": "Brand Navigation UI",
+      "norm_label": "ui/page.tsx"
     },
     {
       "label": "metadata",
@@ -8547,8 +8547,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_metadata",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "metadata"
     },
     {
@@ -8558,8 +8558,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_sampleproduct",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "sampleproduct"
     },
     {
@@ -8569,8 +8569,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_specrows",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "specrows"
     },
     {
@@ -8580,8 +8580,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_macroitems",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "macroitems"
     },
     {
@@ -8591,8 +8591,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_themesection",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "themesection()"
     },
     {
@@ -8602,8 +8602,8 @@
       "source_location": "L213",
       "_origin": "ast",
       "id": "apps_storefront_app_dev_ui_page_uikitpage",
-      "community": 27,
-      "community_name": "UI Component Library",
+      "community": 17,
+      "community_name": "Brand Navigation UI",
       "norm_label": "uikitpage()"
     },
     {
@@ -8640,7 +8640,7 @@
       "norm_label": "videostoriesdemo()"
     },
     {
-      "label": "page.tsx",
+      "label": "envios-devoluciones/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/envios-devoluciones/page.tsx",
       "source_location": "L1",
@@ -8648,7 +8648,7 @@
       "id": "apps_storefront_app_envios_devoluciones_page",
       "community": 7,
       "community_name": "Ambient UI Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "envios-devoluciones/page.tsx"
     },
     {
       "label": "metadata",
@@ -8717,15 +8717,15 @@
       "norm_label": "enviosdevolucionespage()"
     },
     {
-      "label": "route.ts",
+      "label": "catalog.csv/route.ts",
       "file_type": "code",
       "source_file": "apps/storefront/app/feeds/meta/catalog.csv/route.ts",
       "source_location": "L1",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
-      "norm_label": "route.ts"
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
+      "norm_label": "catalog.csv/route.ts"
     },
     {
       "label": "csv()",
@@ -8734,8 +8734,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_csv",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "csv()"
     },
     {
@@ -8745,8 +8745,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_verticalfromrequest",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "verticalfromrequest()"
     },
     {
@@ -8756,8 +8756,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_baseurlforvertical",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "baseurlforvertical()"
     },
     {
@@ -8767,8 +8767,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_absoluteimagelink",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "absoluteimagelink()"
     },
     {
@@ -8778,8 +8778,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_fallbackcsv",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "fallbackcsv()"
     },
     {
@@ -8789,12 +8789,12 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "apps_storefront_app_feeds_meta_catalog_csv_route_get",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "get()"
     },
     {
-      "label": "page.tsx",
+      "label": "guias/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/guias/page.tsx",
       "source_location": "L1",
@@ -8802,7 +8802,7 @@
       "id": "apps_storefront_app_guias_page",
       "community": 17,
       "community_name": "Brand Navigation UI",
-      "norm_label": "page.tsx"
+      "norm_label": "guias/page.tsx"
     },
     {
       "label": "metadata",
@@ -8827,7 +8827,7 @@
       "norm_label": "guidespage()"
     },
     {
-      "label": "page.tsx",
+      "label": "teflon-pfas/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/guias/teflon-pfas/page.tsx",
       "source_location": "L1",
@@ -8835,7 +8835,7 @@
       "id": "apps_storefront_app_guias_teflon_pfas_page",
       "community": 17,
       "community_name": "Brand Navigation UI",
-      "norm_label": "page.tsx"
+      "norm_label": "teflon-pfas/page.tsx"
     },
     {
       "label": "metadata",
@@ -8915,7 +8915,7 @@
       "norm_label": "rootlayout()"
     },
     {
-      "label": "page.tsx",
+      "label": "marca/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/marca/page.tsx",
       "source_location": "L1",
@@ -8923,7 +8923,7 @@
       "id": "apps_storefront_app_marca_page",
       "community": 7,
       "community_name": "Ambient UI Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "marca/page.tsx"
     },
     {
       "label": "metadata",
@@ -8981,7 +8981,7 @@
       "norm_label": "brandportalpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "app/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/page.tsx",
       "source_location": "L1",
@@ -8989,7 +8989,7 @@
       "id": "apps_storefront_app_page",
       "community": 17,
       "community_name": "Brand Navigation UI",
-      "norm_label": "page.tsx"
+      "norm_label": "app/page.tsx"
     },
     {
       "label": "metadata",
@@ -9047,7 +9047,7 @@
       "norm_label": "home()"
     },
     {
-      "label": "page.tsx",
+      "label": "[clientTransactionId]/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/payphone/sandbox/[clientTransactionId]/page.tsx",
       "source_location": "L1",
@@ -9055,7 +9055,7 @@
       "id": "apps_storefront_app_payphone_sandbox_clienttransactionid_page",
       "community": 97,
       "community_name": "Storefront Feature Slice",
-      "norm_label": "page.tsx"
+      "norm_label": "[clienttransactionid]/page.tsx"
     },
     {
       "label": "SandboxPaymentPage()",
@@ -9069,7 +9069,7 @@
       "norm_label": "sandboxpaymentpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "privacidad/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/privacidad/page.tsx",
       "source_location": "L1",
@@ -9077,7 +9077,7 @@
       "id": "apps_storefront_app_privacidad_page",
       "community": 7,
       "community_name": "Ambient UI Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "privacidad/page.tsx"
     },
     {
       "label": "metadata",
@@ -9146,7 +9146,7 @@
       "norm_label": "privacidadpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "products/[slug]/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/products/[slug]/page.tsx",
       "source_location": "L1",
@@ -9154,7 +9154,7 @@
       "id": "apps_storefront_app_products_slug_page",
       "community": 26,
       "community_name": "Product Detail Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "products/[slug]/page.tsx"
     },
     {
       "label": "ProductPageProps",
@@ -9267,7 +9267,7 @@
       "norm_label": "productdetailpage()"
     },
     {
-      "label": "page.tsx",
+      "label": "terminos/page.tsx",
       "file_type": "code",
       "source_file": "apps/storefront/app/terminos/page.tsx",
       "source_location": "L1",
@@ -9275,7 +9275,7 @@
       "id": "apps_storefront_app_terminos_page",
       "community": 7,
       "community_name": "Ambient UI Pages",
-      "norm_label": "page.tsx"
+      "norm_label": "terminos/page.tsx"
     },
     {
       "label": "metadata",
@@ -9410,7 +9410,7 @@
       "norm_label": "usecart()"
     },
     {
-      "label": "catalog.ts",
+      "label": "lib/catalog.ts",
       "file_type": "code",
       "source_file": "apps/storefront/lib/catalog.ts",
       "source_location": "L1",
@@ -9418,7 +9418,7 @@
       "id": "apps_storefront_lib_catalog",
       "community": 23,
       "community_name": "Storefront Catalog Logic",
-      "norm_label": "catalog.ts"
+      "norm_label": "lib/catalog.ts"
     },
     {
       "label": "Product",
@@ -9449,8 +9449,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_productslug",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 6,
+      "community_name": "Wellness Campaign Pages",
       "norm_label": "productslug()"
     },
     {
@@ -9460,8 +9460,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_productpath",
-      "community": 26,
-      "community_name": "Product Detail Pages",
+      "community": 25,
+      "community_name": "Shared Product UI",
       "norm_label": "productpath()"
     },
     {
@@ -9471,8 +9471,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_fallbackproducts",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "fallbackproducts"
     },
     {
@@ -9504,8 +9504,8 @@
       "source_location": "L2445",
       "_origin": "ast",
       "id": "apps_storefront_lib_catalog_wellnessfallbackproducts",
-      "community": 64,
-      "community_name": "Storefront Feature Slice",
+      "community": 23,
+      "community_name": "Storefront Catalog Logic",
       "norm_label": "wellnessfallbackproducts"
     },
     {
@@ -10224,7 +10224,7 @@
       "norm_label": "nextconfig"
     },
     {
-      "label": "package.json",
+      "label": "storefront/package.json",
       "file_type": "code",
       "source_file": "apps/storefront/package.json",
       "source_location": "L1",
@@ -10232,7 +10232,7 @@
       "id": "apps_storefront_package",
       "community": 10,
       "community_name": "Storefront Dependencies",
-      "norm_label": "package.json"
+      "norm_label": "storefront/package.json"
     },
     {
       "label": "name",
@@ -10631,7 +10631,7 @@
       "norm_label": "config"
     },
     {
-      "label": "tsconfig.json",
+      "label": "storefront/tsconfig.json",
       "file_type": "code",
       "source_file": "apps/storefront/tsconfig.json",
       "source_location": "L1",
@@ -10639,7 +10639,7 @@
       "id": "apps_storefront_tsconfig",
       "community": 15,
       "community_name": "Storefront TypeScript Config",
-      "norm_label": "tsconfig.json"
+      "norm_label": "storefront/tsconfig.json"
     },
     {
       "label": "compilerOptions",
@@ -12622,7 +12622,7 @@
       "norm_label": "main()"
     },
     {
-      "label": "package.json",
+      "label": "ecommerce-tools/package.json",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/package.json",
       "source_location": "L1",
@@ -12630,7 +12630,7 @@
       "id": "services_ecommerce_tools_package",
       "community": 14,
       "community_name": "Tools Dependencies",
-      "norm_label": "package.json"
+      "norm_label": "ecommerce-tools/package.json"
     },
     {
       "label": "name",
@@ -12958,8 +12958,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_auth",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "auth.ts"
     },
     {
@@ -12969,8 +12969,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_auth_publicpaths",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "publicpaths"
     },
     {
@@ -12980,12 +12980,12 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_auth_authhook",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "authhook()"
     },
     {
-      "label": "catalog.ts",
+      "label": "src/catalog.ts",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/catalog.ts",
       "source_location": "L1",
@@ -12993,7 +12993,7 @@
       "id": "services_ecommerce_tools_src_catalog",
       "community": 18,
       "community_name": "Tools Catalog Logic",
-      "norm_label": "catalog.ts"
+      "norm_label": "src/catalog.ts"
     },
     {
       "label": "defaultPaymentMethods",
@@ -14184,7 +14184,7 @@
       "norm_label": "crmpayloadforevent()"
     },
     {
-      "label": "index.ts",
+      "label": "src/index.ts",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/index.ts",
       "source_location": "L1",
@@ -14192,7 +14192,7 @@
       "id": "services_ecommerce_tools_src_index",
       "community": 2,
       "community_name": "Tools Contracts",
-      "norm_label": "index.ts"
+      "norm_label": "src/index.ts"
     },
     {
       "label": "config",
@@ -14421,8 +14421,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_meta",
-      "community": 107,
-      "community_name": "meta.ts",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "meta.ts"
     },
     {
@@ -14432,8 +14432,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_meta_csv",
-      "community": 107,
-      "community_name": "meta.ts",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "csv()"
     },
     {
@@ -14443,8 +14443,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_meta_withutm",
-      "community": 107,
-      "community_name": "meta.ts",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "withutm()"
     },
     {
@@ -14454,8 +14454,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_meta_buildmetacatalogcsv",
-      "community": 107,
-      "community_name": "meta.ts",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "buildmetacatalogcsv()"
     },
     {
@@ -14465,8 +14465,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_meta_buildmetadraft",
-      "community": 107,
-      "community_name": "meta.ts",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "buildmetadraft()"
     },
     {
@@ -14476,8 +14476,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_payphone",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "payphone.ts"
     },
     {
@@ -14487,8 +14487,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_payphone_buildclienttransactionid",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "buildclienttransactionid()"
     },
     {
@@ -14498,8 +14498,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_payphone_createpayphonelink",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "createpayphonelink()"
     },
     {
@@ -14547,7 +14547,7 @@
       "norm_label": "buildquote()"
     },
     {
-      "label": "service.ts",
+      "label": "src/service.ts",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/service.ts",
       "source_location": "L1",
@@ -14555,7 +14555,7 @@
       "id": "services_ecommerce_tools_src_service",
       "community": 47,
       "community_name": "Tools Feature Slice",
-      "norm_label": "service.ts"
+      "norm_label": "src/service.ts"
     },
     {
       "label": "addDays()",
@@ -14707,9 +14707,20 @@
       "source_location": "L307",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_service_createcommerceservice",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 2,
+      "community_name": "Tools Contracts",
       "norm_label": "createcommerceservice()"
+    },
+    {
+      "label": "notifyPurchaseByWhatsapp()",
+      "file_type": "code",
+      "source_file": "services/ecommerce-tools/src/service.ts",
+      "source_location": "L1170",
+      "_origin": "ast",
+      "id": "services_ecommerce_tools_src_service_notifypurchasebywhatsapp",
+      "community": 47,
+      "community_name": "Tools Feature Slice",
+      "norm_label": "notifypurchasebywhatsapp()"
     },
     {
       "label": "storage.ts",
@@ -14932,7 +14943,7 @@
       "norm_label": "listduefollowups()"
     },
     {
-      "label": "types.ts",
+      "label": "src/types.ts",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/src/types.ts",
       "source_location": "L1",
@@ -14940,7 +14951,7 @@
       "id": "services_ecommerce_tools_src_types",
       "community": 39,
       "community_name": "Tools Feature Slice",
-      "norm_label": "types.ts"
+      "norm_label": "src/types.ts"
     },
     {
       "label": "Money",
@@ -15004,8 +15015,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_types_customereventtype",
-      "community": 39,
-      "community_name": "Tools Feature Slice",
+      "community": 29,
+      "community_name": "Meta CAPI Events",
       "norm_label": "customereventtype"
     },
     {
@@ -15015,7 +15026,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_types_customereventrecord",
-      "community": 39,
+      "community": 47,
       "community_name": "Tools Feature Slice",
       "norm_label": "customereventrecord"
     },
@@ -15037,7 +15048,7 @@
       "source_location": "L149",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_types_customerrecord",
-      "community": 39,
+      "community": 33,
       "community_name": "Tools Feature Slice",
       "norm_label": "customerrecord"
     },
@@ -15059,8 +15070,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_types_orderrecord",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "orderrecord"
     },
     {
@@ -15070,8 +15081,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "whatsapp-reply.ts"
     },
     {
@@ -15081,8 +15092,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply_whatsappreplyinputschema",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "whatsappreplyinputschema"
     },
     {
@@ -15092,8 +15103,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply_whatsappreplyinput",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "whatsappreplyinput"
     },
     {
@@ -15103,8 +15114,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply_iswindowopen",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "iswindowopen()"
     },
     {
@@ -15114,8 +15125,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply_sendfreeform",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "sendfreeform()"
     },
     {
@@ -15125,8 +15136,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_reply_mountwhatsappreplyroute",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 28,
+      "community_name": "Tools Runtime Config",
       "norm_label": "mountwhatsappreplyroute()"
     },
     {
@@ -15136,8 +15147,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "whatsapp-webhook.ts"
     },
     {
@@ -15147,8 +15158,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_metawebhookmessage",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "metawebhookmessage"
     },
     {
@@ -15158,8 +15169,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_metawebhookchange",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "metawebhookchange"
     },
     {
@@ -15169,8 +15180,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_metawebhookentry",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "metawebhookentry"
     },
     {
@@ -15180,8 +15191,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_metawebhookbody",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "metawebhookbody"
     },
     {
@@ -15191,8 +15202,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_validatehubsignature",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "validatehubsignature()"
     },
     {
@@ -15202,8 +15213,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_extractinboundmessages",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "extractinboundmessages()"
     },
     {
@@ -15213,8 +15224,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_isoptouttext",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "isoptouttext()"
     },
     {
@@ -15224,8 +15235,8 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_parsenpsscore",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "parsenpsscore()"
     },
     {
@@ -15235,8 +15246,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_npsdecision",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "npsdecision()"
     },
     {
@@ -15246,8 +15257,8 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_forwardtovicky",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "forwardtovicky()"
     },
     {
@@ -15257,8 +15268,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_recordinboundevent",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "recordinboundevent()"
     },
     {
@@ -15268,8 +15279,8 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "services_ecommerce_tools_src_whatsapp_webhook_mountwhatsappwebhookroutes",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "mountwhatsappwebhookroutes()"
     },
     {
@@ -15279,8 +15290,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_datafast_crm_test",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 11,
+      "community_name": "Tools CRM Service",
       "norm_label": "datafast-crm.test.ts"
     },
     {
@@ -15290,8 +15301,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_datafast_crm_test_svc",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 2,
+      "community_name": "Tools Contracts",
       "norm_label": "svc()"
     },
     {
@@ -15323,8 +15334,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_quote_test",
-      "community": 28,
-      "community_name": "Tools Runtime Config",
+      "community": 39,
+      "community_name": "Tools Feature Slice",
       "norm_label": "quote.test.ts"
     },
     {
@@ -15334,8 +15345,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_whatsapp_webhook_test",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "whatsapp-webhook.test.ts"
     },
     {
@@ -15345,8 +15356,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_whatsapp_webhook_test_makesignature",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "makesignature()"
     },
     {
@@ -15356,12 +15367,12 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "services_ecommerce_tools_tests_whatsapp_webhook_test_samplebody",
-      "community": 2,
-      "community_name": "Tools Contracts",
+      "community": 46,
+      "community_name": "CRM Feature Slice",
       "norm_label": "samplebody"
     },
     {
-      "label": "tsconfig.json",
+      "label": "ecommerce-tools/tsconfig.json",
       "file_type": "code",
       "source_file": "services/ecommerce-tools/tsconfig.json",
       "source_location": "L1",
@@ -15369,7 +15380,7 @@
       "id": "services_ecommerce_tools_tsconfig",
       "community": 41,
       "community_name": "Tools Feature Slice",
-      "norm_label": "tsconfig.json"
+      "norm_label": "ecommerce-tools/tsconfig.json"
     },
     {
       "label": "compilerOptions",
@@ -17403,7 +17414,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 69,
+      "community": 75,
       "norm_label": "meta official whatsapp business platform",
       "community_name": "Project Documentation",
       "id": "docs_whatsapp_cloud_plan_meta_official_business_platform"
@@ -17543,7 +17554,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 69,
+      "community": 75,
       "norm_label": "waba credentials",
       "community_name": "Project Documentation",
       "id": "docs_whatsapp_cloud_plan_waba_credentials"
@@ -30495,7 +30506,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L314",
+      "source_location": "L328",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30528,7 +30539,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L310",
+      "source_location": "L324",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30539,7 +30550,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L300",
+      "source_location": "L314",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page",
@@ -30600,7 +30611,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/storefront/app/checkout/pago/page.tsx",
-      "source_location": "L150",
+      "source_location": "L164",
       "weight": 1.0,
       "_origin": "ast",
       "source": "apps_storefront_app_checkout_pago_page_pagotarjetapage",
@@ -45354,6 +45365,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/ecommerce-tools/src/service.ts",
+      "source_location": "L1170",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_ecommerce_tools_src_service",
+      "target": "services_ecommerce_tools_src_service_notifypurchasebywhatsapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/ecommerce-tools/src/service.ts",
       "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
@@ -49698,5 +49720,5 @@
       "source_file": "skills/ecommerce-sales/SKILL.md"
     }
   ],
-  "built_at_commit": "12ad8766bddd391766e4a6848ca0c7d7263254e0"
+  "built_at_commit": "6a24c4bcfca221da61b4d68a6f1ee3cccba13c8b"
 }
