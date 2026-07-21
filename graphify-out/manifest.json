@@ -410,8 +410,8 @@
     "semantic_hash": "eb8912cd05d96917f3b7bd734e409675"
   },
   "apps/storefront/app/checkout/pago/page.tsx": {
-    "mtime": 1784586387.9687889,
-    "ast_hash": "d0d6e62a5741a84a3db2e3d3dda0f926",
+    "mtime": 1784588457.861319,
+    "ast_hash": "8f611b165ce86a6007c44f590466a199",
     "semantic_hash": ""
   },
   "apps/storefront/app/checkout/resultado/page.tsx": {
@@ -895,8 +895,8 @@
     "semantic_hash": "fb16e1d8951c6e5dc6d25d40e59f5b1b"
   },
   "services/ecommerce-tools/src/service.ts": {
-    "mtime": 1784586387.9722695,
-    "ast_hash": "0b91e63a443e7f945d75dd6283656905",
+    "mtime": 1784588324.8108478,
+    "ast_hash": "ebf3d3ca115ad5100df1425c774b0d0f",
     "semantic_hash": ""
   },
   "services/ecommerce-tools/src/storage.ts": {
@@ -1140,8 +1140,8 @@
     "semantic_hash": "2ac8aad2138526815a47803664b634e5"
   },
   "docs/PENDIENTES_GO_LIVE.md": {
-    "mtime": 1784586387.9697928,
-    "ast_hash": "27940c6dd637894823708599147c49f8",
+    "mtime": 1784656814.387674,
+    "ast_hash": "9ffa2c8c0f32046c0c9d77b83ca7d8ed",
     "semantic_hash": ""
   },
   "docs/PROJECT_MAP.md": {
