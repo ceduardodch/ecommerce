@@ -60,6 +60,22 @@ export default function PagoTarjetaPage() {
       onReady: function () {
         const button = document.querySelector("form.wpwl-form-card .wpwl-button")
         if (!button) return
+        const holder = document.querySelector<HTMLInputElement>(".wpwl-control-cardHolder")
+        if (holder) {
+          const holderError = document.createElement("div")
+          holderError.dataset.cardholderError = "true"
+          holderError.setAttribute("role", "alert")
+          holderError.textContent = "Nombre del titular de la tarjeta no válido"
+          holderError.style.cssText = "display:none;margin-top:4px;color:#c4502a;font-size:13px;line-height:18px"
+          holder.insertAdjacentElement("afterend", holderError)
+          holder.addEventListener("input", () => {
+            if (holder.value.trim().length >= 2) {
+              holder.classList.remove("wpwl-has-error")
+              holder.removeAttribute("aria-invalid")
+              holderError.style.display = "none"
+            }
+          })
+        }
         // Diferidos y tipo de crédito (guía §5.1–5.2). El widget envía estos
         // campos automáticamente por su atributo name; 0/00 = corriente.
         button.insertAdjacentHTML(
@@ -92,7 +108,10 @@ export default function PagoTarjetaPage() {
         )
         if (!holder || holder.value.trim().length < 2) {
           holder?.classList.add("wpwl-has-error")
-          alert("Ingresa el nombre tal como aparece en la tarjeta.")
+          holder?.setAttribute("aria-invalid", "true")
+          const holderError = document.querySelector<HTMLElement>("[data-cardholder-error]")
+          if (holderError) holderError.style.display = "block"
+          holder?.focus()
           return false
         }
         return true
