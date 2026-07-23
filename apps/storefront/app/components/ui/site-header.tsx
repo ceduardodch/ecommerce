@@ -81,15 +81,18 @@ export function SiteHeader({
             {compactTitle}
           </span>
         )}
-        <button
-          type="button"
-          className={`flex h-9 w-9 items-center justify-center rounded-full ${
-            dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"
-          }`}
-          aria-label="Compartir"
-        >
-          <ShareIcon />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            className={`flex h-9 w-9 items-center justify-center rounded-full ${
+              dark ? "text-[#fcfcf7]" : "text-[#1A1A18]"
+            }`}
+            aria-label="Compartir"
+          >
+            <ShareIcon />
+          </button>
+          <CartBagButton surface={surface} />
+        </div>
       </header>
     )
   }
