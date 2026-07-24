@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { rateLimited } from "../../reviews/lib"
 
 function toolsUrl() {
   return (
@@ -18,6 +19,14 @@ function clientIp(request: NextRequest) {
 
 // Crea el checkout en Datafast (server-side: el secreto vive en ecommerce-tools).
 export async function POST(request: NextRequest) {
+  // Anti-spam: 10 checkouts por IP cada 10 min (holgado para la certificación,
+  // corta el abuso del API de Datafast y el inflado del ledger).
+  if (rateLimited(`datafast:${clientIp(request) || "unknown"}`, 10, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: "too_many_requests", message: "Demasiados intentos. Espera unos minutos." },
+      { status: 429 },
+    )
+  }
   const payload = (await request.json().catch(() => ({}))) as Record<
     string,
     unknown

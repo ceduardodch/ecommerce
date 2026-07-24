@@ -9,7 +9,15 @@ const publicPaths = new Set([
 
 export function authHook(config: AppConfig) {
   return async (request: FastifyRequest, reply: FastifyReply) => {
-    if (!config.toolsApiToken || publicPaths.has(request.url.split("?")[0])) {
+    if (publicPaths.has(request.url.split("?")[0])) {
+      return
+    }
+    if (!config.toolsApiToken) {
+      // Fail-closed en producción: sin token configurado, nada queda público
+      // (p. ej. /tools/datafast/void). En dev local sigue abierto.
+      if (process.env.NODE_ENV === "production") {
+        return reply.code(503).send({ error: "tools_token_not_configured" })
+      }
       return
     }
 

@@ -51,6 +51,10 @@ import type {
   PurchasedProduct,
 } from "./types.js"
 
+// Guard anti-carrera: evita pedido/WhatsApp duplicados si el cliente
+// refresca /checkout/resultado mientras el primer request sigue en vuelo.
+const inflightDatafastResults = new Set<string>()
+
 function addDays(iso: string, days: number) {
   const date = new Date(iso)
   date.setDate(date.getDate() + days)
@@ -692,7 +696,31 @@ export function createCommerceService(config: AppConfig) {
       customer?: DatafastCheckoutInput["customer"]
     }) {
       const reference = input.reference || `etn_${Date.now()}`
-      const checkout = await createDatafastCheckout(config, { ...input, reference })
+      // Anti-manipulación de precios: el unitPrice del cliente NUNCA manda.
+      // Si el SKU existe en el catálogo se usa el precio del catálogo; en
+      // live un SKU desconocido se rechaza (en test se deja pasar para
+      // fixtures y transacciones del script de certificación).
+      const products = await loadProducts(config)
+      const live = config.datafastEnv === "live"
+      const items = input.items.map((it) => {
+        const product = it.sku
+          ? products.find((p) => p.sku === it.sku || p.id === it.sku)
+          : undefined
+        if (!product) {
+          if (live) {
+            throw new Error(
+              `Producto no reconocido en el catálogo: ${it.sku || it.title}`,
+            )
+          }
+          return { ...it }
+        }
+        return { ...it, title: product.title, unitPrice: product.price.amount }
+      })
+      const checkout = await createDatafastCheckout(config, {
+        ...input,
+        items,
+        reference,
+      })
       const now = new Date().toISOString()
       await upsertDatafastCheckout(config.dataDir, {
         reference,
@@ -708,7 +736,7 @@ export function createCommerceService(config: AppConfig) {
             .trim() || undefined,
           email: input.customer?.email,
         },
-        items: input.items.map((it) => ({
+        items: items.map((it) => ({
           title: it.title,
           sku: it.sku,
           quantity: it.quantity,
@@ -725,7 +753,14 @@ export function createCommerceService(config: AppConfig) {
       const result = await getDatafastResult(config, checkoutId, resourcePath)
       const record = await findDatafastCheckout(config.dataDir, checkoutId)
 
-      if (result.status === "paid" && record && !record.registered) {
+      if (
+        result.status === "paid" &&
+        record &&
+        !record.registered &&
+        !inflightDatafastResults.has(record.reference)
+      ) {
+        inflightDatafastResults.add(record.reference)
+        try {
         const now = new Date().toISOString()
         if (record.customer?.phone) {
           const purchasedProducts: PurchasedProduct[] = record.items.map((it) => ({
@@ -837,7 +872,7 @@ export function createCommerceService(config: AppConfig) {
               orderId = order.id
             }
             if (record.customer?.phone) {
-              await notifyPurchaseByWhatsapp(config, {
+              void notifyPurchaseByWhatsapp(config, {
                 phone: record.customer.phone,
                 name: record.customer.name,
                 orderId,
@@ -849,9 +884,13 @@ export function createCommerceService(config: AppConfig) {
               })
             }
           }
-        } catch {
+        } catch (cause) {
           // El pedido/aviso no debe romper la confirmación del pago:
           // la venta ya quedó registrada en el CRM y en el ledger.
+          console.error(
+            `[datafast] fallo creando pedido/aviso para ${record.reference}:`,
+            cause instanceof Error ? cause.message : cause,
+          )
         }
         await upsertDatafastCheckout(config.dataDir, {
           ...record,
@@ -866,6 +905,9 @@ export function createCommerceService(config: AppConfig) {
           authorizationCode: result.authorizationCode,
           updatedAt: now,
         })
+        } finally {
+          inflightDatafastResults.delete(record.reference)
+        }
       } else if (result.status === "failed" && record && record.status === "pending") {
         await upsertDatafastCheckout(config.dataDir, {
           ...record,

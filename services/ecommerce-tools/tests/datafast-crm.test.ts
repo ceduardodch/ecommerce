@@ -86,3 +86,61 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     expect(customers.find((c) => c.phone === "+593991112222")).toBeFalsy()
   })
 })
+
+describe("datafast → blindaje de precios (code review #1)", () => {
+  let dir: string
+  beforeEach(async () => {
+    dir = await mkdtemp(join(tmpdir(), "etn-df-sec-"))
+  })
+  afterEach(async () => {
+    await rm(dir, { recursive: true, force: true })
+  })
+
+  function svc(extra: Record<string, string> = {}) {
+    const config = loadConfig({
+      CRM_BACKEND: "json",
+      DATAFAST_DRY_RUN: "true",
+      ECOMMERCE_TAX_RATE: "0.15",
+      TOOLS_DATA_DIR: dir,
+      ...extra,
+    })
+    return createCommerceService(config)
+  }
+
+  it("ignora el unitPrice del cliente cuando el SKU está en el catálogo", async () => {
+    const service = svc()
+    // Intento de manipulación: sartén real a $0.10
+    const checkout = await service.datafastCheckout({
+      items: [
+        {
+          title: "Sartén hackeada",
+          sku: "COC-SARTEN-PLANO-GRANITO-22",
+          quantity: 1,
+          unitPrice: 0.1,
+        },
+      ],
+      customer: { givenName: "Mallory", phone: "0990000001" },
+    })
+    expect(checkout.amount).toBeGreaterThan(10)
+    const [record] = await readDatafastCheckouts(dir)
+    expect(record.items[0].unitPrice).toBeGreaterThan(10)
+    expect(record.items[0].unitPrice).not.toBe(0.1)
+  })
+
+  it("en LIVE rechaza SKUs que no existen en el catálogo", async () => {
+    const service = svc({ DATAFAST_ENV: "live" })
+    await expect(
+      service.datafastCheckout({
+        items: [{ title: "Fantasma", sku: "SKU-INVENTADO", quantity: 1, unitPrice: 1 }],
+      }),
+    ).rejects.toThrow(/no reconocido/)
+  })
+
+  it("en test deja pasar ítems sin match (fixtures y certificación)", async () => {
+    const service = svc()
+    const checkout = await service.datafastCheckout({
+      items: [{ title: "Fixture X", quantity: 1, unitPrice: 12.5 }],
+    })
+    expect(checkout.amount).toBe(12.5)
+  })
+})

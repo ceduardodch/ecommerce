@@ -219,3 +219,21 @@ describe("datafast — dry-run (sin credenciales)", () => {
     expect(res.status).toBe("failed")
   })
 })
+
+describe("datafast — gate de tarifa 0 en LIVE (code review #2)", () => {
+  const zeroItems = [{ title: "Z", quantity: 1, unitPrice: 10, zeroRated: true }]
+
+  it("en live el flag zeroRated del cliente se ignora (todo gravado)", () => {
+    const config = loadConfig({ DATAFAST_ENV: "live", DATAFAST_ENTITY_ID: "e" })
+    const form = buildCheckoutForm(config, { reference: "etn_z1", items: zeroItems })
+    expect(form.get("customParameters[SHOPPER_VAL_BASE0]")).toBe("0.00")
+    expect(form.get("customParameters[SHOPPER_VAL_IVA]")).not.toBe("0.00")
+  })
+
+  it("en test el flag se respeta (caso base 0 del TestScript)", () => {
+    const config = loadConfig({ DATAFAST_ENV: "test", DATAFAST_ENTITY_ID: "e" })
+    const form = buildCheckoutForm(config, { reference: "etn_z2", items: zeroItems })
+    expect(form.get("customParameters[SHOPPER_VAL_BASE0]")).toBe("10.00")
+    expect(form.get("customParameters[SHOPPER_VAL_IVA]")).toBe("0.00")
+  })
+})

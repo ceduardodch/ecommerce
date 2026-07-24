@@ -69,6 +69,18 @@ function round2(n: number) {
  * hay productos con tarifa 0%, se extiende con un flag por ítem.
  * NO se confía en ningún total enviado por el cliente: se recalcula aquí.
  */
+/**
+ * En LIVE la tarifa 0 jamás se acepta del cliente (protege la declaración de
+ * IVA al SRI); solo en pruebas/certificación se respeta el flag zeroRated.
+ */
+export function sanitizeZeroRated(
+  config: AppConfig,
+  items: DatafastCartItem[],
+): DatafastCartItem[] {
+  if (config.datafastEnv !== "live") return items
+  return items.map(({ zeroRated: _zeroRated, ...it }) => it)
+}
+
 export function computeIva(items: DatafastCartItem[], taxRate: number): IvaBreakdown {
   const sum = (list: DatafastCartItem[]) =>
     round2(list.reduce((acc, it) => acc + it.unitPrice * it.quantity, 0))
@@ -88,7 +100,8 @@ export function buildCheckoutForm(
   config: AppConfig,
   input: DatafastCheckoutInput,
 ): URLSearchParams {
-  const iva = computeIva(input.items, config.taxRate)
+  const safeItems = sanitizeZeroRated(config, input.items)
+  const iva = computeIva(safeItems, config.taxRate)
   const c = input.customer || {}
   const params = new URLSearchParams()
 
@@ -126,7 +139,7 @@ export function buildCheckoutForm(
   params.set("shipping.country", country)
   params.set("billing.country", country)
 
-  input.items.forEach((it, idx) => {
+  safeItems.forEach((it, idx) => {
     // Guía 3.2.1.10.1: el nombre no acepta "&".
     params.set(`cart.items[${idx}].name`, it.title.replace(/&/g, "y").slice(0, 250))
     params.set(
@@ -202,7 +215,7 @@ export async function createDatafastCheckout(
   config: AppConfig,
   input: DatafastCheckoutInput,
 ): Promise<DatafastCheckout> {
-  const iva = computeIva(input.items, config.taxRate)
+  const iva = computeIva(sanitizeZeroRated(config, input.items), config.taxRate)
   const host = datafastHost(config)
   const env = config.datafastEnv === "live" ? "live" : "test"
 
