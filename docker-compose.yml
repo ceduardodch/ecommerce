@@ -129,6 +129,8 @@ services:
       - tools-data:/data
     expose:
       - "8787"
+    ports:
+      - "127.0.0.1:18787:8787"
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:8787/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
       interval: 20s
