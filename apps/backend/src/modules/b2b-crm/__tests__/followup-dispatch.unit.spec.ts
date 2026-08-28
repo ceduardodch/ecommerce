@@ -1,9 +1,12 @@
 import {
   buildFollowupMessage,
+  buildMetaMediaPayload,
   isWithinSendWindow,
   loadDispatchConfig,
+  renderTemplate,
   selectDispatchTargets,
 } from "../followup-dispatch"
+import { DEFAULT_CRM_TEMPLATES } from "../default-templates"
 
 const NOW = new Date("2026-06-10T15:00:00Z")
 
@@ -119,5 +122,63 @@ describe("buildFollowupMessage", () => {
   it("tiene mensaje genérico sin compras", () => {
     const message = buildFollowupMessage({ name: null, purchased_products: [] })
     expect(message).toContain("Hola,")
+  })
+})
+
+describe("buildMetaMediaPayload (adjunto de plantilla)", () => {
+  it("arma un mensaje de video con caption", () => {
+    const payload = buildMetaMediaPayload(
+      "+593979854905",
+      { url: "https://cdn.eter-niu.com/demo.mp4", kind: "video" },
+      "Hola Carlos 👋",
+    )
+    expect(payload.type).toBe("video")
+    expect(payload.video).toEqual({
+      link: "https://cdn.eter-niu.com/demo.mp4",
+      caption: "Hola Carlos 👋",
+    })
+    expect(payload.image).toBeUndefined()
+  })
+
+  it("soporta imagen y documento", () => {
+    expect(
+      buildMetaMediaPayload("+593999", { url: "https://x/y.jpg", kind: "image" }).image,
+    ).toEqual({ link: "https://x/y.jpg" })
+    expect(
+      buildMetaMediaPayload("+593999", { url: "https://x/y.pdf", kind: "document" })
+        .document,
+    ).toEqual({ link: "https://x/y.pdf" })
+  })
+})
+
+describe("plantillas base en español", () => {
+  it("cubre todas las keys que produce templateKeyFromReason", () => {
+    const keys = DEFAULT_CRM_TEMPLATES.map((t) => t.key)
+    for (const expected of [
+      "recompra",
+      "complemento",
+      "cuidado",
+      "estacional",
+      "cross_sell_cocina",
+      "cross_sell_bienestar",
+      "nps",
+      "referido",
+      "generico",
+    ]) {
+      expect(keys).toContain(expected)
+    }
+  })
+
+  it("la plantilla de recompra renderiza las 3 variables", () => {
+    const recompra = DEFAULT_CRM_TEMPLATES.find((t) => t.key === "recompra")!
+    const message = renderTemplate(recompra, {
+      name: "Carlos Díaz",
+      purchased_products: [{ title: "Wok de granito 32 cm" }],
+      daysSincePurchase: 92,
+    })
+    expect(message).toContain("Carlos")
+    expect(message).toContain("Wok de granito 32 cm")
+    expect(message).toContain("92")
+    expect(message).not.toContain("{")
   })
 })

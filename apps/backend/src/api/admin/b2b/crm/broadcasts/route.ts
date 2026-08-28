@@ -87,6 +87,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         return acc
       }, {}),
       sample,
+      media:
+        template.media_url && template.media_type
+          ? { url: template.media_url, kind: template.media_type }
+          : null,
     })
   }
 
@@ -125,6 +129,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       },
       lastInboundAt: null, // Broadcasts siempre usan plantilla
       now,
+      media:
+        template.media_url && template.media_type
+          ? { url: String(template.media_url), kind: String(template.media_type) as any }
+          : null,
     })
 
     const eventMode =

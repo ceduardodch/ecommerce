@@ -1,5 +1,6 @@
 import { MedusaService } from "@medusajs/framework/utils"
 import { normalizeEcPhone } from "../../lib/ec-phone"
+import { DEFAULT_CRM_TEMPLATES } from "./default-templates"
 import {
   ConversationalOrder,
   CrmCustomerEvent,
@@ -739,15 +740,76 @@ class B2bCrmModuleService extends MedusaService({
     return template
   }
 
-  async updateTemplate(key: string, patch: { body?: string; active?: boolean }) {
+  async updateTemplate(
+    key: string,
+    patch: {
+      body?: string
+      active?: boolean
+      label?: string
+      mediaUrl?: string | null
+      mediaType?: string | null
+    },
+  ) {
     const existing = await this.getTemplate(key)
     if (!existing) return undefined
 
     const data: Record<string, unknown> = { id: existing.id }
     if (patch.body !== undefined) data.body = patch.body
     if (patch.active !== undefined) data.active = patch.active
+    if (patch.label !== undefined) data.label = patch.label
+    if (patch.mediaUrl !== undefined) data.media_url = patch.mediaUrl || null
+    if (patch.mediaType !== undefined) data.media_type = patch.mediaType || null
 
     return this.service_().updateCrmMessageTemplates(data)
+  }
+
+  /** Crea la plantilla si no existe; si existe, la actualiza (idempotente). */
+  async upsertTemplate(input: {
+    key: string
+    body: string
+    label?: string
+    active?: boolean
+    mediaUrl?: string | null
+    mediaType?: string | null
+  }) {
+    const existing = await this.getTemplate(input.key)
+    if (existing) {
+      return this.updateTemplate(input.key, {
+        body: input.body,
+        label: input.label,
+        active: input.active,
+        mediaUrl: input.mediaUrl,
+        mediaType: input.mediaType,
+      })
+    }
+
+    return this.service_().createCrmMessageTemplates({
+      key: input.key,
+      body: input.body,
+      label: input.label ?? null,
+      media_url: input.mediaUrl ?? null,
+      media_type: input.mediaType ?? null,
+      active: input.active ?? true,
+    })
+  }
+
+  /**
+   * Siembra las plantillas base en español. No pisa las que ya existen
+   * (para no borrar los textos que el dueño haya ajustado en el admin).
+   */
+  async seedTemplates() {
+    const created: string[] = []
+    const kept: string[] = []
+    for (const template of DEFAULT_CRM_TEMPLATES) {
+      const existing = await this.getTemplate(template.key)
+      if (existing) {
+        kept.push(template.key)
+        continue
+      }
+      await this.upsertTemplate(template)
+      created.push(template.key)
+    }
+    return { created, kept }
   }
 
   async recompraMetrics(asOfIso: string) {

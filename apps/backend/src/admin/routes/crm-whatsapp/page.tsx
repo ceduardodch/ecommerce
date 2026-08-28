@@ -190,24 +190,40 @@ function CrmWhatsappPage() {
     load()
   }, [load])
 
-  async function runDispatch() {
-    setDispatchStatus("Ejecutando followups...")
+  async function runDispatch(dryRun = false) {
+    setDispatchStatus(
+      dryRun ? "Simulando (nadie recibe nada)..." : "Ejecutando followups...",
+    )
+    // Envío real: confirmación explícita para no disparar WhatsApps sin querer.
+    if (!dryRun) {
+      const ok = window.confirm(
+        "Vas a ENVIAR mensajes de WhatsApp reales a los clientes vencidos. ¿Confirmas?",
+      )
+      if (!ok) {
+        setDispatchStatus("Cancelado.")
+        return
+      }
+    }
     try {
       const response = await fetch("/admin/b2b/crm/followups/dispatch", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ dryRun }),
       })
       if (!response.ok) throw new Error(`HTTP ${response.status}`)
       const result = (await response.json()) as {
         mode?: string
+        dryRun?: boolean
+        due?: number
         sent?: number
         queued?: number
         skipped?: number
       }
       setDispatchStatus(
-        `Modo ${result.mode}: ${result.sent || 0} enviados, ${result.queued || 0} en cola, ${result.skipped || 0} omitidos`,
+        result.dryRun
+          ? `Simulación (modo ${result.mode}): ${result.due || 0} vencidos, ${result.skipped || 0} omitidos. Nadie recibió nada.`
+          : `Modo ${result.mode}: ${result.sent || 0} enviados, ${result.queued || 0} en cola, ${result.skipped || 0} omitidos`,
       )
       load()
     } catch (cause) {
@@ -315,7 +331,7 @@ function CrmWhatsappPage() {
             Recompra
           </Link>
           <button
-            onClick={runDispatch}
+            onClick={() => runDispatch(true)}
             style={{
               border: "1px solid var(--border-base)",
               borderRadius: 6,
@@ -326,7 +342,21 @@ function CrmWhatsappPage() {
               cursor: "pointer",
             }}
           >
-            Ejecutar followups ahora
+            Simular followups
+          </button>
+          <button
+            onClick={() => runDispatch(false)}
+            style={{
+              border: "1px solid var(--border-base)",
+              borderRadius: 6,
+              background: "var(--bg-base)",
+              color: "var(--fg-base)",
+              padding: "8px 12px",
+              fontSize: 13,
+              cursor: "pointer",
+            }}
+          >
+            Enviar followups ahora
           </button>
         </div>
       </header>

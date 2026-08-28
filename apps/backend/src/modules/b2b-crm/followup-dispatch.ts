@@ -237,6 +237,45 @@ export type MetaFreeformPayload = {
   text: { body: string }
 }
 
+export type MediaKind = "video" | "image" | "document"
+
+export type TemplateMedia = {
+  url: string
+  kind: MediaKind
+}
+
+export type MetaMediaPayload = {
+  messaging_product: "whatsapp"
+  to: string
+  type: MediaKind
+  video?: { link: string; caption?: string }
+  image?: { link: string; caption?: string }
+  document?: { link: string; caption?: string }
+}
+
+/**
+ * Mensaje con adjunto (video/imagen/documento) por Cloud API.
+ * Solo válido DENTRO de la ventana de servicio de 24h; fuera de ella Meta
+ * exige plantilla aprobada (con header de media si se quiere adjunto).
+ */
+export function buildMetaMediaPayload(
+  phone: string,
+  media: TemplateMedia,
+  caption?: string,
+): MetaMediaPayload {
+  const body = { link: media.url, ...(caption ? { caption } : {}) }
+  return {
+    messaging_product: "whatsapp",
+    to: phone,
+    type: media.kind,
+    ...(media.kind === "video"
+      ? { video: body }
+      : media.kind === "image"
+        ? { image: body }
+        : { document: body }),
+  }
+}
+
 /**
  * Construye el payload de plantilla para la Cloud API de Meta.
  * Variables {{1}}=nombre, {{2}}=producto, {{3}}=dias.
@@ -292,7 +331,7 @@ export function buildMetaFreeformPayload(
  * Ante error 131049 (frequency cap) o cualquier error HTTP/red → degrada a queued.
  */
 export async function dispatchMetaMessage(
-  payload: MetaTemplatePayload | MetaFreeformPayload,
+  payload: MetaTemplatePayload | MetaFreeformPayload | MetaMediaPayload,
   config: Pick<
     FollowupDispatchConfig,
     "whatsappPhoneNumberId" | "whatsappAccessToken" | "metaApiVersion"
@@ -352,6 +391,8 @@ export async function dispatchFollowup(
     /** Si existe y < 24h desde ahora → free-form; si no → template */
     lastInboundAt?: Date | null
     now?: Date
+    /** Adjunto opcional de la plantilla (video/imagen/documento). */
+    media?: TemplateMedia | null
   },
 ): Promise<DispatchOutcome> {
   if (config.mode === "meta") {
@@ -361,9 +402,12 @@ export async function dispatchFollowup(
       now.getTime() - extra.lastInboundAt.getTime() < 24 * 60 * 60 * 1000
 
     if (windowOpen) {
-      // Ventana abierta → free-form (gratis)
+      // Ventana abierta → free-form (gratis). Con adjunto va como
+      // video/imagen + caption; sin adjunto, texto simple.
       return dispatchMetaMessage(
-        buildMetaFreeformPayload(customer.phone, message),
+        extra?.media
+          ? buildMetaMediaPayload(customer.phone, extra.media, message)
+          : buildMetaFreeformPayload(customer.phone, message),
         config,
       )
     }
@@ -406,6 +450,9 @@ export async function dispatchFollowup(
         to: customer.phone,
         deliver: true,
         message,
+        ...(extra?.media
+          ? { mediaUrl: extra.media.url, mediaType: extra.media.kind }
+          : {}),
       }),
     })
 
@@ -546,6 +593,11 @@ export async function runFollowupDispatch(
       ? Math.floor((now.getTime() - new Date((customer as any).last_purchase_at).getTime()) / (1000 * 60 * 60 * 24))
       : 30
 
+    const media =
+      template?.media_url && template?.media_type
+        ? { url: String(template.media_url), kind: String(template.media_type) as MediaKind }
+        : null
+
     const outcome = await dispatchFollowup(customer as any, message, config, {
       templateKey,
       vars: {
@@ -555,6 +607,7 @@ export async function runFollowupDispatch(
       },
       lastInboundAt,
       now,
+      media,
     })
 
     const metaMode = config.mode === "meta"
