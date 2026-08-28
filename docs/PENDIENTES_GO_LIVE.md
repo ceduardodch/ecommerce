@@ -139,3 +139,26 @@ Estado: política de privacidad LOPDP + banner publicados.
 - [x] 🟢 Flujo reparado: proxy `/api/reviews` (rate limit + honeypot), backend
   con validación zod + verificación de compra por teléfono normalizado,
   UI con campos reales de nombre/celular.
+
+## I. CONECTAR RECOMPRA A META (WhatsApp Cloud API) — jul/2026
+Estado: código listo (plantillas con video, dry-run, campañas). Falta la
+conexión con Meta, que depende de credenciales y aprobación de plantillas.
+
+1. 🔴 DUEÑO: obtener el **WABA ID** (Meta Business Settings → Cuentas de
+   WhatsApp → tu cuenta → ID) y exportarlo junto al token existente:
+   `export WHATSAPP_BUSINESS_ACCOUNT_ID=... WHATSAPP_ACCESS_TOKEN=...`
+2. 🟢 Crear las 8 plantillas en Meta:
+   `node scripts/meta-whatsapp-templates.mjs create`
+   (agregar `--video` solo si se quiere header de video; requiere subir el
+   video de ejemplo por Resumable Upload API).
+3. 🟡 Esperar aprobación de Meta (minutos a 24h) y verificar con
+   `node scripts/meta-whatsapp-templates.mjs list` hasta ver APPROVED.
+4. 🔴 DUEÑO: en las envs del backend poner `CRM_FOLLOWUP_DISPATCH_MODE=meta`
+   (hoy probablemente está en `draft` = no envía nada).
+5. 🟢 Sembrar plantillas internas: admin → CRM WhatsApp → Plantillas →
+   "Sembrar plantillas base" (textos editables desde ahí).
+6. 🟡 Prueba dirigida a un solo número antes de abrir a la base:
+   `curl -X POST $BACKEND/admin/b2b/crm/followups/dispatch -d
+   '{"phone":"+593979854905","limit":1}'`
+7. Límite de Meta a recordar: video/imagen libre SOLO dentro de la ventana de
+   24h desde el último mensaje del cliente; fuera de ella, plantilla aprobada.

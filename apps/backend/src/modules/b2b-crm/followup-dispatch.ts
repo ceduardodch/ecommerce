@@ -213,6 +213,8 @@ const META_TEMPLATE_MAP: Record<string, string> = {
   estacional: "eterniu_estacional",
   cross_sell_cocina: "eterniu_xsell_cocina",
   cross_sell_bienestar: "eterniu_xsell_bienestar",
+  nps: "eterniu_nps",
+  referido: "eterniu_referido",
   generico: "eterniu_recompra",
 }
 
