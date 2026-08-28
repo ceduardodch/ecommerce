@@ -8,6 +8,8 @@
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto"
+import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
+import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
 
@@ -42,6 +44,60 @@ export type MetaWebhookEntry = {
 export type MetaWebhookBody = {
   object?: string
   entry?: MetaWebhookEntry[]
+}
+
+const WEBHOOK_DEDUPE_TTL_MS = 7 * 24 * 60 * 60 * 1000
+
+type WebhookDedupeRecord = Record<string, number>
+
+/**
+ * Conserva los IDs de Meta ya procesados en el volumen de datos. Meta puede
+ * reenviar el mismo evento; sólo el primer recibo puede disparar una respuesta.
+ */
+class WebhookMessageDeduper {
+  private readonly filePath: string
+  private readonly ids = new Map<string, number>()
+  private readonly loaded: Promise<void>
+
+  constructor(dataDir: string) {
+    this.filePath = path.join(dataDir, "whatsapp-webhook-dedupe.json")
+    this.loaded = this.load()
+  }
+
+  private async load() {
+    try {
+      const raw = await readFile(this.filePath, "utf8")
+      const records = JSON.parse(raw) as WebhookDedupeRecord
+      for (const [id, at] of Object.entries(records)) {
+        if (Number.isFinite(at) && at > Date.now() - WEBHOOK_DEDUPE_TTL_MS) {
+          this.ids.set(id, at)
+        }
+      }
+    } catch {
+      // El primer arranque no tiene archivo; se crea al aceptar el primer evento.
+    }
+  }
+
+  private async persist() {
+    await mkdir(path.dirname(this.filePath), { recursive: true })
+    const retained = Object.fromEntries(this.ids)
+    const temporary = `${this.filePath}.tmp`
+    await writeFile(temporary, `${JSON.stringify(retained)}\n`, "utf8")
+    await rename(temporary, this.filePath)
+  }
+
+  async claim(messageId: string): Promise<boolean> {
+    await this.loaded
+    if (this.ids.has(messageId)) return false
+
+    const cutoff = Date.now() - WEBHOOK_DEDUPE_TTL_MS
+    for (const [id, at] of this.ids) {
+      if (at < cutoff) this.ids.delete(id)
+    }
+    this.ids.set(messageId, Date.now())
+    await this.persist()
+    return true
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -217,6 +273,7 @@ async function recordInboundEvent(
   }) => Promise<unknown>,
   isOptOut: boolean,
   customerFollowupReason?: string | null,
+  messageId?: string,
 ): Promise<void> {
   const phone = `+${waId}`
   const at = new Date(timestamp * 1000).toISOString()
@@ -227,8 +284,8 @@ async function recordInboundEvent(
     type: "message_in",
     at,
     source: "whatsapp_cloud_api",
-    payload: { text, mediaType: "text", mediaUrl: null },
-    metadata: { lastInboundAt: at },
+    payload: { text, mediaType: "text", mediaUrl: null, messageId },
+    metadata: { lastInboundAt: at, whatsappMessageId: messageId },
   })
 
   // Registrar opt_out si corresponde
@@ -295,6 +352,7 @@ export function mountWhatsappWebhookRoutes(
   getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
+  const deduper = new WebhookMessageDeduper(config.dataDir)
 
   // GET /webhooks/whatsapp — verificación del webhook en Meta
   app.get(
@@ -350,7 +408,11 @@ export function mountWhatsappWebhookRoutes(
 
       // Procesar mensajes en paralelo (fire-and-forget con log de errores)
       Promise.all(
-        messages.map(async ({ waId, text, timestamp }) => {
+        messages.map(async ({ waId, text, timestamp, messageId }) => {
+          if (!(await deduper.claim(messageId))) {
+            app.log.info({ messageId }, "Ignoring duplicate WhatsApp webhook event")
+            return
+          }
           const optOut = isOptOutText(text)
           // Buscar el followup_reason del cliente para lógica NPS (opcional)
           let customerFollowupReason: string | null | undefined
@@ -371,6 +433,7 @@ export function mountWhatsappWebhookRoutes(
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
               customerFollowupReason,
+              messageId,
             )
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")
