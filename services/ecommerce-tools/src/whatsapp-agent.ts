@@ -60,7 +60,11 @@ export async function createWhatsAppAgentReply(
       body: JSON.stringify({
         model: config.openaiModel,
         store: false,
-        max_output_tokens: 220,
+        // Los modelos de razonamiento pueden gastar el límite antes de emitir
+        // texto. Para un chat breve, reducir el razonamiento y dejar margen
+        // suficiente evita respuestas vacías.
+        reasoning: { effort: "low" },
+        max_output_tokens: 500,
         instructions: [
           "Eres Vicky, asesora de ventas de Eter Niu. Responde siempre en español de Ecuador.",
           "Sé breve, amable y concreta. Usa solo el catálogo incluido; no inventes precio, stock, descuentos, entregas ni beneficios de salud.",

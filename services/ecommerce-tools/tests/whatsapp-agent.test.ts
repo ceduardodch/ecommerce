@@ -57,6 +57,8 @@ describe("createWhatsAppAgentReply", () => {
     expect(JSON.parse(String(request.body))).toMatchObject({
       model: "gpt-5-mini",
       store: false,
+      reasoning: { effort: "low" },
+      max_output_tokens: 500,
       input: expect.stringContaining("Olla de granito"),
     })
   })
