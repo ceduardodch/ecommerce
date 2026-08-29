@@ -12,6 +12,8 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
+import type { Product } from "./types.js"
+import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
 
 // ---------------------------------------------------------------------------
 // Tipos de los mensajes que Meta envía al webhook
@@ -350,6 +352,8 @@ export function mountWhatsappWebhookRoutes(
     followupReason?: string
   }) => Promise<unknown>,
   getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
+  searchProducts?: (query: string) => Promise<Product[]>,
+  sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
   const deduper = new WebhookMessageDeduper(config.dataDir)
@@ -438,13 +442,12 @@ export function mountWhatsappWebhookRoutes(
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")
           }
-          // Forward a Vicky sólo si no es opt_out
-          if (!optOut) {
-            await forwardToVicky(config, {
-              phone: waId,
-              text,
-              replyVia: "cloud_api",
-            })
+          if (!optOut && searchProducts && sendReply) {
+            const products = await searchProducts(text).catch(() => [])
+            const replyText = await createWhatsAppAgentReply(config, { text, products })
+            if (replyText) {
+              await sendReply({ phone: `+${waId}`, text: replyText })
+            }
           }
         }),
       ).catch((err) => {

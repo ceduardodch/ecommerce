@@ -39,6 +39,9 @@ export type AppConfig = {
   whatsappAppSecret?: string
   whatsappPhoneNumberId?: string
   whatsappCloudAccessToken?: string
+  whatsappAgentMode: "off" | "openai"
+  openaiApiKey?: string
+  openaiModel: string
   openclawGatewayUrl?: string
   openclawHookPath: string
   openclawHooksToken?: string
@@ -120,6 +123,9 @@ export function loadConfig(env = process.env): AppConfig {
     whatsappAppSecret: env.WHATSAPP_APP_SECRET,
     whatsappPhoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID,
     whatsappCloudAccessToken: env.WHATSAPP_ACCESS_TOKEN,
+    whatsappAgentMode: env.WHATSAPP_AGENT_MODE === "openai" ? "openai" : "off",
+    openaiApiKey: env.OPENAI_API_KEY,
+    openaiModel: env.OPENAI_MODEL || "gpt-5-mini",
     openclawGatewayUrl: env.OPENCLAW_GATEWAY_URL,
     openclawHookPath: env.OPENCLAW_GATEWAY_HOOK_PATH || "/hooks/agent",
     openclawHooksToken: env.OPENCLAW_HOOKS_TOKEN,
