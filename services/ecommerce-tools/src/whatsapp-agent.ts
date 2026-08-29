@@ -8,6 +8,11 @@ type OpenAiResponse = {
   }>
 }
 
+function logAgentDiagnostic(event: string, details: Record<string, unknown> = {}): void {
+  // Nunca registrar mensajes de clientes, tokens ni respuestas completas.
+  console.warn(JSON.stringify({ component: "whatsapp_agent", event, ...details }))
+}
+
 function productContext(products: Product[]): string {
   if (!products.length) return "No hay productos coincidentes en el catálogo actual."
   return products.map((product) => [
@@ -34,7 +39,13 @@ export async function createWhatsAppAgentReply(
   input: { text: string; products: Product[] },
   fetchImpl: typeof fetch = fetch,
 ): Promise<string | null> {
-  if (config.whatsappAgentMode !== "openai" || !config.openaiApiKey) return null
+  if (config.whatsappAgentMode !== "openai" || !config.openaiApiKey) {
+    logAgentDiagnostic("not_configured", {
+      mode: config.whatsappAgentMode,
+      apiKeyConfigured: Boolean(config.openaiApiKey),
+    })
+    return null
+  }
 
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 12_000)
@@ -59,9 +70,17 @@ export async function createWhatsAppAgentReply(
         input: `Mensaje del cliente: ${input.text}\n\nCatálogo relevante:\n${productContext(input.products)}`,
       }),
     })
-    if (!response.ok) return null
-    return extractOutputText(await response.json() as OpenAiResponse)
-  } catch {
+    if (!response.ok) {
+      logAgentDiagnostic("openai_http_error", { status: response.status })
+      return null
+    }
+    const reply = extractOutputText(await response.json() as OpenAiResponse)
+    if (!reply) logAgentDiagnostic("openai_empty_reply")
+    return reply
+  } catch (error) {
+    logAgentDiagnostic("openai_request_failed", {
+      name: error instanceof Error ? error.name : "unknown",
+    })
     return null
   } finally {
     clearTimeout(timeout)
