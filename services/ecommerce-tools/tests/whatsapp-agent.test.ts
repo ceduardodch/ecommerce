@@ -61,5 +61,29 @@ describe("createWhatsAppAgentReply", () => {
       max_output_tokens: 500,
       input: expect.stringContaining("Olla de granito"),
     })
+    const payload = JSON.parse(String(request.body)) as { instructions: string }
+    expect(payload.instructions).toContain("asistente virtual")
+    expect(payload.instructions).toContain("recomienda máximo dos opciones")
+    expect(payload.instructions).toContain("Guía el cierre sin presionar")
+  })
+
+  it("consulta el catálogo vivo si una consulta general no tuvo coincidencias", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Te muestro opciones." }] }],
+    }), { status: 200 }))
+    const catalogLoader = vi.fn().mockResolvedValue(products)
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "Quiero ver productos", products: [] },
+      fetchMock as unknown as typeof fetch,
+      catalogLoader,
+    )
+
+    expect(catalogLoader).toHaveBeenCalledWith(expect.objectContaining({
+      medusaStoreApiUrl: expect.any(String),
+    }))
+    expect(JSON.parse(String(fetchMock.mock.calls[0][1].body)).input)
+      .toContain("Olla de granito")
   })
 })
