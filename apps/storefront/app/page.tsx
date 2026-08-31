@@ -87,18 +87,20 @@ export default async function Home({ searchParams }: HomeProps) {
       <SiteHeader vertical="cocina" surface="dark" />
 
       <main className="bg-[#10160e] pb-28">
-        {/* 3. Hero: producto protagonista con destellos */}
+        {/* 3. Portada: constructor de combos, la oferta principal. */}
+        <ComboBuilder />
+
+        {/* 4. Hero: producto protagonista con destellos */}
         <HeroShowcase product={hero} />
 
-        {/* 4. Grid editorial de la colección */}
+        {/* 5. Grid editorial de la colección */}
         <ProductShowcaseGrid products={rest} />
-        <ComboBuilder />
       </main>
 
-      {/* 5. Footer (ya oscuro) */}
+      {/* 6. Footer (ya oscuro) */}
       <SiteFooter />
 
-      {/* 6. Carrito disponible para armar el combo antes de contactar al vendedor. */}
+      {/* 7. Carrito disponible para armar el combo antes de contactar al vendedor. */}
       <StickyCTABar
         surface="dark"
         product={hero}
