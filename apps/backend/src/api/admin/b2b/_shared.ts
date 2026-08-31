@@ -4,8 +4,10 @@ import {
   OrderStatus,
 } from "@medusajs/framework/utils"
 import {
+  createOrderPaymentCollectionWorkflow,
   createCustomersWorkflow,
   createOrderWorkflow,
+  markPaymentCollectionAsPaid,
   updateOrderWorkflow,
   updateProductsWorkflow,
 } from "@medusajs/medusa/core-flows"
@@ -381,8 +383,36 @@ export async function updateMedusaSalesOrderStatus(
   medusaOrderId: string | undefined,
   paymentStatus: "pending_payment" | "paid" | "payment_failed",
   payment: Record<string, unknown> = {},
+  totalAmount?: number,
 ) {
   if (!medusaOrderId) return undefined
+
+  if (paymentStatus === "paid") {
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const { data: orders } = await query.graph({
+      entity: "order",
+      fields: ["id", "payment_collections.id", "payment_collections.status"],
+      filters: { id: medusaOrderId },
+      pagination: { take: 1 },
+    })
+    let collection: { id: string; status?: string } | undefined =
+      orders[0]?.payment_collections?.[0] || undefined
+    if (!collection) {
+      const { result } = await createOrderPaymentCollectionWorkflow(req.scope).run({
+        input: { order_id: medusaOrderId, amount: Number(totalAmount || 0) },
+      })
+      collection = { id: result[0].id, status: result[0].status }
+    }
+    if (collection.status !== "completed") {
+      await markPaymentCollectionAsPaid(req.scope).run({
+        input: {
+          payment_collection_id: collection.id,
+          order_id: medusaOrderId,
+          captured_by: "b2b-tools",
+        },
+      })
+    }
+  }
 
   const { result } = await updateOrderWorkflow(req.scope).run({
     input: {

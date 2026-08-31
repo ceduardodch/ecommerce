@@ -35,6 +35,13 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   )
 
   if (duplicate) {
+    await updateMedusaSalesOrderStatus(
+      req,
+      existing.medusa_order_id,
+      payload.status,
+      payment,
+      existing.total_amount,
+    )
     return res.json({ order: serializeOrder(existing), idempotent: true })
   }
 
@@ -43,6 +50,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     existing.medusa_order_id,
     payload.status,
     payment,
+    existing.total_amount,
   )
 
   if (payload.status === "paid" && existing.status !== "paid") {
@@ -56,6 +64,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         existing.medusa_order_id,
         "paid",
         { ...payment, stock_exception: error instanceof Error ? error.message : "stock_exception" },
+        existing.total_amount,
       )
     }
   }
