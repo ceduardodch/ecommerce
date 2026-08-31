@@ -115,12 +115,12 @@ const checkoutCatalogEntries = [
   ["MGC-EU-LECHERA-16-AZ", "Olla lechera Azul Oceánico 16 cm", 53, 8, 45],
   ["MGC-EU-OLLA-20-AZ", "Olla Azul Oceánico 20 cm", 63, 8, 55],
   ["MGC-EU-OLLA-24-AZ", "Olla Azul Oceánico 24 cm", 73, 8, 65],
-  ["MGC-SAHARA-NEGRO-SARTEN-20", "Sartén Sahara negro 20 cm", 55, 0, 39.99, "sahara-negro"],
-  ["MGC-SAHARA-NEGRO-SARTEN-24", "Sartén Sahara negro 24 cm", 60, 0, 49.99, "sahara-negro"],
-  ["MGC-SAHARA-NEGRO-SARTEN-28", "Sartén Sahara negro 28 cm", 65, 0, 59.99, "sahara-negro"],
-  ["MGC-SAHARA-GRIS-SARTEN-20", "Sartén Sahara gris 20 cm", 55, 0, 39.99, "sahara-gris"],
-  ["MGC-SAHARA-GRIS-SARTEN-24", "Sartén Sahara gris 24 cm", 60, 0, 49.99, "sahara-gris"],
-  ["MGC-SAHARA-GRIS-SARTEN-28", "Sartén Sahara gris 28 cm", 65, 0, 59.99, "sahara-gris"],
+  ["MGC-SAHARA-NEGRO-SARTEN-20", "Sartén Sahara negro 20 cm", 55, 1, 39.99, "sahara-negro"],
+  ["MGC-SAHARA-NEGRO-SARTEN-24", "Sartén Sahara negro 24 cm", 60, 1, 49.99, "sahara-negro"],
+  ["MGC-SAHARA-NEGRO-SARTEN-28", "Sartén Sahara negro 28 cm", 65, 1, 59.99, "sahara-negro"],
+  ["MGC-SAHARA-GRIS-SARTEN-20", "Sartén Sahara gris 20 cm", 55, 1, 39.99, "sahara-gris"],
+  ["MGC-SAHARA-GRIS-SARTEN-24", "Sartén Sahara gris 24 cm", 60, 1, 49.99, "sahara-gris"],
+  ["MGC-SAHARA-GRIS-SARTEN-28", "Sartén Sahara gris 28 cm", 65, 1, 59.99, "sahara-gris"],
   ["MGC-PALETA-WOK-DATAFAST-TEST", "Paleta para wok · prueba DataFast", 1, 1],
 ] satisfies CheckoutCatalogEntry[]
 

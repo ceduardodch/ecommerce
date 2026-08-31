@@ -474,7 +474,7 @@ export const mgcSaharaPanProducts: Product[] = ["Negro", "Gris"].flatMap(
       warrantyText: "Garantía por confirmar con el proveedor.",
       claimNote:
         "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
-      stock: 0,
+      stock: 1,
       imageUrl: `/media/mgc-sahara/sahara-${color.toLowerCase()}-set-real.jpeg`,
       productUrl: `${kitchenBaseUrl}/products/sahara-${color.toLowerCase()}-${diameterCm}cm`,
       tags: ["mgc", "sahara", color.toLowerCase(), "sarten"],
