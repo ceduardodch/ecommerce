@@ -389,6 +389,7 @@ async function syncInventoryLevels(
   const missingItems = variants.filter(
     ({ variant }) => !variant.inventory_items?.[0]?.inventory_item_id,
   );
+  const createdInventoryItemByVariantId = new Map<string, string>();
   if (missingItems.length) {
     const { result: createdItems } = await createInventoryItemsWorkflow(
       container,
@@ -402,16 +403,20 @@ async function syncInventoryLevels(
         data: { required_quantity: 1 },
       })),
     });
-    for (let index = 0; index < missingItems.length; index += 1) {
-      missingItems[index].variant.inventory_items = [
-        { inventory_item_id: createdItems[index].id },
-      ];
-    }
+    missingItems.forEach(({ variant }, index) =>
+      createdInventoryItemByVariantId.set(
+        variant.id,
+        createdItems[index].id,
+      ),
+    );
   }
 
+  const inventoryItemIdFor = (variant: (typeof variants)[number]["variant"]) =>
+    variant.inventory_items?.[0]?.inventory_item_id ||
+    createdInventoryItemByVariantId.get(variant.id);
   const inventoryItemIds = variants
-    .map(({ variant }) => variant.inventory_items?.[0]?.inventory_item_id)
-    .filter(Boolean);
+    .map(({ variant }) => inventoryItemIdFor(variant))
+    .filter((id): id is string => Boolean(id));
   const { data: levels } = await query.graph({
     entity: "inventory_level",
     fields: ["id", "inventory_item_id", "location_id"],
@@ -420,7 +425,7 @@ async function syncInventoryLevels(
   });
 
   const create = variants.flatMap(({ seed, variant }) => {
-    const inventoryItemId = variant.inventory_items?.[0]?.inventory_item_id;
+    const inventoryItemId = inventoryItemIdFor(variant);
     if (!inventoryItemId) return [];
     const exists = levels.some(
       (level) =>
@@ -444,7 +449,7 @@ async function syncInventoryLevels(
   }
 
   const updates = variants.flatMap(({ seed, variant }) => {
-    const inventoryItemId = variant.inventory_items?.[0]?.inventory_item_id;
+    const inventoryItemId = inventoryItemIdFor(variant);
     if (!inventoryItemId) return [];
     return [
       {
