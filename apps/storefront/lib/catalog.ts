@@ -2608,5 +2608,10 @@ export async function getAllProducts() {
 export async function getProductBySlug(slug: string) {
   const products = await getAllProducts()
   const normalizedSlug = decodeURIComponent(slug)
-  return products.find((product) => productSlug(product) === normalizedSlug)
+  return (
+    products.find((product) => productSlug(product) === normalizedSlug) ||
+    august2026FallbackProducts
+      .map((product) => normalizeProduct(product, "cocina"))
+      .find((product) => productSlug(product) === normalizedSlug)
+  )
 }
