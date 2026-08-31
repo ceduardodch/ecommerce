@@ -22,6 +22,8 @@ export type Product = {
   /** Precio verde por unidad cuando el carrito reúne tres o más productos. */
   comboPrice?: { amount: number; currency: "USD" };
   comboMinimumItems?: number;
+  /** Solo artículos del mismo grupo activan entre sí su precio de combo. */
+  comboGroup?: string;
   discountPercent?: number;
   promoLabel?: string;
   stockSignal?: string;
@@ -396,6 +398,50 @@ export const mgcCollectionComboDeals: Product[] = [
     tags: ["mgc", "combo", "ebano-plata", "12-piezas"],
   },
 ];
+
+const saharaPanSpec = [
+  [20, 55, 39.99],
+  [24, 60, 49.99],
+  [28, 65, 59.99],
+] as const;
+
+export const mgcSaharaPanProducts: Product[] = ["Negro", "Gris"].flatMap(
+  (color) =>
+    saharaPanSpec.map(([diameterCm, pvp, combo]) => ({
+      id: `prod-mgc-sahara-${color.toLowerCase()}-${diameterCm}`,
+      variantId: `var-mgc-sahara-${color.toLowerCase()}-${diameterCm}`,
+      sku: `MGC-SAHARA-${color.toUpperCase()}-SARTEN-${diameterCm}`,
+      vertical: "cocina" as const,
+      title: `Sartén Sahara ${color.toLowerCase()} ${diameterCm} cm`,
+      description: `Sartén Sahara ${color.toLowerCase()} de ${diameterCm} cm con tapa de vidrio y mango de madera.`,
+      category: "Sartenes granito",
+      brand: "MGC",
+      price: { amount: pvp, currency: "USD" as const },
+      originalPrice: { amount: pvp, currency: "USD" as const },
+      comboPrice: { amount: combo, currency: "USD" as const },
+      comboMinimumItems: 3,
+      comboGroup: `sahara-${color.toLowerCase()}`,
+      promoLabel: "Precio del set Sahara de 3 sartenes",
+      stockSignal: "Disponibilidad por confirmar",
+      deliveryBadge: "Entrega y costo de envío por confirmar",
+      paymentMethods: defaultPaymentMethods,
+      couponCode: defaultCouponCode,
+      material: "Granito; mango de madera",
+      diameterCm,
+      pieces: 1,
+      collection: "Sahara",
+      color,
+      stoveCompatibility: "Compatibilidad por confirmar",
+      careTips: "Usar utensilios de silicona o madera y lavar con esponja suave.",
+      warrantyText: "Garantía por confirmar con el proveedor.",
+      claimNote:
+        "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
+      stock: 0,
+      imageUrl: `/media/mgc-sahara/sahara-${color.toLowerCase()}-set-real.jpeg`,
+      productUrl: `${kitchenBaseUrl}/products/sahara-${color.toLowerCase()}-${diameterCm}cm`,
+      tags: ["mgc", "sahara", color.toLowerCase(), "sarten"],
+    })),
+);
 
 function slugify(value: string) {
   return value

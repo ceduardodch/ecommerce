@@ -151,11 +151,11 @@ const onyxImperialMediaBySku: Record<string, ProductMediaItem[]> = {
   ],
   "MGC-FR-WOK-32-GN": [
     {
-      id: "onyx-wok-32-real",
+      id: "wok-tapa-redonda-real",
       type: "image",
-      src: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
-      alt: "Wok Onyx Imperial MGC de 32 cm real, con tapa de vidrio",
-      label: "Wok 32 cm · pieza real",
+      src: "/media/mgc-ebano-plata/ebano-plata-conjunto-frontal.jpg",
+      alt: "Conjunto MGC real con sartén amplia y tapa de pomo redondo",
+      label: "Tapa real de la colección",
     },
   ],
 };

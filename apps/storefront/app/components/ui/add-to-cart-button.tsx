@@ -31,6 +31,7 @@ export function AddToCartButton({
         price: product.price.amount,
         comboPrice: product.comboPrice?.amount,
         comboMinimumItems: product.comboMinimumItems,
+        comboGroup: product.comboGroup,
         image: product.imageUrl,
         category: product.category,
       },

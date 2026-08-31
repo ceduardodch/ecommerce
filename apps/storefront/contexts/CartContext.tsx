@@ -10,6 +10,7 @@ export type CartItem = {
   price: number
   comboPrice?: number
   comboMinimumItems?: number
+  comboGroup?: string
   quantity: number
   image?: string
   category?: string

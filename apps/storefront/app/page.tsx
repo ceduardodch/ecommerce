@@ -10,6 +10,7 @@ import { StickyCTABar } from "./components/ui/sticky-cta-bar"
 import { HeroShowcase } from "./components/ui/hero-showcase"
 import { ProductShowcaseGrid } from "./components/ui/product-showcase-grid"
 import { StarterKitSection } from "./components/starter-kit-section"
+import { SaharaComboBuilder } from "./components/sahara-combo-builder"
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
@@ -92,6 +93,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* 4. Grid editorial de la colección */}
         <ProductShowcaseGrid products={rest} />
+        <SaharaComboBuilder />
         <StarterKitSection />
       </main>
 
