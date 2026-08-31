@@ -1,4 +1,5 @@
 import { MessageCircle } from "lucide-react";
+import Image from "next/image";
 import { mgcCollectionComboDeals } from "../../lib/catalog";
 import { AddToCartButton } from "./ui/add-to-cart-button";
 
@@ -6,14 +7,6 @@ const sellerNumber =
   process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905";
 
 const otherCombos = [
-  {
-    name: "Ébano & Plata",
-    pieces: 12,
-    originalPrice: 369,
-    price: 296.97,
-    savings: 72.03,
-    detail: "Sartenes 20, 24 y 28 cm; ollas 18, 20 y 24 cm.",
-  },
   {
     name: "Sahara",
     pieces: 6,
@@ -38,8 +31,6 @@ function comboLink(name: string) {
 }
 
 export function StarterKitSection() {
-  const onyx = mgcCollectionComboDeals[0];
-
   return (
     <section
       id="combos"
@@ -56,38 +47,62 @@ export function StarterKitSection() {
           Combos listos para cocinar.
         </h2>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#b8c2ae]">
-          Precios especiales por tiempo limitado. El Combo Onyx Imperial usa las
-          fotos y el video reales recibidos.
+          Precios especiales por tiempo limitado. Onyx Imperial y Ébano & Plata
+          usan fotos y videos reales recibidos.
         </p>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2">
-          <article className="rounded-2xl border border-emerald-300/35 bg-[#10160e] p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-emerald-200">
-                  {onyx.pieces} piezas · evidencia real
+          {mgcCollectionComboDeals.map((combo) => {
+            const savings = combo.originalPrice!.amount - combo.price.amount;
+            return (
+              <article
+                key={combo.sku}
+                className="rounded-2xl border border-emerald-300/35 bg-[#10160e] p-6"
+              >
+                <div className="relative mb-5 aspect-[16/9] overflow-hidden rounded-xl bg-black/20">
+                  <Image
+                    src={combo.imageUrl}
+                    alt={`Combo ${combo.collection} MGC real`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                  <span className="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                    Fotos reales
+                  </span>
+                </div>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-emerald-200">
+                      {combo.pieces} piezas · evidencia real
+                    </p>
+                    <h3 className="mt-2 text-2xl font-semibold text-white">
+                      {combo.collection}
+                    </h3>
+                  </div>
+                  <span className="rounded-full bg-emerald-300/15 px-3 py-1 text-xs font-semibold text-emerald-200">
+                    Ahorra ${savings.toFixed(2)}
+                  </span>
+                </div>
+                <p className="mt-3 min-h-14 text-sm leading-relaxed text-[#b8c2ae]">
+                  {combo.description.replace(" Precio especial por tiempo limitado.", "")}
                 </p>
-                <h3 className="mt-2 text-2xl font-semibold text-white">
-                  Onyx Imperial
-                </h3>
-              </div>
-              <span className="rounded-full bg-emerald-300/15 px-3 py-1 text-xs font-semibold text-emerald-200">
-                Ahorra $82.03
-              </span>
-            </div>
-            <p className="mt-3 min-h-14 text-sm leading-relaxed text-[#b8c2ae]">
-              Sartenes 20, 24 y 28 cm; ollas 18, 20 y 24 cm; wok 32 cm.
-            </p>
-            <div className="mt-6 flex items-baseline gap-3">
-              <s className="text-sm text-[#b8c2ae]">$508.99</s>
-              <p className="text-3xl font-semibold text-emerald-200">$426.96</p>
-            </div>
-            <AddToCartButton
-              product={onyx}
-              label="Agregar combo al carrito"
-              className="mt-5 inline-flex items-center rounded-full bg-[#d3fa99] px-5 py-3 text-sm font-semibold text-[#10160e] hover:opacity-90"
-            />
-          </article>
+                <div className="mt-6 flex items-baseline gap-3">
+                  <s className="text-sm text-[#b8c2ae]">
+                    ${combo.originalPrice!.amount.toFixed(2)}
+                  </s>
+                  <p className="text-3xl font-semibold text-emerald-200">
+                    ${combo.price.amount.toFixed(2)}
+                  </p>
+                </div>
+                <AddToCartButton
+                  product={combo}
+                  label="Agregar combo al carrito"
+                  className="mt-5 inline-flex items-center rounded-full bg-[#d3fa99] px-5 py-3 text-sm font-semibold text-[#10160e] hover:opacity-90"
+                />
+              </article>
+            );
+          })}
           {otherCombos.map((combo) => (
             <article
               key={combo.name}

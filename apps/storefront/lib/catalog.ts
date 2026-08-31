@@ -364,6 +364,37 @@ export const mgcCollectionComboDeals: Product[] = [
     productUrl: `${kitchenBaseUrl}/products/combo-onyx-imperial-15-piezas`,
     tags: ["mgc", "combo", "onyx-imperial", "15-piezas"],
   },
+  {
+    id: "prod-mgc-set-ebano-plata-12",
+    variantId: "var-mgc-set-ebano-plata-12",
+    sku: "MGC-SET-EBANO-PLATA-12",
+    vertical: "cocina",
+    title: "Combo Ébano & Plata · 12 piezas",
+    description:
+      "Sartenes 20, 24 y 28 cm; ollas 18, 20 y 24 cm. Precio especial por tiempo limitado.",
+    category: "Combos de cocina",
+    brand: "MGC",
+    price: { amount: 296.97, currency: "USD" },
+    originalPrice: { amount: 369, currency: "USD" },
+    promoLabel: "Ahorra $72.03",
+    stockSignal: "Disponibilidad por confirmar",
+    deliveryBadge: "Entrega y costo de envío por confirmar",
+    paymentMethods: defaultPaymentMethods,
+    couponCode: defaultCouponCode,
+    material: "Granito; mangos de madera",
+    pieces: 12,
+    collection: "Ébano & Plata",
+    color: "Negro granito",
+    stoveCompatibility: "Compatibilidad por confirmar",
+    careTips: "Usar utensilios de silicona o madera y lavar con esponja suave.",
+    warrantyText: "Garantía por confirmar con el proveedor.",
+    claimNote:
+      "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
+    stock: 0,
+    imageUrl: "/media/mgc-ebano-plata/ebano-plata-conjunto-real.jpg",
+    productUrl: `${kitchenBaseUrl}/products/combo-ebano-plata-12-piezas`,
+    tags: ["mgc", "combo", "ebano-plata", "12-piezas"],
+  },
 ];
 
 function slugify(value: string) {
