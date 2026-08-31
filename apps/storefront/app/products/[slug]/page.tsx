@@ -13,6 +13,7 @@ import {
 } from "../../../lib/catalog"
 import { commercialInfo } from "../../../lib/commercial"
 import { mediaSlotForSku } from "../../../lib/content"
+import { comparableMgcProducts, productMedia } from "../../../lib/product-media"
 import {
   PageAnalytics,
   TrackedEventLink,
@@ -20,11 +21,10 @@ import {
 } from "../../components/analytics"
 import { AddToCartButton } from "../../components/ui/add-to-cart-button"
 import { MaterialMacro } from "../../components/ui/material-macro"
-import { Photo } from "../../components/ui/photo"
+import { ProductGallery } from "../../components/ui/product-gallery"
 import { SiteHeader } from "../../components/ui/site-header"
 import { SpecTable } from "../../components/ui/spec-table"
 import { StickyCTABar } from "../../components/ui/sticky-cta-bar"
-import { VideoFrame } from "../../components/ui/video-frame"
 import { Breadcrumbs } from "../../components/ui/breadcrumbs"
 import { CustomerReviews } from "../../components/ui/customer-reviews"
 
@@ -83,6 +83,15 @@ function productUseCases(product: Product) {
 
 /** Build macro items from existing media or fallback to product image */
 function macroItems(product: Product) {
+  const catalogImages = productMedia(product)
+    .filter((item) => item.type === "image")
+    .slice(0, 3)
+    .map((item) => ({ image: item.src, caption: item.label }))
+
+  if (product.sku.startsWith("MGC-") && catalogImages.length >= 2) {
+    return catalogImages
+  }
+
   const knife = [product.category, product.sku, ...(product.tags || [])]
     .join(" ")
     .toLowerCase()
@@ -170,6 +179,10 @@ export async function generateMetadata({
     }
   }
 
+  const galleryCover = productMedia(product).find(
+    (item) => item.type === "image",
+  )
+
   return {
     title: `${product.title} | Eter Niu Cocina`,
     description:
@@ -179,7 +192,7 @@ export async function generateMetadata({
     openGraph: {
       title: product.title,
       description: product.healthAngle || product.description,
-      images: [product.imageUrl],
+      images: [galleryCover?.src || product.imageUrl],
       type: "website",
       url: productPath(product),
     },
@@ -200,7 +213,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     : [product, ...products]
 
   const slot = mediaSlotForSku(product.sku)
-  const video = mediaPath(slot?.video)
+  const gallery = productMedia(product)
+  const comparableProducts = comparableMgcProducts(product, catalogProducts)
   const promo = hasPromo(product)
   const related = relatedProducts(product, catalogProducts)
   const useCases = productUseCases(product)
@@ -238,34 +252,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         />
       </div>
 
-      {/* 2. Gallery: ancho acotado en desktop (9:16 a todo el ancho = gigante) */}
+      {/* 2. Galería de producto: fotos reales, video opcional y zoom */}
       <div className="relative mx-auto w-full max-w-[440px] px-4 pt-4">
-        {video ? (
-          /* VideoFrame handles lazy load + viewport detection */
-          <VideoFrame
-            src={video}
-            poster={slot?.poster || product.imageUrl}
-            ratio="9/16"
-            label={slot?.label || "Ver en uso"}
-          />
-        ) : (
-          /* Static hero image — priority since it's the first LCP element */
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#E8E2D8]">
-            <Photo
-              src={slot?.poster || product.imageUrl}
-              alt={product.title}
-              priority
-              sizes="(max-width: 640px) 100vw, 640px"
-              className="rounded-none"
-            />
-            {/* Position indicator dots */}
-            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-              <span className="h-1.5 w-4 rounded-full bg-white" />
-              <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-              <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
-            </div>
-          </div>
-        )}
+        <ProductGallery media={gallery} productName={product.title} />
       </div>
 
       {/* 3. Title Fraunces 28 + 5 stars + social proof */}
@@ -311,6 +300,33 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <p className="mb-5 text-[13px] leading-snug text-[#b8c2ae]">
           {product.bundleUseCase || product.description}
         </p>
+
+        {comparableProducts.length > 1 && (
+          <section className="mb-5" aria-label="Otras colecciones disponibles">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-[#b8c2ae]">
+              Otros colores y colecciones
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {comparableProducts.map((item) => {
+                const current = item.sku === product.sku
+                return (
+                  <a
+                    key={item.sku}
+                    href={productPath(item)}
+                    aria-current={current ? "page" : undefined}
+                    className={`rounded-full border px-3 py-2 text-[12px] font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#d3fa99] ${
+                      current
+                        ? "border-[#d3fa99] bg-[#d3fa99] text-[#10160e]"
+                        : "border-white/25 text-white hover:border-white/60"
+                    }`}
+                  >
+                    {item.collection} · {item.color}
+                  </a>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Price */}
         <div className="mb-5 flex items-baseline gap-3">
