@@ -3,8 +3,15 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { loadConfig } from "../src/config.js"
-import { createCommerceService } from "../src/service.js"
+import {
+  checkoutCatalogProducts,
+  createCommerceService,
+} from "../src/service.js"
 import { readCustomers, readDatafastCheckouts } from "../src/storage.js"
+import {
+  cocinaFallbackProducts,
+  mgcSaharaPanProducts,
+} from "../../../apps/storefront/lib/catalog.js"
 
 describe("datafast → registro de venta en CRM (recompra)", () => {
   let dir: string
@@ -166,5 +173,28 @@ describe("datafast → blindaje de precios (code review #1)", () => {
       items: [{ title: "Fixture X", quantity: 1, unitPrice: 12.5 }],
     })
     expect(checkout.amount).toBe(12.5)
+  })
+})
+
+describe("contrato tienda → DataFast", () => {
+  it("autoriza exactamente los SKU y precios visibles de cocina", () => {
+    const checkoutBySku = new Map(
+      checkoutCatalogProducts.map((product) => [product.sku, product]),
+    )
+    const storefrontProducts = [
+      ...cocinaFallbackProducts,
+      ...mgcSaharaPanProducts,
+    ]
+
+    storefrontProducts.forEach((product) => {
+      const checkoutProduct = checkoutBySku.get(product.sku)
+      expect(checkoutProduct).toBeTruthy()
+      expect(checkoutProduct?.price.amount).toBe(product.price.amount)
+      expect(checkoutProduct?.stock).toBe(product.stock)
+      expect(checkoutProduct?.comboPrice?.amount).toBe(
+        product.comboPrice?.amount,
+      )
+      expect(checkoutProduct?.comboGroup).toBe(product.comboGroup)
+    })
   })
 })

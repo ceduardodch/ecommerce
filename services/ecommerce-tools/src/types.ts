@@ -17,6 +17,8 @@ export type Product = {
   /** Precio promocional por unidad cuando el carrito reúne el mínimo del combo. */
   comboPrice?: Money
   comboMinimumItems?: number
+  /** Solo productos del mismo grupo activan entre sí el precio de combo. */
+  comboGroup?: string
   discountPercent?: number
   promoLabel?: string
   stockSignal?: string

@@ -56,24 +56,77 @@ import type {
 // refresca /checkout/resultado mientras el primer request sigue en vuelo.
 const inflightDatafastResults = new Set<string>()
 
-// Registro temporal usado solo al recalcular el checkout DataFast. La tienda
-// muestra la misma ficha; no se expone en el catálogo comercial ni en Meta.
-const datafastTestProduct: Product = {
-  id: "prod-mgc-paleta-wok-datafast-test",
-  variantId: "var-mgc-paleta-wok-datafast-test",
-  sku: "MGC-PALETA-WOK-DATAFAST-TEST",
-  vertical: "cocina",
-  title: "Paleta para wok · prueba DataFast",
-  description: "Producto temporal de $1.00 para probar el pago con tarjeta.",
-  category: "Accesorios de cocina",
-  brand: "MGC",
-  price: { amount: 1, currency: "USD" },
-  originalPrice: { amount: 1, currency: "USD" },
-  stock: 1,
-  imageUrl: "",
-  productUrl: "",
-  tags: ["prueba", "datafast", "paleta", "wok"],
+type CheckoutCatalogEntry = readonly [
+  sku: string,
+  title: string,
+  pvp: number,
+  stock: number,
+  combo?: number,
+  comboGroup?: string,
+]
+
+function checkoutCatalogProduct([
+  sku,
+  title,
+  pvp,
+  stock,
+  combo,
+  comboGroup,
+]: CheckoutCatalogEntry): Product {
+  return {
+    id: `prod-${sku.toLowerCase()}`,
+    variantId: `var-${sku.toLowerCase()}`,
+    sku,
+    vertical: "cocina",
+    title,
+    description: `${title}. Precio validado por el catálogo de checkout.`,
+    category: "Cocina MGC",
+    brand: "MGC",
+    price: { amount: pvp, currency: "USD" },
+    originalPrice: { amount: pvp, currency: "USD" },
+    ...(combo
+      ? {
+          comboPrice: { amount: combo, currency: "USD" as const },
+          comboMinimumItems: 3,
+          ...(comboGroup ? { comboGroup } : {}),
+        }
+      : {}),
+    stock,
+    imageUrl: "",
+    productUrl: "",
+    tags: ["mgc", "checkout"],
+  }
 }
+
+// Catálogo que autoriza cobros DataFast. Sus SKU y valores deben mantenerse
+// iguales a los publicados por la tienda y al seed de Medusa.
+const checkoutCatalogEntries = [
+  ["MGC-FR-SARTEN-20-GN", "Sartén Onyx Imperial 20 cm", 55, 96, 39.99],
+  ["MGC-FR-SARTEN-24-GN", "Sartén Onyx Imperial 24 cm", 60, 96, 49.99],
+  ["MGC-FR-SARTEN-28-GN", "Sartén Onyx Imperial 28 cm", 65, 96, 59.99],
+  ["MGC-FR-LECHERA-18-GN", "Olla lechera Onyx Imperial 18 cm", 53, 48, 39],
+  ["MGC-FR-OLLA-20-GN", "Olla Onyx Imperial 20 cm", 63, 32, 49],
+  ["MGC-FR-OLLA-24-GN", "Olla Onyx Imperial 24 cm", 73, 32, 59],
+  ["MGC-FR-WOK-32-GN", "Wok Onyx Imperial 32 cm", 139.99, 18, 129.99],
+  ["MGC-FR-SARTEN-24-RO", "Sartén francesa angular 24 cm", 60, 8, 55],
+  ["MGC-EU-SARTEN-20-AZ", "Sartén Azul Oceánico 20 cm", 55, 16, 45],
+  ["MGC-EU-SARTEN-24-AZ", "Sartén Azul Oceánico 24 cm", 60, 16, 55],
+  ["MGC-EU-SARTEN-28-AZ", "Sartén Azul Oceánico 28 cm", 65, 16, 60],
+  ["MGC-EU-LECHERA-16-AZ", "Olla lechera Azul Oceánico 16 cm", 53, 8, 45],
+  ["MGC-EU-OLLA-20-AZ", "Olla Azul Oceánico 20 cm", 63, 8, 55],
+  ["MGC-EU-OLLA-24-AZ", "Olla Azul Oceánico 24 cm", 73, 8, 65],
+  ["MGC-SAHARA-NEGRO-SARTEN-20", "Sartén Sahara negro 20 cm", 55, 0, 39.99, "sahara-negro"],
+  ["MGC-SAHARA-NEGRO-SARTEN-24", "Sartén Sahara negro 24 cm", 60, 0, 49.99, "sahara-negro"],
+  ["MGC-SAHARA-NEGRO-SARTEN-28", "Sartén Sahara negro 28 cm", 65, 0, 59.99, "sahara-negro"],
+  ["MGC-SAHARA-GRIS-SARTEN-20", "Sartén Sahara gris 20 cm", 55, 0, 39.99, "sahara-gris"],
+  ["MGC-SAHARA-GRIS-SARTEN-24", "Sartén Sahara gris 24 cm", 60, 0, 49.99, "sahara-gris"],
+  ["MGC-SAHARA-GRIS-SARTEN-28", "Sartén Sahara gris 28 cm", 65, 0, 59.99, "sahara-gris"],
+  ["MGC-PALETA-WOK-DATAFAST-TEST", "Paleta para wok · prueba DataFast", 1, 1],
+] satisfies CheckoutCatalogEntry[]
+
+export const checkoutCatalogProducts = checkoutCatalogEntries.map(
+  checkoutCatalogProduct,
+)
 
 function addDays(iso: string, days: number) {
   const date = new Date(iso)
@@ -721,7 +774,7 @@ export function createCommerceService(config: AppConfig) {
       // El navegador nunca define el valor cobrable. Recalculamos cada línea
       // contra el catálogo y aplicamos la misma regla del precio verde. En
       // pruebas se permiten fixtures sin SKU de catálogo; en producción no.
-      const catalog = [...(await loadProducts(config)), datafastTestProduct]
+      const catalog = [...checkoutCatalogProducts, ...(await loadProducts(config))]
       const live = config.datafastEnv === "live"
       const requested = input.items.map((item) => {
         const sku = item.sku?.trim()
@@ -743,21 +796,23 @@ export function createCommerceService(config: AppConfig) {
         }
         return { item, product }
       })
-      const comboEligibleItems = requested.reduce(
-        (sum, { item, product }) =>
-          sum + (product?.comboPrice ? item.quantity : 0),
-        0,
+      const comboGroups = new Map<string, { items: number; minimum: number }>()
+      requested.forEach(({ item, product }) => {
+        if (!product?.comboPrice) return
+        const group = product.comboGroup || "general"
+        const current = comboGroups.get(group) || {
+          items: 0,
+          minimum: product.comboMinimumItems || 3,
+        }
+        current.items += item.quantity
+        current.minimum = Math.min(current.minimum, product.comboMinimumItems || 3)
+        comboGroups.set(group, current)
+      })
+      const activeComboGroups = new Set(
+        [...comboGroups].flatMap(([group, state]) =>
+          state.items >= state.minimum ? [group] : [],
+        ),
       )
-      const comboMinimumItems = requested.reduce(
-        (minimum, { product }) =>
-          product?.comboPrice
-            ? Math.min(minimum, product.comboMinimumItems || 3)
-            : minimum,
-        Number.POSITIVE_INFINITY,
-      )
-      const comboApplied =
-        Number.isFinite(comboMinimumItems) &&
-        comboEligibleItems >= comboMinimumItems
       const pricedItems = requested.map(({ item, product }) =>
         product
           ? {
@@ -765,7 +820,8 @@ export function createCommerceService(config: AppConfig) {
               sku: product.sku,
               quantity: item.quantity,
               unitPrice:
-                comboApplied && product.comboPrice
+                product.comboPrice &&
+                activeComboGroups.has(product.comboGroup || "general")
                   ? product.comboPrice.amount
                   : product.price.amount,
               description: product.description,
