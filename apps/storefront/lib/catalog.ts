@@ -333,6 +333,44 @@ export const august2026FallbackProducts: Product[] = [
     }),
 );
 
+/** Producto temporal para validar el checkout DataFast. Retirar al cerrar la prueba. */
+export const datafastTestProducts: Product[] = [
+  {
+    id: "prod-mgc-paleta-wok-datafast-test",
+    variantId: "var-mgc-paleta-wok-datafast-test",
+    sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+    vertical: "cocina",
+    title: "Paleta para wok · prueba DataFast",
+    description:
+      "Paleta mostrada con el wok MGC. Producto temporal de $1.00 para probar el pago con tarjeta; no incluye el wok.",
+    category: "Accesorios de cocina",
+    brand: "MGC",
+    price: { amount: 1, currency: "USD" },
+    originalPrice: { amount: 1, currency: "USD" },
+    promoLabel: "Prueba temporal de pago",
+    stockSignal: "Disponible solo durante la prueba DataFast",
+    deliveryBadge: "No coordinar entrega: artículo habilitado para probar el pago.",
+    paymentMethods: ["tarjeta"],
+    material: "Silicona y mango de madera",
+    pieces: 1,
+    collection: "Prueba DataFast",
+    color: "Negro y madera",
+    stoveCompatibility: "No aplica",
+    careTips: "Lavar con esponja suave.",
+    warrantyText: "Prueba temporal; sin garantía comercial.",
+    claimNote: "Producto temporal para validar DataFast; retirar después de la prueba.",
+    stock: 1,
+    imageUrl: "/media/mgc-imperial/onyx-wok-32-tapa-rectangular-real.png",
+    productUrl: `${kitchenBaseUrl}/products/paleta-wok-prueba-datafast`,
+    tags: ["mgc", "paleta", "wok", "prueba", "datafast"],
+  },
+];
+
+export const cocinaFallbackProducts = [
+  ...august2026FallbackProducts,
+  ...datafastTestProducts,
+];
+
 /** Combos promocionales entregados por el proveedor. No aplican precio verde adicional. */
 export const mgcCollectionComboDeals: Product[] = [
   {
@@ -2644,7 +2682,7 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
   const fallback =
     vertical === "bienestar"
       ? wellnessFallbackProducts
-      : august2026FallbackProducts;
+      : cocinaFallbackProducts;
   const products = await fetchProducts(vertical);
 
   // Cocina se publica como catálogo comercial MGC: las referencias, variantes
@@ -2702,7 +2740,7 @@ export async function getAllProducts() {
       ? normalized
       : allowDemoCatalog
         ? [
-            ...august2026FallbackProducts.map((product) =>
+            ...cocinaFallbackProducts.map((product) =>
               normalizeProduct(product),
             ),
             ...wellnessFallbackProducts.map((product) =>
@@ -2714,7 +2752,7 @@ export async function getAllProducts() {
 
   return allowDemoCatalog
     ? [
-        ...august2026FallbackProducts.map((product) =>
+        ...cocinaFallbackProducts.map((product) =>
           normalizeProduct(product),
         ),
         ...wellnessFallbackProducts.map((product) =>
@@ -2729,7 +2767,7 @@ export async function getProductBySlug(slug: string) {
   const normalizedSlug = decodeURIComponent(slug);
   return (
     products.find((product) => productSlug(product) === normalizedSlug) ||
-    august2026FallbackProducts
+    cocinaFallbackProducts
       .map((product) => normalizeProduct(product, "cocina"))
       .find((product) => productSlug(product) === normalizedSlug)
   );
