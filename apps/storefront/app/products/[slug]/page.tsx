@@ -189,16 +189,20 @@ export async function generateMetadata({
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params
   const products = await getProducts()
-  const product = products.find(
-    (item) => productSlug(item) === decodeURIComponent(slug),
-  )
+  const product =
+    products.find((item) => productSlug(item) === decodeURIComponent(slug)) ||
+    (await getProductBySlug(slug))
 
   if (!product) notFound()
+
+  const catalogProducts = products.some((item) => item.id === product.id)
+    ? products
+    : [product, ...products]
 
   const slot = mediaSlotForSku(product.sku)
   const video = mediaPath(slot?.video)
   const promo = hasPromo(product)
-  const related = relatedProducts(product, products)
+  const related = relatedProducts(product, catalogProducts)
   const useCases = productUseCases(product)
   const waHref = (() => {
     // Build the WhatsApp link to embed in StickyCTABar - we use the product's WhatsApp URL
