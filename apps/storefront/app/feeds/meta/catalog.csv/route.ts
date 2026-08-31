@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server"
 import {
-  fallbackProducts,
+  august2026FallbackProducts,
   wellnessFallbackProducts,
 } from "../../../../lib/catalog"
 import { kitchenBaseUrl, wellnessBaseUrl } from "../../../../lib/domains"
@@ -35,7 +35,9 @@ function absoluteImageLink(imageUrl: string, vertical: "cocina" | "bienestar") {
 
 function fallbackCsv(vertical: "cocina" | "bienestar") {
   const products =
-    vertical === "bienestar" ? wellnessFallbackProducts : fallbackProducts
+    vertical === "bienestar"
+      ? wellnessFallbackProducts
+      : august2026FallbackProducts
   const columns = [
     "id",
     "title",

@@ -9,6 +9,8 @@ type CartItemProps = {
     sku: string
     title: string
     price: number
+    comboPrice?: number
+    comboMinimumItems?: number
     quantity: number
     image?: string
     category?: string
@@ -16,7 +18,9 @@ type CartItemProps = {
 }
 
 export function CartItemComponent({ item }: CartItemProps) {
-  const { updateQuantity, removeItem } = useCart()
+  const { updateQuantity, removeItem, comboApplied, unitPriceForItem } =
+    useCart()
+  const unitPrice = unitPriceForItem(item)
 
   return (
     <div className="flex gap-3 py-3 border-b border-[#E8E2D8] last:border-b-0">
@@ -40,8 +44,13 @@ export function CartItemComponent({ item }: CartItemProps) {
             {item.title}
           </p>
           <p className="mt-1 text-[16px] font-semibold text-[var(--accent)]">
-            ${item.price.toFixed(2)}
+            ${unitPrice.toFixed(2)}
           </p>
+          {comboApplied && item.comboPrice && (
+            <p className="mt-0.5 text-[11px] font-medium text-emerald-700">
+              Precio verde por combo
+            </p>
+          )}
         </div>
 
         {/* Quantity Controls */}

@@ -1,10 +1,13 @@
 import { commercialInfo } from "./commercial"
+import { calculateCartPricing } from "./cart-pricing"
 
 export type CartItem = {
   id: string
   sku: string
   title: string
   price: number
+  comboPrice?: number
+  comboMinimumItems?: number
   quantity: number
   image?: string
   category?: string
@@ -144,11 +147,13 @@ export function generateCartMessage(
   customerName?: string,
   customerCity?: string,
 ): string {
+  const { comboApplied, unitPriceForItem } = calculateCartPricing(items)
   const itemsList = items
-    .map(
-      (item) =>
-        `${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}`,
-    )
+    .map((item) => {
+      const unitPrice = unitPriceForItem(item)
+      const comboText = comboApplied && item.comboPrice ? " (precio combo)" : ""
+      return `${item.quantity}x ${item.title} - $${(unitPrice * item.quantity).toFixed(2)}${comboText}`
+    })
     .join("\n")
 
   const message = [
@@ -159,7 +164,7 @@ export function generateCartMessage(
     "",
     itemsList,
     "",
-    `Total: $${total.toFixed(2)}`,
+    `Total: $${total.toFixed(2)}${comboApplied ? " · precio verde aplicado" : ""}`,
     "",
     "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
   ]

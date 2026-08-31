@@ -38,7 +38,7 @@ const EMPTY: Form = {
 }
 
 export default function PagoTarjetaPage() {
-  const { items, totalAmount, loaded } = useCart()
+  const { items, totalAmount, loaded, unitPriceForItem } = useCart()
   const [form, setForm] = useState<Form>(EMPTY)
   const [checkout, setCheckout] = useState<CheckoutResponse | null>(null)
   const [loading, setLoading] = useState(false)
@@ -58,15 +58,20 @@ export default function PagoTarjetaPage() {
       locale: "es",
       labels: { cvv: "CVV", cardHolder: "Nombre (igual que en la tarjeta)" },
       onReady: function () {
-        const button = document.querySelector("form.wpwl-form-card .wpwl-button")
+        const button = document.querySelector(
+          "form.wpwl-form-card .wpwl-button",
+        )
         if (!button) return
-        const holder = document.querySelector<HTMLInputElement>(".wpwl-control-cardHolder")
+        const holder = document.querySelector<HTMLInputElement>(
+          ".wpwl-control-cardHolder",
+        )
         if (holder) {
           const holderError = document.createElement("div")
           holderError.dataset.cardholderError = "true"
           holderError.setAttribute("role", "alert")
           holderError.textContent = "Nombre del titular de la tarjeta no válido"
-          holderError.style.cssText = "display:none;margin-top:4px;color:#c4502a;font-size:13px;line-height:18px"
+          holderError.style.cssText =
+            "display:none;margin-top:4px;color:#c4502a;font-size:13px;line-height:18px"
           holder.insertAdjacentElement("afterend", holderError)
           holder.addEventListener("input", () => {
             if (holder.value.trim().length >= 2) {
@@ -109,7 +114,9 @@ export default function PagoTarjetaPage() {
         if (!holder || holder.value.trim().length < 2) {
           holder?.classList.add("wpwl-has-error")
           holder?.setAttribute("aria-invalid", "true")
-          const holderError = document.querySelector<HTMLElement>("[data-cardholder-error]")
+          const holderError = document.querySelector<HTMLElement>(
+            "[data-cardholder-error]",
+          )
           if (holderError) holderError.style.display = "block"
           holder?.focus()
           return false
@@ -123,7 +130,8 @@ export default function PagoTarjetaPage() {
     document.body.appendChild(script)
     // Validaciones adicionales exigidas por Datafast (guía §3, ambas fases).
     const dfValidations = document.createElement("script")
-    dfValidations.src = "https://www.datafast.com.ec/js/dfAdditionalValidations1.js"
+    dfValidations.src =
+      "https://www.datafast.com.ec/js/dfAdditionalValidations1.js"
     dfValidations.async = true
     document.body.appendChild(dfValidations)
     if (widgetRef.current) {
@@ -139,7 +147,10 @@ export default function PagoTarjetaPage() {
     return (
       <Shell>
         <p className="text-[16px] text-[#1A1A18]">Tu carrito está vacío.</p>
-        <a href="/cart" className="mt-4 inline-block text-[var(--accent)] underline">
+        <a
+          href="/cart"
+          className="mt-4 inline-block text-[var(--accent)] underline"
+        >
           Volver al carrito
         </a>
       </Shell>
@@ -167,7 +178,9 @@ export default function PagoTarjetaPage() {
   const startCheckout = async () => {
     setError(null)
     if (missing.length) {
-      setError("Completa nombre, apellido, cédula, teléfono, email y dirección.")
+      setError(
+        "Completa nombre, apellido, cédula, teléfono, email y dirección.",
+      )
       return
     }
     if (!cedulaOk) {
@@ -194,7 +207,7 @@ export default function PagoTarjetaPage() {
           title: i.title,
           category: i.category || "",
           brand: "Eter Niu",
-          price: { amount: i.price, currency: "USD" },
+          price: { amount: unitPriceForItem(i), currency: "USD" },
           imageUrl: i.image || "",
           productUrl: "",
           tags: [],
@@ -210,7 +223,7 @@ export default function PagoTarjetaPage() {
             title: i.title,
             sku: i.sku,
             quantity: i.quantity,
-            unitPrice: i.price,
+            unitPrice: unitPriceForItem(i),
             // Atajo para el caso "base 0" del script de certificación de
             // Datafast: /checkout/pago?base0=1 marca los ítems tarifa 0%.
             ...(new URLSearchParams(window.location.search).get("base0") === "1"
@@ -232,7 +245,9 @@ export default function PagoTarjetaPage() {
       })
       const data = (await res.json()) as CheckoutResponse
       if (!res.ok || data.error) {
-        throw new Error(data.message || data.error || "No se pudo iniciar el pago.")
+        throw new Error(
+          data.message || data.error || "No se pudo iniciar el pago.",
+        )
       }
       setCheckout(data)
     } catch (e) {
@@ -244,28 +259,63 @@ export default function PagoTarjetaPage() {
 
   return (
     <Shell>
-      <h1 className="text-[26px] font-semibold text-[#1A1A18]">Pagar con tarjeta</h1>
+      <h1 className="text-[26px] font-semibold text-[#1A1A18]">
+        Pagar con tarjeta
+      </h1>
       <p className="mt-1 text-[14px] text-[#6B6B66]">
-        Total a pagar: <strong className="text-[#1A1A18]">${totalAmount.toFixed(2)}</strong>{" "}
+        Total a pagar:{" "}
+        <strong className="text-[#1A1A18]">${totalAmount.toFixed(2)}</strong>{" "}
         (IVA incluido)
       </p>
 
       {!checkout && (
         <div className="mt-6 space-y-3">
           <Row>
-            <Field label="Primer nombre" value={form.givenName} onChange={(v) => setForm({ ...form, givenName: v })} />
-            <Field label="Segundo nombre" value={form.middleName} onChange={(v) => setForm({ ...form, middleName: v })} />
+            <Field
+              label="Primer nombre"
+              value={form.givenName}
+              onChange={(v) => setForm({ ...form, givenName: v })}
+            />
+            <Field
+              label="Segundo nombre"
+              value={form.middleName}
+              onChange={(v) => setForm({ ...form, middleName: v })}
+            />
           </Row>
           <Row>
-            <Field label="Apellidos" value={form.surname} onChange={(v) => setForm({ ...form, surname: v })} />
-            <Field label="Cédula" value={form.idNumber} onChange={(v) => setForm({ ...form, idNumber: v })} />
+            <Field
+              label="Apellidos"
+              value={form.surname}
+              onChange={(v) => setForm({ ...form, surname: v })}
+            />
+            <Field
+              label="Cédula"
+              value={form.idNumber}
+              onChange={(v) => setForm({ ...form, idNumber: v })}
+            />
           </Row>
           <Row>
-            <Field label="Teléfono" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-            <Field label="Email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+            <Field
+              label="Teléfono"
+              value={form.phone}
+              onChange={(v) => setForm({ ...form, phone: v })}
+            />
+            <Field
+              label="Email"
+              value={form.email}
+              onChange={(v) => setForm({ ...form, email: v })}
+            />
           </Row>
-          <Field label="Dirección" value={form.street} onChange={(v) => setForm({ ...form, street: v })} />
-          <Field label="Ciudad (opcional)" value={form.city} onChange={(v) => setForm({ ...form, city: v })} />
+          <Field
+            label="Dirección"
+            value={form.street}
+            onChange={(v) => setForm({ ...form, street: v })}
+          />
+          <Field
+            label="Ciudad (opcional)"
+            value={form.city}
+            onChange={(v) => setForm({ ...form, city: v })}
+          />
 
           {error && <p className="text-[13px] text-[#C4502A]">{error}</p>}
 
@@ -289,7 +339,10 @@ export default function PagoTarjetaPage() {
             </a>
             .
           </p>
-          <a href="/cart" className="block text-center text-[13px] text-[#6B6B66] underline">
+          <a
+            href="/cart"
+            className="block text-center text-[13px] text-[#6B6B66] underline"
+          >
             Volver al carrito
           </a>
         </div>
@@ -334,7 +387,9 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#10160e]">
       <div className="mx-auto max-w-md px-4 py-10">
-        <div className="rounded-2xl border border-white/10 bg-white p-6">{children}</div>
+        <div className="rounded-2xl border border-white/10 bg-white p-6">
+          {children}
+        </div>
       </div>
     </div>
   )
@@ -355,7 +410,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-[13px] font-medium text-[#1A1A18] mb-1">{label}</label>
+      <label className="block text-[13px] font-medium text-[#1A1A18] mb-1">
+        {label}
+      </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
