@@ -271,7 +271,8 @@ const legacyKitchenProducts: KitchenProduct[] = [
 ]
 
 // El catálogo público de agosto reemplaza los productos de muestra anteriores.
-// Las referencias rojas sin foto quedan en borrador dentro del seed de agosto.
+// Todas las referencias de agosto se publican; la variante roja indica que su
+// imagen es referencial hasta recibir la foto física exacta.
 const products: KitchenProduct[] = [...august2026KitchenProducts]
 
 const publishableProducts = products.filter(

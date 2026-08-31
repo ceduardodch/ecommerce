@@ -66,7 +66,7 @@ type MgcCookwareInput = {
   handle: string
   category: "Sartenes granito" | "Ollas granito" | "Woks granito"
   collection: "Francesa" | "Europea"
-  color: "Gris negro" | "Azul"
+  color: "Gris negro" | "Azul" | "Rojo"
   diameterCm: number
   stock: number
   pvp: number
@@ -81,7 +81,7 @@ function mgcCookware(input: MgcCookwareInput): Product {
     sku: input.sku,
     vertical: "cocina",
     title: input.title,
-    description: `${input.title} de granito con mango de madera. Confirma stock, compatibilidad y garantía por WhatsApp.`,
+    description: `${input.title} de granito con mango de madera.${input.color === "Rojo" ? " Imagen referencial de color; confirma el acabado con el vendedor por WhatsApp." : ""} Confirma stock, compatibilidad y garantía por WhatsApp.`,
     category: input.category,
     brand: "MGC",
     price: { amount: input.pvp, currency: "USD" },
@@ -210,6 +210,19 @@ export const august2026FallbackProducts: Product[] = [
     139.99,
     129.99,
     "catalogo-sarten-con-tapa-gris-negro.jpg",
+  ],
+  [
+    "MGC-FR-SARTEN-24-RO",
+    "Sartén francesa angular 24 cm",
+    "sarten-francesa-angular-24cm-roja",
+    "Sartenes granito",
+    "Francesa",
+    "Rojo",
+    24,
+    8,
+    60,
+    55,
+    "catalogo-sarten-angular-roja-referencial.png",
   ],
   [
     "MGC-EU-SARTEN-20-AZ",

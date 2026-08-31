@@ -39,7 +39,7 @@ function cookware(input: {
     handle: input.handle,
     sku: input.sku,
     category: input.category,
-    description: `${input.title} de granito con mango de madera. Confirma disponibilidad, compatibilidad y garantía por WhatsApp.`,
+    description: `${input.title} de granito con mango de madera.${input.color === "Rojo" ? " Imagen referencial de color; confirma el acabado con el vendedor por WhatsApp." : ""} Confirma disponibilidad, compatibilidad y garantía por WhatsApp.`,
     price: input.pvp,
     originalPrice: input.pvp,
     stock: input.stock,
@@ -59,7 +59,9 @@ function cookware(input: {
       distributorMinimumOrderUsd: 260,
       stock: input.stock,
       promoLabel: "Consulta promociones por WhatsApp",
-      stockSignal: hasImage
+      stockSignal: input.color === "Rojo"
+        ? "Imagen referencial de color; stock confirmado en importación"
+        : hasImage
         ? "Stock confirmado en importación; entrega por confirmar"
         : "No publicar hasta contar con foto real",
       bundleEligible: true,
@@ -185,6 +187,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 60,
     negotiable: 55,
     distributor: 46.44,
+    image: "catalogo-sarten-angular-roja-referencial.png",
   }),
   cookware({
     sku: "MGC-EU-SARTEN-20-AZ",
