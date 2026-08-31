@@ -307,12 +307,16 @@ export default function PagoTarjetaPage() {
             />
           </Row>
           <Field
-            label="Dirección"
+            label="Dirección de envío"
             value={form.street}
             onChange={(v) => setForm({ ...form, street: v })}
           />
+          <p className="-mt-2 text-[12px] leading-5 text-[#6B6B66]">
+            Aquí coordinaremos y entregaremos tu pedido. Incluye calle, número,
+            sector y una referencia útil.
+          </p>
           <Field
-            label="Ciudad (opcional)"
+            label="Ciudad de envío (opcional)"
             value={form.city}
             onChange={(v) => setForm({ ...form, city: v })}
           />

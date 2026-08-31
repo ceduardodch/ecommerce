@@ -891,6 +891,15 @@ export function createCommerceService(config: AppConfig) {
             phone: toEcPhone(input.customer.phone),
             name: [input.customer.givenName, input.customer.surname].filter(Boolean).join(" ") || undefined,
             email: input.customer.email,
+            metadata: input.customer.street
+              ? {
+                  shippingAddress: {
+                    street: input.customer.street,
+                    city: input.customer.city,
+                    countryCode: input.customer.countryCode || "EC",
+                  },
+                }
+              : undefined,
           }
         : undefined
       const pendingOrder = config.crmBackend === "medusa"

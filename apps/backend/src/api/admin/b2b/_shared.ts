@@ -254,6 +254,21 @@ function customerNameParts(name?: string) {
   }
 }
 
+function orderAddressFromCustomer(customer: CustomerPayload) {
+  const address = customer.metadata?.shippingAddress as
+    | { street?: string; city?: string; countryCode?: string }
+    | undefined
+  if (!address?.street?.trim()) return undefined
+
+  return {
+    ...customerNameParts(customer.name),
+    address_1: address.street.trim(),
+    city: address.city?.trim() || undefined,
+    country_code: (address.countryCode || "EC").toLowerCase(),
+    phone: customer.phone ? normalizePhone(customer.phone) : undefined,
+  }
+}
+
 export async function findOrCreateMedusaCustomer(
   req: MedusaRequest,
   customer: CustomerPayload = {},
@@ -333,6 +348,7 @@ export async function createMedusaSalesOrder(
     input.quote.currency?.toLowerCase() ||
     region.currency_code ||
     "usd"
+  const deliveryAddress = orderAddressFromCustomer(input.customer || {})
 
   const workflowInput = {
       // No usamos borradores. Estos pedidos deben entrar a /app/orders desde
@@ -343,6 +359,8 @@ export async function createMedusaSalesOrder(
       currency_code: currencyCode,
       email: medusaCustomer.email || undefined,
       customer_id: medusaCustomer.id,
+      shipping_address: deliveryAddress,
+      billing_address: deliveryAddress,
       no_notification: true,
       items: input.quote.lines.map((line) => ({
         title: line.title,
