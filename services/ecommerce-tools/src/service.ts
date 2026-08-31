@@ -943,6 +943,34 @@ export function createCommerceService(config: AppConfig) {
       const result = await getDatafastResult(config, checkoutId, resourcePath)
       const record = await findDatafastCheckout(config.dataDir, checkoutId)
 
+      // DataFast puede dejar de exponer un checkout antiguo. Si el ledger ya
+      // conserva una aprobación verificada, esa venta sigue siendo válida y
+      // debe completar la sincronización nativa de Medusa al reconsultarla.
+      if (
+        record?.status === "paid" &&
+        record.orderId &&
+        config.crmBackend === "medusa"
+      ) {
+        await updateMedusaPaymentStatus(config, record.orderId, {
+          status: "paid",
+          payment: {
+            reference: record.reference,
+            checkoutId,
+            code: record.resultCode,
+            paymentId: record.paymentId,
+            authorizationCode: record.authorizationCode,
+          },
+        })
+        return {
+          ...result,
+          status: "paid" as const,
+          code: record.resultCode || result.code,
+          description: record.resultDescription || result.description,
+          reference: record.resultReference || record.reference,
+          paymentBrand: record.paymentBrand || result.paymentBrand,
+        }
+      }
+
       if (
         result.status === "paid" &&
         record &&
