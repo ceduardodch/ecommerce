@@ -240,10 +240,37 @@ mountWhatsappReplyRoute(
   },
 )
 
+async function reconcileDatafastWhenMedusaIsReady() {
+  // Coolify levanta los contenedores en paralelo. Esperar evita que el ledger
+  // se marque como fallido sólo porque Medusa aún está iniciando.
+  const attempts = 12
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const reconciliation = await service.reconcileDatafastLedger()
+    if (reconciliation.failed === 0) {
+      app.log.info(reconciliation, "DataFast ledger reconciled with Medusa")
+      return
+    }
+
+    if (attempt < attempts) {
+      app.log.warn(
+        { ...reconciliation, attempt, attempts },
+        "Medusa is not ready for DataFast reconciliation; retrying",
+      )
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+    } else {
+      app.log.error(
+        { ...reconciliation, attempt, attempts },
+        "DataFast ledger reconciliation exhausted its startup retries",
+      )
+    }
+  }
+}
+
 try {
-  const reconciliation = await service.reconcileDatafastLedger()
-  app.log.info(reconciliation, "DataFast ledger reconciled with Medusa")
   await app.listen({ port: config.port, host: "0.0.0.0" })
+  void reconcileDatafastWhenMedusaIsReady().catch((error) => {
+    app.log.error(error, "Unexpected DataFast reconciliation failure")
+  })
 } catch (error) {
   app.log.error(error)
   process.exit(1)
