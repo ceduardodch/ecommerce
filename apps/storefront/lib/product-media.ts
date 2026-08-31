@@ -1,13 +1,13 @@
-import type { Product } from "./catalog"
+import type { Product } from "./catalog";
 
 export type ProductMediaItem = {
-  id: string
-  type: "image" | "video"
-  src: string
-  alt: string
-  label: string
-  poster?: string
-}
+  id: string;
+  type: "image" | "video";
+  src: string;
+  alt: string;
+  label: string;
+  poster?: string;
+};
 
 const frenchCollectionMedia: ProductMediaItem[] = [
   {
@@ -67,7 +67,7 @@ const frenchCollectionMedia: ProductMediaItem[] = [
     alt: "Video de la colección francesa gris negro MGC en movimiento",
     label: "Ver en movimiento",
   },
-]
+];
 
 const europeanCollectionMedia: ProductMediaItem[] = [
   {
@@ -99,7 +99,84 @@ const europeanCollectionMedia: ProductMediaItem[] = [
     alt: "Video de la colección europea azul MGC en movimiento",
     label: "Ver en movimiento",
   },
-]
+];
+
+const onyxImperialMediaBySku: Record<string, ProductMediaItem[]> = {
+  "MGC-FR-SARTEN-20-GN": [
+    {
+      id: "onyx-sarten-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
+      alt: "Sartén Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-SARTEN-24-GN": [
+    {
+      id: "onyx-sarten-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
+      alt: "Sartén Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-SARTEN-28-GN": [
+    {
+      id: "onyx-sarten-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
+      alt: "Sartén Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-LECHERA-18-GN": [
+    {
+      id: "onyx-lechera-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-lechera-18-real.jpeg",
+      alt: "Olla lechera Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-OLLA-20-GN": [
+    {
+      id: "onyx-olla-20-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-olla-20-real.jpeg",
+      alt: "Olla Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-OLLA-24-GN": [
+    {
+      id: "onyx-olla-24-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-olla-24-real.jpeg",
+      alt: "Olla Onyx Imperial MGC real, con tapa de vidrio",
+      label: "Pieza real",
+    },
+  ],
+  "MGC-FR-WOK-32-GN": [
+    {
+      id: "onyx-wok-32-real",
+      type: "image",
+      src: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
+      alt: "Wok Onyx Imperial MGC de 32 cm real, con tapa de vidrio",
+      label: "Wok 32 cm · pieza real",
+    },
+  ],
+};
+
+const onyxImperialSetMedia: ProductMediaItem[] = [
+  {
+    id: "onyx-conjunto-video",
+    type: "video",
+    src: "/media/mgc-imperial/onyx-imperial-conjunto-real.mp4",
+    poster: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
+    alt: "Video real de las piezas del combo Onyx Imperial MGC",
+    label: "Conjunto real en video",
+  },
+];
 
 function productCover(product: Product): ProductMediaItem {
   if (product.sku === "MGC-FR-WOK-32-GN") {
@@ -109,7 +186,7 @@ function productCover(product: Product): ProductMediaItem {
       src: "/media/mgc-catalog/french-gris-negro-portada-iluminada.png",
       alt: "Wok francés MGC de 32 cm gris negro con tapa de vidrio sobre fondo blanco",
       label: "Wok 32 cm · vista principal",
-    }
+    };
   }
 
   return {
@@ -118,7 +195,7 @@ function productCover(product: Product): ProductMediaItem {
     src: product.imageUrl,
     alt: `${product.title}. Foto de su colección MGC.`,
     label: "Foto de la colección",
-  }
+  };
 }
 
 /**
@@ -126,37 +203,36 @@ function productCover(product: Product): ProductMediaItem {
  * fotos se muestran como colección para no atribuir un diámetro no verificado.
  */
 export function productMedia(product: Product): ProductMediaItem[] {
-  const cover = productCover(product)
+  const onyxMedia = onyxImperialMediaBySku[product.sku];
+  if (onyxMedia) return [...onyxMedia, ...onyxImperialSetMedia];
+
+  const cover = productCover(product);
 
   if (product.sku.startsWith("MGC-FR-") && !product.sku.endsWith("-RO")) {
-    return [cover, ...frenchCollectionMedia]
+    return [cover, ...frenchCollectionMedia];
   }
 
   if (product.sku.startsWith("MGC-EU-")) {
-    return [cover, ...europeanCollectionMedia]
+    return [cover, ...europeanCollectionMedia];
   }
 
-  return [cover]
+  return [cover];
 }
 
 const comparableSkuGroups = [
   ["MGC-FR-SARTEN-20-GN", "MGC-EU-SARTEN-20-AZ"],
-  [
-    "MGC-FR-SARTEN-24-GN",
-    "MGC-EU-SARTEN-24-AZ",
-    "MGC-FR-SARTEN-24-RO",
-  ],
+  ["MGC-FR-SARTEN-24-GN", "MGC-EU-SARTEN-24-AZ", "MGC-FR-SARTEN-24-RO"],
   ["MGC-FR-SARTEN-28-GN", "MGC-EU-SARTEN-28-AZ"],
   ["MGC-FR-OLLA-20-GN", "MGC-EU-OLLA-20-AZ"],
   ["MGC-FR-OLLA-24-GN", "MGC-EU-OLLA-24-AZ"],
-]
+];
 
 /** Only exposes products that are explicitly declared comparable by size/type. */
 export function comparableMgcProducts(product: Product, products: Product[]) {
-  const skus = comparableSkuGroups.find((group) => group.includes(product.sku))
-  if (!skus) return []
+  const skus = comparableSkuGroups.find((group) => group.includes(product.sku));
+  if (!skus) return [];
 
   return skus
     .map((sku) => products.find((candidate) => candidate.sku === sku))
-    .filter((candidate): candidate is Product => Boolean(candidate))
+    .filter((candidate): candidate is Product => Boolean(candidate));
 }

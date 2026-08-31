@@ -3,76 +3,76 @@ import {
   defaultPaymentMethods,
   defaultStoveCompatibility,
   defaultFreeShippingLabel,
-} from "./commercial"
-import { kitchenBaseUrl, wellnessBaseUrl } from "./domains"
+} from "./commercial";
+import { kitchenBaseUrl, wellnessBaseUrl } from "./domains";
 
-export { whatsappLink } from "./whatsapp"
+export { whatsappLink } from "./whatsapp";
 
 export type Product = {
-  id: string
-  variantId: string
-  sku: string
-  vertical?: "cocina" | "bienestar"
-  title: string
-  description: string
-  category: string
-  brand: string
-  price: { amount: number; currency: "USD" }
-  originalPrice?: { amount: number; currency: "USD" }
+  id: string;
+  variantId: string;
+  sku: string;
+  vertical?: "cocina" | "bienestar";
+  title: string;
+  description: string;
+  category: string;
+  brand: string;
+  price: { amount: number; currency: "USD" };
+  originalPrice?: { amount: number; currency: "USD" };
   /** Precio verde por unidad cuando el carrito reúne tres o más productos. */
-  comboPrice?: { amount: number; currency: "USD" }
-  comboMinimumItems?: number
-  discountPercent?: number
-  promoLabel?: string
-  stockSignal?: string
-  bundleEligible?: boolean
-  deliveryBadge?: string
-  freeShipping?: boolean
-  paymentMethods?: string[]
-  couponCode?: string
-  material?: string
-  coating?: string
-  teflonFree?: boolean
-  pfoaFree?: boolean
-  pfasFree?: boolean
-  ptfeFree?: boolean
-  capacity?: string
-  diameterCm?: number
-  pieces?: number
-  collection?: string
-  color?: string
-  stoveCompatibility?: string
-  tipoCocina?: string
-  nivel?: string
-  bundleUseCase?: string
-  careTips?: string
-  healthAngle?: string
-  warrantyText?: string
-  instagramSourceUrl?: string
-  sourceUrls?: string[]
-  contentAngles?: string[]
-  certificationStatus?: string
-  claimNote?: string
-  reorderAfterDays?: number
-  stock: number
-  imageUrl: string
-  productUrl: string
-  tags: string[]
-}
+  comboPrice?: { amount: number; currency: "USD" };
+  comboMinimumItems?: number;
+  discountPercent?: number;
+  promoLabel?: string;
+  stockSignal?: string;
+  bundleEligible?: boolean;
+  deliveryBadge?: string;
+  freeShipping?: boolean;
+  paymentMethods?: string[];
+  couponCode?: string;
+  material?: string;
+  coating?: string;
+  teflonFree?: boolean;
+  pfoaFree?: boolean;
+  pfasFree?: boolean;
+  ptfeFree?: boolean;
+  capacity?: string;
+  diameterCm?: number;
+  pieces?: number;
+  collection?: string;
+  color?: string;
+  stoveCompatibility?: string;
+  tipoCocina?: string;
+  nivel?: string;
+  bundleUseCase?: string;
+  careTips?: string;
+  healthAngle?: string;
+  warrantyText?: string;
+  instagramSourceUrl?: string;
+  sourceUrls?: string[];
+  contentAngles?: string[];
+  certificationStatus?: string;
+  claimNote?: string;
+  reorderAfterDays?: number;
+  stock: number;
+  imageUrl: string;
+  productUrl: string;
+  tags: string[];
+};
 
 type MgcCookwareInput = {
-  sku: string
-  title: string
-  handle: string
-  category: "Sartenes granito" | "Ollas granito" | "Woks granito"
-  collection: "Francesa" | "Europea"
-  color: "Gris negro" | "Azul" | "Rojo"
-  diameterCm: number
-  stock: number
-  pvp: number
-  combo: number
-  image: string
-}
+  sku: string;
+  title: string;
+  handle: string;
+  category: "Sartenes granito" | "Ollas granito" | "Woks granito";
+  collection: string;
+  color: string;
+  diameterCm: number;
+  stock: number;
+  pvp: number;
+  combo: number;
+  image: string;
+};
 
 function mgcCookware(input: MgcCookwareInput): Product {
   return {
@@ -116,17 +116,17 @@ function mgcCookware(input: MgcCookwareInput): Product {
       input.color.toLowerCase(),
       `${input.diameterCm}cm`,
     ],
-  }
+  };
 }
 
 export const august2026FallbackProducts: Product[] = [
   [
     "MGC-FR-SARTEN-20-GN",
-    "Sartén francesa 20 cm",
+    "Sartén Onyx Imperial 20 cm",
     "sarten-francesa-20cm-gris-negro",
     "Sartenes granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     20,
     96,
     55,
@@ -135,11 +135,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-SARTEN-24-GN",
-    "Sartén francesa 24 cm",
+    "Sartén Onyx Imperial 24 cm",
     "sarten-francesa-24cm-gris-negro",
     "Sartenes granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     24,
     96,
     60,
@@ -148,11 +148,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-SARTEN-28-GN",
-    "Sartén francesa 28 cm",
+    "Sartén Onyx Imperial 28 cm",
     "sarten-francesa-28cm-gris-negro",
     "Sartenes granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     28,
     96,
     65,
@@ -161,11 +161,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-LECHERA-18-GN",
-    "Olla lechera francesa 18 cm",
+    "Olla lechera Onyx Imperial 18 cm",
     "olla-lechera-francesa-18cm-gris-negro",
     "Ollas granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     18,
     48,
     53,
@@ -174,11 +174,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-OLLA-20-GN",
-    "Olla francesa 20 cm",
+    "Olla Onyx Imperial 20 cm",
     "olla-francesa-20cm-gris-negro",
     "Ollas granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     20,
     32,
     63,
@@ -187,11 +187,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-OLLA-24-GN",
-    "Olla francesa 24 cm",
+    "Olla Onyx Imperial 24 cm",
     "olla-francesa-24cm-gris-negro",
     "Ollas granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     24,
     32,
     73,
@@ -200,11 +200,11 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-WOK-32-GN",
-    "Wok francés 32 cm",
+    "Wok Onyx Imperial 32 cm",
     "wok-frances-32cm-gris-negro",
     "Woks granito",
-    "Francesa",
-    "Gris negro",
+    "Onyx Imperial",
+    "Negro granito",
     32,
     18,
     139.99,
@@ -329,7 +329,42 @@ export const august2026FallbackProducts: Product[] = [
       combo: combo as number,
       image: image as string,
     }),
-)
+);
+
+/** Combos promocionales entregados por el proveedor. No aplican precio verde adicional. */
+export const mgcCollectionComboDeals: Product[] = [
+  {
+    id: "prod-mgc-set-onyx-imperial-15",
+    variantId: "var-mgc-set-onyx-imperial-15",
+    sku: "MGC-SET-ONYX-IMPERIAL-15",
+    vertical: "cocina",
+    title: "Combo Onyx Imperial · 15 piezas",
+    description:
+      "Sartenes 20, 24 y 28 cm; ollas 18, 20 y 24 cm; wok 32 cm. Precio especial por tiempo limitado.",
+    category: "Combos de cocina",
+    brand: "MGC",
+    price: { amount: 426.96, currency: "USD" },
+    originalPrice: { amount: 508.99, currency: "USD" },
+    promoLabel: "Ahorra $82.03",
+    stockSignal: "Disponibilidad por confirmar",
+    deliveryBadge: "Entrega y costo de envío por confirmar",
+    paymentMethods: defaultPaymentMethods,
+    couponCode: defaultCouponCode,
+    material: "Granito; mangos de madera",
+    pieces: 15,
+    collection: "Onyx Imperial",
+    color: "Negro granito",
+    stoveCompatibility: "Compatibilidad por confirmar",
+    careTips: "Usar utensilios de silicona o madera y lavar con esponja suave.",
+    warrantyText: "Garantía por confirmar con el proveedor.",
+    claimNote:
+      "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
+    stock: 0,
+    imageUrl: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
+    productUrl: `${kitchenBaseUrl}/products/combo-onyx-imperial-15-piezas`,
+    tags: ["mgc", "combo", "onyx-imperial", "15-piezas"],
+  },
+];
 
 function slugify(value: string) {
   return value
@@ -337,24 +372,24 @@ function slugify(value: string) {
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
+    .replace(/^-+|-+$/g, "");
 }
 
 export function productSlug(product: Product) {
   try {
-    const url = new URL(product.productUrl)
-    const [, slug] = url.pathname.match(/\/products\/([^/?#]+)/) || []
-    if (slug) return decodeURIComponent(slug)
+    const url = new URL(product.productUrl);
+    const [, slug] = url.pathname.match(/\/products\/([^/?#]+)/) || [];
+    if (slug) return decodeURIComponent(slug);
   } catch {
-    const [, slug] = product.productUrl.match(/\/products\/([^/?#]+)/) || []
-    if (slug) return decodeURIComponent(slug)
+    const [, slug] = product.productUrl.match(/\/products\/([^/?#]+)/) || [];
+    if (slug) return decodeURIComponent(slug);
   }
 
-  return slugify(product.title || product.sku || product.id)
+  return slugify(product.title || product.sku || product.id);
 }
 
 export function productPath(product: Product) {
-  return `/products/${productSlug(product)}`
+  return `/products/${productSlug(product)}`;
 }
 
 export const fallbackProducts: Product[] = [
@@ -613,7 +648,7 @@ export const fallbackProducts: Product[] = [
     tags: ["cuchillo", "samurai", "japones", "todo uso", "cocina"],
     productUrl: `${kitchenBaseUrl}/products/cuchillo-samurai-japones-todo-uso`,
   },
-]
+];
 
 type WellnessFallbackProductInput = Omit<
   Product,
@@ -627,8 +662,8 @@ type WellnessFallbackProductInput = Omit<
   | "stoveCompatibility"
   | "productUrl"
 > & {
-  handle: string
-}
+  handle: string;
+};
 
 const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [
   {
@@ -2223,7 +2258,7 @@ const wellnessFallbackCatalog: WellnessFallbackProductInput[] = [
     imageUrl: "/media/wellness-billete-1-millon.jpg",
     tags: ["bienestar", "billete 1 millon", "detalle", "regalo"],
   },
-]
+];
 
 export const wellnessFallbackProducts: Product[] = wellnessFallbackCatalog.map(
   (product) => ({
@@ -2238,18 +2273,18 @@ export const wellnessFallbackProducts: Product[] = wellnessFallbackCatalog.map(
     stoveCompatibility: "No aplica",
     productUrl: `${wellnessBaseUrl}/campanas/${product.handle}?sku=${product.sku}`,
   }),
-)
+);
 
 function isGeneratedPlaceholder(url?: string) {
-  return !url || url.includes("placehold.co")
+  return !url || url.includes("placehold.co");
 }
 
 function localMediaUrl(url?: string) {
-  if (!url) return ""
-  if (url.startsWith("/media/")) return url
+  if (!url) return "";
+  if (url.startsWith("/media/")) return url;
 
   try {
-    const parsed = new URL(url)
+    const parsed = new URL(url);
     const legacyMediaHosts = new Set([
       "shop.b2b.com.ec",
       "cocina.b2b.com.ec",
@@ -2258,53 +2293,53 @@ function localMediaUrl(url?: string) {
       "bienestar.eter-niu.com",
       "www.eter-niu.com",
       "eter-niu.com",
-    ])
+    ]);
 
     if (
       legacyMediaHosts.has(parsed.hostname) &&
       parsed.pathname.startsWith("/media/")
     ) {
-      return parsed.pathname
+      return parsed.pathname;
     }
   } catch {
-    return url
+    return url;
   }
 
-  return url
+  return url;
 }
 
 function generatedImageForProduct(product: Product) {
   const haystack = `${product.sku} ${product.title} ${product.category}`
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
+    .toLowerCase();
   if (
     product.vertical === "bienestar" ||
     product.sku.startsWith("BIEN-") ||
     haystack.includes("bienestar")
   ) {
     if (haystack.includes("mat") || haystack.includes("yoga")) {
-      return "/media/wellness-mat.svg"
+      return "/media/wellness-mat.svg";
     }
     if (haystack.includes("bowl") || haystack.includes("te ")) {
-      return "/media/wellness-bowl.svg"
+      return "/media/wellness-bowl.svg";
     }
     if (haystack.includes("aroma") || haystack.includes("calma")) {
-      return "/media/wellness-aroma.svg"
+      return "/media/wellness-aroma.svg";
     }
     if (
       haystack.includes("botella") ||
       haystack.includes("hidrat") ||
       haystack.includes("termo")
     ) {
-      return "/media/wellness-botella.svg"
+      return "/media/wellness-botella.svg";
     }
     if (
       haystack.includes("tambor") ||
       haystack.includes("lengua") ||
       haystack.includes("8 notas")
     ) {
-      return "/media/wellness-tambor-lengua-real.jpg"
+      return "/media/wellness-tambor-lengua-real.jpg";
     }
     if (
       haystack.includes("cuenco") ||
@@ -2314,35 +2349,35 @@ function generatedImageForProduct(product: Product) {
       haystack.includes("amuleto") ||
       haystack.includes("humo")
     ) {
-      return "/media/wellness-aroma.svg"
+      return "/media/wellness-aroma.svg";
     }
-    return "/media/wellness-hero.svg"
+    return "/media/wellness-hero.svg";
   }
   if (haystack.includes("utensilio")) {
-    return "/media/photo-product-utensilios.jpg"
+    return "/media/photo-product-utensilios.jpg";
   }
   if (haystack.includes("set")) {
-    return "/media/photo-product-set-granito.jpg"
+    return "/media/photo-product-set-granito.jpg";
   }
   if (haystack.includes("24")) {
-    return "/media/photo-product-olla-24.jpg"
+    return "/media/photo-product-olla-24.jpg";
   }
   if (haystack.includes("20")) {
-    return "/media/photo-product-olla-20.jpg"
+    return "/media/photo-product-olla-20.jpg";
   }
   if (haystack.includes("18")) {
-    return "/media/photo-product-olla-20.jpg"
+    return "/media/photo-product-olla-20.jpg";
   }
   if (haystack.includes("cuchillo")) {
-    return "/media/photo-product-utensilios.jpg"
+    return "/media/photo-product-utensilios.jpg";
   }
   if (haystack.includes("sarten")) {
-    return "/media/product-sarten-granito-22.jpg"
+    return "/media/product-sarten-granito-22.jpg";
   }
   if (haystack.includes("wok")) {
-    return "/media/product-wok-granito-32.jpg"
+    return "/media/product-wok-granito-32.jpg";
   }
-  return "/media/photo-hero-cocina.jpg"
+  return "/media/photo-hero-cocina.jpg";
 }
 
 // Fotos limpias de producto servidas por el storefront: puentean las imágenes
@@ -2350,14 +2385,14 @@ function generatedImageForProduct(product: Product) {
 const IMAGE_OVERRIDES: Record<string, string> = {
   "MGC-WOK-GRANITO-32": "/media/product-wok-granito-32.jpg",
   "COC-SARTEN-PLANO-GRANITO-22": "/media/product-sarten-granito-22.jpg",
-}
+};
 
 function placeholderForProduct(product: Product) {
-  const override = IMAGE_OVERRIDES[product.sku?.toUpperCase?.() || ""]
-  if (override) return override
+  const override = IMAGE_OVERRIDES[product.sku?.toUpperCase?.() || ""];
+  if (override) return override;
   if (!isGeneratedPlaceholder(product.imageUrl))
-    return localMediaUrl(product.imageUrl)
-  return generatedImageForProduct(product)
+    return localMediaUrl(product.imageUrl);
+  return generatedImageForProduct(product);
 }
 
 const kitchenTerms = [
@@ -2383,13 +2418,13 @@ const kitchenTerms = [
   "complemento",
   "cuchillo",
   "cuchillos",
-]
+];
 
 function isKitchenProduct(product: Product) {
-  if (product.vertical === "cocina") return true
-  if (product.vertical === "bienestar") return false
+  if (product.vertical === "cocina") return true;
+  if (product.vertical === "bienestar") return false;
   if (product.sku.startsWith("COC-") || product.sku.startsWith("MGC-")) {
-    return true
+    return true;
   }
   const haystack = [
     product.title,
@@ -2406,8 +2441,8 @@ function isKitchenProduct(product: Product) {
     ...product.tags,
   ]
     .join(" ")
-    .toLowerCase()
-  return kitchenTerms.some((term) => haystack.includes(term))
+    .toLowerCase();
+  return kitchenTerms.some((term) => haystack.includes(term));
 }
 
 const wellnessTerms = [
@@ -2443,12 +2478,12 @@ const wellnessTerms = [
   "rutina",
   "decoracion",
   "lifestyle",
-]
+];
 
 function isWellnessProduct(product: Product) {
-  if (product.vertical === "bienestar") return true
-  if (product.vertical === "cocina") return false
-  if (product.sku.startsWith("BIEN-")) return true
+  if (product.vertical === "bienestar") return true;
+  if (product.vertical === "cocina") return false;
+  if (product.sku.startsWith("BIEN-")) return true;
   const haystack = [
     product.title,
     product.description,
@@ -2462,17 +2497,17 @@ function isWellnessProduct(product: Product) {
     ...product.tags,
   ]
     .join(" ")
-    .toLowerCase()
-  return wellnessTerms.some((term) => haystack.includes(term))
+    .toLowerCase();
+  return wellnessTerms.some((term) => haystack.includes(term));
 }
 
 function normalizeProduct(
   product: Product,
   vertical: "cocina" | "bienestar" = "cocina",
 ): Product {
-  const isComplement = product.category.toLowerCase().includes("complement")
+  const isComplement = product.category.toLowerCase().includes("complement");
   const isWellness =
-    vertical === "bienestar" || product.vertical === "bienestar"
+    vertical === "bienestar" || product.vertical === "bienestar";
 
   return {
     ...product,
@@ -2494,33 +2529,33 @@ function normalizeProduct(
           ? "No aplica; cuida ollas de granito"
           : defaultStoveCompatibility),
     tags: product.tags || [],
-  }
+  };
 }
 
 async function fetchProducts(vertical?: "cocina" | "bienestar") {
   const toolsUrl =
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
-    "http://localhost:8787"
+    "http://localhost:8787";
 
   try {
-    const headers: Record<string, string> = {}
+    const headers: Record<string, string> = {};
     if (process.env.TOOLS_API_TOKEN) {
-      headers.authorization = `Bearer ${process.env.TOOLS_API_TOKEN}`
+      headers.authorization = `Bearer ${process.env.TOOLS_API_TOKEN}`;
     }
 
-    const url = new URL("/tools/search-products", toolsUrl)
-    url.searchParams.set("limit", "100")
-    if (vertical) url.searchParams.set("vertical", vertical)
+    const url = new URL("/tools/search-products", toolsUrl);
+    url.searchParams.set("limit", "100");
+    if (vertical) url.searchParams.set("vertical", vertical);
     const response = await fetch(url, {
       cache: "no-store",
       headers,
-    })
-    if (!response.ok) throw new Error("tools unavailable")
-    const data = (await response.json()) as { products?: Product[] }
-    return data.products || []
+    });
+    if (!response.ok) throw new Error("tools unavailable");
+    const data = (await response.json()) as { products?: Product[] };
+    return data.products || [];
   } catch {
-    return undefined
+    return undefined;
   }
 }
 
@@ -2528,56 +2563,56 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
   const allowDemoCatalog =
     process.env.ALLOW_DEMO_CATALOG === "true" ||
     process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
-    process.env.NODE_ENV !== "production"
+    process.env.NODE_ENV !== "production";
   const fallback =
     vertical === "bienestar"
       ? wellnessFallbackProducts
-      : august2026FallbackProducts
-  const products = await fetchProducts(vertical)
+      : august2026FallbackProducts;
+  const products = await fetchProducts(vertical);
 
   // Cocina se publica como catálogo comercial MGC: las referencias, variantes
   // y precios aprobados de agosto son la fuente visible, incluso si Medusa aún
   // devuelve artículos de una carga anterior.
   if (vertical === "cocina") {
-    return fallback.map((product) => normalizeProduct(product, vertical))
+    return fallback.map((product) => normalizeProduct(product, vertical));
   }
 
   if (products) {
     const verticalProducts = products
       .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
-      .map((product) => normalizeProduct(product, vertical))
-    if (verticalProducts.length) return verticalProducts
+      .map((product) => normalizeProduct(product, vertical));
+    if (verticalProducts.length) return verticalProducts;
 
     // El catálogo MGC aprobado también debe mostrarse mientras el inventario
     // de Medusa se carga o se recupera. Evita una portada vacía en producción.
     if (allowDemoCatalog) {
-      return fallback.map((product) => normalizeProduct(product, vertical))
+      return fallback.map((product) => normalizeProduct(product, vertical));
     }
 
-    return []
+    return [];
   }
 
   if (allowDemoCatalog) {
-    return fallback.map((product) => normalizeProduct(product, vertical))
+    return fallback.map((product) => normalizeProduct(product, vertical));
   }
 
-  return []
+  return [];
 }
 
 export async function getProducts() {
-  return getProductsForVertical("cocina")
+  return getProductsForVertical("cocina");
 }
 
 export async function getWellnessProducts() {
-  return getProductsForVertical("bienestar")
+  return getProductsForVertical("bienestar");
 }
 
 export async function getAllProducts() {
   const allowDemoCatalog =
     process.env.ALLOW_DEMO_CATALOG === "true" ||
     process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
-    process.env.NODE_ENV !== "production"
-  const products = await fetchProducts()
+    process.env.NODE_ENV !== "production";
+  const products = await fetchProducts();
 
   if (products) {
     const normalized = products.map((product) =>
@@ -2585,7 +2620,7 @@ export async function getAllProducts() {
         product,
         isWellnessProduct(product) ? "bienestar" : "cocina",
       ),
-    )
+    );
     return normalized.length
       ? normalized
       : allowDemoCatalog
@@ -2597,7 +2632,7 @@ export async function getAllProducts() {
               normalizeProduct(product, "bienestar"),
             ),
           ]
-        : []
+        : [];
   }
 
   return allowDemoCatalog
@@ -2609,16 +2644,16 @@ export async function getAllProducts() {
           normalizeProduct(product, "bienestar"),
         ),
       ]
-    : []
+    : [];
 }
 
 export async function getProductBySlug(slug: string) {
-  const products = await getAllProducts()
-  const normalizedSlug = decodeURIComponent(slug)
+  const products = await getAllProducts();
+  const normalizedSlug = decodeURIComponent(slug);
   return (
     products.find((product) => productSlug(product) === normalizedSlug) ||
     august2026FallbackProducts
       .map((product) => normalizeProduct(product, "cocina"))
       .find((product) => productSlug(product) === normalizedSlug)
-  )
+  );
 }
