@@ -2539,16 +2539,22 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
     const verticalProducts = products
       .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
       .map((product) => normalizeProduct(product, vertical))
-    return verticalProducts.length
-      ? verticalProducts
-      : allowDemoCatalog
-        ? fallback.map((product) => normalizeProduct(product, vertical))
-        : []
+    if (verticalProducts.length) return verticalProducts
+
+    // El catálogo MGC aprobado también debe mostrarse mientras el inventario
+    // de Medusa se carga o se recupera. Evita una portada vacía en producción.
+    if (vertical === "cocina" || allowDemoCatalog) {
+      return fallback.map((product) => normalizeProduct(product, vertical))
+    }
+
+    return []
   }
 
-  return allowDemoCatalog
-    ? fallback.map((product) => normalizeProduct(product, vertical))
-    : []
+  if (vertical === "cocina" || allowDemoCatalog) {
+    return fallback.map((product) => normalizeProduct(product, vertical))
+  }
+
+  return []
 }
 
 export async function getProducts() {
