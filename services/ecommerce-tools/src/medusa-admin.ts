@@ -34,10 +34,12 @@ async function medusaAdminFetch<T>(
 export async function createMedusaOrder(
   config: AppConfig,
   input: {
+    externalId?: string
     quote: OrderRecord["quote"]
     customer?: CustomerInput
     source?: string
     notes?: string
+    paymentStatus?: "paid"
   },
 ) {
   const result = await medusaAdminFetch<{ order: OrderRecord }>(

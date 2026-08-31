@@ -50,6 +50,7 @@ import type {
   OrderRecord,
   PurchasedProduct,
   Product,
+  Quote,
 } from "./types.js"
 
 // Guard anti-carrera: evita pedido/WhatsApp duplicados si el cliente
@@ -870,13 +871,13 @@ export function createCommerceService(config: AppConfig) {
       if (
         result.status === "paid" &&
         record &&
-        !record.registered &&
+        (!record.registered || !record.orderId) &&
         !inflightDatafastResults.has(record.reference)
       ) {
         inflightDatafastResults.add(record.reference)
         try {
         const now = new Date().toISOString()
-        if (record.customer?.phone) {
+        if (!record.registered && record.customer?.phone) {
           const purchasedProducts: PurchasedProduct[] = record.items.map(
             (it) => ({
               productId: it.sku || it.title,
@@ -912,100 +913,76 @@ export function createCommerceService(config: AppConfig) {
           // El evento Purchase de Meta lo dispara el storefront en /checkout/resultado;
           // aquí solo registramos la venta en el CRM (recompra).
         }
-        // Pedido en el módulo de órdenes (misma tubería que Vicky) para poder
-        // gestionar la logística de entrega desde el admin + aviso por WhatsApp.
+        // Todo pago aprobado crea una orden operable, incluso si el SKU es
+        // temporal o aún no está sembrado en Medusa.
+        let orderId = record.orderId
+        let medusaOrderId = record.medusaOrderId
         try {
-          const products = await loadProducts(config)
-          const orderItems = record.items
-            .filter((it) =>
-              it.sku
-                ? products.some((p) => p.sku === it.sku || p.id === it.sku)
-                : false,
-            )
-            .map((it) => ({
-              productId: it.sku as string,
-              quantity: it.quantity,
-            }))
-          if (orderItems.length > 0) {
-            const quote = buildQuote(config, products, orderItems)
-            // El pedido refleja lo COBRADO por Datafast (precio promo del
-            // storefront), no el precio de lista del catálogo.
-            const paidBySku = new Map(record.items.map((it) => [it.sku, it]))
-            quote.lines = quote.lines.map((line) => {
-              const paidItem = line.sku ? paidBySku.get(line.sku) : undefined
-              if (!paidItem) return line
-              return {
-                ...line,
-                unitPrice: { amount: paidItem.unitPrice, currency: "USD" },
-                lineTotal: {
-                  amount:
-                    Math.round(paidItem.unitPrice * paidItem.quantity * 100) /
-                    100,
-                  currency: "USD",
-                },
-              }
-            })
-            quote.subtotal = { amount: record.amount, currency: "USD" }
-            quote.tax = { amount: 0, currency: "USD" }
-            quote.total = { amount: record.amount, currency: "USD" }
-            const orderCustomer = record.customer?.phone
-              ? {
-                  phone: record.customer.phone,
-                  name: record.customer.name,
-                  email: record.customer.email,
-                }
-              : undefined
-            const notes = `PAGADO con tarjeta (Datafast ${result.code}). Ref ${record.reference}${
-              result.paymentId ? ` · paymentId ${result.paymentId}` : ""
-            }${result.authorizationCode ? ` · aut. ${result.authorizationCode}` : ""}`
-            let orderId: string
-            if (config.crmBackend === "medusa") {
-              const order = await createMedusaOrder(config, {
-                quote,
-                customer: orderCustomer,
-                source: "datafast_web",
-                notes,
-              })
-              orderId = order.id
-            } else {
-              const order: OrderRecord = {
-                id: `ETN-${Date.now().toString(36).toUpperCase()}`,
-                quote,
-                customer: orderCustomer || {},
-                status: "paid",
-                createdAt: now,
-                updatedAt: now,
-                events: [
-                  {
-                    type: "created",
-                    at: now,
-                    payload: {
-                      source: "datafast_web",
-                      reference: record.reference,
-                    },
-                  },
-                  {
-                    type: "paid",
-                    at: now,
-                    payload: { code: result.code, paymentId: result.paymentId },
-                  },
-                ],
-              }
-              await upsertOrder(config.dataDir, order)
-              orderId = order.id
-            }
-            if (record.customer?.phone) {
-              void notifyPurchaseByWhatsapp(config, {
+          const quote: Quote = {
+            id: `datafast-${record.reference}`,
+            lines: record.items.map((item) => ({
+              productId: item.sku || item.title,
+              variantId: item.sku || item.title,
+              sku: item.sku || item.title,
+              title: item.title,
+              quantity: item.quantity,
+              unitPrice: { amount: item.unitPrice, currency: "USD" },
+              lineTotal: {
+                amount: Math.round(item.unitPrice * item.quantity * 100) / 100,
+                currency: "USD",
+              },
+            })),
+            subtotal: { amount: record.amount, currency: "USD" },
+            tax: { amount: 0, currency: "USD" },
+            total: { amount: record.amount, currency: "USD" },
+            currency: "USD",
+            whatsappMessage: "",
+          }
+          const orderCustomer = record.customer?.phone
+            ? {
                 phone: record.customer.phone,
                 name: record.customer.name,
-                orderId,
-                total: record.amount,
-                items: record.items.map((it) => ({
-                  title: it.title,
-                  quantity: it.quantity,
-                })),
-              })
+                email: record.customer.email,
+              }
+            : undefined
+          const notes = `PAGADO con tarjeta (Datafast ${result.code}). Ref ${record.reference}${
+            result.paymentId ? ` · paymentId ${result.paymentId}` : ""
+          }${result.authorizationCode ? ` · aut. ${result.authorizationCode}` : ""}`
+          if (!orderId && config.crmBackend === "medusa") {
+            const order = await createMedusaOrder(config, {
+              externalId: record.reference,
+              quote,
+              customer: orderCustomer,
+              source: "datafast_web",
+              notes,
+              paymentStatus: "paid",
+            })
+            orderId = order.id
+            medusaOrderId = order.medusaOrderId
+          } else if (!orderId) {
+            const order: OrderRecord = {
+              id: record.reference,
+              quote,
+              customer: orderCustomer || {},
+              status: "paid",
+              createdAt: now,
+              updatedAt: now,
+              events: [
+                { type: "created", at: now, payload: { source: "datafast_web" } },
+                { type: "paid", at: now, payload: { code: result.code, paymentId: result.paymentId } },
+              ],
             }
+            await upsertOrder(config.dataDir, order)
+            orderId = order.id
+          }
+          if (orderId && record.customer?.phone) {
+            void notifyPurchaseByWhatsapp(config, {
+              phone: record.customer.phone,
+              name: record.customer.name,
+              orderId,
+              total: record.amount,
+              items: record.items.map((it) => ({ title: it.title, quantity: it.quantity })),
+            })
           }
         } catch (cause) {
           // El pedido/aviso no debe romper la confirmación del pago:
@@ -1019,6 +996,8 @@ export function createCommerceService(config: AppConfig) {
           ...record,
           status: "paid",
           registered: true,
+          orderId,
+          medusaOrderId,
           resultCode: result.code,
           resultDescription: result.description,
           resultReference: result.reference,

@@ -17,6 +17,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const input = req.body as B2bOrderPayload
   const crm = crmService(req)
   const externalId = input.externalId || externalOrderId()
+  const paymentStatus = input.paymentStatus === "paid" ? "paid" : "pending_payment"
   const customerPayload = input.customer || {}
   const phone = customerPayload.phone
     ? normalizePhone(customerPayload.phone)
@@ -54,7 +55,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     externalId,
     quoteId: input.quote.id,
     phone,
-    status: "pending_payment",
+    status: paymentStatus,
     medusaOrderId: medusaDraftOrder.id,
     medusaDraftOrderId: medusaDraftOrder.id,
     totalAmount: input.quote.total.amount,
@@ -75,6 +76,15 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
           medusaDraftOrderId: medusaDraftOrder.id,
         },
       },
+      ...(paymentStatus === "paid"
+        ? [
+            {
+              type: "paid",
+              at: new Date().toISOString(),
+              payload: { source: input.source || "whatsapp" },
+            },
+          ]
+        : []),
     ],
   })
 

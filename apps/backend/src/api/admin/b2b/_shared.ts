@@ -34,6 +34,7 @@ type QuoteLinePayload = {
 
 export type B2bOrderPayload = {
   externalId?: string
+  paymentStatus?: "paid"
   quote: {
     id: string
     lines: QuoteLinePayload[]

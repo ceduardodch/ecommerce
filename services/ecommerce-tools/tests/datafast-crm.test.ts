@@ -7,7 +7,7 @@ import {
   checkoutCatalogProducts,
   createCommerceService,
 } from "../src/service.js"
-import { readCustomers, readDatafastCheckouts } from "../src/storage.js"
+import { readCustomers, readDatafastCheckouts, readOrders } from "../src/storage.js"
 import {
   cocinaFallbackProducts,
   mgcSaharaPanProducts,
@@ -49,6 +49,7 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     const records = await readDatafastCheckouts(dir)
     expect(records[0]?.status).toBe("paid")
     expect(records[0]?.registered).toBe(true)
+    expect(records[0]?.orderId).toBeTruthy()
     expect(records[0]?.resultCode).toBe("000.100.112")
     expect(records[0]?.resultDescription).toBe("DRY-RUN approved")
 
@@ -62,6 +63,13 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     expect(maria?.suggestedFrequencyDays).toBe(90)
     const paidEvents = (maria?.events || []).filter((e) => e.type === "paid")
     expect(paidEvents.length).toBe(1)
+
+    const orders = await readOrders(dir)
+    expect(orders).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: records[0]?.orderId, status: "paid" }),
+      ]),
+    )
   })
 
   it("es idempotente: consultar el resultado dos veces NO duplica la venta", async () => {

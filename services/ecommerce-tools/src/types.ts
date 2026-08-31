@@ -173,6 +173,8 @@ export type CustomerRecord = {
 export type DatafastCheckoutRecord = {
   reference: string
   checkoutId: string
+  orderId?: string
+  medusaOrderId?: string
   amount: number
   status: "pending" | "paid" | "failed"
   registered: boolean
