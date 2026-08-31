@@ -2535,6 +2535,13 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
       : august2026FallbackProducts
   const products = await fetchProducts(vertical)
 
+  // Cocina se publica como catálogo comercial MGC: las referencias, variantes
+  // y precios aprobados de agosto son la fuente visible, incluso si Medusa aún
+  // devuelve artículos de una carga anterior.
+  if (vertical === "cocina") {
+    return fallback.map((product) => normalizeProduct(product, vertical))
+  }
+
   if (products) {
     const verticalProducts = products
       .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
@@ -2543,14 +2550,14 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
 
     // El catálogo MGC aprobado también debe mostrarse mientras el inventario
     // de Medusa se carga o se recupera. Evita una portada vacía en producción.
-    if (vertical === "cocina" || allowDemoCatalog) {
+    if (allowDemoCatalog) {
       return fallback.map((product) => normalizeProduct(product, vertical))
     }
 
     return []
   }
 
-  if (vertical === "cocina" || allowDemoCatalog) {
+  if (allowDemoCatalog) {
     return fallback.map((product) => normalizeProduct(product, vertical))
   }
 
