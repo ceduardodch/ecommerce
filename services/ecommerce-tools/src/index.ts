@@ -241,6 +241,8 @@ mountWhatsappReplyRoute(
 )
 
 try {
+  const reconciliation = await service.reconcileDatafastLedger()
+  app.log.info(reconciliation, "DataFast ledger reconciled with Medusa")
   await app.listen({ port: config.port, host: "0.0.0.0" })
 } catch (error) {
   app.log.error(error)

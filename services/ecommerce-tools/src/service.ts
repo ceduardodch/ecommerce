@@ -31,6 +31,7 @@ import {
   findOrder,
   findOrderByClientTransaction,
   listDueFollowups,
+  readDatafastCheckouts,
   readCustomers,
   readOrders,
   upsertCustomer,
@@ -550,6 +551,40 @@ export function createCommerceService(config: AppConfig) {
   }
 
   return {
+    /** Recupera pagos verificados tras reinicios o callbacks expirados. */
+    async reconcileDatafastLedger() {
+      if (config.crmBackend !== "medusa") {
+        return { scanned: 0, synchronized: 0 }
+      }
+
+      const records = await readDatafastCheckouts(config.dataDir)
+      let synchronized = 0
+      let failed = 0
+      for (const record of records) {
+        if (record.status !== "paid" || !record.orderId) continue
+        try {
+          await updateMedusaPaymentStatus(config, record.orderId, {
+            status: "paid",
+            payment: {
+              reference: record.reference,
+              checkoutId: record.checkoutId,
+              code: record.resultCode,
+              paymentId: record.paymentId,
+              authorizationCode: record.authorizationCode,
+            },
+          })
+          synchronized += 1
+        } catch (error) {
+          failed += 1
+          console.error(
+            `[datafast] Medusa reconciliation failed for ${record.reference}:`,
+            error instanceof Error ? error.message : error,
+          )
+        }
+      }
+      return { scanned: records.length, synchronized, failed }
+    },
+
     async products(input: {
       query?: string
       category?: string
