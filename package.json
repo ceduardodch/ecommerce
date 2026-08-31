@@ -17,6 +17,7 @@
     "backend:build": "turbo build --filter=@b2b/medusa-backend",
     "backend:start": "turbo start --filter=@b2b/medusa-backend",
     "backend:seed": "turbo seed --filter=@b2b/medusa-backend",
+    "backend:test:unit": "turbo test:unit --filter=@b2b/medusa-backend",
     "storefront:dev": "turbo dev --filter=@b2b/storefront",
     "storefront:build": "turbo build --filter=@b2b/storefront",
     "storefront:start": "turbo start --filter=@b2b/storefront",
