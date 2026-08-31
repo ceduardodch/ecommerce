@@ -1,42 +1,46 @@
-import { MedusaContainer } from "@medusajs/framework"
+import { MedusaContainer } from "@medusajs/framework";
 import {
   ContainerRegistrationKeys,
   ProductStatus,
-} from "@medusajs/framework/utils"
+} from "@medusajs/framework/utils";
 import {
+  createInventoryItemsWorkflow,
+  createInventoryLevelsWorkflow,
+  createLinksWorkflow,
   createProductCategoriesWorkflow,
   createProductsWorkflow,
+  updateInventoryLevelsWorkflow,
   updateProductsWorkflow,
-} from "@medusajs/medusa/core-flows"
-import { august2026KitchenProducts } from "./kitchen-catalog-august-2026"
+} from "@medusajs/medusa/core-flows";
+import { august2026KitchenProducts } from "./kitchen-catalog-august-2026";
 
 type KitchenProduct = {
-  title: string
-  handle: string
-  sku: string
-  category: string
-  description: string
-  price: number
-  originalPrice: number
-  stock: number
-  image: string
-  metadata: Record<string, unknown>
-}
+  title: string;
+  handle: string;
+  sku: string;
+  category: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  stock: number;
+  image: string;
+  metadata: Record<string, unknown>;
+};
 
 const commercialMetadata = {
   vertical: "cocina",
   freeShipping: true,
   paymentMethods: ["transferencia", "deuna", "payphone"],
   couponCode: "GRANITOHOY",
-}
+};
 
 const kitchenPublicUrl = (
   process.env.COCINA_PUBLIC_URL ||
   process.env.STORE_PUBLIC_URL ||
   "https://shop.b2b.com.ec"
-).replace(/\/$/, "")
+).replace(/\/$/, "");
 
-const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`
+const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`;
 
 const legacyKitchenProducts: KitchenProduct[] = [
   {
@@ -268,16 +272,16 @@ const legacyKitchenProducts: KitchenProduct[] = [
       tipoCocina: "Corte diario",
     },
   },
-]
+];
 
 // El catálogo público de agosto reemplaza los productos de muestra anteriores.
 // Todas las referencias de agosto se publican; la variante roja indica que su
 // imagen es referencial hasta recibir la foto física exacta.
-const products: KitchenProduct[] = [...august2026KitchenProducts]
+const products: KitchenProduct[] = [...august2026KitchenProducts];
 
 const publishableProducts = products.filter(
   (product) => product.metadata.catalogActive !== false,
-)
+);
 
 const legacyKitchenHandles = [
   ...legacyKitchenProducts.map((product) => product.handle),
@@ -288,24 +292,24 @@ const legacyKitchenHandles = [
   "set-mgc-ollas-sartenes-granito",
   "sarten-wok-granito-recetas-rapidas",
   "utensilios-compatibles-granito",
-]
+];
 
 async function ensureCategories(container: MedusaContainer) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
   const categoryNames = [
     ...new Set(publishableProducts.map((product) => product.category)),
-  ]
+  ];
   const { data: existingCategories } = await query.graph({
     entity: "product_category",
     fields: ["id", "name"],
     pagination: { take: 100 },
-  })
+  });
 
   const missing = categoryNames.filter(
     (name) => !existingCategories.some((category) => category.name === name),
-  )
+  );
 
-  let createdCategories: Array<{ id: string; name: string }> = []
+  let createdCategories: Array<{ id: string; name: string }> = [];
   if (missing.length) {
     const { result } = await createProductCategoriesWorkflow(container).run({
       input: {
@@ -314,25 +318,26 @@ async function ensureCategories(container: MedusaContainer) {
           is_active: true,
         })),
       },
-    })
-    createdCategories = result
+    });
+    createdCategories = result;
   }
 
-  return [...existingCategories, ...createdCategories]
+  return [...existingCategories, ...createdCategories];
 }
 
 function updateVariantInput(
   seed: KitchenProduct,
   existing: Record<string, any>,
 ) {
-  const variant = existing.variants?.[0]
-  if (!variant?.id) return undefined
+  const variant = existing.variants?.[0];
+  if (!variant?.id) return undefined;
 
   return [
     {
       id: variant.id,
       title: "Default",
       sku: seed.sku,
+      manage_inventory: true,
       prices: [{ amount: seed.price, currency_code: "usd" }],
       metadata: {
         ...(variant.metadata || {}),
@@ -341,16 +346,126 @@ function updateVariantInput(
         originalPrice: seed.originalPrice,
       },
     },
-  ]
+  ];
+}
+
+async function syncInventoryLevels(
+  container: MedusaContainer,
+  products: KitchenProduct[],
+) {
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const [{ data: locations }, { data: catalogProducts }] = await Promise.all([
+    query.graph({
+      entity: "stock_location",
+      fields: ["id"],
+      pagination: { take: 1 },
+    }),
+    query.graph({
+      entity: "product",
+      fields: [
+        "handle",
+        "variants.id",
+        "variants.sku",
+        "variants.inventory_items.inventory_item_id",
+      ],
+      pagination: { take: 500 },
+    }),
+  ]);
+  const locationId = locations[0]?.id;
+  if (!locationId) {
+    throw new Error("No existe una ubicación de inventario para el catálogo.");
+  }
+
+  const variants = products.flatMap((seed) => {
+    const product = catalogProducts.find(
+      (candidate) => candidate.handle === seed.handle,
+    );
+    const variant = product?.variants?.find(
+      (candidate) => candidate.sku === seed.sku,
+    );
+    return variant?.id ? [{ seed, variant }] : [];
+  });
+
+  const missingItems = variants.filter(
+    ({ variant }) => !variant.inventory_items?.[0]?.inventory_item_id,
+  );
+  if (missingItems.length) {
+    const { result: createdItems } = await createInventoryItemsWorkflow(
+      container,
+    ).run({
+      input: { items: missingItems.map(({ seed }) => ({ sku: seed.sku })) },
+    });
+    await createLinksWorkflow(container).run({
+      input: missingItems.map(({ variant }, index) => ({
+        product: { variant_id: variant.id },
+        inventory: { inventory_item_id: createdItems[index].id },
+        data: { required_quantity: 1 },
+      })),
+    });
+    for (let index = 0; index < missingItems.length; index += 1) {
+      missingItems[index].variant.inventory_items = [
+        { inventory_item_id: createdItems[index].id },
+      ];
+    }
+  }
+
+  const inventoryItemIds = variants
+    .map(({ variant }) => variant.inventory_items?.[0]?.inventory_item_id)
+    .filter(Boolean);
+  const { data: levels } = await query.graph({
+    entity: "inventory_level",
+    fields: ["id", "inventory_item_id", "location_id"],
+    filters: { inventory_item_id: inventoryItemIds },
+    pagination: { take: 500 },
+  });
+
+  const create = variants.flatMap(({ seed, variant }) => {
+    const inventoryItemId = variant.inventory_items?.[0]?.inventory_item_id;
+    if (!inventoryItemId) return [];
+    const exists = levels.some(
+      (level) =>
+        level.inventory_item_id === inventoryItemId &&
+        level.location_id === locationId,
+    );
+    return exists
+      ? []
+      : [
+          {
+            inventory_item_id: inventoryItemId,
+            location_id: locationId,
+            stocked_quantity: seed.stock,
+          },
+        ];
+  });
+  if (create.length) {
+    await createInventoryLevelsWorkflow(container).run({
+      input: { inventory_levels: create },
+    });
+  }
+
+  const updates = variants.flatMap(({ seed, variant }) => {
+    const inventoryItemId = variant.inventory_items?.[0]?.inventory_item_id;
+    if (!inventoryItemId) return [];
+    return [
+      {
+        inventory_item_id: inventoryItemId,
+        location_id: locationId,
+        stocked_quantity: seed.stock,
+      },
+    ];
+  });
+  if (updates.length) {
+    await updateInventoryLevelsWorkflow(container).run({ input: { updates } });
+  }
 }
 
 export default async function kitchenCatalogSeed({
   container,
 }: {
-  container: MedusaContainer
+  container: MedusaContainer;
 }) {
-  const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
+  const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
+  const query = container.resolve(ContainerRegistrationKeys.QUERY);
 
   const [{ data: channels }, { data: shippingProfiles }] = await Promise.all([
     query.graph({
@@ -363,34 +478,34 @@ export default async function kitchenCatalogSeed({
       fields: ["id"],
       pagination: { take: 1 },
     }),
-  ])
+  ]);
 
   if (!channels?.[0]?.id || !shippingProfiles?.[0]?.id) {
     throw new Error(
       "Ejecuta primero el seed inicial de Medusa para crear canal y shipping profile.",
-    )
+    );
   }
 
   const { data: existingProducts } = await query.graph({
     entity: "product",
     fields: ["id", "handle", "metadata", "variants.id", "variants.metadata"],
     pagination: { take: 500 },
-  })
-  const categories = await ensureCategories(container)
+  });
+  const categories = await ensureCategories(container);
   const existingByHandle = new Map(
     existingProducts.map((product) => [product.handle, product]),
-  )
+  );
   const existingKitchenProducts = publishableProducts.flatMap((product) => {
-    const existing = existingByHandle.get(product.handle)
-    return existing ? [{ seed: product, existing }] : []
-  })
+    const existing = existingByHandle.get(product.handle);
+    return existing ? [{ seed: product, existing }] : [];
+  });
   const missingProducts = publishableProducts.filter(
     (product) => !existingByHandle.has(product.handle),
-  )
+  );
   const legacyProducts = legacyKitchenHandles.flatMap((handle) => {
-    const existing = existingByHandle.get(handle)
-    return existing ? [existing] : []
-  })
+    const existing = existingByHandle.get(handle);
+    return existing ? [existing] : [];
+  });
 
   if (legacyProducts.length) {
     await updateProductsWorkflow(container).run({
@@ -406,11 +521,11 @@ export default async function kitchenCatalogSeed({
           },
         })),
       },
-    })
+    });
 
     logger.info(
       `Kitchen catalog seed archived ${legacyProducts.length} legacy products.`,
-    )
+    );
   }
 
   if (existingKitchenProducts.length) {
@@ -433,18 +548,17 @@ export default async function kitchenCatalogSeed({
           },
         })),
       },
-    })
+    });
 
     logger.info(
       `Kitchen catalog seed synced ${existingKitchenProducts.length} existing products.`,
-    )
+    );
   }
 
   if (!missingProducts.length) {
-    logger.info(
-      "Kitchen catalog seed skipped creation: products already exist.",
-    )
-    return
+    await syncInventoryLevels(container, publishableProducts);
+    logger.info("Kitchen catalog seed synced inventory for existing products.");
+    return;
   }
 
   await createProductsWorkflow(container).run({
@@ -470,6 +584,7 @@ export default async function kitchenCatalogSeed({
           {
             title: "Default",
             sku: product.sku,
+            manage_inventory: true,
             options: { Presentacion: "Default" },
             prices: [{ amount: product.price, currency_code: "usd" }],
             metadata: {
@@ -482,9 +597,11 @@ export default async function kitchenCatalogSeed({
         sales_channels: [{ id: channels[0].id }],
       })),
     },
-  })
+  });
 
   logger.info(
     `Kitchen catalog seed created ${missingProducts.length} products.`,
-  )
+  );
+  await syncInventoryLevels(container, publishableProducts);
+  logger.info("Kitchen catalog seed synced inventory levels.");
 }
