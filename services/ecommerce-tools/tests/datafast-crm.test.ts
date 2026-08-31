@@ -8,10 +8,6 @@ import {
   createCommerceService,
 } from "../src/service.js"
 import { readCustomers, readDatafastCheckouts, readOrders } from "../src/storage.js"
-import {
-  cocinaFallbackProducts,
-  mgcSaharaPanProducts,
-} from "../../../apps/storefront/lib/catalog.js"
 
 describe("datafast → registro de venta en CRM (recompra)", () => {
   let dir: string
@@ -37,7 +33,7 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
       items: [
-        { title: "Olla de granito 24cm", sku: "MGC-OLLA-24", quantity: 1, unitPrice: 95 },
+        { title: "Olla de granito 24cm", sku: "MGC-FR-OLLA-24-GN", quantity: 1, unitPrice: 95 },
       ],
       customer: { givenName: "Maria", surname: "Prueba", phone: "0991234567" },
     })
@@ -75,7 +71,7 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
   it("es idempotente: consultar el resultado dos veces NO duplica la venta", async () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
-      items: [{ title: "Mat de yoga", sku: "BIE-MAT", quantity: 1, unitPrice: 30 }],
+      items: [{ title: "Sartén 20 cm", sku: "MGC-FR-SARTEN-20-GN", quantity: 1, unitPrice: 30 }],
       customer: { givenName: "Ana", surname: "Test", phone: "0987654321" },
     })
     await service.datafastResult(checkout.checkoutId)
@@ -129,7 +125,7 @@ describe("datafast → blindaje de precios (code review #1)", () => {
       items: [
         {
           title: "Sartén hackeada",
-          sku: "COC-SARTEN-PLANO-GRANITO-22",
+          sku: "MGC-FR-SARTEN-20-GN",
           quantity: 1,
           unitPrice: 0.1,
         },
@@ -184,25 +180,8 @@ describe("datafast → blindaje de precios (code review #1)", () => {
   })
 })
 
-describe("contrato tienda → DataFast", () => {
-  it("autoriza exactamente los SKU y precios visibles de cocina", () => {
-    const checkoutBySku = new Map(
-      checkoutCatalogProducts.map((product) => [product.sku, product]),
-    )
-    const storefrontProducts = [
-      ...cocinaFallbackProducts,
-      ...mgcSaharaPanProducts,
-    ]
-
-    storefrontProducts.forEach((product) => {
-      const checkoutProduct = checkoutBySku.get(product.sku)
-      expect(checkoutProduct).toBeTruthy()
-      expect(checkoutProduct?.price.amount).toBe(product.price.amount)
-      expect(checkoutProduct?.stock).toBe(product.stock)
-      expect(checkoutProduct?.comboPrice?.amount).toBe(
-        product.comboPrice?.amount,
-      )
-      expect(checkoutProduct?.comboGroup).toBe(product.comboGroup)
-    })
+describe("contrato catálogo → DataFast", () => {
+  it("sólo conserva fixtures para pruebas locales", () => {
+    expect(checkoutCatalogProducts.some((product) => product.sku === "MGC-PALETA-WOK-DATAFAST-TEST")).toBe(true)
   })
 })

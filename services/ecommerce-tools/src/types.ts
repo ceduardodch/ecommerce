@@ -202,7 +202,12 @@ export type OrderRecord = {
   medusaDraftOrderId?: string
   quote: Quote
   customer: CustomerInput
-  status: "pending_payment" | "paid" | "payment_review" | "cancelled"
+  status:
+    | "pending_payment"
+    | "paid"
+    | "payment_failed"
+    | "payment_review"
+    | "cancelled"
   paymentLink?: string
   clientTransactionId?: string
   createdAt: string

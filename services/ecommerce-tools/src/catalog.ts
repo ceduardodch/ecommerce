@@ -258,6 +258,7 @@ function normalizeMedusaProduct(
       : undefined,
     comboMinimumItems:
       numberFromMetadata(product.metadata?.comboMinimumItems) || undefined,
+    comboGroup: stringFromMetadata(product.metadata?.comboGroup),
     discountPercent,
     promoLabel: stringFromMetadata(product.metadata?.promoLabel),
     stockSignal: stringFromMetadata(product.metadata?.stockSignal),
@@ -308,7 +309,9 @@ function normalizeMedusaProduct(
     ),
     claimNote: stringFromMetadata(product.metadata?.claimNote),
     reorderAfterDays: numberFromMetadata(product.metadata?.reorderAfterDays),
-    stock: Number(product.metadata?.stock || variant?.metadata?.stock || 0),
+    // El cero es un valor válido. No usar `||` aquí: con ese operador un
+    // producto agotado podía tomar un stock alterno y volver a venderse.
+    stock: Number(product.metadata?.stock ?? variant?.metadata?.stock ?? 0),
     imageUrl: imageForProduct(
       config,
       { sku, title: product.title, category, vertical },
@@ -316,7 +319,7 @@ function normalizeMedusaProduct(
     ),
     productUrl: productUrl(config, product, vertical, sku),
     tags: [
-      ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
+      ...((product.tags?.map((tag) => tag.value).filter(Boolean) || []) as string[]),
       product.title,
       product.description || "",
       stringFromMetadata(product.metadata?.material) || "",
@@ -419,7 +422,7 @@ function inferVertical(
     product.description || "",
     category,
     product.collection?.title || "",
-    ...(product.tags?.map((tag) => tag.value).filter(Boolean) as string[]),
+    ...((product.tags?.map((tag) => tag.value).filter(Boolean) || []) as string[]),
     stringFromMetadata(product.metadata?.material) || "",
     stringFromMetadata(product.metadata?.bundleUseCase) || "",
     stringFromMetadata(product.metadata?.healthAngle) || "",

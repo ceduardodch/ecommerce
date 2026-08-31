@@ -13,6 +13,7 @@ import {
   getMedusaOrder,
   importMedusaCustomers,
   listMedusaDueFollowups,
+  updateMedusaPaymentStatus,
 } from "./medusa-admin.js"
 import {
   crmPayloadForEvent,
@@ -775,7 +776,13 @@ export function createCommerceService(config: AppConfig) {
       // El navegador nunca define el valor cobrable. Recalculamos cada línea
       // contra el catálogo y aplicamos la misma regla del precio verde. En
       // pruebas se permiten fixtures sin SKU de catálogo; en producción no.
-      const catalog = [...checkoutCatalogProducts, ...(await loadProducts(config))]
+      const medusaCatalog = await loadProducts(config)
+      // En producción no hay lista alternativa: un SKU que Medusa no conoce
+      // no llega al formulario de DataFast. Los fixtures sólo existen para
+      // pruebas locales con ALLOW_DEMO_CATALOG=true.
+      const catalog = config.allowDemoCatalog
+        ? [...medusaCatalog, ...checkoutCatalogProducts]
+        : medusaCatalog
       const live = config.datafastEnv === "live"
       const requested = input.items.map((item) => {
         const sku = item.sku?.trim()
@@ -785,7 +792,7 @@ export function createCommerceService(config: AppConfig) {
             )
           : undefined
         if (!product) {
-          if (live) {
+          if (live || !config.allowDemoCatalog) {
             throw new Error(
               `Producto no reconocido en el catálogo: ${sku || item.title}`,
             )
@@ -830,18 +837,86 @@ export function createCommerceService(config: AppConfig) {
             }
           : { ...item },
       )
+      const now = new Date().toISOString()
+      const quote: Quote = {
+        id: `datafast-${reference}`,
+        lines: requested.map(({ item, product }, index) => {
+          const priced = pricedItems[index]
+          if (!priced) {
+            throw new Error(`Producto no reconocido en el catálogo: ${item.sku || item.title}`)
+          }
+          // Sólo para fixtures locales. En producción el SKU ya fue rechazado
+          // arriba si Medusa no lo devolvió.
+          if (!product) {
+            return {
+              productId: item.sku || `fixture-${index}`,
+              variantId: item.sku || `fixture-${index}`,
+              sku: item.sku || item.title,
+              title: item.title,
+              quantity: item.quantity,
+              unitPrice: { amount: priced.unitPrice, currency: "USD" as const },
+              lineTotal: {
+                amount: Math.round(priced.unitPrice * item.quantity * 100) / 100,
+                currency: "USD" as const,
+              },
+            }
+          }
+          return {
+            productId: product.id,
+            variantId: product.variantId,
+            sku: product.sku,
+            title: product.title,
+            quantity: item.quantity,
+            unitPrice: { amount: priced.unitPrice, currency: "USD" },
+            lineTotal: {
+              amount: Math.round(priced.unitPrice * item.quantity * 100) / 100,
+              currency: "USD",
+            },
+            reorderAfterDays: product.reorderAfterDays,
+          }
+        }),
+        subtotal: {
+          amount: Math.round(pricedItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) * 100) / 100,
+          currency: "USD",
+        },
+        tax: { amount: 0, currency: "USD" },
+        total: { amount: 0, currency: "USD" },
+        currency: "USD",
+        whatsappMessage: "",
+      }
+      quote.total = { ...quote.subtotal }
+
+      const customer = input.customer?.phone
+        ? {
+            phone: toEcPhone(input.customer.phone),
+            name: [input.customer.givenName, input.customer.surname].filter(Boolean).join(" ") || undefined,
+            email: input.customer.email,
+          }
+        : undefined
+      const pendingOrder = config.crmBackend === "medusa"
+        ? await createMedusaOrder(config, {
+            externalId: reference,
+            quote,
+            customer,
+            source: "datafast_web",
+            notes: "Checkout DataFast iniciado; pendiente de confirmación.",
+            paymentStatus: "pending_payment",
+          })
+        : undefined
+
       const checkout = await createDatafastCheckout(config, {
         reference,
         items: pricedItems,
         customer: input.customer,
       })
-      const now = new Date().toISOString()
       await upsertDatafastCheckout(config.dataDir, {
         reference,
         checkoutId: checkout.checkoutId,
         amount: checkout.amount,
         status: "pending",
         registered: false,
+        orderId: pendingOrder?.id,
+        medusaOrderId: pendingOrder?.medusaOrderId,
         customer: {
           phone: toEcPhone(input.customer?.phone),
           name:
@@ -913,8 +988,8 @@ export function createCommerceService(config: AppConfig) {
           // El evento Purchase de Meta lo dispara el storefront en /checkout/resultado;
           // aquí solo registramos la venta en el CRM (recompra).
         }
-        // Todo pago aprobado crea una orden operable, incluso si el SKU es
-        // temporal o aún no está sembrado en Medusa.
+        // La orden se creó al iniciar el checkout. Aquí sólo se marca el
+        // resultado; por eso una recarga o callback duplicado no duplica nada.
         let orderId = record.orderId
         let medusaOrderId = record.medusaOrderId
         try {
@@ -948,7 +1023,18 @@ export function createCommerceService(config: AppConfig) {
           const notes = `PAGADO con tarjeta (Datafast ${result.code}). Ref ${record.reference}${
             result.paymentId ? ` · paymentId ${result.paymentId}` : ""
           }${result.authorizationCode ? ` · aut. ${result.authorizationCode}` : ""}`
-          if (!orderId && config.crmBackend === "medusa") {
+          if (orderId && config.crmBackend === "medusa") {
+            await updateMedusaPaymentStatus(config, orderId, {
+              status: "paid",
+              payment: {
+                reference: record.reference,
+                checkoutId,
+                code: result.code,
+                paymentId: result.paymentId,
+                authorizationCode: result.authorizationCode,
+              },
+            })
+          } else if (!orderId && config.crmBackend === "medusa") {
             const order = await createMedusaOrder(config, {
               externalId: record.reference,
               quote,
@@ -1011,6 +1097,18 @@ export function createCommerceService(config: AppConfig) {
           inflightDatafastResults.delete(record.reference)
         }
       } else if (result.status === "failed" && record && record.status === "pending") {
+        if (record.orderId && config.crmBackend === "medusa") {
+          await updateMedusaPaymentStatus(config, record.orderId, {
+            status: "payment_failed",
+            payment: {
+              reference: record.reference,
+              checkoutId,
+              code: result.code,
+              paymentId: result.paymentId,
+              authorizationCode: result.authorizationCode,
+            },
+          })
+        }
         await upsertDatafastCheckout(config.dataDir, {
           ...record,
           status: "failed",

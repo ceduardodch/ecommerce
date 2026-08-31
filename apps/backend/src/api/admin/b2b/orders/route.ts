@@ -1,7 +1,7 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import {
   B2bOrderPayload,
-  createMedusaDraftOrder,
+  createMedusaSalesOrder,
   crmService,
   customerInputFromPayload,
   findOrCreateMedusaCustomer,
@@ -17,14 +17,19 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
   const input = req.body as B2bOrderPayload
   const crm = crmService(req)
   const externalId = input.externalId || externalOrderId()
-  const paymentStatus = input.paymentStatus === "paid" ? "paid" : "pending_payment"
+  const paymentStatus = input.paymentStatus || "pending_payment"
   const customerPayload = input.customer || {}
   const phone = customerPayload.phone
     ? normalizePhone(customerPayload.phone)
     : undefined
 
+  const existing = await crm.findConversationalOrder(externalId)
+  if (existing) {
+    return res.json({ order: serializeOrder(existing), idempotent: true })
+  }
+
   const medusaCustomer = await findOrCreateMedusaCustomer(req, customerPayload)
-  const medusaDraftOrder = await createMedusaDraftOrder(
+  const medusaOrder = await createMedusaSalesOrder(
     req,
     { ...input, externalId },
     medusaCustomer,
@@ -42,7 +47,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       at: new Date().toISOString(),
       orderId: externalId,
       quoteId: input.quote.id,
-      medusaOrderId: medusaDraftOrder.id,
+      medusaOrderId: medusaOrder.id,
       source: input.source || "whatsapp",
       payload: {
         total: input.quote.total,
@@ -56,8 +61,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     quoteId: input.quote.id,
     phone,
     status: paymentStatus,
-    medusaOrderId: medusaDraftOrder.id,
-    medusaDraftOrderId: medusaDraftOrder.id,
+    medusaOrderId: medusaOrder.id,
     totalAmount: input.quote.total.amount,
     currencyCode: input.quote.currency?.toLowerCase() || "usd",
     quote: input.quote,
@@ -73,7 +77,7 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
         payload: {
           source: input.source || "whatsapp",
           notes: input.notes,
-          medusaDraftOrderId: medusaDraftOrder.id,
+          medusaOrderId: medusaOrder.id,
         },
       },
       ...(paymentStatus === "paid"
@@ -88,5 +92,5 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
     ],
   })
 
-  res.json({ order: serializeOrder(order) })
+  res.json({ order: serializeOrder(order), idempotent: false })
 }

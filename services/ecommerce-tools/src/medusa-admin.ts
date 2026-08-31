@@ -39,7 +39,7 @@ export async function createMedusaOrder(
     customer?: CustomerInput
     source?: string
     notes?: string
-    paymentStatus?: "paid"
+    paymentStatus?: "pending_payment" | "paid" | "payment_failed"
   },
 ) {
   const result = await medusaAdminFetch<{ order: OrderRecord }>(
@@ -51,6 +51,25 @@ export async function createMedusaOrder(
     },
   )
 
+  return result.order
+}
+
+export async function updateMedusaPaymentStatus(
+  config: AppConfig,
+  orderId: string,
+  input: {
+    status: "pending_payment" | "paid" | "payment_failed"
+    payment: Record<string, unknown>
+  },
+) {
+  const result = await medusaAdminFetch<{ order: OrderRecord }>(
+    config,
+    `/admin/b2b/orders/${encodeURIComponent(orderId)}/payment-status`,
+    {
+      method: "POST",
+      body: JSON.stringify(input),
+    },
+  )
   return result.order
 }
 

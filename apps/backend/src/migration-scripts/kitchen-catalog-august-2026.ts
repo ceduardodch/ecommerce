@@ -25,13 +25,14 @@ function cookware(input: {
   handle: string
   category: string
   collection: "Francesa" | "Europea"
-  color: "Gris negro" | "Azul" | "Rojo"
+  color: "Gris negro" | "Azul" | "Rojo" | "Negro" | "Gris"
   diameter: number
   stock: number
   pvp: number
   negotiable: number
   distributor: number
   image?: string
+  comboGroup?: string
 }): KitchenCatalogProduct {
   const hasImage = Boolean(input.image)
   return {
@@ -55,6 +56,7 @@ function cookware(input: {
       originalPrice: input.pvp,
       negotiatedPrice: input.negotiable,
       comboMinimumItems: 3,
+      comboGroup: input.comboGroup || input.collection.toLowerCase(),
       distributorPrice: input.distributor,
       distributorMinimumOrderUsd: 260,
       stock: input.stock,
@@ -273,4 +275,54 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     distributor: 56.56,
     image: "catalogo-coleccion-europea-azul.jpg",
   }),
+  // Sahara no aparece en el Excel de importación. Se mantiene una unidad por
+  // variante hasta que el inventario definitivo llegue y se vuelve a ejecutar
+  // este seed idempotente.
+  ...(["Negro", "Gris"] as const).flatMap((color) =>
+    [20, 24, 28].map((diameter) => {
+      const pvp = diameter === 20 ? 55 : diameter === 24 ? 60 : 65
+      const promo = diameter === 20 ? 39.99 : diameter === 24 ? 49.99 : 59.99
+      const suffix = color === "Negro" ? "NEGRO" : "GRIS"
+      return cookware({
+        sku: `MGC-SAHARA-${suffix}-SARTEN-${diameter}`,
+        title: `Sartén Sahara ${color.toLowerCase()} ${diameter} cm`,
+        handle: `sarten-sahara-${color.toLowerCase()}-${diameter}cm`,
+        category: "Sartenes granito",
+        collection: "Francesa",
+        color,
+        diameter,
+        stock: 1,
+        pvp,
+        negotiable: promo,
+        distributor: 0,
+        comboGroup: `sahara-${color.toLowerCase()}`,
+        image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+      })
+    }),
+  ),
+  {
+    title: "Paleta para wok · prueba DataFast",
+    handle: "paleta-wok-datafast-prueba",
+    sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+    category: "Utensilios de cocina",
+    description:
+      "Paleta para wok habilitada temporalmente para validar el flujo de pago DataFast.",
+    price: 1,
+    originalPrice: 1,
+    stock: 1,
+    image: imageUrl("catalogo-sarten-con-tapa-gris-negro.jpg"),
+    metadata: {
+      brand: "MGC",
+      vertical: "cocina",
+      material: "Utensilio para wok",
+      price: 1,
+      originalPrice: 1,
+      stock: 1,
+      catalogActive: true,
+      temporaryPaymentTest: true,
+      deliveryBadge: "Entrega por coordinar",
+      stockSignal: "1 unidad de prueba",
+      bundleEligible: false,
+    },
+  },
 ]

@@ -2685,13 +2685,6 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
       : cocinaFallbackProducts;
   const products = await fetchProducts(vertical);
 
-  // Cocina se publica como catálogo comercial MGC: las referencias, variantes
-  // y precios aprobados de agosto son la fuente visible, incluso si Medusa aún
-  // devuelve artículos de una carga anterior.
-  if (vertical === "cocina") {
-    return fallback.map((product) => normalizeProduct(product, vertical));
-  }
-
   if (products) {
     const verticalProducts = products
       .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
@@ -2765,10 +2758,16 @@ export async function getAllProducts() {
 export async function getProductBySlug(slug: string) {
   const products = await getAllProducts();
   const normalizedSlug = decodeURIComponent(slug);
-  return (
-    products.find((product) => productSlug(product) === normalizedSlug) ||
-    cocinaFallbackProducts
-      .map((product) => normalizeProduct(product, "cocina"))
-      .find((product) => productSlug(product) === normalizedSlug)
-  );
+  const product = products.find((item) => productSlug(item) === normalizedSlug);
+  if (product) return product;
+
+  const allowDemoCatalog =
+    process.env.ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NEXT_PUBLIC_ALLOW_DEMO_CATALOG === "true" ||
+    process.env.NODE_ENV !== "production";
+  return allowDemoCatalog
+    ? cocinaFallbackProducts
+        .map((item) => normalizeProduct(item, "cocina"))
+        .find((item) => productSlug(item) === normalizedSlug)
+    : undefined;
 }
