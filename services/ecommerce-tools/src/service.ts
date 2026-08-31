@@ -49,6 +49,7 @@ import type { SaleFeedbackInput, ToolsEventInput } from "./contracts.js"
 import type {
   CustomerEventRecord,
   CustomerInput,
+  DatafastCheckoutRecord,
   OrderRecord,
   PurchasedProduct,
   Product,
@@ -550,6 +551,26 @@ export function createCommerceService(config: AppConfig) {
     })
   }
 
+  async function resolveDatafastMedusaOrder(
+    record: DatafastCheckoutRecord,
+  ): Promise<DatafastCheckoutRecord> {
+    if (config.crmBackend !== "medusa" || record.orderId) return record
+
+    // Los checkouts creados antes de la orden pendiente pueden no guardar el
+    // enlace. La referencia DataFast es también el external_id único del CRM.
+    const linkedOrder = await getMedusaOrder(config, record.reference)
+    if (!linkedOrder?.id) return record
+
+    const linkedRecord = {
+      ...record,
+      orderId: linkedOrder.id,
+      medusaOrderId: linkedOrder.medusaOrderId || record.medusaOrderId,
+      updatedAt: new Date().toISOString(),
+    }
+    await upsertDatafastCheckout(config.dataDir, linkedRecord)
+    return linkedRecord
+  }
+
   return {
     /** Recupera pagos verificados tras reinicios o callbacks expirados. */
     async reconcileDatafastLedger() {
@@ -561,16 +582,17 @@ export function createCommerceService(config: AppConfig) {
       let synchronized = 0
       let failed = 0
       for (const record of records) {
-        if (record.status !== "paid" || !record.orderId) continue
         try {
-          await updateMedusaPaymentStatus(config, record.orderId, {
+          const linkedRecord = await resolveDatafastMedusaOrder(record)
+          if (linkedRecord.status !== "paid" || !linkedRecord.orderId) continue
+          await updateMedusaPaymentStatus(config, linkedRecord.orderId, {
             status: "paid",
             payment: {
-              reference: record.reference,
-              checkoutId: record.checkoutId,
-              code: record.resultCode,
-              paymentId: record.paymentId,
-              authorizationCode: record.authorizationCode,
+              reference: linkedRecord.reference,
+              checkoutId: linkedRecord.checkoutId,
+              code: linkedRecord.resultCode,
+              paymentId: linkedRecord.paymentId,
+              authorizationCode: linkedRecord.authorizationCode,
             },
           })
           synchronized += 1
@@ -985,7 +1007,10 @@ export function createCommerceService(config: AppConfig) {
     // ─── Datafast: consultar resultado + registrar venta en CRM (idempotente) ───
     async datafastResult(checkoutId: string, resourcePath?: string) {
       const result = await getDatafastResult(config, checkoutId, resourcePath)
-      const record = await findDatafastCheckout(config.dataDir, checkoutId)
+      const storedRecord = await findDatafastCheckout(config.dataDir, checkoutId)
+      const record = storedRecord
+        ? await resolveDatafastMedusaOrder(storedRecord)
+        : undefined
 
       // DataFast puede dejar de exponer un checkout antiguo. Si el ledger ya
       // conserva una aprobación verificada, esa venta sigue siendo válida y
