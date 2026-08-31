@@ -71,33 +71,26 @@ const frenchCollectionMedia: ProductMediaItem[] = [
 
 const europeanCollectionMedia: ProductMediaItem[] = [
   {
-    id: "european-collection-studio",
+    id: "azul-oceanico-conjunto-real",
     type: "image",
-    src: "/media/mgc-catalog/europea-azul-coleccion-estudio.png",
-    alt: "Conjunto real de la colección europea azul MGC sobre fondo blanco",
-    label: "Colección en estudio",
+    src: "/media/mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
+    alt: "Conjunto Azul Oceánico MGC real, con sartenes y ollas sobre mesa de madera",
+    label: "Conjunto real",
   },
   {
-    id: "european-collection",
+    id: "azul-oceanico-superior",
     type: "image",
-    src: "/media/mgc-catalog/europea-azul-coleccion.jpg",
-    alt: "Conjunto de la colección europea azul MGC con tapas de vidrio",
-    label: "Vista de la colección",
+    src: "/media/mgc-azul-oceanico/azul-oceanico-conjunto-superior.jpeg",
+    alt: "Vista superior real del conjunto Azul Oceánico MGC",
+    label: "Vista superior real",
   },
   {
-    id: "european-top",
-    type: "image",
-    src: "/media/mgc-catalog/europea-azul-vista-superior.jpg",
-    alt: "Vista superior de las piezas de la colección europea azul MGC",
-    label: "Vista superior",
-  },
-  {
-    id: "european-video",
+    id: "azul-oceanico-video-real",
     type: "video",
-    src: "/media/mgc-catalog/europea-azul-en-movimiento.mp4",
-    poster: "/media/mgc-catalog/europea-azul-coleccion.jpg",
-    alt: "Video de la colección europea azul MGC en movimiento",
-    label: "Ver en movimiento",
+    src: "/media/mgc-azul-oceanico/azul-oceanico-conjunto-real.mp4",
+    poster: "/media/mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
+    alt: "Video real del conjunto Azul Oceánico MGC",
+    label: "Conjunto real en video",
   },
 ];
 
@@ -213,7 +206,7 @@ export function productMedia(product: Product): ProductMediaItem[] {
   }
 
   if (product.sku.startsWith("MGC-EU-")) {
-    return [cover, ...europeanCollectionMedia];
+    return europeanCollectionMedia;
   }
 
   return [cover];
