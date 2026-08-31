@@ -651,6 +651,9 @@ class B2bCrmModuleService extends MedusaService({
       (order) => order.status === "pending_payment",
     )
     const paidOrders = orders.filter((order) => order.status === "paid")
+    const failedOrders = orders.filter(
+      (order) => order.status === "payment_failed",
+    )
     const leadPhones = new Set(
       events
         .filter((event) =>
@@ -700,12 +703,14 @@ class B2bCrmModuleService extends MedusaService({
         leads: leadPhones.size,
         pendingOrders: pendingOrders.length,
         paidOrders: paidOrders.length,
+        failedOrders: failedOrders.length,
         dueFollowups: dueFollowups.length,
         customers: customers.length,
       },
       customers,
       pendingOrders,
       paidOrders: paidOrders.slice(-10),
+      failedOrders: failedOrders.slice(-10),
       dueFollowups,
       hotLeads,
       careFollowups: dueFollowups.filter((customer) =>
