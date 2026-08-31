@@ -71,8 +71,6 @@ export default async function Home({ searchParams }: HomeProps) {
     .filter((p) => p.sku !== hero.sku)
     .sort((a, b) => gridRank(a) - gridRank(b))
 
-  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre ollas de granito Eter Niu.")}`
-
   return (
     <div data-theme="cocina" className="relative isolate bg-[#10160e]">
       <PageAmbient />
@@ -100,14 +98,13 @@ export default async function Home({ searchParams }: HomeProps) {
       {/* 5. Footer (ya oscuro) */}
       <SiteFooter />
 
-      {/* 6. Sticky WhatsApp del wok, aparece tras 300px (el hero ya tiene CTA) */}
+      {/* 6. Carrito disponible para armar el combo antes de contactar al vendedor. */}
       <StickyCTABar
         surface="dark"
         product={hero}
         placement="home_sticky_cta"
         price={`$${hero.price.amount.toFixed(2)}`}
-        waHref={waHref}
-        waLabel="Pedir por WhatsApp"
+        waLabel="Agregar al carrito"
         alwaysVisible={false}
       />
     </div>

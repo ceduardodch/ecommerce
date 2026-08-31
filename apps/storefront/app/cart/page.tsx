@@ -145,7 +145,7 @@ export default function CartPage() {
                   customerName={formData.name}
                   customerCity={formData.city}
                   className="w-full rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white hover:opacity-85 transition-opacity cursor-pointer"
-                  label="Enviar pedido por WhatsApp"
+                  label="Cotizar mi carrito por WhatsApp"
                 />
 
                 <div className="flex items-center gap-3 py-1">
@@ -166,8 +166,8 @@ export default function CartPage() {
                 </a>
 
                 <p className="text-[12px] text-[#6B6B66] text-center">
-                  WhatsApp: confirmas stock y pago con Vicky. Tarjeta: pago seguro
-                  online por Datafast (IVA incluido).
+                  WhatsApp: el vendedor recibe tu lista completa y puede armar tu
+                  combo. Tarjeta: pago seguro online por Datafast (IVA incluido).
                 </p>
               </div>
             </div>

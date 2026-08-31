@@ -11,6 +11,13 @@ export type ProductMediaItem = {
 
 const frenchCollectionMedia: ProductMediaItem[] = [
   {
+    id: "french-sartenes-studio",
+    type: "image",
+    src: "/media/mgc-catalog/french-gris-negro-sartenes-estudio.png",
+    alt: "Tres sartenes de la colección francesa gris negro MGC sobre fondo blanco",
+    label: "Sartenes de la colección",
+  },
+  {
     id: "french-portada",
     type: "image",
     src: "/media/mgc-catalog/french-gris-negro-portada-iluminada.png",
@@ -64,6 +71,13 @@ const frenchCollectionMedia: ProductMediaItem[] = [
 
 const europeanCollectionMedia: ProductMediaItem[] = [
   {
+    id: "european-collection-studio",
+    type: "image",
+    src: "/media/mgc-catalog/europea-azul-coleccion-estudio.png",
+    alt: "Conjunto real de la colección europea azul MGC sobre fondo blanco",
+    label: "Colección en estudio",
+  },
+  {
     id: "european-collection",
     type: "image",
     src: "/media/mgc-catalog/europea-azul-coleccion.jpg",
@@ -87,29 +101,42 @@ const europeanCollectionMedia: ProductMediaItem[] = [
   },
 ]
 
+function productCover(product: Product): ProductMediaItem {
+  if (product.sku === "MGC-FR-WOK-32-GN") {
+    return {
+      id: "wok-32-principal",
+      type: "image",
+      src: "/media/mgc-catalog/french-gris-negro-portada-iluminada.png",
+      alt: "Wok francés MGC de 32 cm gris negro con tapa de vidrio sobre fondo blanco",
+      label: "Wok 32 cm · vista principal",
+    }
+  }
+
+  return {
+    id: "product-cover",
+    type: "image",
+    src: product.imageUrl,
+    alt: `${product.title}. Foto de su colección MGC.`,
+    label: "Foto de la colección",
+  }
+}
+
 /**
- * Las fotografías de esta entrega documentan colecciones, no cada diámetro.
- * Por eso solo se asocian a la colección correspondiente y nunca se usan para
- * crear una variante o un color que no exista en el catálogo.
+ * Solo el wok 32 está documentado con foto de la pieza aislada. Las demás
+ * fotos se muestran como colección para no atribuir un diámetro no verificado.
  */
 export function productMedia(product: Product): ProductMediaItem[] {
+  const cover = productCover(product)
+
   if (product.sku.startsWith("MGC-FR-") && !product.sku.endsWith("-RO")) {
-    return frenchCollectionMedia
+    return [cover, ...frenchCollectionMedia]
   }
 
   if (product.sku.startsWith("MGC-EU-")) {
-    return europeanCollectionMedia
+    return [cover, ...europeanCollectionMedia]
   }
 
-  return [
-    {
-      id: "product-cover",
-      type: "image",
-      src: product.imageUrl,
-      alt: product.title,
-      label: "Vista principal",
-    },
-  ]
+  return [cover]
 }
 
 const comparableSkuGroups = [

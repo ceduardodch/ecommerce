@@ -1,12 +1,10 @@
 import type { Product } from "../../../lib/catalog"
 import { productPath } from "../../../lib/catalog"
-import { TrackedWhatsAppLink } from "../analytics"
 import { FloatingProduct } from "./floating-product"
 import { AddToCartButton } from "./add-to-cart-button"
 
 // Hero del landing oscuro de cocina: producto protagonista GIGANTE flotando
-// con destellos (FloatingProduct hero-dark) + copy editorial + CTA WhatsApp.
-// Server component; TrackedWhatsAppLink es client island.
+// con destellos (FloatingProduct hero-dark) + copy editorial + CTA de carrito.
 
 function WhatsAppIcon() {
   return (
@@ -23,6 +21,11 @@ function WhatsAppIcon() {
 }
 
 export function HeroShowcase({ product }: { product: Product }) {
+  const heroImage =
+    product.sku === "MGC-FR-WOK-32-GN"
+      ? "/media/mgc-catalog/french-gris-negro-portada-iluminada.png"
+      : product.imageUrl
+
   return (
     <section className="relative overflow-hidden bg-[#10160e]">
       {/* Vignette de profundidad detrás del hero */}
@@ -63,7 +66,7 @@ export function HeroShowcase({ product }: { product: Product }) {
             <FloatingProduct
               variant="hero-dark"
               priority
-              imageUrl={product.imageUrl}
+              imageUrl={heroImage}
               alt={product.title}
               className="mx-auto max-w-[min(92vw,480px)]"
             />
@@ -89,14 +92,6 @@ export function HeroShowcase({ product }: { product: Product }) {
             className="hs-enter mt-5 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start"
             style={{ animationDelay: "0.48s" }}
           >
-            <TrackedWhatsAppLink
-              product={product}
-              placement="home_hero"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-3.5 text-[14px] font-semibold text-white sm:w-auto"
-            >
-              <WhatsAppIcon />
-              Pedir por WhatsApp
-            </TrackedWhatsAppLink>
             <AddToCartButton
               product={product}
               label="Agregar al carrito"
@@ -115,7 +110,7 @@ export function HeroShowcase({ product }: { product: Product }) {
               Ver detalles del producto
             </a>
             <p className="text-[12px] text-[#b8c2ae]">
-              Envío gratis a todo Ecuador · Pagas al recibir
+              Arma tu combo en el carrito y decide después si quieres asesoría por WhatsApp.
             </p>
           </div>
         </div>
@@ -125,7 +120,7 @@ export function HeroShowcase({ product }: { product: Product }) {
           <FloatingProduct
             variant="hero-dark"
             priority
-            imageUrl={product.imageUrl}
+            imageUrl={heroImage}
             alt={product.title}
             className="mx-auto max-w-[620px]"
           />

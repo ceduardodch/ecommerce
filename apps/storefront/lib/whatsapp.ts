@@ -160,13 +160,13 @@ export function generateCartMessage(
     customerName ? `Hola, soy ${customerName}` : "Hola",
     customerCity ? `de ${customerCity}.` : "",
     "",
-    "Quiero pedir:",
+    "Quiero cotizar este pedido y armar mi combo:",
     "",
     itemsList,
     "",
     `Total: $${total.toFixed(2)}${comboApplied ? " · precio verde aplicado" : ""}`,
     "",
-    "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
+    "Ayúdame a confirmar stock, precio de combo, envío y formas de pago.",
   ]
     .filter(Boolean)
     .join("\n")
