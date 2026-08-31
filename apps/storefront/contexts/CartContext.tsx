@@ -1,12 +1,15 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
+import { calculateCartPricing } from "../lib/cart-pricing"
 
 export type CartItem = {
   id: string
   sku: string
   title: string
   price: number
+  comboPrice?: number
+  comboMinimumItems?: number
   quantity: number
   image?: string
   category?: string
@@ -20,8 +23,16 @@ type CartContextType = {
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
   totalItems: number
+  comboEligibleItems: number
+  subtotalAmount: number
+  comboDiscount: number
+  comboApplied: boolean
   totalAmount: number
-  generateWhatsAppMessage: (customerName?: string, customerCity?: string) => string
+  unitPriceForItem: (item: CartItem) => number
+  generateWhatsAppMessage: (
+    customerName?: string,
+    customerCity?: string,
+  ) => string
   // UI state (INTEG-1)
   isOpen: boolean
   openCart: () => void
@@ -73,7 +84,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     quantity: number = 1,
   ) => {
     setItems((prevItems) => {
-      const existingIndex = prevItems.findIndex((item) => item.id === product.id)
+      const existingIndex = prevItems.findIndex(
+        (item) => item.id === product.id,
+      )
 
       if (existingIndex > -1) {
         // Product already exists, update quantity
@@ -112,11 +125,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-
-  const totalAmount = items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  )
+  const pricing = calculateCartPricing(items)
+  const {
+    comboEligibleItems,
+    comboApplied,
+    unitPriceForItem,
+    subtotalAmount,
+    totalAmount,
+    comboDiscount,
+  } = pricing
 
   const generateWhatsAppMessage = (
     customerName: string = "",
@@ -125,7 +142,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const itemsList = items
       .map(
         (item) =>
-          `${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}`,
+          `${item.quantity}x ${item.title} - $${(unitPriceForItem(item) * item.quantity).toFixed(2)}${comboApplied && item.comboPrice ? " (precio combo)" : ""}`,
       )
       .join("\n")
 
@@ -137,7 +154,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       "",
       itemsList,
       "",
-      `Total: $${totalAmount.toFixed(2)}`,
+      `Total: $${totalAmount.toFixed(2)}${comboApplied ? " · precio verde aplicado" : ""}`,
       "",
       "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
     ]
@@ -157,7 +174,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity,
         clearCart,
         totalItems,
+        comboEligibleItems,
+        subtotalAmount,
+        comboDiscount,
+        comboApplied,
         totalAmount,
+        unitPriceForItem,
         generateWhatsAppMessage,
         isOpen,
         openCart,

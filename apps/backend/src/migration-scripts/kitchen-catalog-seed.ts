@@ -1,88 +1,93 @@
-import { MedusaContainer } from "@medusajs/framework";
+import { MedusaContainer } from "@medusajs/framework"
 import {
   ContainerRegistrationKeys,
   ProductStatus,
-} from "@medusajs/framework/utils";
+} from "@medusajs/framework/utils"
 import {
   createProductCategoriesWorkflow,
   createProductsWorkflow,
   updateProductsWorkflow,
-} from "@medusajs/medusa/core-flows";
+} from "@medusajs/medusa/core-flows"
+import { august2026KitchenProducts } from "./kitchen-catalog-august-2026"
 
 type KitchenProduct = {
-  title: string;
-  handle: string;
-  sku: string;
-  category: string;
-  description: string;
-  price: number;
-  originalPrice: number;
-  stock: number;
-  image: string;
-  metadata: Record<string, unknown>;
-};
+  title: string
+  handle: string
+  sku: string
+  category: string
+  description: string
+  price: number
+  originalPrice: number
+  stock: number
+  image: string
+  metadata: Record<string, unknown>
+}
 
 const commercialMetadata = {
   vertical: "cocina",
   freeShipping: true,
   paymentMethods: ["transferencia", "deuna", "payphone"],
   couponCode: "GRANITOHOY",
-};
+}
 
 const kitchenPublicUrl = (
   process.env.COCINA_PUBLIC_URL ||
   process.env.STORE_PUBLIC_URL ||
   "https://shop.b2b.com.ec"
-).replace(/\/$/, "");
+).replace(/\/$/, "")
 
-const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`;
+const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`
 
-const products: KitchenProduct[] = [
+const legacyKitchenProducts: KitchenProduct[] = [
   {
     title: "Wok 32 cm granito premium antiadherente",
     handle: "wok-granito-32cm-tapa",
     sku: "MGC-WOK-GRANITO-32",
     category: "Woks granito",
-    description: "Wok de granito antiadherente para cocina diaria, salteados y porciones familiares.",
+    description:
+      "Wok de granito antiadherente para cocina diaria, salteados y porciones familiares.",
     price: 151.2,
     originalPrice: 151.2,
     stock: 1,
     image: kitchenMediaUrl("photo-receta-wok.jpg"),
     metadata: {
-        "brand": "Eter Niu Cocina",
-        "material": "Granito antiadherente",
-        "capacity": "Porciones familiares",
-        "pieces": 1,
-        "nivel": "Uso diario",
-        "bundleUseCase": "Salteados, arroz, recetas familiares y cocina con menos aceite",
-        "careTips": "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
-        "healthAngle": "Opcion sin teflon para cocinar diario con una superficie antiadherente de granito.",
-        "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
-        "sourceUrls": [
-            "https://wa.me/c/593979854905"
-        ],
-        "contentAngles": [
-            "granito premium",
-            "wok 32 cm",
-            "menos aceite",
-            "cocina familiar"
-        ],
-        "certificationStatus": "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
-        "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
-        "reorderAfterDays": 180,
-        "promoLabel": "Catalogo real WhatsApp",
-        "deliveryBadge": "Envio gratis Ecuador",
-        "stockSignal": "Stock por confirmar por WhatsApp",
-        "bundleEligible": true,
-        "price": 151.2,
-        "originalPrice": 151.2,
-        "stock": 1,
-        "coating": "Granito",
-        "teflonFree": true,
-        "pfoaFree": true,
-        "diameterCm": 32,
-        "stoveCompatibility": "Gas, induccion y vitroceramica",
-        "tipoCocina": "Familia y recetas"
+      brand: "Eter Niu Cocina",
+      material: "Granito antiadherente",
+      capacity: "Porciones familiares",
+      pieces: 1,
+      nivel: "Uso diario",
+      bundleUseCase:
+        "Salteados, arroz, recetas familiares y cocina con menos aceite",
+      careTips:
+        "Usar utensilios de silicona o madera, fuego medio y esponja suave.",
+      healthAngle:
+        "Opcion sin teflon para cocinar diario con una superficie antiadherente de granito.",
+      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854905"],
+      contentAngles: [
+        "granito premium",
+        "wok 32 cm",
+        "menos aceite",
+        "cocina familiar",
+      ],
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
+      claimNote:
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
+      reorderAfterDays: 180,
+      promoLabel: "Catalogo real WhatsApp",
+      deliveryBadge: "Envio gratis Ecuador",
+      stockSignal: "Stock por confirmar por WhatsApp",
+      bundleEligible: true,
+      price: 151.2,
+      originalPrice: 151.2,
+      stock: 1,
+      coating: "Granito",
+      teflonFree: true,
+      pfoaFree: true,
+      diameterCm: 32,
+      stoveCompatibility: "Gas, induccion y vitroceramica",
+      tipoCocina: "Familia y recetas",
     },
   },
   {
@@ -90,45 +95,44 @@ const products: KitchenProduct[] = [
     handle: "olla-granito-20cm",
     sku: "MGC-OLLA-GRANITO-20",
     category: "Ollas granito",
-    description: "Olla de granito antiadherente para porciones pequenas y uso diario en casa.",
+    description:
+      "Olla de granito antiadherente para porciones pequenas y uso diario en casa.",
     price: 75.6,
     originalPrice: 75.6,
     stock: 1,
     image: kitchenMediaUrl("photo-product-olla-20.jpg"),
     metadata: {
-        "brand": "Eter Niu Cocina",
-        "material": "Granito antiadherente",
-        "capacity": "1 a 3 personas",
-        "pieces": 1,
-        "nivel": "Inicio saludable",
-        "bundleUseCase": "Salsas, avena, guarniciones y porciones pequenas",
-        "careTips": "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
-        "healthAngle": "Alternativa a antiadherentes tradicionales para uso diario.",
-        "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
-        "sourceUrls": [
-            "https://wa.me/c/593979854905"
-        ],
-        "contentAngles": [
-            "olla 20 cm",
-            "porciones pequenas",
-            "uso diario"
-        ],
-        "certificationStatus": "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
-        "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
-        "reorderAfterDays": 180,
-        "promoLabel": "Uso diario",
-        "deliveryBadge": "Envio gratis 24-48h segun ciudad",
-        "stockSignal": "Stock por confirmar por WhatsApp",
-        "bundleEligible": true,
-        "price": 75.6,
-        "originalPrice": 75.6,
-        "stock": 1,
-        "coating": "Granito",
-        "teflonFree": true,
-        "pfoaFree": true,
-        "diameterCm": 20,
-        "stoveCompatibility": "Gas, induccion y vitroceramica",
-        "tipoCocina": "Diario ligero"
+      brand: "Eter Niu Cocina",
+      material: "Granito antiadherente",
+      capacity: "1 a 3 personas",
+      pieces: 1,
+      nivel: "Inicio saludable",
+      bundleUseCase: "Salsas, avena, guarniciones y porciones pequenas",
+      careTips:
+        "Evitar metal, precalentar suave y lavar cuando la olla este tibia.",
+      healthAngle:
+        "Alternativa a antiadherentes tradicionales para uso diario.",
+      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854905"],
+      contentAngles: ["olla 20 cm", "porciones pequenas", "uso diario"],
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
+      claimNote:
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
+      reorderAfterDays: 180,
+      promoLabel: "Uso diario",
+      deliveryBadge: "Envio gratis 24-48h segun ciudad",
+      stockSignal: "Stock por confirmar por WhatsApp",
+      bundleEligible: true,
+      price: 75.6,
+      originalPrice: 75.6,
+      stock: 1,
+      coating: "Granito",
+      teflonFree: true,
+      pfoaFree: true,
+      diameterCm: 20,
+      stoveCompatibility: "Gas, induccion y vitroceramica",
+      tipoCocina: "Diario ligero",
     },
   },
   {
@@ -136,45 +140,48 @@ const products: KitchenProduct[] = [
     handle: "olla-granito-18cm",
     sku: "MGC-OLLA-GRANITO-18",
     category: "Ollas granito",
-    description: "Olla compacta de granito antiadherente para salsas, guarniciones y porciones pequenas.",
+    description:
+      "Olla compacta de granito antiadherente para salsas, guarniciones y porciones pequenas.",
     price: 63.6,
     originalPrice: 63.6,
     stock: 1,
     image: kitchenMediaUrl("photo-product-olla-20.jpg"),
     metadata: {
-        "brand": "Eter Niu Cocina",
-        "material": "Granito antiadherente",
-        "capacity": "1 a 2 personas",
-        "pieces": 1,
-        "nivel": "Uso diario",
-        "bundleUseCase": "Porciones pequenas, salsas, guarniciones y cocina diaria",
-        "careTips": "Cocinar a fuego medio para conservar el recubrimiento por mas tiempo.",
-        "healthAngle": "Olla compacta sin teflon para empezar con granito en la cocina diaria.",
-        "warrantyText": "Garantia de fabrica a confirmar por WhatsApp.",
-        "sourceUrls": [
-            "https://wa.me/c/593979854905"
-        ],
-        "contentAngles": [
-            "olla 18 cm",
-            "tamano compacto",
-            "uso diario en hornilla"
-        ],
-        "certificationStatus": "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
-        "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
-        "reorderAfterDays": 180,
-        "promoLabel": "Catalogo real WhatsApp",
-        "deliveryBadge": "Envio gratis con stock confirmado",
-        "stockSignal": "Stock por confirmar por WhatsApp",
-        "bundleEligible": true,
-        "price": 63.6,
-        "originalPrice": 63.6,
-        "stock": 1,
-        "coating": "Granito",
-        "teflonFree": true,
-        "pfoaFree": true,
-        "diameterCm": 18,
-        "stoveCompatibility": "Gas, induccion y vitroceramica",
-        "tipoCocina": "Diario ligero"
+      brand: "Eter Niu Cocina",
+      material: "Granito antiadherente",
+      capacity: "1 a 2 personas",
+      pieces: 1,
+      nivel: "Uso diario",
+      bundleUseCase: "Porciones pequenas, salsas, guarniciones y cocina diaria",
+      careTips:
+        "Cocinar a fuego medio para conservar el recubrimiento por mas tiempo.",
+      healthAngle:
+        "Olla compacta sin teflon para empezar con granito en la cocina diaria.",
+      warrantyText: "Garantia de fabrica a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854905"],
+      contentAngles: [
+        "olla 18 cm",
+        "tamano compacto",
+        "uso diario en hornilla",
+      ],
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
+      claimNote:
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
+      reorderAfterDays: 180,
+      promoLabel: "Catalogo real WhatsApp",
+      deliveryBadge: "Envio gratis con stock confirmado",
+      stockSignal: "Stock por confirmar por WhatsApp",
+      bundleEligible: true,
+      price: 63.6,
+      originalPrice: 63.6,
+      stock: 1,
+      coating: "Granito",
+      teflonFree: true,
+      pfoaFree: true,
+      diameterCm: 18,
+      stoveCompatibility: "Gas, induccion y vitroceramica",
+      tipoCocina: "Diario ligero",
     },
   },
   {
@@ -182,45 +189,44 @@ const products: KitchenProduct[] = [
     handle: "sarten-plano-granito-22cm",
     sku: "COC-SARTEN-PLANO-GRANITO-22",
     category: "Sartenes granito",
-    description: "Sarten plano de granito antiadherente para desayunos, vegetales y preparaciones rapidas.",
+    description:
+      "Sarten plano de granito antiadherente para desayunos, vegetales y preparaciones rapidas.",
     price: 62.4,
     originalPrice: 62.4,
     stock: 1,
     image: kitchenMediaUrl("photo-detalle-wok.jpg"),
     metadata: {
-        "brand": "Eter Niu Cocina",
-        "material": "Granito antiadherente",
-        "capacity": "1 a 3 personas",
-        "pieces": 1,
-        "nivel": "Uso diario",
-        "bundleUseCase": "Huevos, vegetales, pollo, tortillas y desayunos",
-        "careTips": "Usar fuego medio, utensilios suaves y evitar choque termico al lavar.",
-        "healthAngle": "Alternativa a antiadherentes tradicionales para recetas de todos los dias.",
-        "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
-        "sourceUrls": [
-            "https://wa.me/c/593979854905"
-        ],
-        "contentAngles": [
-            "sarten 22 cm",
-            "desayunos",
-            "uso rapido"
-        ],
-        "certificationStatus": "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
-        "claimNote": "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
-        "reorderAfterDays": 180,
-        "promoLabel": "Catalogo real WhatsApp",
-        "deliveryBadge": "Envio gratis Ecuador",
-        "stockSignal": "Stock por confirmar por WhatsApp",
-        "bundleEligible": true,
-        "price": 62.4,
-        "originalPrice": 62.4,
-        "stock": 1,
-        "coating": "Granito",
-        "teflonFree": true,
-        "pfoaFree": true,
-        "diameterCm": 22,
-        "stoveCompatibility": "Gas, induccion y vitroceramica",
-        "tipoCocina": "Rapido diario"
+      brand: "Eter Niu Cocina",
+      material: "Granito antiadherente",
+      capacity: "1 a 3 personas",
+      pieces: 1,
+      nivel: "Uso diario",
+      bundleUseCase: "Huevos, vegetales, pollo, tortillas y desayunos",
+      careTips:
+        "Usar fuego medio, utensilios suaves y evitar choque termico al lavar.",
+      healthAngle:
+        "Alternativa a antiadherentes tradicionales para recetas de todos los dias.",
+      warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854905"],
+      contentAngles: ["sarten 22 cm", "desayunos", "uso rapido"],
+      certificationStatus:
+        "Catalogo WhatsApp: certificaciones USA y Europeas; guardar respaldo del proveedor antes de pauta fuerte.",
+      claimNote:
+        "No publicar claims medicos; libre de teflon/PFOA queda sujeto a respaldo del proveedor.",
+      reorderAfterDays: 180,
+      promoLabel: "Catalogo real WhatsApp",
+      deliveryBadge: "Envio gratis Ecuador",
+      stockSignal: "Stock por confirmar por WhatsApp",
+      bundleEligible: true,
+      price: 62.4,
+      originalPrice: 62.4,
+      stock: 1,
+      coating: "Granito",
+      teflonFree: true,
+      pfoaFree: true,
+      diameterCm: 22,
+      stoveCompatibility: "Gas, induccion y vitroceramica",
+      tipoCocina: "Rapido diario",
     },
   },
   {
@@ -228,67 +234,78 @@ const products: KitchenProduct[] = [
     handle: "cuchillo-samurai-japones-todo-uso",
     sku: "COC-CUCHILLO-SAMURAI-TODO-USO",
     category: "Cuchillos",
-    description: "Cuchillo Samurai todo uso para cortes precisos en preparaciones diarias.",
+    description:
+      "Cuchillo Samurai todo uso para cortes precisos en preparaciones diarias.",
     price: 29.99,
     originalPrice: 50,
     stock: 1,
     image: kitchenMediaUrl("photo-product-cuchillo-samurai.jpg"),
     metadata: {
-        "brand": "Eter Niu Cocina",
-        "material": "Acero inoxidable",
-        "capacity": "Todo uso",
-        "pieces": 1,
-        "nivel": "Uso diario",
-        "bundleUseCase": "Verduras, carnes, frutas y preparacion general",
-        "careTips": "Lavar y secar despues de usar; guardar protegido.",
-        "healthAngle": "Complemento practico para preparar ingredientes antes de cocinar.",
-        "warrantyText": "Garantia y disponibilidad a confirmar por WhatsApp.",
-        "sourceUrls": [
-            "https://wa.me/c/593979854905"
-        ],
-        "contentAngles": [
-            "cuchillo todo uso",
-            "preparacion diaria"
-        ],
-        "certificationStatus": "No aplica",
-        "claimNote": "No publicar promesas de durabilidad extrema sin ficha tecnica.",
-        "reorderAfterDays": 240,
-        "promoLabel": "Oferta especial",
-        "deliveryBadge": "Envio gratis por Servientrega",
-        "stockSignal": "Stock por confirmar por WhatsApp",
-        "bundleEligible": true,
-        "price": 29.99,
-        "originalPrice": 50,
-        "stock": 1,
-        "stoveCompatibility": "No aplica; complemento de cocina",
-        "tipoCocina": "Corte diario"
+      brand: "Eter Niu Cocina",
+      material: "Acero inoxidable",
+      capacity: "Todo uso",
+      pieces: 1,
+      nivel: "Uso diario",
+      bundleUseCase: "Verduras, carnes, frutas y preparacion general",
+      careTips: "Lavar y secar despues de usar; guardar protegido.",
+      healthAngle:
+        "Complemento practico para preparar ingredientes antes de cocinar.",
+      warrantyText: "Garantia y disponibilidad a confirmar por WhatsApp.",
+      sourceUrls: ["https://wa.me/c/593979854905"],
+      contentAngles: ["cuchillo todo uso", "preparacion diaria"],
+      certificationStatus: "No aplica",
+      claimNote:
+        "No publicar promesas de durabilidad extrema sin ficha tecnica.",
+      reorderAfterDays: 240,
+      promoLabel: "Oferta especial",
+      deliveryBadge: "Envio gratis por Servientrega",
+      stockSignal: "Stock por confirmar por WhatsApp",
+      bundleEligible: true,
+      price: 29.99,
+      originalPrice: 50,
+      stock: 1,
+      stoveCompatibility: "No aplica; complemento de cocina",
+      tipoCocina: "Corte diario",
     },
   },
 ]
 
+// El catálogo público de agosto reemplaza los productos de muestra anteriores.
+// Todas las referencias de agosto se publican; la variante roja indica que su
+// imagen es referencial hasta recibir la foto física exacta.
+const products: KitchenProduct[] = [...august2026KitchenProducts]
+
+const publishableProducts = products.filter(
+  (product) => product.metadata.catalogActive !== false,
+)
+
 const legacyKitchenHandles = [
+  ...legacyKitchenProducts.map((product) => product.handle),
+  ...august2026KitchenProducts
+    .filter((product) => product.metadata.catalogActive === false)
+    .map((product) => product.handle),
   "olla-granito-24cm-familiar",
   "set-mgc-ollas-sartenes-granito",
   "sarten-wok-granito-recetas-rapidas",
   "utensilios-compatibles-granito",
-];
+]
 
 async function ensureCategories(container: MedusaContainer) {
-  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
   const categoryNames = [
-    ...new Set(products.map((product) => product.category)),
-  ];
+    ...new Set(publishableProducts.map((product) => product.category)),
+  ]
   const { data: existingCategories } = await query.graph({
     entity: "product_category",
     fields: ["id", "name"],
     pagination: { take: 100 },
-  });
+  })
 
   const missing = categoryNames.filter(
     (name) => !existingCategories.some((category) => category.name === name),
-  );
+  )
 
-  let createdCategories: Array<{ id: string; name: string }> = [];
+  let createdCategories: Array<{ id: string; name: string }> = []
   if (missing.length) {
     const { result } = await createProductCategoriesWorkflow(container).run({
       input: {
@@ -297,19 +314,19 @@ async function ensureCategories(container: MedusaContainer) {
           is_active: true,
         })),
       },
-    });
-    createdCategories = result;
+    })
+    createdCategories = result
   }
 
-  return [...existingCategories, ...createdCategories];
+  return [...existingCategories, ...createdCategories]
 }
 
 function updateVariantInput(
   seed: KitchenProduct,
   existing: Record<string, any>,
 ) {
-  const variant = existing.variants?.[0];
-  if (!variant?.id) return undefined;
+  const variant = existing.variants?.[0]
+  if (!variant?.id) return undefined
 
   return [
     {
@@ -324,16 +341,16 @@ function updateVariantInput(
         originalPrice: seed.originalPrice,
       },
     },
-  ];
+  ]
 }
 
 export default async function kitchenCatalogSeed({
   container,
 }: {
-  container: MedusaContainer;
+  container: MedusaContainer
 }) {
-  const logger = container.resolve(ContainerRegistrationKeys.LOGGER);
-  const query = container.resolve(ContainerRegistrationKeys.QUERY);
+  const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
+  const query = container.resolve(ContainerRegistrationKeys.QUERY)
 
   const [{ data: channels }, { data: shippingProfiles }] = await Promise.all([
     query.graph({
@@ -346,34 +363,34 @@ export default async function kitchenCatalogSeed({
       fields: ["id"],
       pagination: { take: 1 },
     }),
-  ]);
+  ])
 
   if (!channels?.[0]?.id || !shippingProfiles?.[0]?.id) {
     throw new Error(
       "Ejecuta primero el seed inicial de Medusa para crear canal y shipping profile.",
-    );
+    )
   }
 
   const { data: existingProducts } = await query.graph({
     entity: "product",
     fields: ["id", "handle", "metadata", "variants.id", "variants.metadata"],
     pagination: { take: 500 },
-  });
-  const categories = await ensureCategories(container);
+  })
+  const categories = await ensureCategories(container)
   const existingByHandle = new Map(
     existingProducts.map((product) => [product.handle, product]),
-  );
-  const existingKitchenProducts = products.flatMap((product) => {
-    const existing = existingByHandle.get(product.handle);
-    return existing ? [{ seed: product, existing }] : [];
-  });
-  const missingProducts = products.filter(
+  )
+  const existingKitchenProducts = publishableProducts.flatMap((product) => {
+    const existing = existingByHandle.get(product.handle)
+    return existing ? [{ seed: product, existing }] : []
+  })
+  const missingProducts = publishableProducts.filter(
     (product) => !existingByHandle.has(product.handle),
-  );
+  )
   const legacyProducts = legacyKitchenHandles.flatMap((handle) => {
-    const existing = existingByHandle.get(handle);
-    return existing ? [existing] : [];
-  });
+    const existing = existingByHandle.get(handle)
+    return existing ? [existing] : []
+  })
 
   if (legacyProducts.length) {
     await updateProductsWorkflow(container).run({
@@ -389,11 +406,11 @@ export default async function kitchenCatalogSeed({
           },
         })),
       },
-    });
+    })
 
     logger.info(
       `Kitchen catalog seed archived ${legacyProducts.length} legacy products.`,
-    );
+    )
   }
 
   if (existingKitchenProducts.length) {
@@ -416,18 +433,18 @@ export default async function kitchenCatalogSeed({
           },
         })),
       },
-    });
+    })
 
     logger.info(
       `Kitchen catalog seed synced ${existingKitchenProducts.length} existing products.`,
-    );
+    )
   }
 
   if (!missingProducts.length) {
     logger.info(
       "Kitchen catalog seed skipped creation: products already exist.",
-    );
-    return;
+    )
+    return
   }
 
   await createProductsWorkflow(container).run({
@@ -465,9 +482,9 @@ export default async function kitchenCatalogSeed({
         sales_channels: [{ id: channels[0].id }],
       })),
     },
-  });
+  })
 
   logger.info(
     `Kitchen catalog seed created ${missingProducts.length} products.`,
-  );
+  )
 }

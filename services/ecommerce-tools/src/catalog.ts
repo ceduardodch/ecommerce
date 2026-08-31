@@ -34,7 +34,9 @@ type MedusaProduct = {
 
 function baseUrlForVertical(config: AppConfig, vertical: ProductVertical) {
   return (
-    vertical === "bienestar" ? config.wellnessPublicUrl : config.kitchenPublicUrl
+    vertical === "bienestar"
+      ? config.wellnessPublicUrl
+      : config.kitchenPublicUrl
   ).replace(/\/$/, "")
 }
 
@@ -181,7 +183,10 @@ function withGeneratedImages(config: AppConfig, products: Product[]) {
         config,
         { ...product, vertical },
         product.imageUrl,
-      ).replace("https://shop.b2b.com.ec", baseUrlForVertical(config, vertical)),
+      ).replace(
+        "https://shop.b2b.com.ec",
+        baseUrlForVertical(config, vertical),
+      ),
       productUrl: product.productUrl.replace(
         "https://shop.b2b.com.ec",
         baseUrlForVertical(config, vertical),
@@ -245,6 +250,14 @@ function normalizeMedusaProduct(
     originalPrice: originalAmount
       ? { amount: originalAmount, currency: "USD" }
       : undefined,
+    comboPrice: numberFromMetadata(product.metadata?.negotiatedPrice)
+      ? {
+          amount: numberFromMetadata(product.metadata?.negotiatedPrice)!,
+          currency: "USD",
+        }
+      : undefined,
+    comboMinimumItems:
+      numberFromMetadata(product.metadata?.comboMinimumItems) || undefined,
     discountPercent,
     promoLabel: stringFromMetadata(product.metadata?.promoLabel),
     stockSignal: stringFromMetadata(product.metadata?.stockSignal),
@@ -272,6 +285,8 @@ function normalizeMedusaProduct(
     capacity: stringFromMetadata(product.metadata?.capacity),
     diameterCm: numberFromMetadata(product.metadata?.diameterCm),
     pieces: numberFromMetadata(product.metadata?.pieces),
+    collection: stringFromMetadata(product.metadata?.collection),
+    color: stringFromMetadata(product.metadata?.color),
     stoveCompatibility:
       stringFromMetadata(product.metadata?.stoveCompatibility) ||
       (category.toLowerCase().includes("complement")

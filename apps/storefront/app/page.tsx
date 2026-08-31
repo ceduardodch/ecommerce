@@ -9,6 +9,7 @@ import { SiteFooter } from "./components/ui/site-footer"
 import { StickyCTABar } from "./components/ui/sticky-cta-bar"
 import { HeroShowcase } from "./components/ui/hero-showcase"
 import { ProductShowcaseGrid } from "./components/ui/product-showcase-grid"
+import { StarterKitSection } from "./components/starter-kit-section"
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
@@ -28,14 +29,22 @@ export const metadata: Metadata = {
 
 // ---- data -------------------------------------------------------------------
 
-const HERO_SKU = "MGC-WOK-GRANITO-32"
+const HERO_SKU = "MGC-FR-WOK-32-GN"
 
-// Orden del grid: separa las ollas 18/20 (comparten foto) y cierra con la promo.
+// Orden visual: primero la colección francesa y después la europea.
 const GRID_ORDER = [
-  "MGC-OLLA-GRANITO-20",
-  "COC-SARTEN-PLANO-GRANITO-22",
-  "MGC-OLLA-GRANITO-18",
-  "COC-CUCHILLO-SAMURAI-TODO-USO",
+  "MGC-FR-SARTEN-20-GN",
+  "MGC-FR-SARTEN-24-GN",
+  "MGC-FR-SARTEN-28-GN",
+  "MGC-FR-LECHERA-18-GN",
+  "MGC-FR-OLLA-20-GN",
+  "MGC-FR-OLLA-24-GN",
+  "MGC-EU-SARTEN-20-AZ",
+  "MGC-EU-SARTEN-24-AZ",
+  "MGC-EU-SARTEN-28-AZ",
+  "MGC-EU-LECHERA-16-AZ",
+  "MGC-EU-OLLA-20-AZ",
+  "MGC-EU-OLLA-24-AZ",
 ]
 
 function gridRank(p: Product) {
@@ -85,6 +94,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
         {/* 4. Grid editorial de la colección */}
         <ProductShowcaseGrid products={rest} />
+        <StarterKitSection />
       </main>
 
       {/* 5. Footer (ya oscuro) */}

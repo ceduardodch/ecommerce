@@ -15,7 +15,7 @@ type Result = {
 
 function Resultado() {
   const params = useSearchParams()
-  const { items, totalAmount, clearCart } = useCart()
+  const { items, totalAmount, clearCart, unitPriceForItem } = useCart()
   const [state, setState] = useState<"loading" | "paid" | "failed">("loading")
   const [result, setResult] = useState<Result | null>(null)
   const settled = useRef(false)
@@ -45,28 +45,28 @@ function Resultado() {
           // (000.000.000). Los códigos de prueba (000.100.11x, certificación
           // Datafast) muestran éxito al usuario pero no contaminan campañas.
           if (data.code === "000.000.000") {
-          trackStorefrontEvent({
-            eventName: "Purchase",
-            type: "purchase_confirmed",
-            source: "storefront",
-            value: data.amount || totalAmount,
-            cta: "datafast_paid",
-            placement: "checkout_result",
-            products: items.map((i) => ({
-              id: i.id,
-              variantId: i.id,
-              sku: i.sku,
-              title: i.title,
-              category: i.category || "",
-              brand: "Eter Niu",
-              price: { amount: i.price, currency: "USD" },
-              imageUrl: i.image || "",
-              productUrl: "",
-              tags: [],
-              stock: 0,
-            })),
-            metadata: { reference: data.reference, provider: "datafast" },
-          })
+            trackStorefrontEvent({
+              eventName: "Purchase",
+              type: "purchase_confirmed",
+              source: "storefront",
+              value: data.amount || totalAmount,
+              cta: "datafast_paid",
+              placement: "checkout_result",
+              products: items.map((i) => ({
+                id: i.id,
+                variantId: i.id,
+                sku: i.sku,
+                title: i.title,
+                category: i.category || "",
+                brand: "Eter Niu",
+                price: { amount: unitPriceForItem(i), currency: "USD" },
+                imageUrl: i.image || "",
+                productUrl: "",
+                tags: [],
+                stock: 0,
+              })),
+              metadata: { reference: data.reference, provider: "datafast" },
+            })
           }
           clearCart()
           setState("paid")
@@ -96,8 +96,8 @@ function Resultado() {
                 ¡Pago confirmado!
               </h1>
               <p className="mt-2 text-[14px] text-[#6B6B66]">
-                Gracias por tu compra. Te contactamos por WhatsApp para coordinar
-                el envío (48h por Servientrega).
+                Gracias por tu compra. Te contactamos por WhatsApp para
+                coordinar el envío (48h por Servientrega).
               </p>
               {result?.reference && (
                 <p className="mt-3 text-[12px] text-[#6B6B66]">
@@ -132,7 +132,10 @@ function Resultado() {
                 >
                   Reintentar pago
                 </a>
-                <a href="/cart" className="text-[13px] text-[#6B6B66] underline">
+                <a
+                  href="/cart"
+                  className="text-[13px] text-[#6B6B66] underline"
+                >
                   Volver al carrito
                 </a>
               </div>

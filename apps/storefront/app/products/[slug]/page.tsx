@@ -3,11 +3,7 @@ import { existsSync } from "node:fs"
 import { join } from "node:path"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import {
-  BookOpen,
-  MessageCircle,
-  Star,
-} from "lucide-react"
+import { BookOpen, MessageCircle, Star } from "lucide-react"
 import {
   getProductBySlug,
   getProducts,
@@ -76,7 +72,9 @@ function productUseCases(product: Product) {
   const useCases = [
     product.bundleUseCase,
     product.capacity ? `Recomendado para ${product.capacity}` : undefined,
-    product.diameterCm ? `${product.diameterCm} cm para medir facil` : undefined,
+    product.diameterCm
+      ? `${product.diameterCm} cm para medir facil`
+      : undefined,
     product.careTips,
   ].filter(Boolean) as string[]
 
@@ -92,12 +90,22 @@ function macroItems(product: Product) {
 
   if (knife) {
     const items = [
-      { file: "photo-cuchillo-samurai-textura.jpg", caption: "Acero inoxidable" },
+      {
+        file: "photo-cuchillo-samurai-textura.jpg",
+        caption: "Acero inoxidable",
+      },
       { file: "photo-cuchillo-samurai-mango.jpg", caption: "Mango ergonomico" },
-      { file: "photo-cuchillo-samurai-full.jpg", caption: "Hoja de uso diario" },
+      {
+        file: "photo-cuchillo-samurai-full.jpg",
+        caption: "Hoja de uso diario",
+      },
     ].filter((i) => mediaPath(i.file))
 
-    if (items.length === 3) return items.map((i) => ({ image: `/media/${i.file}`, caption: i.caption }))
+    if (items.length === 3)
+      return items.map((i) => ({
+        image: `/media/${i.file}`,
+        caption: i.caption,
+      }))
   }
 
   // Granito pots/woks
@@ -107,7 +115,11 @@ function macroItems(product: Product) {
     { file: "photo-product-utensilios.jpg", caption: "Mango soft-touch" },
   ].filter((i) => mediaPath(i.file))
 
-  if (granito.length === 3) return granito.map((i) => ({ image: `/media/${i.file}`, caption: i.caption }))
+  if (granito.length === 3)
+    return granito.map((i) => ({
+      image: `/media/${i.file}`,
+      caption: i.caption,
+    }))
 
   // Generic fallback
   return [
@@ -122,14 +134,24 @@ function specRows(product: Product) {
   const commerce = commercialInfo(product)
   const rows: { label: string; value: string }[] = []
 
-  if (product.diameterCm) rows.push({ label: "Diametro", value: `${product.diameterCm} cm` })
-  if (product.capacity) rows.push({ label: "Capacidad", value: product.capacity })
-  if (product.material) rows.push({ label: "Material", value: product.material })
-  if (product.stoveCompatibility && !product.stoveCompatibility.toLowerCase().includes("no aplica")) {
+  if (product.diameterCm)
+    rows.push({ label: "Diametro", value: `${product.diameterCm} cm` })
+  if (product.capacity)
+    rows.push({ label: "Capacidad", value: product.capacity })
+  if (product.material)
+    rows.push({ label: "Material", value: product.material })
+  if (
+    product.stoveCompatibility &&
+    !product.stoveCompatibility.toLowerCase().includes("no aplica")
+  ) {
     rows.push({ label: "Cocinas", value: product.stoveCompatibility })
   }
-  if (product.pieces && product.pieces > 1) rows.push({ label: "Piezas", value: `${product.pieces}` })
-  rows.push({ label: "Garantia", value: product.warrantyText || "Confirmar por WhatsApp" })
+  if (product.pieces && product.pieces > 1)
+    rows.push({ label: "Piezas", value: `${product.pieces}` })
+  rows.push({
+    label: "Garantia",
+    value: product.warrantyText || "Confirmar por WhatsApp",
+  })
   rows.push({ label: "Envio", value: commerce.freeShippingLabel })
   rows.push({ label: "Cupon", value: commerce.couponCode })
 
@@ -185,7 +207,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   })()
 
   return (
-    <main data-theme="cocina" className="relative isolate min-h-screen bg-[#10160e] pb-28">
+    <main
+      data-theme="cocina"
+      className="relative isolate min-h-screen bg-[#10160e] pb-28"
+    >
       <PageAmbient />
       <PageAnalytics featured={product} />
 
@@ -244,6 +269,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           {product.category}
         </p>
+        {(product.collection || product.color) && (
+          <p className="mb-2 text-[12px] font-medium text-[#b8c2ae]">
+            {[product.collection, product.color].filter(Boolean).join(" · ")}
+          </p>
+        )}
         <h1
           className="mb-2 text-[28px] font-medium leading-snug text-white"
           style={{ fontFamily: "var(--font-display)" }}
@@ -286,10 +316,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </span>
           )}
           <span className="text-[26px] font-medium leading-none text-[#d3fa99]">
-            {money(product.price.amount)}
+            PVP {money(product.price.amount)}
           </span>
           <span className="text-[12px] text-[#b8c2ae]">stock por WhatsApp</span>
         </div>
+        {product.comboPrice && (
+          <div className="mb-5 rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-3">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-emerald-200">
+              Precio verde por combo
+            </p>
+            <p className="mt-1 text-[18px] font-semibold text-emerald-200">
+              {money(product.comboPrice.amount)} c/u desde{" "}
+              {product.comboMinimumItems || 3} productos
+            </p>
+          </div>
+        )}
 
         {/* Hero CTA */}
         <TrackedWhatsAppLink
@@ -364,10 +405,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </h2>
           <ul className="space-y-2">
             {useCases.map((item) => (
-              <li
-                key={item}
-                className="flex gap-2 text-[14px] text-[#b8c2ae]"
-              >
+              <li key={item} className="flex gap-2 text-[14px] text-[#b8c2ae]">
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d3fa99]" />
                 {item}
               </li>
@@ -383,7 +421,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             Sin miedo, sin promesas medicas
           </p>
           <p className="mb-3 text-[13px] leading-snug text-[#b8c2ae]">
-            {product.healthAngle}. Claims como PFAS/PFOA/PTFE se publican solo con certificacion del proveedor.
+            {product.healthAngle}. Claims como PFAS/PFOA/PTFE se publican solo
+            con certificacion del proveedor.
           </p>
           <TrackedEventLink
             className="inline-flex items-center gap-1.5 rounded-full border border-white/40 px-4 py-2 text-[13px] font-medium text-white"
@@ -478,7 +517,11 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             Reseñas reales de clientes que compraron este producto
           </p>
 
-          <CustomerReviews productId={product.id} productSku={product.sku} productName={product.title} />
+          <CustomerReviews
+            productId={product.id}
+            productSku={product.sku}
+            productName={product.title}
+          />
         </div>
       </section>
 

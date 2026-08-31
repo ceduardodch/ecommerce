@@ -14,6 +14,9 @@ export type Product = {
   brand: string
   price: Money
   originalPrice?: Money
+  /** Precio promocional por unidad cuando el carrito reúne el mínimo del combo. */
+  comboPrice?: Money
+  comboMinimumItems?: number
   discountPercent?: number
   promoLabel?: string
   stockSignal?: string
@@ -31,6 +34,8 @@ export type Product = {
   capacity?: string
   diameterCm?: number
   pieces?: number
+  collection?: string
+  color?: string
   stoveCompatibility?: string
   tipoCocina?: string
   nivel?: string

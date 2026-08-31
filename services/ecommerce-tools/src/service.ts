@@ -74,7 +74,8 @@ function toEcPhone(raw?: string): string | undefined {
   const digits = raw.replace(/[^\d+]/g, "")
   if (digits.startsWith("+")) return digits
   if (digits.startsWith("593")) return `+${digits}`
-  if (digits.startsWith("0") && digits.length === 10) return `+593${digits.slice(1)}`
+  if (digits.startsWith("0") && digits.length === 10)
+    return `+593${digits.slice(1)}`
   if (digits.length === 9) return `+593${digits}`
   return digits ? `+${digits}` : undefined
 }
@@ -403,7 +404,8 @@ export function createCommerceService(config: AppConfig) {
   ) {
     const products = await loadProducts(config)
     const product = products.find((item) => item.sku === input.sku)
-    if (!product) throw new Error(`Producto no encontrado por SKU: ${input.sku}`)
+    if (!product)
+      throw new Error(`Producto no encontrado por SKU: ${input.sku}`)
 
     const amount = input.amount ?? product.price.amount
     const eventName = input.status === "paid" ? "Purchase" : "Lead"
@@ -696,30 +698,65 @@ export function createCommerceService(config: AppConfig) {
       customer?: DatafastCheckoutInput["customer"]
     }) {
       const reference = input.reference || `etn_${Date.now()}`
-      // Anti-manipulación de precios: el unitPrice del cliente NUNCA manda.
-      // Si el SKU existe en el catálogo se usa el precio del catálogo; en
-      // live un SKU desconocido se rechaza (en test se deja pasar para
-      // fixtures y transacciones del script de certificación).
-      const products = await loadProducts(config)
+      // El navegador nunca define el valor cobrable. Recalculamos cada línea
+      // contra el catálogo y aplicamos la misma regla del precio verde. En
+      // pruebas se permiten fixtures sin SKU de catálogo; en producción no.
+      const catalog = await loadProducts(config)
       const live = config.datafastEnv === "live"
-      const items = input.items.map((it) => {
-        const product = it.sku
-          ? products.find((p) => p.sku === it.sku || p.id === it.sku)
+      const requested = input.items.map((item) => {
+        const sku = item.sku?.trim()
+        const product = sku
+          ? catalog.find(
+              (candidate) => candidate.sku === sku || candidate.id === sku,
+            )
           : undefined
         if (!product) {
           if (live) {
             throw new Error(
-              `Producto no reconocido en el catálogo: ${it.sku || it.title}`,
+              `Producto no reconocido en el catálogo: ${sku || item.title}`,
             )
           }
-          return { ...it }
+          return { item }
         }
-        return { ...it, title: product.title, unitPrice: product.price.amount }
+        if (product.stock < item.quantity) {
+          throw new Error(`Stock insuficiente para ${product.title}`)
+        }
+        return { item, product }
       })
+      const comboEligibleItems = requested.reduce(
+        (sum, { item, product }) =>
+          sum + (product?.comboPrice ? item.quantity : 0),
+        0,
+      )
+      const comboMinimumItems = requested.reduce(
+        (minimum, { product }) =>
+          product?.comboPrice
+            ? Math.min(minimum, product.comboMinimumItems || 3)
+            : minimum,
+        Number.POSITIVE_INFINITY,
+      )
+      const comboApplied =
+        Number.isFinite(comboMinimumItems) &&
+        comboEligibleItems >= comboMinimumItems
+      const pricedItems = requested.map(({ item, product }) =>
+        product
+          ? {
+              title: product.title,
+              sku: product.sku,
+              quantity: item.quantity,
+              unitPrice:
+                comboApplied && product.comboPrice
+                  ? product.comboPrice.amount
+                  : product.price.amount,
+              description: product.description,
+              zeroRated: item.zeroRated,
+            }
+          : { ...item },
+      )
       const checkout = await createDatafastCheckout(config, {
-        ...input,
-        items,
         reference,
+        items: pricedItems,
+        customer: input.customer,
       })
       const now = new Date().toISOString()
       await upsertDatafastCheckout(config.dataDir, {
@@ -730,13 +767,14 @@ export function createCommerceService(config: AppConfig) {
         registered: false,
         customer: {
           phone: toEcPhone(input.customer?.phone),
-          name: [input.customer?.givenName, input.customer?.surname]
-            .filter(Boolean)
-            .join(" ")
-            .trim() || undefined,
+          name:
+            [input.customer?.givenName, input.customer?.surname]
+              .filter(Boolean)
+              .join(" ")
+              .trim() || undefined,
           email: input.customer?.email,
         },
-        items: items.map((it) => ({
+        items: pricedItems.map((it) => ({
           title: it.title,
           sku: it.sku,
           quantity: it.quantity,
@@ -763,13 +801,15 @@ export function createCommerceService(config: AppConfig) {
         try {
         const now = new Date().toISOString()
         if (record.customer?.phone) {
-          const purchasedProducts: PurchasedProduct[] = record.items.map((it) => ({
-            productId: it.sku || it.title,
-            sku: it.sku || it.title,
-            title: it.title,
-            quantity: it.quantity,
-            purchasedAt: now,
-          }))
+          const purchasedProducts: PurchasedProduct[] = record.items.map(
+            (it) => ({
+              productId: it.sku || it.title,
+              sku: it.sku || it.title,
+              title: it.title,
+              quantity: it.quantity,
+              purchasedAt: now,
+            }),
+          )
           const freq = nextReorderDays(purchasedProducts)
           await trackCustomerEvent(
             config,
@@ -806,7 +846,10 @@ export function createCommerceService(config: AppConfig) {
                 ? products.some((p) => p.sku === it.sku || p.id === it.sku)
                 : false,
             )
-            .map((it) => ({ productId: it.sku as string, quantity: it.quantity }))
+            .map((it) => ({
+              productId: it.sku as string,
+              quantity: it.quantity,
+            }))
           if (orderItems.length > 0) {
             const quote = buildQuote(config, products, orderItems)
             // El pedido refleja lo COBRADO por Datafast (precio promo del
@@ -820,7 +863,8 @@ export function createCommerceService(config: AppConfig) {
                 unitPrice: { amount: paidItem.unitPrice, currency: "USD" },
                 lineTotal: {
                   amount:
-                    Math.round(paidItem.unitPrice * paidItem.quantity * 100) / 100,
+                    Math.round(paidItem.unitPrice * paidItem.quantity * 100) /
+                    100,
                   currency: "USD",
                 },
               }
@@ -859,7 +903,10 @@ export function createCommerceService(config: AppConfig) {
                   {
                     type: "created",
                     at: now,
-                    payload: { source: "datafast_web", reference: record.reference },
+                    payload: {
+                      source: "datafast_web",
+                      reference: record.reference,
+                    },
                   },
                   {
                     type: "paid",
@@ -1037,7 +1084,7 @@ export function createCommerceService(config: AppConfig) {
           whatsappConsent:
             input.type === "opt_out"
               ? false
-              : input.whatsappConsent ?? input.customer?.whatsappConsent,
+              : (input.whatsappConsent ?? input.customer?.whatsappConsent),
           nextFollowupAt: input.nextFollowupAt,
           followupReason: input.followupReason,
           metadata: {
