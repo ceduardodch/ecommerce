@@ -946,12 +946,12 @@ export function createCommerceService(config: AppConfig) {
       if (
         result.status === "paid" &&
         record &&
-        (!record.registered || !record.orderId) &&
         !inflightDatafastResults.has(record.reference)
       ) {
         inflightDatafastResults.add(record.reference)
         try {
         const now = new Date().toISOString()
+        const isFirstRegistration = !record.registered
         if (!record.registered && record.customer?.phone) {
           const purchasedProducts: PurchasedProduct[] = record.items.map(
             (it) => ({
@@ -1061,7 +1061,7 @@ export function createCommerceService(config: AppConfig) {
             await upsertOrder(config.dataDir, order)
             orderId = order.id
           }
-          if (orderId && record.customer?.phone) {
+          if (isFirstRegistration && orderId && record.customer?.phone) {
             void notifyPurchaseByWhatsapp(config, {
               phone: record.customer.phone,
               name: record.customer.name,
