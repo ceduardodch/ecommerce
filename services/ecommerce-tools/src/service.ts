@@ -49,11 +49,31 @@ import type {
   CustomerInput,
   OrderRecord,
   PurchasedProduct,
+  Product,
 } from "./types.js"
 
 // Guard anti-carrera: evita pedido/WhatsApp duplicados si el cliente
 // refresca /checkout/resultado mientras el primer request sigue en vuelo.
 const inflightDatafastResults = new Set<string>()
+
+// Registro temporal usado solo al recalcular el checkout DataFast. La tienda
+// muestra la misma ficha; no se expone en el catálogo comercial ni en Meta.
+const datafastTestProduct: Product = {
+  id: "prod-mgc-paleta-wok-datafast-test",
+  variantId: "var-mgc-paleta-wok-datafast-test",
+  sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+  vertical: "cocina",
+  title: "Paleta para wok · prueba DataFast",
+  description: "Producto temporal de $1.00 para probar el pago con tarjeta.",
+  category: "Accesorios de cocina",
+  brand: "MGC",
+  price: { amount: 1, currency: "USD" },
+  originalPrice: { amount: 1, currency: "USD" },
+  stock: 1,
+  imageUrl: "",
+  productUrl: "",
+  tags: ["prueba", "datafast", "paleta", "wok"],
+}
 
 function addDays(iso: string, days: number) {
   const date = new Date(iso)
@@ -701,7 +721,7 @@ export function createCommerceService(config: AppConfig) {
       // El navegador nunca define el valor cobrable. Recalculamos cada línea
       // contra el catálogo y aplicamos la misma regla del precio verde. En
       // pruebas se permiten fixtures sin SKU de catálogo; en producción no.
-      const catalog = await loadProducts(config)
+      const catalog = [...(await loadProducts(config)), datafastTestProduct]
       const live = config.datafastEnv === "live"
       const requested = input.items.map((item) => {
         const sku = item.sku?.trim()

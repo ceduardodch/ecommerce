@@ -136,6 +136,30 @@ describe("datafast → blindaje de precios (code review #1)", () => {
     ).rejects.toThrow(/no reconocido/)
   })
 
+  it("en LIVE acepta la paleta temporal y siempre cobra $1.00", async () => {
+    const service = svc({ DATAFAST_ENV: "live" })
+    const checkout = await service.datafastCheckout({
+      items: [
+        {
+          title: "Precio alterado desde el navegador",
+          sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+          quantity: 1,
+          unitPrice: 99,
+        },
+      ],
+    })
+
+    expect(checkout.amount).toBe(1)
+    const [record] = await readDatafastCheckouts(dir)
+    expect(record.items).toEqual([
+      expect.objectContaining({
+        sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+        title: "Paleta para wok · prueba DataFast",
+        unitPrice: 1,
+      }),
+    ])
+  })
+
   it("en test deja pasar ítems sin match (fixtures y certificación)", async () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
