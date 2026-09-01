@@ -1,7 +1,15 @@
 import type { AppConfig } from "./config.js"
 import { loadProducts } from "./catalog.js"
-import type { CustomerEventRecord, Product } from "./types.js"
+import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { getMedusaAgentPlaybook, type AgentPlaybookItem } from "./medusa-admin.js"
+
+/** Resumen del cliente (compras previas, etapa, próximo seguimiento) para el prompt. */
+export type CustomerContext = {
+  purchasedProducts?: PurchasedProduct[]
+  journeyStage?: string
+  nextFollowupAt?: string
+  followupReason?: string
+}
 
 /**
  * Cuántos turnos previos (mensajes entrantes + salientes) se incluyen en el
@@ -59,6 +67,44 @@ function conversationHistoryText(events: CustomerEventRecord[] = []): string {
     .join("\n")
 }
 
+/**
+ * Arma el bloque de contexto del cliente para el prompt: qué ya compró, en
+ * qué etapa de la conversación está y si tiene un seguimiento programado.
+ * Vacío para un cliente nuevo o cuando no hay `getCustomer` disponible.
+ */
+function customerContextText(context?: CustomerContext): string {
+  if (!context) return ""
+  const lines: string[] = []
+
+  if (context.purchasedProducts?.length) {
+    const titles = context.purchasedProducts.map((product) => product.title).join(", ")
+    lines.push(`Ya compró: ${titles}. No le ofrezcas estos mismos productos de nuevo; si insiste en repetir, sugiere algo complementario o distinto.`)
+  }
+  if (context.journeyStage) {
+    lines.push(`Etapa actual de la conversación: ${context.journeyStage}.`)
+  }
+  if (context.nextFollowupAt) {
+    const reason = context.followupReason ? ` (motivo: ${context.followupReason})` : ""
+    lines.push(`Tiene un seguimiento programado para ${context.nextFollowupAt}${reason}.`)
+  }
+
+  return lines.join("\n")
+}
+
+/**
+ * Saca del catálogo los productos que el cliente ya compró.
+ *
+ * Es un filtro de código, no solo una instrucción de texto: el CA de V-2
+ * pide que un cliente que ya compró una olla no reciba la oferta de esa
+ * misma olla, y confiar solo en que el modelo "lea" el contexto y decida no
+ * ofrecerla es más frágil que simplemente no dársela como opción.
+ */
+function excludePurchasedProducts(products: Product[], purchasedProducts: PurchasedProduct[] = []): Product[] {
+  if (!purchasedProducts.length) return products
+  const purchasedSkus = new Set(purchasedProducts.map((product) => product.sku))
+  return products.filter((product) => !purchasedSkus.has(product.sku))
+}
+
 function extractOutputText(response: OpenAiResponse): string | null {
   const text = response.output
     ?.flatMap((item) => item.content || [])
@@ -92,7 +138,12 @@ function instructionsWithPlaybook(playbook: AgentPlaybookItem[]) {
 
 export async function createWhatsAppAgentReply(
   config: AppConfig,
-  input: { text: string; products: Product[]; history?: CustomerEventRecord[] },
+  input: {
+    text: string
+    products: Product[]
+    history?: CustomerEventRecord[]
+    customerContext?: CustomerContext
+  },
   fetchImpl: typeof fetch = fetch,
   catalogLoader: typeof loadProducts = loadProducts,
   playbookLoader: (config: AppConfig) => Promise<AgentPlaybookItem[]> = getMedusaAgentPlaybook,
@@ -108,15 +159,19 @@ export async function createWhatsAppAgentReply(
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 12_000)
   try {
-    // Una consulta general puede no coincidir con un título o SKU. Antes de
-    // responder que no hay productos, toma una selección del catálogo vivo.
-    const products = input.products.length
-      ? input.products
-      : (await catalogLoader(config).catch(() => [])).slice(0, 6)
+    const purchasedProducts = input.customerContext?.purchasedProducts
+    const searchedProducts = excludePurchasedProducts(input.products, purchasedProducts)
+    // Una consulta general puede no coincidir con un título o SKU, y una
+    // búsqueda cuyo único resultado sea algo que el cliente ya compró queda
+    // igual de vacía tras filtrarlo. Ambos casos caen al catálogo vivo.
+    const products = searchedProducts.length
+      ? searchedProducts
+      : excludePurchasedProducts(await catalogLoader(config).catch(() => []), purchasedProducts).slice(0, 6)
     const playbook = config.crmBackend === "medusa"
       ? await playbookLoader(config).catch(() => [])
       : []
     const conversationHistory = conversationHistoryText(input.history)
+    const customerContext = customerContextText(input.customerContext)
     const response = await fetchImpl("https://api.openai.com/v1/responses", {
       method: "POST",
       signal: controller.signal,
@@ -134,6 +189,7 @@ export async function createWhatsAppAgentReply(
         max_output_tokens: 500,
         instructions: instructionsWithPlaybook(playbook),
         input: [
+          customerContext && `Contexto del cliente:\n${customerContext}`,
           conversationHistory && `Historial reciente (más antiguo primero):\n${conversationHistory}`,
           `Mensaje del cliente: ${input.text}`,
           `Catálogo relevante:\n${productContext(products)}`,
