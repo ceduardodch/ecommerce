@@ -11,8 +11,8 @@ import {
   customerImportSchema,
   metaDraftInputSchema,
   orderInputSchema,
-  payphoneInputSchema,
   quoteInputSchema,
+  whatsappCartInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
 
@@ -71,15 +71,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "create_payphone_link",
-      description: "Genera un link de pago PayPhone para una orden.",
+      name: "create_whatsapp_cart",
+      description: "Crea un enlace temporal de carrito para WhatsApp. No cobra ni procesa tarjeta.",
       inputSchema: {
         type: "object",
-        properties: {
-          orderId: { type: "string" },
-          description: { type: "string" },
-        },
-        required: ["orderId"],
+        properties: { phone: { type: "string" }, customer: { type: "object" }, items: { type: "array" } },
+        required: ["phone", "customer", "items"],
       },
     },
     {
@@ -238,9 +235,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
   }
 
-  if (request.params.name === "create_payphone_link") {
-    const input = payphoneInputSchema.parse(args)
-    const order = await service.createPaymentLink(input.orderId)
+  if (request.params.name === "create_whatsapp_cart") {
+    const input = whatsappCartInputSchema.parse(args)
+    const order = await service.createWhatsappCart(input)
     return {
       content: [{ type: "text", text: JSON.stringify(order, null, 2) }],
     }

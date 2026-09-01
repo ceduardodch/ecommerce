@@ -393,6 +393,7 @@ function LeadsPage() {
   const [page, setPage] = useState(0)
   const [data, setData] = useState<CustomersResponse | undefined>()
   const [error, setError] = useState<string | undefined>()
+  const [retry, setRetry] = useState(0)
   const [loading, setLoading] = useState(false)
   const [campaignOpen, setCampaignOpen] = useState(false)
 
@@ -435,7 +436,10 @@ function LeadsPage() {
 
     fetch(`/admin/b2b/crm/customers?${params}`, { credentials: "include" })
       .then(async (response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        if (!response.ok) {
+          const detail = await response.json().catch(() => ({})) as { message?: string; errorId?: string }
+          throw new Error(`${detail.message || `HTTP ${response.status}`}${detail.errorId ? ` (${detail.errorId})` : ""}`)
+        }
         return response.json() as Promise<CustomersResponse>
       })
       .then((payload) => {
@@ -453,7 +457,7 @@ function LeadsPage() {
     return () => {
       mounted = false
     }
-  }, [params])
+  }, [params, retry])
 
   const totalPages = data ? Math.max(1, Math.ceil(data.count / PAGE_SIZE)) : 1
 
@@ -606,6 +610,7 @@ function LeadsPage() {
       {error ? (
         <section style={cardStyle}>
           <p>No se pudo cargar la lista: {error}</p>
+          <button type="button" style={buttonStyle} onClick={() => setRetry((value) => value + 1)}>Reintentar</button>
         </section>
       ) : null}
 

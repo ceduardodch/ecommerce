@@ -2,12 +2,14 @@ import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
 import { buildFollowupAction, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
-import { createPayPhoneLink } from "./payphone.js"
+import {
+  consumeCartSession,
+  createCartSession,
+  type CartSessionLine,
+} from "./cart-session.js"
 import {
   addMedusaCustomerEvent,
-  attachMedusaPaymentLink,
   createMedusaOrder,
-  forwardPayphoneWebhook,
   getMedusaCustomer,
   getMedusaDashboard,
   getMedusaOrder,
@@ -28,8 +30,6 @@ import {
   addCustomerEvent,
   findCustomer,
   findDatafastCheckout,
-  findOrder,
-  findOrderByClientTransaction,
   listDueFollowups,
   readDatafastCheckouts,
   readCustomers,
@@ -157,40 +157,6 @@ function toEcPhone(raw?: string): string | undefined {
   return digits ? `+${digits}` : undefined
 }
 
-function isPaidStatus(status: string | undefined) {
-  return ["paid", "success", "approved", "2", "3"].includes(
-    String(status || "").toLowerCase(),
-  )
-}
-
-function orderPurchaseEvent(order: OrderRecord): ToolsEventInput {
-  return {
-    eventName: "Purchase",
-    type: "purchase_confirmed",
-    eventId: `purchase:${order.id}`,
-    at: new Date().toISOString(),
-    source: "payphone",
-    consent: order.customer.whatsappConsent,
-    customer: order.customer,
-    products: order.quote.lines.map((line) => ({
-      productId: line.productId,
-      variantId: line.variantId,
-      sku: line.sku,
-      title: line.title,
-      price: line.unitPrice.amount,
-      currency: line.unitPrice.currency,
-      quantity: line.quantity,
-    })),
-    value: order.quote.total.amount,
-    currency: order.quote.currency,
-    metadata: {
-      orderId: order.id,
-      medusaOrderId: order.medusaOrderId,
-      quoteId: order.quote.id,
-    },
-  }
-}
-
 function recentEventsFromCustomer(customer: unknown) {
   if (!customer || typeof customer !== "object") return []
   const events = (customer as { events?: unknown }).events
@@ -230,7 +196,7 @@ function suggestNextAction(customer: unknown, events: unknown[]) {
     types.includes("order_created") ||
     types.includes("cotizacion_pendiente")
   ) {
-    return "Retomar pago pendiente con link PayPhone y confirmar entrega."
+    return "Retomar el carrito pendiente y confirmar entrega antes del checkout DataFast."
   }
   if (
     types.includes("care_followup_due") ||
@@ -643,6 +609,60 @@ export function createCommerceService(config: AppConfig) {
       return quote
     },
 
+    /**
+     * El enlace es un portador opaco y de un solo uso. El precio mostrado se
+     * toma del catálogo actual; DataFast vuelve a validar cada SKU antes del
+     * cobro, por lo que este objeto nunca autoriza un monto por sí mismo.
+     */
+    async createWhatsappCart(input: {
+      phone: string
+      customer: { name?: string; city?: string }
+      items: Array<{ productId: string; variantId?: string; quantity: number }>
+    }) {
+      const products = await loadProducts(config)
+      const lines: CartSessionLine[] = input.items.map((item) => {
+        const product = products.find(
+          (candidate) => candidate.id === item.productId &&
+            (!item.variantId || candidate.variantId === item.variantId),
+        )
+        if (!product) throw new Error("Producto no disponible en el catálogo actual")
+        if (product.stock < item.quantity) {
+          throw new Error(`Stock insuficiente para ${product.title}`)
+        }
+        return {
+          productId: product.id,
+          variantId: product.variantId,
+          sku: product.sku,
+          title: product.title,
+          quantity: item.quantity,
+          price: product.price.amount,
+          comboPrice: product.comboPrice?.amount,
+          comboMinimumItems: product.comboMinimumItems,
+          comboGroup: product.comboGroup,
+          image: product.imageUrl,
+          category: product.category,
+        }
+      })
+      const session = await createCartSession(config.dataDir, {
+        phone: toEcPhone(input.phone) || input.phone,
+        customer: input.customer,
+        items: lines,
+      })
+      const baseUrl = config.kitchenPublicUrl.replace(/\/$/, "")
+      const cartUrl = `${baseUrl}/cart?session=${encodeURIComponent(session.token)}`
+      await trackCustomerEvent(config, { phone: input.phone, name: input.customer.name, metadata: { city: input.customer.city, journeyStage: "carrito_enviado" } }, {
+        type: "cart_link_sent",
+        at: new Date().toISOString(),
+        source: "whatsapp_ai",
+        payload: { itemCount: lines.reduce((sum, line) => sum + line.quantity, 0), expiresAt: session.expiresAt },
+      }, { metadata: { journeyStage: "carrito_enviado" } })
+      return { cartUrl, expiresAt: session.expiresAt }
+    },
+
+    async consumeWhatsappCart(token: string) {
+      return consumeCartSession(config.dataDir, token)
+    },
+
     async createOrder(input: {
       items: Array<{ productId: string; variantId?: string; quantity: number }>
       customer?: CustomerInput
@@ -699,128 +719,6 @@ export function createCommerceService(config: AppConfig) {
         },
       })
       return saved
-    },
-
-    async createPaymentLink(orderId: string) {
-      const order =
-        config.crmBackend === "medusa"
-          ? await getMedusaOrder(config, orderId)
-          : await findOrder(config.dataDir, orderId)
-      if (!order) throw new Error(`Orden no encontrada: ${orderId}`)
-
-      const link = await createPayPhoneLink(config, order)
-
-      if (config.crmBackend === "medusa") {
-        return attachMedusaPaymentLink(config, orderId, {
-          paymentLink: link.url,
-          clientTransactionId: link.clientTransactionId,
-          payload: link,
-        })
-      }
-
-      const now = new Date().toISOString()
-      const updated: OrderRecord = {
-        ...order,
-        paymentLink: link.url,
-        clientTransactionId: link.clientTransactionId,
-        updatedAt: now,
-        events: [
-          ...order.events,
-          {
-            type: "payphone_link_created",
-            at: now,
-            payload: link,
-          },
-        ],
-      }
-
-      return upsertOrder(config.dataDir, updated)
-    },
-
-    async payphoneWebhook(payload: Record<string, unknown>) {
-      if (config.crmBackend === "medusa") {
-        const result = await forwardPayphoneWebhook(config, payload)
-        if (isPaidStatus(result.status) && result.order) {
-          await sendMetaConversionEvent(
-            config,
-            orderPurchaseEvent(result.order),
-            `purchase:${result.order.id}`,
-          )
-        }
-        return result
-      }
-
-      const clientTransactionId = String(payload.clientTransactionId || "")
-      const order = clientTransactionId
-        ? await findOrderByClientTransaction(
-            config.dataDir,
-            clientTransactionId,
-          )
-        : undefined
-
-      if (!order) {
-        return { matched: false, status: "unmatched", payload }
-      }
-
-      const rawStatus = String(payload.status || payload.statusCode || "")
-      const paid = ["2", "3", "approved", "success", "paid"].includes(
-        rawStatus.toLowerCase(),
-      )
-      const now = new Date().toISOString()
-      const updated: OrderRecord = {
-        ...order,
-        status: paid ? "paid" : "payment_review",
-        updatedAt: now,
-        events: [
-          ...order.events,
-          {
-            type: "payphone_notification",
-            at: now,
-            payload,
-          },
-        ],
-      }
-
-      await upsertOrder(config.dataDir, updated)
-      if (updated.customer.phone && paid) {
-        const suggestedFrequencyDays = nextReorderDays(updated.quote.lines)
-        const purchasedProducts: PurchasedProduct[] = updated.quote.lines.map(
-          (line) => ({
-            productId: line.productId,
-            sku: line.sku,
-            title: line.title,
-            quantity: line.quantity,
-            purchasedAt: now,
-            reorderAfterDays: line.reorderAfterDays,
-          }),
-        )
-
-        await trackCustomerEvent(
-          config,
-          updated.customer,
-          {
-            type: "paid",
-            at: now,
-            orderId: updated.id,
-            quoteId: updated.quote.id,
-            source: "payphone",
-            payload,
-          },
-          {
-            lastPurchaseAt: now,
-            purchasedProducts,
-            suggestedFrequencyDays,
-            nextFollowupAt: addDays(now, suggestedFrequencyDays),
-            followupReason: "recompra_o_complemento_cocina",
-          },
-        )
-        await sendMetaConversionEvent(
-          config,
-          orderPurchaseEvent(updated),
-          `purchase:${updated.id}`,
-        )
-      }
-      return { matched: true, status: updated.status, order: updated }
     },
 
     // ─── Datafast: crear checkout + recordar contexto para confirmación ───

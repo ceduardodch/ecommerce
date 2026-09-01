@@ -10,9 +10,8 @@ import {
   datafastVoidSchema,
   metaDraftInputSchema,
   orderInputSchema,
-  payphoneInputSchema,
-  payphoneWebhookSchema,
   quoteInputSchema,
+  whatsappCartInputSchema,
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
@@ -51,7 +50,6 @@ app.get("/healthz", async () => ({
   crmBackend: config.crmBackend,
   allowDemoCatalog: config.allowDemoCatalog,
   medusaAdminApiKeyConfigured: Boolean(config.medusaAdminApiKey),
-  payphoneMode: config.payphoneDryRun ? "dry-run" : "live",
   datafastMode: config.datafastDryRun ? "dry-run" : config.datafastEnv,
   datafastConfigured: Boolean(config.datafastEntityId && config.datafastAccessToken),
 }))
@@ -83,20 +81,16 @@ app.post("/tools/orders", async (request) => {
   return service.createOrder(input)
 })
 
-app.post("/tools/payphone-link", async (request) => {
-  const input = payphoneInputSchema.parse(request.body)
-  const order = await service.createPaymentLink(input.orderId)
-  return {
-    orderId: order.id,
-    status: order.status,
-    paymentLink: order.paymentLink,
-    clientTransactionId: order.clientTransactionId,
-  }
+app.post("/tools/whatsapp-cart-sessions", async (request) => {
+  const input = whatsappCartInputSchema.parse(request.body)
+  return service.createWhatsappCart(input)
 })
 
-app.post("/webhooks/payphone", async (request) => {
-  const payload = payphoneWebhookSchema.parse(request.body)
-  return service.payphoneWebhook(payload)
+app.post("/tools/whatsapp-cart-sessions/:token/consume", async (request, reply) => {
+  const params = request.params as { token: string }
+  const session = await service.consumeWhatsappCart(params.token)
+  if (!session) return reply.code(404).send({ error: "cart_session_unavailable" })
+  return { session }
 })
 
 // ─── Datafast (botón de pagos con tarjeta) ───
@@ -228,6 +222,10 @@ mountWhatsappWebhookRoutes(
     async (phone) => service.getCustomer(phone),
     async (event) => service.addCustomerEvent(event as Parameters<typeof service.addCustomerEvent>[0]),
   ),
+  {
+    quote: (input) => service.quote(input),
+    createCart: (input) => service.createWhatsappCart(input),
+  },
 )
 
 // WhatsApp Cloud API — respuesta libre de Vicky (W3)

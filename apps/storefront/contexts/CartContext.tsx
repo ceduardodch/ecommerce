@@ -23,6 +23,8 @@ type CartContextType = {
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
+  replaceCart: (items: CartItem[], customer?: { name?: string; city?: string }) => void
+  checkoutCustomer: { name?: string; city?: string }
   totalItems: number
   comboEligibleItems: number
   subtotalAmount: number
@@ -43,10 +45,12 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined)
 
 const CART_STORAGE_KEY = "eter_niu_cart"
+const CART_CUSTOMER_STORAGE_KEY = "eter_niu_cart_customer"
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [loaded, setLoaded] = useState(false)
+  const [checkoutCustomer, setCheckoutCustomer] = useState<{ name?: string; city?: string }>({})
   const [isOpen, setIsOpen] = useState(false)
 
   const openCart = () => setIsOpen(true)
@@ -61,6 +65,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (Array.isArray(parsed)) {
           setItems(parsed)
         }
+        const customer = localStorage.getItem(CART_CUSTOMER_STORAGE_KEY)
+        if (customer) setCheckoutCustomer(JSON.parse(customer))
       }
     } catch (error) {
       console.error("Error loading cart from localStorage:", error)
@@ -79,6 +85,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
     }
   }, [items, loaded])
+
+  useEffect(() => {
+    if (loaded) localStorage.setItem(CART_CUSTOMER_STORAGE_KEY, JSON.stringify(checkoutCustomer))
+  }, [checkoutCustomer, loaded])
 
   const addItem = (
     product: Omit<CartItem, "quantity">,
@@ -123,6 +133,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCart = () => {
     setItems([])
+    setCheckoutCustomer({})
+  }
+
+  const replaceCart = (nextItems: CartItem[], customer: { name?: string; city?: string } = {}) => {
+    setItems(nextItems)
+    setCheckoutCustomer(customer)
   }
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
@@ -174,6 +190,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeItem,
         updateQuantity,
         clearCart,
+        replaceCart,
+        checkoutCustomer,
         totalItems,
         comboEligibleItems,
         subtotalAmount,

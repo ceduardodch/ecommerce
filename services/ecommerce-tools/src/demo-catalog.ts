@@ -4,7 +4,7 @@ const kitchenDefaults = {
   vertical: "cocina" as const,
   brand: "Eter Niu Cocina",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "payphone"],
+  paymentMethods: ["transferencia", "deuna", "tarjeta"],
   couponCode: "GRANITOHOY",
   deliveryBadge: "Envio gratis Ecuador",
   stoveCompatibility: "Gas, induccion y vitroceramica",
@@ -14,7 +14,7 @@ const wellnessDefaults = {
   vertical: "bienestar" as const,
   brand: "Eter Niu Bienestar",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "payphone"],
+  paymentMethods: ["transferencia", "deuna", "tarjeta"],
   couponCode: "BIENESTARHOY",
   deliveryBadge: "Envio gratis Ecuador",
   stoveCompatibility: "No aplica",
@@ -82,7 +82,7 @@ const kitchenCatalog: Product[] = [
         "paymentMethods": [
             "transferencia",
             "deuna",
-            "payphone"
+            "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
         "imageUrl": "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
@@ -147,7 +147,7 @@ const kitchenCatalog: Product[] = [
         "paymentMethods": [
             "transferencia",
             "deuna",
-            "payphone"
+            "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
         "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
@@ -212,7 +212,7 @@ const kitchenCatalog: Product[] = [
         "paymentMethods": [
             "transferencia",
             "deuna",
-            "payphone"
+            "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
         "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
@@ -277,7 +277,7 @@ const kitchenCatalog: Product[] = [
         "paymentMethods": [
             "transferencia",
             "deuna",
-            "payphone"
+            "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
         "imageUrl": "https://cocina.b2b.com.ec/media/photo-detalle-wok.jpg",
@@ -337,7 +337,7 @@ const kitchenCatalog: Product[] = [
         "paymentMethods": [
             "transferencia",
             "deuna",
-            "payphone"
+            "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
         "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-cuchillo-samurai.jpg",

@@ -294,7 +294,7 @@ function CampaignPhotoGallery({
           Oferta de lanzamiento: $29.99
         </p>
         <p className="mb-4 text-[12px] text-[#b8c2ae]">
-          Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.
+          Envío gratis por Servientrega y pago por transferencia, deuna! o tarjeta DataFast.
         </p>
         <TrackedWhatsAppLink
           className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"

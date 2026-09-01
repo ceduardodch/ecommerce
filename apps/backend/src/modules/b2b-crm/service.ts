@@ -742,7 +742,9 @@ class B2bCrmModuleService extends MedusaService({
    * Admin, usa los valores base: Vicky nunca queda sin reglas de objeciones.
    */
   async agentPlaybook() {
-    const templates = await this.listTemplates(false)
+    // El panel de IA debe seguir explicando las reglas aunque la tabla de
+    // plantillas esté temporalmente inaccesible durante un despliegue.
+    const templates = await this.listTemplates(false).catch(() => [])
     const byKey = new Map(
       templates
         .filter((template: any) => template.key?.startsWith("agent_"))

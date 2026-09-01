@@ -30,6 +30,7 @@
     "datafast:probe": "node scripts/datafast-certification-probe.mjs",
     "campaign:readiness": "node scripts/campaign-readiness-report.mjs",
     "crm:reset": "node scripts/reset-medusa-crm.mjs",
+    "crm:cleanup-datafast": "node scripts/reset-medusa-crm.mjs --retain-single-paid-datafast",
     "graphify:build": "uv tool run --from graphifyy graphify extract . --code-only",
     "graphify:build:full": "uv tool run --from graphifyy graphify extract .",
     "graphify:update": "uv tool run --from graphifyy graphify update .",

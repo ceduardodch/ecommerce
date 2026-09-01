@@ -2,7 +2,7 @@ import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
 
-const defaultPaymentMethods = ["transferencia", "deuna", "payphone"]
+const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"

@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { crmService } from "../../_shared"
+import { DEFAULT_AGENT_PLAYBOOK } from "../../../../../modules/b2b-crm/default-agent-playbook"
 
 const PLAYBOOK_KEYS = new Set([
   "agent_objecion_precio",
@@ -11,7 +12,17 @@ const PLAYBOOK_KEYS = new Set([
 ])
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-  res.json({ items: await crmService(req).agentPlaybook() })
+  const errorId = `agent-playbook-${Date.now().toString(36)}`
+  try {
+    res.json({ items: await crmService(req).agentPlaybook() })
+  } catch (error) {
+    console.error({ errorId, error }, "CRM agent playbook unavailable")
+    res.json({
+      items: DEFAULT_AGENT_PLAYBOOK.map((item) => ({ ...item, active: true })),
+      warning: "El CRM no respondió. Se cargaron las reglas base; puedes reintentar guardar.",
+      errorId,
+    })
+  }
 }
 
 export async function PUT(req: MedusaRequest, res: MedusaResponse) {

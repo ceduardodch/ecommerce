@@ -2,7 +2,7 @@
 
 import { PageAmbient } from "../components/ui/page-ambient"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useCart } from "../../contexts/CartContext"
 import { CartItemComponent } from "../components/cart/cart-item"
 import { CartSummary } from "../components/cart/cart-summary"
@@ -14,11 +14,44 @@ type FormData = {
 }
 
 export default function CartPage() {
-  const { items, loaded, totalAmount } = useCart()
+  const { items, loaded, totalAmount, replaceCart, checkoutCustomer } = useCart()
+  const consumedSession = useRef<string | null>(null)
+  const [sessionError, setSessionError] = useState("")
   const [formData, setFormData] = useState<FormData>({
     name: "",
     city: "",
   })
+
+  useEffect(() => {
+    if (!checkoutCustomer.name && !checkoutCustomer.city) return
+    setFormData({ name: checkoutCustomer.name || "", city: checkoutCustomer.city || "" })
+  }, [checkoutCustomer.city, checkoutCustomer.name])
+
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get("session")
+    if (!token || consumedSession.current === token) return
+    consumedSession.current = token
+    void fetch(`/api/cart-sessions/${encodeURIComponent(token)}`, { method: "POST" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("El enlace ya no está disponible")
+        const payload = await response.json() as { session?: { items?: any[]; customer?: { name?: string; city?: string } } }
+        const session = payload.session
+        if (!session?.items?.length) throw new Error("El carrito no contiene productos disponibles")
+        replaceCart(session.items.map((item) => ({
+          id: item.productId,
+          sku: item.sku,
+          title: item.title,
+          price: item.price,
+          comboPrice: item.comboPrice,
+          comboMinimumItems: item.comboMinimumItems,
+          comboGroup: item.comboGroup,
+          quantity: item.quantity,
+          image: item.image,
+          category: item.category,
+        })), session.customer)
+      })
+      .catch((error) => setSessionError(error instanceof Error ? error.message : "No se pudo cargar el carrito"))
+  }, [replaceCart])
 
   const handleCheckout = () => {
     // The CheckoutButton handles tracking and WhatsApp link generation
@@ -67,6 +100,7 @@ export default function CartPage() {
         >
           Tu carrito
         </h1>
+        {sessionError ? <div role="alert" className="mb-5 rounded-xl border border-[#C4502A] bg-[#FFF5F2] p-4 text-[#8F3117]">{sessionError}. Puedes armar un carrito nuevo desde la tienda.</div> : null}
 
         {items.length === 0 ? (
           <div className="bg-white rounded-2xl border border-[#E8E2D8] p-8 text-center">

@@ -38,12 +38,23 @@ const EMPTY: Form = {
 }
 
 export default function PagoTarjetaPage() {
-  const { items, totalAmount, loaded, unitPriceForItem } = useCart()
+  const { items, totalAmount, loaded, unitPriceForItem, checkoutCustomer } = useCart()
   const [form, setForm] = useState<Form>(EMPTY)
   const [checkout, setCheckout] = useState<CheckoutResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const widgetRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!checkoutCustomer.name && !checkoutCustomer.city) return
+    const names = (checkoutCustomer.name || "").trim().split(/\s+/)
+    setForm((current) => ({
+      ...current,
+      givenName: current.givenName || names[0] || "",
+      surname: current.surname || names.slice(1).join(" "),
+      city: current.city || checkoutCustomer.city || "",
+    }))
+  }, [checkoutCustomer.city, checkoutCustomer.name])
 
   // Inyecta el widget Copy&Pay de Datafast cuando hay checkout real.
   useEffect(() => {

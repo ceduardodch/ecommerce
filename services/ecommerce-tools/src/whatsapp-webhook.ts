@@ -14,6 +14,7 @@ import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
 import type { Product } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
+import { advanceWhatsappSale, type CommerceState } from "./whatsapp-sales-flow.js"
 
 // ---------------------------------------------------------------------------
 // Tipos de los mensajes que Meta envía al webhook
@@ -306,9 +307,13 @@ export function mountWhatsappWebhookRoutes(
     nextFollowupAt?: string
     followupReason?: string
   }) => Promise<unknown>,
-  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
+  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null; metadata?: Record<string, unknown>; name?: string; email?: string } | undefined>,
   searchProducts?: (query: string) => Promise<Product[]>,
   sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
+  commerce?: {
+    quote: (input: { items: Array<{ productId: string; variantId?: string; quantity: number }>; customer?: { phone?: string; name?: string; email?: string; metadata?: Record<string, unknown> } }) => Promise<any>
+    createCart: (input: { phone: string; customer: { name: string; city: string }; items: Array<{ productId: string; variantId: string; quantity: number }> }) => Promise<{ cartUrl: string; expiresAt: string }>
+  },
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
   const deduper = new WebhookMessageDeduper(config.dataDir)
@@ -399,7 +404,15 @@ export function mountWhatsappWebhookRoutes(
           }
           if (!optOut && searchProducts && sendReply) {
             const products = await searchProducts(text).catch(() => [])
-            const replyText = await createWhatsAppAgentReply(config, { text, products })
+            const customer = getCustomer ? await getCustomer(`+${waId}`).catch(() => undefined) : undefined
+            const sale = commerce ? await advanceWhatsappSale({
+              text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
+              state: customer?.metadata?.agentCommerce as CommerceState | undefined,
+              quote: commerce.quote,
+              createCart: commerce.createCart,
+            }).catch(() => undefined) : undefined
+            if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
+            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products })
             if (replyText) {
               await sendReply({ phone: `+${waId}`, text: replyText })
             }

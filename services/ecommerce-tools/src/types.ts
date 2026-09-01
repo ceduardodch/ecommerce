@@ -126,6 +126,8 @@ export type CustomerEventType =
   | "opt_out"
   | "no_response"
   | "conversation_escalated"
+  | "cart_link_sent"
+  | "human_handoff"
   | "note"
   | "followup_queued"
   | "followup_snoozed"

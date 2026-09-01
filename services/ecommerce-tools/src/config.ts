@@ -13,10 +13,6 @@ export type AppConfig = {
   medusaAdminApiKey?: string
   taxRate: number
   whatsappSellerNumber: string
-  payphoneApiLinkUrl: string
-  payphoneToken?: string
-  payphoneStoreId?: string
-  payphoneDryRun: boolean
   // Datafast (DataFast Ecuador / ACI oppwa) — botón de pagos con tarjeta
   datafastEnv: "test" | "live"
   datafastDryRun: boolean
@@ -94,12 +90,6 @@ export function loadConfig(env = process.env): AppConfig {
     whatsappSellerNumber: normalizeWhatsappSellerNumber(
       env.WHATSAPP_SELLER_NUMBER || "0979854915",
     ),
-    payphoneApiLinkUrl:
-      env.PAYPHONE_API_LINK_URL ||
-      "https://pay.payphonetodoesposible.com/api/Links",
-    payphoneToken: env.PAYPHONE_TOKEN,
-    payphoneStoreId: env.PAYPHONE_STORE_ID,
-    payphoneDryRun: bool(env.PAYPHONE_DRY_RUN, true),
     // Datafast: dry-run por defecto hasta tener credenciales aprobadas
     datafastEnv: env.DATAFAST_ENV === "live" ? "live" : "test",
     datafastDryRun: bool(env.DATAFAST_DRY_RUN, true),

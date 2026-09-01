@@ -82,42 +82,6 @@ export async function getMedusaOrder(config: AppConfig, orderId: string) {
   return result.order
 }
 
-export async function attachMedusaPaymentLink(
-  config: AppConfig,
-  orderId: string,
-  input: {
-    paymentLink: string
-    clientTransactionId: string
-    payload?: unknown
-  },
-) {
-  const result = await medusaAdminFetch<{ order: OrderRecord }>(
-    config,
-    `/admin/b2b/orders/${encodeURIComponent(orderId)}/payment-link`,
-    {
-      method: "POST",
-      body: JSON.stringify(input),
-    },
-  )
-
-  return result.order
-}
-
-export async function forwardPayphoneWebhook(
-  config: AppConfig,
-  payload: Record<string, unknown>,
-) {
-  return medusaAdminFetch<{
-    matched: boolean
-    status: string
-    order?: OrderRecord
-    payload?: Record<string, unknown>
-  }>(config, "/admin/b2b/orders/payphone-webhook", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  })
-}
-
 export async function importMedusaCustomers(
   config: AppConfig,
   customers: unknown[],

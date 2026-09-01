@@ -100,6 +100,7 @@ async function main() {
   const databaseUrl =
     argValue("--database-url") || process.env.DATABASE_URL || ""
   const confirmReset = hasArg("--confirm-reset-crm")
+  const retainSinglePaidDatafast = hasArg("--retain-single-paid-datafast")
   const outputDir =
     argValue("--backup-dir") ||
     path.join(process.cwd(), "data", "crm-backups", timestamp())
@@ -136,11 +137,21 @@ async function main() {
       backups.push(await backupTable(client, table, outputDir))
     }
 
+    const paidDatafast = await client.query(
+      `select distinct phone from crm_customer_event where type = 'paid' and source = 'datafast' and phone is not null and deleted_at is null order by phone`,
+    )
+    const retainedPhone = retainSinglePaidDatafast ? paidDatafast.rows[0]?.phone : undefined
+    if (retainSinglePaidDatafast && paidDatafast.rows.length !== 1) {
+      throw new Error(`Expected exactly one confirmed DataFast customer; found ${paidDatafast.rows.length}. No rows were deleted.`)
+    }
+
     const manifest = {
       generatedAt: new Date().toISOString(),
-      action: confirmReset ? "backup_and_reset" : "backup_only_dry_run",
+      action: confirmReset ? (retainSinglePaidDatafast ? "backup_and_retain_single_paid_datafast" : "backup_and_reset") : "backup_only_dry_run",
       tables: CRM_TABLES,
       countsBefore: before,
+      paidDatafastPhones: paidDatafast.rows.map((row) => row.phone),
+      retainedPhone,
       backups,
       note:
         "Only B2B CRM tables are included. Medusa products, customers, users, regions and orders are not reset by this script.",
@@ -157,10 +168,13 @@ async function main() {
     }
 
     await client.query("begin")
-    await client.query(
-      CRM_TABLES.map((table) => `truncate table ${quoteIdentifier(table)}`)
-        .join("; "),
-    )
+    if (retainSinglePaidDatafast) {
+      await client.query(`delete from "crm_customer_event" where phone <> $1 or phone is null`, [retainedPhone])
+      await client.query(`delete from "conversational_order" where phone <> $1 or phone is null or status <> 'paid'`, [retainedPhone])
+      await client.query(`delete from "crm_customer_profile" where phone <> $1`, [retainedPhone])
+    } else {
+      await client.query(CRM_TABLES.map((table) => `truncate table ${quoteIdentifier(table)}`).join("; "))
+    }
     await client.query("commit")
 
     const after = Object.fromEntries(
@@ -169,7 +183,7 @@ async function main() {
       ),
     )
 
-    console.log("CRM reset complete.")
+    console.log(retainSinglePaidDatafast ? "CRM cleanup complete; retained the single paid DataFast customer." : "CRM reset complete.")
     console.log(
       JSON.stringify({
         countsBefore: before,
