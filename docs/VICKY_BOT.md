@@ -51,14 +51,47 @@ Vicky should not query the database directly for normal sales work. Use `ecommer
 - `GET /tools/ai-context/customer/:phone`
 - `POST /tools/quote`
 - `POST /tools/orders`
-- `POST /tools/payphone-link`
+- `GET /tools/payment-methods`
+- `POST /tools/whatsapp-cart-sessions`
+- `POST /tools/datafast/checkout`
 - `POST /tools/customer-events`
 - `POST /tools/events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`
 - `POST /tools/meta-post-draft`
 
-The tools service is responsible for Medusa, CRM WhatsApp, Meta events, PayPhone and order traceability.
+The tools service is responsible for Medusa, CRM WhatsApp, Meta events, Datafast and order traceability.
+
+## Formas de pago (dos)
+
+Vicky ofrece **solo dos**: transferencia/depósito bancario y tarjeta con
+Datafast. No hay pago contra entrega — se despacha después de confirmar el pago.
+
+Los datos de la cuenta bancaria **no viven en el repo** (es público). Se cargan
+por entorno en el servicio `ecommerce-tools` y Vicky los lee con
+`GET /tools/payment-methods`:
+
+```text
+BANK_TRANSFER_ENABLED=true
+BANK_NAME=Banco Pichincha
+BANK_ACCOUNT_HOLDER=<titular de la cuenta>
+BANK_ACCOUNT_TAX_ID=<RUC o cedula>
+BANK_ACCOUNT_TYPE=Ahorros
+BANK_ACCOUNT_NUMBER=<numero de cuenta>
+BRAND_INSTAGRAM_URL=https://instagram.com/eter.niu
+```
+
+Sin esas variables, la respuesta marca `configured: false` y el prompt obliga a
+escalar a un humano en lugar de dictar una cuenta inventada. Verificación:
+
+```bash
+curl -fsS "$ECOMMERCE_TOOLS_BASE_URL/tools/payment-methods" \
+  -H "Authorization: Bearer $ECOMMERCE_TOOLS_TOKEN" | head -40
+```
+
+La misma respuesta trae la política de previo pago, el guion de confianza
+(videos de despacho en redes, guía de Servientrega, reseñas) y los enlaces a la
+página pública `/pagos`.
 
 ## Coolify Setup
 
@@ -235,7 +268,7 @@ Verificar que cada conversación tenga N eventos `message_in` + `message_out` in
 # Verificar que hay 1 evento por cada mensaje real de WhatsApp
 ```
 
-Use `/tools/sales/payment-proof` for transfer/deuna screenshots under review and `/tools/sales/confirm` only after human confirmation.
+Use `/tools/sales/payment-proof` for transfer screenshots under review and `/tools/sales/confirm` only after human confirmation.
 
 ## Responder por Cloud API cuando el mensaje llegó con replyVia: "cloud_api" (W3)
 
@@ -302,7 +335,7 @@ dispatcher con `CRM_FOLLOWUP_DISPATCH_MODE=meta`.
 
 ## Production Guardrails
 
-- Keep PayPhone in `PAYPHONE_DRY_RUN=true` until real credentials and webhook are validated.
+- Keep Datafast in `DATAFAST_DRY_RUN=true` until real credentials and the result callback are validated.
 - Keep outbound WhatsApp allowlisted during early testing.
 - Do not automate ad spend or Marketplace publishing without explicit human confirmation.
 - Human must confirm delivery, invoice, warranty exceptions, bulk discounts and unclear payment status.

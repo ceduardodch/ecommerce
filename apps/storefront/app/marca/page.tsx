@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { TrackedEventLink } from "../components/analytics"
 import { Isotipo } from "../components/ui/isotipo"
 import { Photo } from "../components/ui/photo"
+import { paymentBadgeLabel } from "../../lib/commercial"
 import { brandBaseUrl, kitchenBaseUrl, wellnessBaseUrl } from "../../lib/domains"
 import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "../../lib/seo"
 import { sellerWhatsappNumber } from "../../lib/whatsapp"
@@ -102,7 +103,7 @@ export default function BrandPortalPage() {
           <span aria-hidden="true">·</span>
           <span>Envío gratis por Servientrega</span>
           <span aria-hidden="true">·</span>
-          <span>Pagas al recibir</span>
+          <span>{paymentBadgeLabel}</span>
         </p>
       </header>
 

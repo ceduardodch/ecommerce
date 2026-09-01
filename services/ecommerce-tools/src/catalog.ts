@@ -2,7 +2,20 @@ import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
 
-const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
+// Solo hay dos formas de pago: transferencia y tarjeta (Datafast).
+const supportedPaymentMethods = ["transferencia", "tarjeta"]
+const defaultPaymentMethods = supportedPaymentMethods
+
+/**
+ * Descarta métodos legacy (deuna!, payphone, contra entrega) que sigan
+ * guardados en la metadata de Medusa o en el catálogo demo.
+ */
+function normalizePaymentMethods(methods?: string[] | null) {
+  const kept = (methods || []).filter((method) =>
+    supportedPaymentMethods.includes(method.trim().toLowerCase()),
+  )
+  return kept.length ? kept : defaultPaymentMethods
+}
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"
@@ -193,9 +206,7 @@ function withGeneratedImages(config: AppConfig, products: Product[]) {
       ),
       deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
       freeShipping: product.freeShipping ?? true,
-      paymentMethods: product.paymentMethods?.length
-        ? product.paymentMethods
-        : defaultPaymentMethods,
+      paymentMethods: normalizePaymentMethods(product.paymentMethods),
       couponCode: product.couponCode || defaultCouponCode,
       stoveCompatibility:
         product.stoveCompatibility ||
@@ -272,9 +283,9 @@ function normalizeMedusaProduct(
       product.metadata?.freeShipping === undefined
         ? true
         : booleanFromMetadata(product.metadata?.freeShipping),
-    paymentMethods:
-      stringArrayFromMetadata(product.metadata?.paymentMethods) ||
-      defaultPaymentMethods,
+    paymentMethods: normalizePaymentMethods(
+      stringArrayFromMetadata(product.metadata?.paymentMethods),
+    ),
     couponCode:
       stringFromMetadata(product.metadata?.couponCode) || defaultCouponCode,
     material: stringFromMetadata(product.metadata?.material),

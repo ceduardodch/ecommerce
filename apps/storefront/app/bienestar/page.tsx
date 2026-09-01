@@ -192,7 +192,7 @@ export default async function WellnessPage() {
       />
 
       {/* 1. Promo bar */}
-      <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
+      <PromoBar message="Envío gratis a todo Ecuador · Pago con tarjeta o transferencia" />
 
       {/* 2. Header */}
       <SiteHeader vertical="bienestar" surface="dark" />

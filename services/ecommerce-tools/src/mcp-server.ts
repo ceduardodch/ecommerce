@@ -6,6 +6,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js"
 import { loadConfig } from "./config.js"
 import { createCommerceService } from "./service.js"
+import { paymentMethodsInfo } from "./payments.js"
 import {
   customerEventInputSchema,
   customerImportSchema,
@@ -200,6 +201,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         },
       },
     },
+    {
+      name: "payment_methods",
+      description:
+        "Formas de pago vigentes (transferencia y tarjeta Datafast), datos bancarios, politica de previo pago y guion de confianza. Usar SIEMPRE antes de dictar una cuenta o prometer despacho.",
+      inputSchema: { type: "object", properties: {} },
+    },
   ],
 }))
 
@@ -309,6 +316,17 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const dashboard = await service.dashboard(input)
     return {
       content: [{ type: "text", text: JSON.stringify(dashboard, null, 2) }],
+    }
+  }
+
+  if (request.params.name === "payment_methods") {
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(paymentMethodsInfo(config), null, 2),
+        },
+      ],
     }
   }
 

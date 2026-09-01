@@ -25,7 +25,7 @@ type WellnessProduct = {
 const commercialMetadata = {
   vertical: "bienestar",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "payphone"],
+  paymentMethods: ["transferencia", "tarjeta"],
   couponCode: "BIENESTARHOY",
   stoveCompatibility: "No aplica",
 };

@@ -71,6 +71,9 @@ export function SiteFooter() {
             >
               @eter.niu
             </a>
+            <a href="/pagos" className="hover:text-[#d3fa99] transition-colors">
+              Formas de pago
+            </a>
             <a href="/privacidad" className="hover:text-[#d3fa99] transition-colors">
               Privacidad
             </a>
@@ -93,7 +96,7 @@ export function SiteFooter() {
             </a>
           </p>
           <p className="mt-3 text-[11px] text-[#b8c2ae]">
-            Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
+            Envío gratis a todo Ecuador por Servientrega · Pago con tarjeta o transferencia
           </p>
         </div>
 
@@ -157,6 +160,14 @@ export function SiteFooter() {
                   className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
                   Marca
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/pagos"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
+                >
+                  Formas de pago
                 </a>
               </li>
               <li>
@@ -238,7 +249,7 @@ export function SiteFooter() {
 
         {/* Bottom notice (both mobile & desktop) */}
         <p className="mt-8 text-[11px] text-[#b8c2ae]">
-          Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
+          Envío gratis a todo Ecuador por Servientrega · Pago con tarjeta o transferencia
         </p>
       </div>
     </footer>

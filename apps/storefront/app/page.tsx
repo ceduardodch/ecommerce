@@ -137,7 +137,7 @@ export default async function Home({ searchParams }: HomeProps) {
       />
 
       {/* 1. Promo bar (ya oscura, funde con el canvas) */}
-      <PromoBar message="Arma tu combo · Revisa el carrito · Paga con tarjeta DataFast" />
+      <PromoBar message="Arma tu combo · Revisa el carrito · Paga con tarjeta o transferencia" />
 
       {/* 2. Header dark */}
       <SiteHeader vertical="cocina" surface="dark" />

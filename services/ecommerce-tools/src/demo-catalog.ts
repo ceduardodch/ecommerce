@@ -4,7 +4,7 @@ const kitchenDefaults = {
   vertical: "cocina" as const,
   brand: "Eter Niu Cocina",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "tarjeta"],
+  paymentMethods: ["transferencia", "tarjeta"],
   couponCode: "GRANITOHOY",
   deliveryBadge: "Envio gratis Ecuador",
   stoveCompatibility: "Gas, induccion y vitroceramica",
@@ -14,7 +14,7 @@ const wellnessDefaults = {
   vertical: "bienestar" as const,
   brand: "Eter Niu Bienestar",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "tarjeta"],
+  paymentMethods: ["transferencia", "tarjeta"],
   couponCode: "BIENESTARHOY",
   deliveryBadge: "Envio gratis Ecuador",
   stoveCompatibility: "No aplica",
@@ -81,7 +81,6 @@ const kitchenCatalog: Product[] = [
         "freeShipping": true,
         "paymentMethods": [
             "transferencia",
-            "deuna",
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
@@ -146,7 +145,6 @@ const kitchenCatalog: Product[] = [
         "freeShipping": true,
         "paymentMethods": [
             "transferencia",
-            "deuna",
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
@@ -211,7 +209,6 @@ const kitchenCatalog: Product[] = [
         "freeShipping": true,
         "paymentMethods": [
             "transferencia",
-            "deuna",
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
@@ -276,7 +273,6 @@ const kitchenCatalog: Product[] = [
         "freeShipping": true,
         "paymentMethods": [
             "transferencia",
-            "deuna",
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
@@ -336,7 +332,6 @@ const kitchenCatalog: Product[] = [
         "freeShipping": true,
         "paymentMethods": [
             "transferencia",
-            "deuna",
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",

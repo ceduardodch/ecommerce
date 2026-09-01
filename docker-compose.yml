@@ -110,6 +110,15 @@ services:
       DATAFAST_ECOMMERCE_ID: ${DATAFAST_ECOMMERCE_ID:-}
       DATAFAST_SERVICE_PROVIDER_ID: ${DATAFAST_SERVICE_PROVIDER_ID:-}
       DATAFAST_CUSTOMER_NAME: ${DATAFAST_CUSTOMER_NAME:-ETERNIU}
+      # Transferencia bancaria: los datos reales solo por entorno (repo público).
+      # Sin ellos, /tools/payment-methods marca configured=false y Vicky escala.
+      BANK_TRANSFER_ENABLED: ${BANK_TRANSFER_ENABLED:-true}
+      BANK_NAME: "${BANK_NAME:-Banco Pichincha}"
+      BANK_ACCOUNT_HOLDER: "${BANK_ACCOUNT_HOLDER:-}"
+      BANK_ACCOUNT_TAX_ID: ${BANK_ACCOUNT_TAX_ID:-}
+      BANK_ACCOUNT_TYPE: "${BANK_ACCOUNT_TYPE:-Ahorros}"
+      BANK_ACCOUNT_NUMBER: ${BANK_ACCOUNT_NUMBER:-}
+      BRAND_INSTAGRAM_URL: ${BRAND_INSTAGRAM_URL:-https://instagram.com/eter.niu}
       META_CATALOG_BRAND: "${META_CATALOG_BRAND:-Eter Niu Cocina}"
       META_API_VERSION: ${META_API_VERSION:-v23.0}
       PIXEL_ENABLED: ${PIXEL_ENABLED:-false}

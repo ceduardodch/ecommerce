@@ -14,7 +14,7 @@ import {
   Utensils,
 } from "lucide-react"
 import { getProducts, productPath, type Product } from "../../../lib/catalog"
-import { commercialInfo } from "../../../lib/commercial"
+import { commercialInfo, paymentBadgeLabel } from "../../../lib/commercial"
 import { mediaSlots, type MediaSlot } from "../../../lib/content"
 import { kitchenBaseUrl } from "../../../lib/domains"
 import { absoluteUrl } from "../../../lib/seo"
@@ -278,7 +278,7 @@ function TrustGrid({ product }: { product: Product }) {
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
         <BadgeDollarSign size={20} className="text-[#d3fa99]" />
         <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
-          Pagas al recibir
+          {paymentBadgeLabel}
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
@@ -327,7 +327,7 @@ function CampaignPhotoGallery({
           Oferta de lanzamiento: $29.99
         </p>
         <p className="mb-4 text-[12px] text-[#b8c2ae]">
-          Envío gratis por Servientrega y pago por transferencia, deuna! o tarjeta DataFast.
+          Envío gratis por Servientrega y pago por transferencia o tarjeta Datafast.
         </p>
         <TrackedWhatsAppLink
           className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"

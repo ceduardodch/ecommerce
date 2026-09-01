@@ -1,6 +1,6 @@
 ---
 name: ecommerce-sales
-description: Conversational healthy kitchen ecommerce sales workflow for the Medusa/OpenClaw stack. Use when an agent must answer WhatsApp buyer questions, search products, use CRM context, recommend granite pots/woks/sets, create quotes, create pending-payment orders, generate PayPhone links, schedule followups, or prepare a human handoff for shop.b2b.com.ec.
+description: Conversational healthy kitchen ecommerce sales workflow for the Medusa/OpenClaw stack. Use when an agent must answer WhatsApp buyer questions, search products, use CRM context, recommend granite pots/woks/sets, create quotes, create pending-payment orders, close payments by bank transfer or Datafast card, schedule followups, or prepare a human handoff for shop.b2b.com.ec.
 ---
 
 # Ecommerce Sales
@@ -16,7 +16,7 @@ Use this skill to sell kitchen products through the ecommerce tool layer without
 3. Call `GET /tools/search-products` with the strongest kitchen terms. If results are broad, recommend up to three options.
 4. Call `POST /tools/quote` before giving totals. Include customer phone when available so CRM records `quote_created`.
 5. If the buyer accepts, call `POST /tools/orders` with customer name/phone and source `whatsapp`.
-6. Call `POST /tools/payphone-link` and send the returned link without modification.
+6. Call `GET /tools/payment-methods` and close the payment: dictate the transfer account from that response, or build the card cart with `POST /tools/whatsapp-cart-sessions` and send that link. Never dictate a bank account from memory.
 7. Register manual events with `POST /tools/customer-events` for no-response, escalation, opt-out, `payment_proof_received` or explicit recompra interest. Web/social events use `POST /tools/events` with `journeyStage`, `householdPeople`, `city`, `videoSlot`, `productInterestSku`, `recommendedSku`, `couponClaimed`, `freeShippingShown`, `paymentMethodsShown`, `stoveCompatibilityShown` and `followupSequence` when available.
 8. End with order id, payment status, CRM event/followup date, and next operational step.
 
@@ -26,9 +26,11 @@ Use this skill to sell kitchen products through the ecommerce tool layer without
 - Do not state totals unless they came from `quote`.
 - Do not refer to prior purchases unless they came from `get_customer`.
 - Do not create a payment link before an order exists.
+- Offer exactly two payment methods: bank transfer (Banco Pichincha) and card through Datafast. Never offer cash on delivery, deuna! or PayPhone.
+- Prepay always: the order ships after the payment is confirmed. Never promise "pagas al recibir".
 - Treat `pending_payment` as unpaid.
-- Treat transfer/deuna screenshots as `payment_proof_received` and human review, not as paid.
-- Treat PayPhone dry-run links as test links and say so if visible.
+- Treat transfer screenshots as `payment_proof_received` and human review, not as paid.
+- Treat Datafast dry-run checkouts as test links and say so if visible.
 - Escalate to a human for bulk discounts, custom installation, warranty exceptions, invoices, or unclear payment status.
 - For outbound followup, send only with consent or active conversation; otherwise prepare a human-approved message.
 
@@ -43,7 +45,8 @@ Important endpoints:
 - `GET /tools/customers/:phone`
 - `POST /tools/quote`
 - `POST /tools/orders`
-- `POST /tools/payphone-link`
+- `GET /tools/payment-methods`
+- `POST /tools/whatsapp-cart-sessions`
 - `POST /tools/customer-events`
 - `GET /tools/followups/due`
 - `GET /tools/dashboard`

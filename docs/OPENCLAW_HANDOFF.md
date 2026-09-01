@@ -111,12 +111,12 @@ Rutas privadas esperadas:
 4. OpenClaw recomienda maximo tres opciones segun uso: 20 cm, 24 cm, wok 32 cm, set MGC, menos aceite, familia, cuidado o reposicion.
 5. OpenClaw cotiza y queda evento `quote_created` si hay telefono.
 6. Si el cliente acepta, OpenClaw crea orden `pending_payment`.
-7. OpenClaw genera link PayPhone.
-8. Webhook PayPhone o conciliacion humana confirma el pago y agenda recompra si aplica.
+7. OpenClaw cierra el pago con una de las dos formas: transferencia (datos desde `GET /tools/payment-methods`) o tarjeta Datafast (enlace de carrito con `POST /tools/whatsapp-cart-sessions`). No hay contra entrega: se despacha con el pago confirmado.
+8. El resultado de Datafast o la conciliacion humana del comprobante confirma el pago y agenda recompra si aplica.
 9. Si entrega, factura, instalacion o garantia no son claras, OpenClaw escala a humano.
-10. Si el cliente envia comprobante de transferencia/deuna, registrar `payment_proof_received`; queda en revision humana y no se marca `paid` ni `Purchase`.
+10. Si el cliente envia comprobante de transferencia, registrar `payment_proof_received`; queda en revision humana y no se marca `paid` ni `Purchase`.
 11. Si el cliente ya mostro interes y falta perfil, pedir: "Para confirmarte envio gratis por Servientrega, me ayudas con tu nombre y ciudad?" y registrar `lead_created` con `customer.name`, `customer.whatsappConsent=true` y metadata `city`, `productInterestSku`, `campaignSlug`, `leadId`, `journeyStage=cotizacion_pendiente`.
-12. Cuando un humano confirma transferencia/deuna/pago, usar `POST /tools/sales/confirm` con `customerName`, telefono, SKU, monto, metodo de pago, `leadId`, campana y `confirmedBy`.
+12. Cuando un humano confirma la transferencia o el pago con tarjeta, usar `POST /tools/sales/confirm` con `customerName`, telefono, SKU, monto, metodo de pago, `leadId`, campana y `confirmedBy`.
 
 ## Recompra
 

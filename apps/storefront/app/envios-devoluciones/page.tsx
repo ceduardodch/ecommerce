@@ -52,6 +52,14 @@ export default function EnviosDevolucionesPage() {
             <strong>Servientrega</strong>.
           </LI>
           <LI>
+            <strong>Previo pago:</strong> despachamos una vez confirmado el pago
+            (transferencia o tarjeta Datafast). Mira las{" "}
+            <a href="/pagos" className="text-[#d3fa99] underline">
+              formas de pago
+            </a>
+            .
+          </LI>
+          <LI>
             <strong>Costo:</strong> envío <strong>gratis</strong>.
           </LI>
           <LI>
@@ -64,7 +72,16 @@ export default function EnviosDevolucionesPage() {
           </LI>
           <LI>
             Te compartimos la guía de seguimiento por WhatsApp cuando tu pedido sale
-            a despacho.
+            a despacho. Además publicamos los videos de los despachos del día en{" "}
+            <a
+              href="https://instagram.com/eter.niu"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#d3fa99] underline"
+            >
+              @eter.niu
+            </a>
+            .
           </LI>
         </ul>
 

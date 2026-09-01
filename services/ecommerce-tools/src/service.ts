@@ -198,7 +198,7 @@ function suggestNextAction(customer: unknown, events: unknown[]) {
     return "No contactar por WhatsApp. Mantener opt-out y pedir revision humana."
   }
   if (types.includes("payment_proof_received")) {
-    return "Revisar comprobante de transferencia/deuna con humano antes de marcar pagado."
+    return "Revisar comprobante de transferencia con humano antes de marcar pagado."
   }
   if (
     types.includes("checkout_started") ||

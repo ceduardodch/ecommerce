@@ -67,7 +67,8 @@ export default function TerminosPage() {
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
           <LI>
             <strong>Por WhatsApp:</strong> agregas productos y cierras tu pedido
-            con nuestra asesora, quien confirma stock, envío y forma de pago.
+            con nuestra asesora, quien confirma stock, envío y forma de pago. Si
+            eliges transferencia, te enviamos por ahí los datos de la cuenta.
           </LI>
           <LI>
             <strong>Pago con tarjeta en línea:</strong> a través de la pasarela
@@ -79,7 +80,20 @@ export default function TerminosPage() {
         <ul className="mt-3 list-disc space-y-1.5 pl-5">
           <LI>Los precios están en dólares de los Estados Unidos (USD) e incluyen IVA.</LI>
           <LI>Podemos actualizar precios y promociones sin previo aviso; se respeta el precio vigente al confirmar el pedido.</LI>
-          <LI>Aceptamos pago con tarjeta (Datafast) y otras formas acordadas por WhatsApp (por ejemplo, pago contra entrega).</LI>
+          <LI>
+            Aceptamos <strong>dos formas de pago</strong>: transferencia o
+            depósito bancario y tarjeta de crédito/débito con Datafast. Detalle
+            en{" "}
+            <a href="/pagos" className="text-[#d3fa99] underline">
+              formas de pago
+            </a>
+            .
+          </LI>
+          <LI>
+            Las compras son con <strong>previo pago</strong>: el pedido se
+            despacha una vez confirmado el pago. No trabajamos con pago contra
+            entrega.
+          </LI>
           <LI>Los datos de tu tarjeta se procesan en el entorno seguro de Datafast y no se almacenan en nuestros servidores.</LI>
         </ul>
 

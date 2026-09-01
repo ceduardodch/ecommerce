@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (vertical === "marca") {
     return [
       { url: url("/"), changeFrequency: "monthly", priority: 1 },
+      { url: url("/pagos"), changeFrequency: "yearly", priority: 0.4 },
       { url: url("/terminos"), changeFrequency: "yearly", priority: 0.3 },
       { url: url("/privacidad"), changeFrequency: "yearly", priority: 0.3 },
       {

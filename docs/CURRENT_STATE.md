@@ -158,8 +158,8 @@ Metadata estandar esperada desde storefront: `journeyStage`, `householdPeople`, 
 - Drafts organicos disponibles por `/tools/meta-post-draft`.
 - Pixel/CAPI v1 disponible con `NEXT_PUBLIC_META_PIXEL_ID`, `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y `PIXEL_ENABLED`.
 - Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened`, videos `video_interest`, quiz `quiz_completed`, guia `guide_downloaded` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material, diametro, placement y recomendacion para que OpenClaw una interes web con conversacion.
-- WhatsApp CTA v2: home, cards, fichas y quiz muestran cupon `GRANITOHOY`, envio gratis, transferencia/deuna!/PayPhone y compatibilidad gas/induccion/vitroceramica. El mensaje empieza con `Hola, quiero la olla de granito {producto}.` y agrega campos estructurados para Vicky.
-- `payment_proof_received` existe como evento CRM/manual para comprobantes de transferencia/deuna; no dispara `Purchase` CAPI hasta confirmacion humana o webhook de pago.
+- WhatsApp CTA v2: home, cards, fichas y quiz muestran cupon `GRANITOHOY`, envio gratis, transferencia o tarjeta Datafast (las dos unicas formas de pago) y compatibilidad gas/induccion/vitroceramica. El mensaje empieza con `Hola, quiero la olla de granito {producto}.` y agrega campos estructurados para Vicky.
+- `payment_proof_received` existe como evento CRM/manual para comprobantes de transferencia; no dispara `Purchase` CAPI hasta confirmacion humana o webhook de pago.
 - Marketplace en v1 es asistido: la IA prepara titulo, copy, precio, fotos/checklist; humano confirma/publica.
 - No automatizar gasto publicitario ni publicar sin confirmacion explicita.
 

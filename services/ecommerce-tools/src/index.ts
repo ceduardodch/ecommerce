@@ -15,6 +15,7 @@ import {
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
+import { paymentMethodsInfo } from "./payments.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 import { mountWhatsappReplyRoute, sendWhatsappCloudReply } from "./whatsapp-reply.js"
 import type { CustomerRecord } from "./types.js"
@@ -93,6 +94,10 @@ app.post("/tools/whatsapp-cart-sessions/:token/consume", async (request, reply) 
   if (!session) return reply.code(404).send({ error: "cart_session_unavailable" })
   return { session }
 })
+
+// Formas de pago (dos: transferencia y tarjeta Datafast) + guion de confianza.
+// Vicky debe leer esto antes de dictar datos bancarios o prometer despacho.
+app.get("/tools/payment-methods", async () => paymentMethodsInfo(config))
 
 // ─── Datafast (botón de pagos con tarjeta) ───
 app.post("/tools/datafast/checkout", async (request) => {

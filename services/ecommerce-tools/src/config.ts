@@ -23,6 +23,14 @@ export type AppConfig = {
   datafastEcommerceId?: string
   datafastServiceProviderId?: string
   datafastCustomerName?: string
+  // Transferencia bancaria — datos reales SOLO por env (repo público)
+  bankTransferEnabled: boolean
+  bankName: string
+  bankAccountHolder?: string
+  bankAccountTaxId?: string
+  bankAccountType: string
+  bankAccountNumber?: string
+  brandInstagramUrl: string
   metaCatalogBrand: string
   metaApiVersion: string
   pixelEnabled: boolean
@@ -109,6 +117,17 @@ export function loadConfig(env = process.env): AppConfig {
     datafastEcommerceId: env.DATAFAST_ECOMMERCE_ID,
     datafastServiceProviderId: env.DATAFAST_SERVICE_PROVIDER_ID,
     datafastCustomerName: env.DATAFAST_CUSTOMER_NAME,
+    // Transferencia bancaria: la cuenta nunca se hardcodea porque este repo es
+    // público. Sin estas variables, /tools/payment-methods marca el método como
+    // no configurado y Vicky debe escalar a humano en vez de inventar datos.
+    bankTransferEnabled: bool(env.BANK_TRANSFER_ENABLED, true),
+    bankName: env.BANK_NAME || "Banco Pichincha",
+    bankAccountHolder: env.BANK_ACCOUNT_HOLDER,
+    bankAccountTaxId: env.BANK_ACCOUNT_TAX_ID,
+    bankAccountType: env.BANK_ACCOUNT_TYPE || "Ahorros",
+    bankAccountNumber: env.BANK_ACCOUNT_NUMBER,
+    brandInstagramUrl:
+      env.BRAND_INSTAGRAM_URL || "https://instagram.com/eter.niu",
     metaCatalogBrand: env.META_CATALOG_BRAND || "Eter Niu Cocina",
     metaApiVersion: env.META_API_VERSION || "v23.0",
     pixelEnabled: bool(env.PIXEL_ENABLED || env.NEXT_PUBLIC_PIXEL_ENABLED, true),
