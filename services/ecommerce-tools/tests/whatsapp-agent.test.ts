@@ -92,6 +92,87 @@ describe("createWhatsAppAgentReply", () => {
     expect(payload.instructions).not.toContain("No debe aparecer")
   })
 
+  it("incluye el historial reciente en el prompt y lo usa para interpretar una respuesta corta", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Perfecto, para 4 personas te recomiendo la olla 24cm." }] }],
+    }), { status: 200 }))
+
+    const result = await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "4",
+        products,
+        history: [
+          { type: "message_in", at: "2026-09-01T10:00:00.000Z", payload: { text: "Hola, quiero una olla" } },
+          { type: "message_out", at: "2026-09-01T10:00:05.000Z", payload: { text: "¿Para cuántas personas cocinas?" } },
+        ],
+      },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(result).toBe("Perfecto, para 4 personas te recomiendo la olla 24cm.")
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).toContain("Historial reciente")
+    expect(payload.input).toContain("Vicky: ¿Para cuántas personas cocinas?")
+    expect(payload.input).toContain("Cliente: Hola, quiero una olla")
+    expect(payload.input).toContain("Mensaje del cliente: 4")
+    // El historial va antes del mensaje actual, no después.
+    expect(payload.input.indexOf("¿Para cuántas personas cocinas?"))
+      .toBeLessThan(payload.input.indexOf("Mensaje del cliente: 4"))
+  })
+
+  it("ordena el historial por fecha aunque llegue desordenado (Medusa lo devuelve DESC) y recorta al límite", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Ok" }] }],
+    }), { status: 200 }))
+
+    // Desordenado a propósito y con más de HISTORY_TURN_LIMIT (10) turnos.
+    const history = Array.from({ length: 13 }, (_, i) => ({
+      type: (i % 2 === 0 ? "message_in" : "message_out") as const,
+      at: new Date(2026, 8, 1, 10, 12 - i).toISOString(),
+      payload: { text: `turno-${i}` },
+    }))
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "hola", products, history },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    // Los 3 turnos más viejos (los últimos del array desordenado, índices 12/11/10)
+    // quedan fuera del límite de 10.
+    expect(payload.input).not.toContain("turno-12")
+    expect(payload.input).not.toContain("turno-11")
+    expect(payload.input).not.toContain("turno-10")
+    // El más reciente sí entra, y aparece después del más viejo que sí entra.
+    expect(payload.input).toContain("turno-0")
+    expect(payload.input).toContain("turno-9")
+    expect(payload.input.indexOf("turno-9")).toBeLessThan(payload.input.indexOf("turno-0"))
+  })
+
+  it("ignora eventos que no son mensajes o que no traen texto", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Ok" }] }],
+    }), { status: 200 }))
+
+    await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "hola",
+        products,
+        history: [
+          { type: "quote_created", at: "2026-09-01T09:00:00.000Z", payload: { quoteId: "q1" } },
+          { type: "message_in", at: "2026-09-01T09:05:00.000Z", payload: {} },
+        ],
+      },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).not.toContain("Historial reciente")
+  })
+
   it("consulta el catálogo vivo si una consulta general no tuvo coincidencias", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       output: [{ type: "message", content: [{ type: "output_text", text: "Te muestro opciones." }] }],

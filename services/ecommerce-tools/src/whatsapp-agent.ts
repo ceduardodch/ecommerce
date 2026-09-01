@@ -1,7 +1,14 @@
 import type { AppConfig } from "./config.js"
 import { loadProducts } from "./catalog.js"
-import type { Product } from "./types.js"
+import type { CustomerEventRecord, Product } from "./types.js"
 import { getMedusaAgentPlaybook, type AgentPlaybookItem } from "./medusa-admin.js"
+
+/**
+ * Cuántos turnos previos (mensajes entrantes + salientes) se incluyen en el
+ * prompt. Cada turno es corto (mensajes de WhatsApp), así que 10 caben
+ * cómodos en el presupuesto de tokens sin acercarse al límite del modelo.
+ */
+const HISTORY_TURN_LIMIT = 10
 
 type OpenAiResponse = {
   output?: Array<{
@@ -24,6 +31,32 @@ function productContext(products: Product[]): string {
     product.stock > 0 ? "disponible" : "sin stock confirmado",
     product.productUrl ? `link: ${product.productUrl}` : "",
   ].filter(Boolean).join("; ")).join("\n")
+}
+
+/**
+ * Arma el bloque de turnos previos para el prompt.
+ *
+ * Los eventos llegan en el orden que dé el backend (Medusa los devuelve
+ * DESC por fecha; el almacenamiento local en archivo los devuelve ASC), así
+ * que se ordenan explícitamente antes de recortar — de lo contrario
+ * `slice(-N)` tomaría los N turnos más VIEJOS en vez de los más recientes
+ * cuando el backend es Medusa.
+ */
+function conversationHistoryText(events: CustomerEventRecord[] = []): string {
+  const turns = events
+    .filter(
+      (event): event is CustomerEventRecord & { payload: { text: string } } =>
+        (event.type === "message_in" || event.type === "message_out") &&
+        typeof (event.payload as { text?: unknown } | undefined)?.text === "string",
+    )
+    .sort((a, b) => a.at.localeCompare(b.at))
+    .slice(-HISTORY_TURN_LIMIT)
+
+  if (!turns.length) return ""
+
+  return turns
+    .map((turn) => `${turn.type === "message_in" ? "Cliente" : "Vicky"}: ${turn.payload.text}`)
+    .join("\n")
 }
 
 function extractOutputText(response: OpenAiResponse): string | null {
@@ -59,7 +92,7 @@ function instructionsWithPlaybook(playbook: AgentPlaybookItem[]) {
 
 export async function createWhatsAppAgentReply(
   config: AppConfig,
-  input: { text: string; products: Product[] },
+  input: { text: string; products: Product[]; history?: CustomerEventRecord[] },
   fetchImpl: typeof fetch = fetch,
   catalogLoader: typeof loadProducts = loadProducts,
   playbookLoader: (config: AppConfig) => Promise<AgentPlaybookItem[]> = getMedusaAgentPlaybook,
@@ -83,6 +116,7 @@ export async function createWhatsAppAgentReply(
     const playbook = config.crmBackend === "medusa"
       ? await playbookLoader(config).catch(() => [])
       : []
+    const conversationHistory = conversationHistoryText(input.history)
     const response = await fetchImpl("https://api.openai.com/v1/responses", {
       method: "POST",
       signal: controller.signal,
@@ -99,7 +133,13 @@ export async function createWhatsAppAgentReply(
         reasoning: { effort: "low" },
         max_output_tokens: 500,
         instructions: instructionsWithPlaybook(playbook),
-        input: `Mensaje del cliente: ${input.text}\n\nCatálogo relevante:\n${productContext(products)}`,
+        input: [
+          conversationHistory && `Historial reciente (más antiguo primero):\n${conversationHistory}`,
+          `Mensaje del cliente: ${input.text}`,
+          `Catálogo relevante:\n${productContext(products)}`,
+        ]
+          .filter(Boolean)
+          .join("\n\n"),
       }),
     })
     if (!response.ok) {
