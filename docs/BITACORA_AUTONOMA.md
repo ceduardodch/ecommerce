@@ -776,3 +776,36 @@ con una prueba real de WhatsApp antes de mergear, dado que es el cambio de
 mayor alcance de todo el sprint (reemplaza el camino principal de cierre de
 venta). Después de eso, V-4 (notas de voz) y V-5 (comprobantes por foto)
 siguen en la cola, ambos 🔴.
+
+---
+
+## 2026-09-01 · Mergeado el PR #17 (dueño presente, orden explícita)
+
+**Qué pasó**: el dueño pidió mergear el PR #17 ("mergea") en la misma
+sesión, sin esperar a la prueba real contra OpenAI que quedó anotada como
+recomendación. Se hizo con `gh pr merge 17 --merge --delete-branch`.
+
+**Commit resultante en `main`**: `0a284dc` (merge commit del PR #17 sobre
+`b0fd7c0`)
+
+**Verificado**: CI del push a `main` tras el merge — run `33558989077`,
+job `ci` en verde (Build, Typecheck, Test tools, Test backend, Test
+storefront, Validate compose — todos ✓, 1m48s). Es la misma verificación
+que ya corrió en el PR antes de mergear (mismo commit, sin cambios).
+
+**No verificado — se mergeó sin esto, a criterio del dueño**:
+- Conversación real de WhatsApp con `OPENAI_API_KEY` real probando el
+  tool-calling de punta a punta (cotizar → confirmar → recibir el link de
+  carrito). Sigue siendo la brecha de verificación más importante de este
+  cambio.
+- Que el deploy de Coolify disparado por este push haya terminado bien
+  (no tengo acceso al dashboard).
+
+**Pendiente/Asumido**: vigilar los logs de `whatsapp_agent` en producción
+los primeros días — específicamente `openai_http_error`,
+`openai_empty_reply` y `tool_call_round_limit_reached`, que son las señales
+de que el tool-calling no está funcionando como se espera contra la API
+real.
+
+**Siguiente lote**: V-4 · Notas de voz (🔴 → para en rama), según el orden
+de ejecución del plan.
