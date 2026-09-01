@@ -26,9 +26,10 @@ export const metadata: Metadata = {
   description:
     "Ollas, woks y sets de granito para cocinar con menos aceite, videos de uso, guias de cuidado y cotizacion por WhatsApp.",
   metadataBase: new URL(kitchenBaseUrl),
-  alternates: {
-    canonical: kitchenBaseUrl,
-  },
+  // Sin `alternates.canonical` a propósito: Next hereda la metadata del layout
+  // en toda página que no la sobrescriba, y una canónica aquí hacía que cada
+  // ficha y cada guía se declararan duplicados de la portada. Cada página
+  // declara la suya con `canonical()` de `lib/seo`.
   openGraph: {
     title: "Eter Niu Cocina",
     description:

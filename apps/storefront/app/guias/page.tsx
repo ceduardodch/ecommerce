@@ -7,6 +7,7 @@ import {
   ShieldCheck,
 } from "lucide-react"
 import { getProducts } from "../../lib/catalog"
+import { canonical } from "../../lib/seo"
 import {
   TrackedEventLink,
   TrackedWhatsAppLink,
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
   title: "Guías de cocina saludable | Eter Niu Cocina",
   description:
     "Guías simples para elegir ollas de granito, cuidar el antiadherente y cocinar con menos aceite.",
+  ...canonical("/guias"),
 }
 
 export default async function GuidesPage() {
