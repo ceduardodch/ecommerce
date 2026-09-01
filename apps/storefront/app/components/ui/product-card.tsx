@@ -4,7 +4,6 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { Badge } from "./badge"
 import { AddToCartButton } from "./add-to-cart-button"
-import { WhatsAppButton } from "./button"
 import { ScrollReveal } from "./scroll-reveal"
 
 export type ProductCardData = {
@@ -87,69 +86,34 @@ export function ProductCard({ product, index }: { product: ProductCardData; inde
             </div>
           </a>
 
-          {/* Action Buttons */}
-          <div className="mt-3 flex flex-col gap-2">
-            {/* Mobile: WhatsApp button (flujo actual) */}
-            <div className="md:hidden">
-              <WhatsAppButton
-                product={{
-                  id: product.id,
-                  variantId: product.id,
-                  sku: product.sku,
-                  title: product.title,
-                  category: product.category || "",
-                  brand: "Eter Niu",
-                  price: {
-                    amount: parseFloat(product.price.replace("$", "")),
-                    currency: "USD",
-                  },
-                  description: "",
-                  stock: 0,
-                  imageUrl: product.image,
-                  productUrl: product.href,
-                  tags: [],
-                  stockSignal: product.stockSignal,
-                  paymentMethods: product.paymentMethods,
-                  couponCode: product.couponCode,
-                  freeShipping: product.freeShipping,
-                  stoveCompatibility: product.stoveCompatibility,
-                }}
-                placement="product_card"
-                label="Pedir por WhatsApp"
-                className="w-full"
-              />
-            </div>
-
-            {/* Desktop: Add to cart button (nuevo flujo) */}
-            <div className="hidden md:block">
-              <AddToCartButton
-                product={{
-                  id: product.id,
-                  variantId: product.id,
-                  sku: product.sku,
-                  title: product.title,
-                  description: "",
-                  category: product.category || "",
-                  brand: "Eter Niu",
-                  price: {
-                    amount: parseFloat(product.price.replace("$", "")),
-                    currency: "USD",
-                  },
-                  imageUrl: product.image,
-                  productUrl: product.href,
-                  tags: [],
-                  stock: 0,
-                  stockSignal: product.stockSignal,
-                  paymentMethods: product.paymentMethods,
-                  couponCode: product.couponCode,
-                  freeShipping: product.freeShipping,
-                  stoveCompatibility: product.stoveCompatibility,
-                  vertical: product.vertical,
-                }}
-                label="Agregar al carrito"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#1c3a13] px-5 py-3 text-[14px] font-semibold text-[#fcfcf7] hover:opacity-85 transition-opacity cursor-pointer"
-              />
-            </div>
+          <div className="mt-3">
+            <AddToCartButton
+              product={{
+                id: product.id,
+                variantId: product.id,
+                sku: product.sku,
+                title: product.title,
+                description: "",
+                category: product.category || "",
+                brand: "Eter Niu",
+                price: {
+                  amount: parseFloat(product.price.replace("$", "")),
+                  currency: "USD",
+                },
+                imageUrl: product.image,
+                productUrl: product.href,
+                tags: [],
+                stock: 0,
+                stockSignal: product.stockSignal,
+                paymentMethods: product.paymentMethods,
+                couponCode: product.couponCode,
+                freeShipping: product.freeShipping,
+                stoveCompatibility: product.stoveCompatibility,
+                vertical: product.vertical,
+              }}
+              label="Agregar al carrito"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[#1c3a13] px-5 py-3 text-[14px] font-semibold text-[#fcfcf7] hover:opacity-85 transition-opacity cursor-pointer"
+            />
           </div>
         </div>
       </motion.div>

@@ -61,15 +61,42 @@ type WhatsappContext = {
   fbclid?: string
 }
 
+/**
+ * Número de venta de Eter Niu (Vicky), en formato internacional sin "+".
+ *
+ * Fuente única: antes cada archivo llevaba su propio literal y había DOS
+ * números distintos conviviendo entre el storefront y `ecommerce-tools`, así
+ * que según por dónde entrara el cliente el chat caía en un teléfono o en otro.
+ * Cualquier CTA, enlace `tel:` o texto legal debe salir de aquí o de
+ * `NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER`.
+ */
+export const SELLER_WHATSAPP_NUMBER = "593987135207"
+
+/** El mismo número en formato local ecuatoriano, para textos legales. */
+export const SELLER_WHATSAPP_LOCAL = "0987135207"
+
+/** Para enlaces `tel:`. */
+export const SELLER_PHONE_TEL = "+593987135207"
+
+/** Para mostrarlo al cliente. */
+export const SELLER_PHONE_DISPLAY = "+593 98 713 5207"
+
 function normalizeWhatsappSellerNumber(value: string) {
   const digits = value.replace(/\D/g, "")
   if (digits === "593999999999" || digits === "9999999999") {
-    return "593979854905"
+    return SELLER_WHATSAPP_NUMBER
   }
   if (digits.startsWith("0") && digits.length === 10) {
     return `593${digits.slice(1)}`
   }
-  return digits || "593979854905"
+  return digits || SELLER_WHATSAPP_NUMBER
+}
+
+/** Número de venta efectivo: el del entorno si está configurado, o el nuestro. */
+export function sellerWhatsappNumber() {
+  return normalizeWhatsappSellerNumber(
+    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || SELLER_WHATSAPP_NUMBER,
+  )
 }
 
 function isKnifeProduct(product: WhatsappProduct) {
@@ -119,9 +146,7 @@ export function whatsappLink(
     stoveCompatibility:
       context.stoveCompatibility || product.stoveCompatibility,
   })
-  const seller = normalizeWhatsappSellerNumber(
-    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905",
-  )
+  const seller = sellerWhatsappNumber()
   const fitQuestion =
     context.fitQuestion ||
     (context.vertical === "bienestar" || isKitchenComplement(product)
@@ -160,13 +185,13 @@ export function generateCartMessage(
     customerName ? `Hola, soy ${customerName}` : "Hola",
     customerCity ? `de ${customerCity}.` : "",
     "",
-    "Quiero pedir:",
+    "Quiero cotizar este pedido y armar mi combo:",
     "",
     itemsList,
     "",
     `Total: $${total.toFixed(2)}${comboApplied ? " · precio verde aplicado" : ""}`,
     "",
-    "Me confirmas stock, envío gratis por Servientrega y formas de pago?",
+    "Ayúdame a confirmar stock, precio de combo, envío y formas de pago.",
   ]
     .filter(Boolean)
     .join("\n")
@@ -181,9 +206,7 @@ export function whatsappCartLink(
   customerCity: string = "",
   sessionId?: string,
 ): string {
-  const seller = normalizeWhatsappSellerNumber(
-    process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905",
-  )
+  const seller = sellerWhatsappNumber()
 
   const message = generateCartMessage(items, total, customerName, customerCity)
   const reference = sessionId ? `Ref: cart_${sessionId}` : "Ref: cart"

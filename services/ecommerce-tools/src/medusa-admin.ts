@@ -34,10 +34,12 @@ async function medusaAdminFetch<T>(
 export async function createMedusaOrder(
   config: AppConfig,
   input: {
+    externalId?: string
     quote: OrderRecord["quote"]
     customer?: CustomerInput
     source?: string
     notes?: string
+    paymentStatus?: "pending_payment" | "paid" | "payment_failed"
   },
 ) {
   const result = await medusaAdminFetch<{ order: OrderRecord }>(
@@ -52,6 +54,25 @@ export async function createMedusaOrder(
   return result.order
 }
 
+export async function updateMedusaPaymentStatus(
+  config: AppConfig,
+  orderId: string,
+  input: {
+    status: "pending_payment" | "paid" | "payment_failed"
+    payment: Record<string, unknown>
+  },
+) {
+  const result = await medusaAdminFetch<{ order: OrderRecord }>(
+    config,
+    `/admin/b2b/orders/${encodeURIComponent(orderId)}/payment-status`,
+    {
+      method: "POST",
+      body: JSON.stringify(input),
+    },
+  )
+  return result.order
+}
+
 export async function getMedusaOrder(config: AppConfig, orderId: string) {
   const result = await medusaAdminFetch<{ order: OrderRecord }>(
     config,
@@ -59,42 +80,6 @@ export async function getMedusaOrder(config: AppConfig, orderId: string) {
   )
 
   return result.order
-}
-
-export async function attachMedusaPaymentLink(
-  config: AppConfig,
-  orderId: string,
-  input: {
-    paymentLink: string
-    clientTransactionId: string
-    payload?: unknown
-  },
-) {
-  const result = await medusaAdminFetch<{ order: OrderRecord }>(
-    config,
-    `/admin/b2b/orders/${encodeURIComponent(orderId)}/payment-link`,
-    {
-      method: "POST",
-      body: JSON.stringify(input),
-    },
-  )
-
-  return result.order
-}
-
-export async function forwardPayphoneWebhook(
-  config: AppConfig,
-  payload: Record<string, unknown>,
-) {
-  return medusaAdminFetch<{
-    matched: boolean
-    status: string
-    order?: OrderRecord
-    payload?: Record<string, unknown>
-  }>(config, "/admin/b2b/orders/payphone-webhook", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  })
 }
 
 export async function importMedusaCustomers(
@@ -185,4 +170,19 @@ export async function getMedusaDashboard(
   if (input.asOf) url.searchParams.set("asOf", input.asOf)
 
   return medusaAdminFetch<unknown>(config, `${url.pathname}${url.search}`)
+}
+
+export type AgentPlaybookItem = {
+  key: string
+  label: string
+  body: string
+  active: boolean
+}
+
+export async function getMedusaAgentPlaybook(config: AppConfig) {
+  const result = await medusaAdminFetch<{ items: AgentPlaybookItem[] }>(
+    config,
+    "/admin/b2b/crm/agent-playbook",
+  )
+  return result.items
 }

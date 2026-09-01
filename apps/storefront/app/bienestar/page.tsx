@@ -18,7 +18,9 @@ import {
 } from "../../lib/catalog"
 import { commercialInfo } from "../../lib/commercial"
 import { kitchenBaseUrl, publicCampaignPath, wellnessBaseUrl } from "../../lib/domains"
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "../../lib/seo"
 import { wellnessOpeningLine } from "../../lib/wellness"
+import { sellerWhatsappNumber } from "../../lib/whatsapp"
 import { TrackedWhatsAppLink } from "../components/analytics"
 import { PromoBar } from "../components/ui/promo-bar"
 import { SiteHeader } from "../components/ui/site-header"
@@ -160,10 +162,25 @@ export default async function WellnessPage() {
   const products = await getWellnessProducts()
   const featured = products[0]
 
-  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
+  const waHref = `https://wa.me/${sellerWhatsappNumber()}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
+  const organizationJsonLd = buildOrganizationJsonLd(
+    "Eter Niu Bienestar",
+    wellnessBaseUrl,
+  )
+  const websiteJsonLd = buildWebSiteJsonLd("Eter Niu Bienestar", wellnessBaseUrl)
 
   return (
     <div data-theme="bienestar" className="relative isolate bg-[#10160e]">
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde constantes del sitio, no
+        // viene del usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <PageAmbient />
       <WellnessAnalytics
         context={{

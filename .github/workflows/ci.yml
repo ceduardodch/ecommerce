@@ -30,8 +30,21 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Los typechecks no los cubría el build: `next build` y `medusa build`
+      # transpilan sin validar tipos en todo el árbol.
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Test tools
         run: npm run tools:test
+
+      # Aquí viven, entre otros, los tests que impiden clasificar como
+      # "reintentable" un fallo que no lo es. Sin este paso no protegían nada.
+      - name: Test backend
+        run: npm run backend:test:unit
+
+      - name: Test storefront
+        run: npm run storefront:test
 
       - name: Validate compose
         env:

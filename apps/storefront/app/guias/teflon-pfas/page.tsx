@@ -2,6 +2,7 @@ import { PageAmbient } from "../../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { BookOpen, MessageCircle, ShieldCheck } from "lucide-react"
 import { getProducts } from "../../../lib/catalog"
+import { canonical } from "../../../lib/seo"
 import {
   TrackedEventLink,
   TrackedWhatsAppLink,
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   title: "PFAS, PFOA y teflón explicado simple | Eter Niu Cocina",
   description:
     "Guía educativa para elegir antiadherentes con información segura sobre PFAS, PFOA, PTFE y ollas de granito.",
+  ...canonical("/guias/teflon-pfas"),
 }
 
 export default async function TeflonPfasGuidePage() {

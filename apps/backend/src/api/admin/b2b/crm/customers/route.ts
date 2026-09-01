@@ -38,6 +38,8 @@ const VALID_RFM_SEGMENTS: RfmSegment[] = [
 ]
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
+  const errorId = `crm-customers-${Date.now().toString(36)}`
+  try {
   const limit = Number(req.query.limit || 100)
   const offset = Number(req.query.offset || 0)
   const rfmParam = req.query.rfmSegment ? String(req.query.rfmSegment) : undefined
@@ -71,6 +73,14 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
     offset,
     limit,
   })
+  } catch (error) {
+    console.error({ errorId, error }, "CRM customer list unavailable")
+    res.status(503).json({
+      error: "crm_customers_unavailable",
+      message: "No se pudo cargar la lista de leads. Reintenta en unos segundos.",
+      errorId,
+    })
+  }
 }
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {

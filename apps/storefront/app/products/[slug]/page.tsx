@@ -1,9 +1,10 @@
 import { PageAmbient } from "../../components/ui/page-ambient"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
+import { cache } from "react"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { BookOpen, MessageCircle, Star } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import {
   getProductBySlug,
   getProducts,
@@ -12,12 +13,17 @@ import {
   type Product,
 } from "../../../lib/catalog"
 import { commercialInfo } from "../../../lib/commercial"
-import { mediaSlotForSku } from "../../../lib/content"
-import { comparableMgcProducts, productMedia } from "../../../lib/product-media"
+import { publicBaseUrlForVertical } from "../../../lib/domains"
+import {
+  comparableMgcProducts,
+  productMedia,
+  type ProductMediaItem,
+} from "../../../lib/product-media"
+import { getReviewSummary, type ReviewSummary } from "../../../lib/reviews"
+import { absoluteUrl, canonical } from "../../../lib/seo"
 import {
   PageAnalytics,
   TrackedEventLink,
-  TrackedWhatsAppLink,
 } from "../../components/analytics"
 import { AddToCartButton } from "../../components/ui/add-to-cart-button"
 import { MaterialMacro } from "../../components/ui/material-macro"
@@ -32,8 +38,14 @@ type ProductPageProps = {
   params: Promise<{ slug: string }>
 }
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+// La ficha no depende de searchParams ni de cabeceras, así que puede servirse
+// de la caché de ruta. Era `force-dynamic`: cada visita desde la pauta pagaba
+// storefront → tools → Medusa antes de pintar el primer píxel.
+//
+// Literal a propósito: Next exige que la config de segmento sea analizable
+// estáticamente y no acepta una constante importada. Mantener en 300, igual que
+// `CATALOG_REVALIDATE_SECONDS` en lib/catalog.
+export const revalidate = 300
 
 function money(amount: number) {
   return `$${amount.toFixed(2)}`
@@ -167,15 +179,110 @@ function specRows(product: Product) {
   return rows
 }
 
+/**
+ * Datos estructurados schema.org de la ficha.
+ *
+ * Es lo que permite que Google muestre precio, disponibilidad y estrellas en el
+ * resultado de búsqueda. El `aggregateRating` se incluye SOLO si hay reseñas
+ * reales y visibles en la página: declarar una valoración que el usuario no ve
+ * es motivo de acción manual.
+ */
+function buildProductJsonLd(
+  product: Product,
+  gallery: ProductMediaItem[],
+  reviews?: ReviewSummary,
+) {
+  const baseUrl = publicBaseUrlForVertical(product.vertical)
+  const images = gallery
+    .filter((item) => item.type === "image")
+    .map((item) => absoluteUrl(item.src, baseUrl))
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description:
+      product.healthAngle || product.bundleUseCase || product.description,
+    sku: product.sku,
+    image: images.length ? images : [absoluteUrl(product.imageUrl, baseUrl)],
+    brand: { "@type": "Brand", name: product.brand || "Eter Niu" },
+    ...(product.material ? { material: product.material } : {}),
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(productPath(product), baseUrl),
+      priceCurrency: product.price.currency,
+      price: product.price.amount.toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/PreOrder",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Eter Niu" },
+    },
+    ...(reviews
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviews.averageRating.toFixed(1),
+            reviewCount: reviews.totalCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+        }
+      : {}),
+  }
+}
+
+/**
+ * Datos estructurados schema.org de las migas de pan.
+ *
+ * Mismo `items` que se le pasa al componente `Breadcrumbs`, para que el
+ * schema nunca se desalinee de lo que el usuario ve en pantalla.
+ */
+function buildBreadcrumbJsonLd(
+  product: Product,
+  items: { label: string; href?: string }[],
+) {
+  const baseUrl = publicBaseUrlForVertical(product.vertical)
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      ...(item.href ? { item: absoluteUrl(item.href, baseUrl) } : {}),
+    })),
+  }
+}
+
+/**
+ * Resuelve la ficha una sola vez por petición.
+ *
+ * `generateMetadata` y el render se ejecutan por separado y cada uno cargaba el
+ * catálogo por su cuenta — dos o tres viajes a `ecommerce-tools` para pintar una
+ * ficha. `cache()` hace que el segundo reciba el resultado del primero.
+ */
+const resolveProduct = cache(async (slug: string) => {
+  const products = await getProducts()
+  const decoded = decodeURIComponent(slug)
+  const match = products.find((item) => productSlug(item) === decoded)
+  // Solo si no está en la vertical de cocina vale la pena pedir el catálogo
+  // completo (una ficha de bienestar servida por este host).
+  return { products, product: match ?? (await getProductBySlug(slug)) }
+})
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = await getProductBySlug(slug)
+  const { product } = await resolveProduct(slug)
 
   if (!product) {
     return {
       title: "Producto no disponible | Eter Niu Cocina",
+      robots: { index: false, follow: true },
     }
   }
 
@@ -189,6 +296,10 @@ export async function generateMetadata({
       product.bundleUseCase ||
       product.description ||
       "Ficha de producto de cocina saludable con cotizacion por WhatsApp.",
+    // La canónica apunta a la ficha misma. Sin esto heredaba la del layout y
+    // cada producto se declaraba duplicado de la portada — es decir, la página
+    // a la que apunta el feed de Meta le pedía a Google que no la indexara.
+    ...canonical(productPath(product), publicBaseUrlForVertical(product.vertical)),
     openGraph: {
       title: product.title,
       description: product.healthAngle || product.description,
@@ -201,10 +312,7 @@ export async function generateMetadata({
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const products = await getProducts()
-  const product =
-    products.find((item) => productSlug(item) === decodeURIComponent(slug)) ||
-    (await getProductBySlug(slug))
+  const { products, product } = await resolveProduct(slug)
 
   if (!product) notFound()
 
@@ -212,23 +320,34 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     ? products
     : [product, ...products]
 
-  const slot = mediaSlotForSku(product.sku)
   const gallery = productMedia(product)
   const comparableProducts = comparableMgcProducts(product, catalogProducts)
   const promo = hasPromo(product)
   const related = relatedProducts(product, catalogProducts)
   const useCases = productUseCases(product)
-  const waHref = (() => {
-    // Build the WhatsApp link to embed in StickyCTABar - we use the product's WhatsApp URL
-    // The actual link generation happens via TrackedWhatsAppLink in the hero CTA
-    return `https://wa.me/593979854905`
-  })()
-
+  const reviewSummary = await getReviewSummary(product.id)
+  const productJsonLd = buildProductJsonLd(product, gallery, reviewSummary)
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: product.category || "Productos" },
+    { label: product.title },
+  ]
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(product, breadcrumbItems)
   return (
     <main
       data-theme="cocina"
       className="relative isolate min-h-screen bg-[#10160e] pb-28"
     >
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde el catálogo, no viene del
+        // usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageAmbient />
       <PageAnalytics featured={product} />
 
@@ -243,22 +362,16 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* 1.5. Breadcrumbs (desktop-only) */}
       <div className="px-4 pt-4">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: product.category || "Productos" },
-            { label: product.title },
-          ]}
-        />
+        <Breadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* 2. Galería de producto: fotos reales, video opcional y zoom */}
-      <div className="relative mx-auto w-full max-w-[440px] px-4 pt-4">
-        <ProductGallery media={gallery} productName={product.title} />
-      </div>
+      {/* Galería y compra: dos columnas en escritorio; una columna en móvil. */}
+      <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 pt-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)] lg:items-start lg:pt-8">
+        <div className="relative mx-auto w-full max-w-[560px] lg:sticky lg:top-6">
+          <ProductGallery media={gallery} productName={product.title} />
+        </div>
 
-      {/* 3. Title Fraunces 28 + 5 stars + social proof */}
-      <div className="px-4 pt-5">
+        <div className="min-w-0 pt-1 lg:pt-5">
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-[#d3fa99]">
           {product.category}
         </p>
@@ -338,7 +451,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           <span className="text-[26px] font-medium leading-none text-[#d3fa99]">
             PVP {money(product.price.amount)}
           </span>
-          <span className="text-[12px] text-[#b8c2ae]">stock por WhatsApp</span>
+          <span className="text-[12px] text-[#b8c2ae]">stock al cotizar el carrito</span>
         </div>
         {product.comboPrice && (
           <div className="mb-5 rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-3">
@@ -352,36 +465,16 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
           </div>
         )}
 
-        {/* Hero CTA */}
-        <TrackedWhatsAppLink
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[14px] font-semibold text-white"
-          cta="product_detail_whatsapp"
-          eventType="product_interest"
-          metadata={{
-            journeyStage: "cotizacion_pendiente",
-            productInterestSku: product.sku,
-            recommendedSku: product.sku,
-            videoSlot: slot?.id,
-          }}
-          placement="product_detail_hero"
-          product={product}
-          whatsappContext={{
-            recommendation:
-              product.bundleUseCase || product.healthAngle || product.title,
-            recommendedSku: product.sku,
-            journeyStage: "cotizacion_pendiente",
-            videoSlot: slot?.id,
-          }}
-        >
-          <MessageCircle size={19} />
-          Reclamar cupon y consultar stock
-        </TrackedWhatsAppLink>
         <AddToCartButton
           product={product}
           label="Agregar al carrito"
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-[#d3fa99] px-5 py-3.5 text-[14px] font-semibold text-[#10160e] hover:opacity-90 transition-opacity cursor-pointer"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-[#d3fa99] px-5 py-3.5 text-[14px] font-semibold text-[#10160e] hover:opacity-90 transition-opacity cursor-pointer"
         />
-      </div>
+        <p className="mt-3 text-center text-[12px] text-[#b8c2ae]">
+          Agrega varias piezas y pide ayuda con tu combo desde el carrito.
+        </p>
+        </div>
+      </section>
 
       {/* 5. "El material, de cerca" (patrón Material Kitchen) */}
       <div className="px-4 pt-10">
@@ -500,25 +593,6 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     >
                       Ver ficha
                     </a>
-                    <TrackedWhatsAppLink
-                      className="text-[12px] font-medium text-[#25D366]"
-                      eventType="product_interest"
-                      metadata={{
-                        journeyStage: "cotizacion_pendiente",
-                        productInterestSku: item.sku,
-                        recommendedSku: item.sku,
-                      }}
-                      placement="product_detail_related"
-                      product={item}
-                      whatsappContext={{
-                        recommendation:
-                          item.bundleUseCase || "producto relacionado",
-                        recommendedSku: item.sku,
-                        journeyStage: "cotizacion_pendiente",
-                      }}
-                    >
-                      WhatsApp
-                    </TrackedWhatsAppLink>
                   </div>
                 </div>
               </div>
@@ -545,17 +619,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         </div>
       </section>
 
-      {/* 9. Sticky CTA bar: precio izquierda + botón WA — siempre visible (alwaysVisible) */}
-      {/* La ficha tiene product en contexto, así que el sticky usa TrackedWhatsAppLink
-          (regla #1: ninguna CTA de WhatsApp sin tracking). */}
+      {/* Carrito fijo: WhatsApp queda al final del pedido completo. */}
       <StickyCTABar
         surface="dark"
         alwaysVisible
         price={money(product.price.amount)}
         product={product}
         placement="ficha_sticky"
-        waHref={waHref}
-        waLabel="Pedir por WhatsApp"
+        waLabel="Agregar al carrito"
       />
     </main>
   )

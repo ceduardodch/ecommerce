@@ -1,6 +1,7 @@
 import { MedusaService } from "@medusajs/framework/utils"
 import { normalizeEcPhone } from "../../lib/ec-phone"
 import { DEFAULT_CRM_TEMPLATES } from "./default-templates"
+import { DEFAULT_AGENT_PLAYBOOK } from "./default-agent-playbook"
 import {
   ConversationalOrder,
   CrmConversation,
@@ -930,6 +931,9 @@ class B2bCrmModuleService extends MedusaService({
       (order) => order.status === "pending_payment",
     )
     const paidOrders = orders.filter((order) => order.status === "paid")
+    const failedOrders = orders.filter(
+      (order) => order.status === "payment_failed",
+    )
     const leadPhones = new Set(
       events
         .filter((event) =>
@@ -979,12 +983,14 @@ class B2bCrmModuleService extends MedusaService({
         leads: leadPhones.size,
         pendingOrders: pendingOrders.length,
         paidOrders: paidOrders.length,
+        failedOrders: failedOrders.length,
         dueFollowups: dueFollowups.length,
         customers: customers.length,
       },
       customers,
       pendingOrders,
       paidOrders: paidOrders.slice(-10),
+      failedOrders: failedOrders.slice(-10),
       dueFollowups,
       hotLeads,
       careFollowups: dueFollowups.filter((customer) =>
@@ -1008,6 +1014,52 @@ class B2bCrmModuleService extends MedusaService({
       { order: { key: "ASC" } },
     )
     return templates
+  }
+
+  /**
+   * Devuelve el guión comercial para la IA. Si el dueño aún no lo guardó en
+   * Admin, usa los valores base: Vicky nunca queda sin reglas de objeciones.
+   */
+  async agentPlaybook() {
+    // El panel de IA debe seguir explicando las reglas aunque la tabla de
+    // plantillas esté temporalmente inaccesible durante un despliegue.
+    const templates = await this.listTemplates(false).catch(() => [])
+    const byKey = new Map(
+      templates
+        .filter((template: any) => template.key?.startsWith("agent_"))
+        .map((template: any) => [template.key, template]),
+    )
+
+    return DEFAULT_AGENT_PLAYBOOK.map((base) => {
+      const saved: any = byKey.get(base.key)
+      return {
+        key: base.key,
+        label: saved?.label || base.label,
+        body: saved?.body || base.body,
+        active: saved?.active ?? true,
+        updatedAt: saved?.updated_at,
+      }
+    })
+  }
+
+  async saveAgentPlaybook(items: Array<{
+    key: string
+    label: string
+    body: string
+    active: boolean
+  }>) {
+    const allowed = new Set(DEFAULT_AGENT_PLAYBOOK.map((item) => item.key))
+    const saved: any[] = []
+    for (const item of items) {
+      if (!allowed.has(item.key)) continue
+      saved.push(await this.upsertTemplate({
+        key: item.key,
+        label: item.label,
+        body: item.body,
+        active: item.active,
+      }))
+    }
+    return saved
   }
 
   async getTemplate(key: string) {

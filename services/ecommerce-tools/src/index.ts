@@ -10,14 +10,14 @@ import {
   datafastVoidSchema,
   metaDraftInputSchema,
   orderInputSchema,
-  payphoneInputSchema,
-  payphoneWebhookSchema,
   quoteInputSchema,
+  whatsappCartInputSchema,
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 import { mountWhatsappReplyRoute, sendWhatsappCloudReply } from "./whatsapp-reply.js"
+import type { CustomerRecord } from "./types.js"
 
 const config = loadConfig()
 const service = createCommerceService(config)
@@ -51,7 +51,6 @@ app.get("/healthz", async () => ({
   crmBackend: config.crmBackend,
   allowDemoCatalog: config.allowDemoCatalog,
   medusaAdminApiKeyConfigured: Boolean(config.medusaAdminApiKey),
-  payphoneMode: config.payphoneDryRun ? "dry-run" : "live",
   datafastMode: config.datafastDryRun ? "dry-run" : config.datafastEnv,
   datafastConfigured: Boolean(config.datafastEntityId && config.datafastAccessToken),
 }))
@@ -83,20 +82,16 @@ app.post("/tools/orders", async (request) => {
   return service.createOrder(input)
 })
 
-app.post("/tools/payphone-link", async (request) => {
-  const input = payphoneInputSchema.parse(request.body)
-  const order = await service.createPaymentLink(input.orderId)
-  return {
-    orderId: order.id,
-    status: order.status,
-    paymentLink: order.paymentLink,
-    clientTransactionId: order.clientTransactionId,
-  }
+app.post("/tools/whatsapp-cart-sessions", async (request) => {
+  const input = whatsappCartInputSchema.parse(request.body)
+  return service.createWhatsappCart(input)
 })
 
-app.post("/webhooks/payphone", async (request) => {
-  const payload = payphoneWebhookSchema.parse(request.body)
-  return service.payphoneWebhook(payload)
+app.post("/tools/whatsapp-cart-sessions/:token/consume", async (request, reply) => {
+  const params = request.params as { token: string }
+  const session = await service.consumeWhatsappCart(params.token)
+  if (!session) return reply.code(404).send({ error: "cart_session_unavailable" })
+  return { session }
 })
 
 // ─── Datafast (botón de pagos con tarjeta) ───
@@ -220,21 +215,20 @@ mountWhatsappWebhookRoutes(
   async (input) => {
     return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
   },
-  async (phone) => service.getCustomer(phone) as Promise<{ followup_reason?: string | null } | undefined>,
+  // `service.getCustomer` es `unknown` cuando CRM_BACKEND=medusa (viene de
+  // un fetch HTTP tipado laxo), pero en runtime ambos backends devuelven la
+  // misma forma que `CustomerRecord` (ver `serializeCustomer` del backend).
+  async (phone) => service.getCustomer(phone) as Promise<CustomerRecord | undefined>,
   async (query) => service.products({ query, limit: 6 }),
-  async (input) => {
-    const result = await sendWhatsappCloudReply(config, input.phone, input.text)
-    if (result.ok) {
-      await service.addCustomerEvent({
-        phone: input.phone,
-        type: "message_out",
-        at: new Date().toISOString(),
-        source: "whatsapp_cloud_api",
-        payload: { text: input.text, messageId: result.messageId, senderType: "ai", status: "sent" },
-        metadata: {},
-      })
-    }
-    return result
+  async (input) => sendWhatsappCloudReply(
+    config,
+    input,
+    async (phone) => service.getCustomer(phone),
+    async (event) => service.addCustomerEvent(event as Parameters<typeof service.addCustomerEvent>[0]),
+  ),
+  {
+    quote: (input) => service.quote(input),
+    createCart: (input) => service.createWhatsappCart(input),
   },
   async (phone) => service.isWhatsappAiPaused(phone),
 )
@@ -249,8 +243,71 @@ mountWhatsappReplyRoute(
   },
 )
 
+/** Cada cuánto se revisan los checkouts que quedaron sin resolver. */
+const DATAFAST_SWEEP_INTERVAL_MS = 10 * 60 * 1000
+
+async function reconcileDatafastWhenMedusaIsReady() {
+  // Coolify levanta los contenedores en paralelo. Esperar evita que el ledger
+  // se marque como fallido sólo porque Medusa aún está iniciando.
+  const attempts = 12
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const reconciliation = await service.reconcileDatafastLedger()
+    if (reconciliation.failed === 0) {
+      app.log.info(reconciliation, "DataFast ledger reconciled with Medusa")
+      return
+    }
+
+    if (attempt < attempts) {
+      app.log.warn(
+        { ...reconciliation, attempt, attempts },
+        "Medusa is not ready for DataFast reconciliation; retrying",
+      )
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+    } else {
+      app.log.error(
+        { ...reconciliation, attempt, attempts },
+        "DataFast ledger reconciliation exhausted its startup retries",
+      )
+    }
+  }
+}
+
+/**
+ * Barrido periódico de checkouts que quedaron en `pending`.
+ *
+ * Un cobro aprobado no puede depender de que el navegador del cliente vuelva a
+ * /checkout/resultado. Cada pasada le pregunta a Datafast por los pendientes
+ * con más de unos minutos y los resuelve por el camino idempotente de siempre.
+ */
+async function sweepPendingDatafastCheckouts() {
+  try {
+    const sweep = await service.reconcilePendingDatafastCheckouts()
+    if (sweep.recovered > 0) {
+      app.log.warn(sweep, "Recovered DataFast payments whose callback never arrived")
+    } else if (sweep.scanned > 0) {
+      app.log.info(sweep, "DataFast pending sweep finished")
+    }
+  } catch (error) {
+    app.log.error(error, "DataFast pending sweep failed")
+  }
+}
+
 try {
   await app.listen({ port: config.port, host: "0.0.0.0" })
+  void reconcileDatafastWhenMedusaIsReady()
+    .catch((error) => {
+      app.log.error(error, "Unexpected DataFast reconciliation failure")
+    })
+    // El primer barrido va después de la reconciliación con Medusa: si Medusa
+    // aún no está lista, recuperar un pago no podría crear su pedido.
+    .then(sweepPendingDatafastCheckouts)
+
+  // `unref()` para que el temporizador no impida que el proceso termine cuando
+  // Coolify lo reinicie.
+  setInterval(
+    () => void sweepPendingDatafastCheckouts(),
+    DATAFAST_SWEEP_INTERVAL_MS,
+  ).unref()
 } catch (error) {
   app.log.error(error)
   process.exit(1)

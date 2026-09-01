@@ -25,6 +25,7 @@ type Dashboard = {
     leads: number
     pendingOrders: number
     paidOrders: number
+    failedOrders: number
     dueFollowups: number
     customers: number
   }
@@ -36,9 +37,24 @@ type Dashboard = {
   optOuts: CrmCustomerRow[]
   pendingOrders: Array<{
     id: string
+    medusaOrderId?: string
     medusaDraftOrderId?: string
     status: string
     paymentLink?: string
+    createdAt?: string
+    customer?: { name?: string; phone?: string; email?: string }
+    quote?: { total?: { amount: number; currency: string } }
+  }>
+  paidOrders: Array<{
+    id: string
+    status: string
+    createdAt?: string
+    customer?: { name?: string; phone?: string; email?: string }
+    quote?: { total?: { amount: number; currency: string } }
+  }>
+  failedOrders: Array<{
+    id: string
+    status: string
     createdAt?: string
     customer?: { name?: string; phone?: string; email?: string }
     quote?: { total?: { amount: number; currency: string } }
@@ -373,6 +389,7 @@ function CrmWhatsappPage() {
           ["Leads", dashboard.counts.leads],
           ["Ordenes pendientes", dashboard.counts.pendingOrders],
           ["Pagadas", dashboard.counts.paidOrders],
+          ["Rechazadas", dashboard.counts.failedOrders],
           ["Followups vencidos", dashboard.counts.dueFollowups],
         ].map(([label, value]) => (
           <article key={label} style={cardStyle}>
@@ -497,13 +514,93 @@ function CrmWhatsappPage() {
                   {order.customer?.name || order.customer?.phone || "-"}
                 </td>
                 <td style={cellStyle}>{money(order.quote?.total)}</td>
-                <td style={cellStyle}>{order.medusaDraftOrderId || "-"}</td>
+                <td style={cellStyle}>{order.medusaOrderId || "-"}</td>
               </tr>
             ))}
             {!dashboard.pendingOrders.length ? (
               <tr>
                 <td colSpan={4} style={cellStyle}>
                   No hay ordenes pendientes.
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </section>
+
+      <section style={cardStyle}>
+        <h2 style={{ marginTop: 0 }}>Pagos rechazados</h2>
+        <p style={{ fontSize: 13, color: "var(--fg-subtle)", marginTop: 0 }}>
+          Se conservan para auditoría. No entran a despacho.
+        </p>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={cellStyle}>Referencia</th>
+              <th style={cellStyle}>Cliente</th>
+              <th style={cellStyle}>Total</th>
+              <th style={cellStyle}>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dashboard.failedOrders.map((order) => (
+              <tr key={order.id}>
+                <td style={cellStyle}>
+                  <strong>{order.id}</strong>
+                  <br />
+                  {formatDate(order.createdAt)}
+                </td>
+                <td style={cellStyle}>
+                  {order.customer?.name || order.customer?.phone || "-"}
+                </td>
+                <td style={cellStyle}>{money(order.quote?.total)}</td>
+                <td style={cellStyle}>Rechazado · no despachar</td>
+              </tr>
+            ))}
+            {!dashboard.failedOrders.length ? (
+              <tr>
+                <td colSpan={4} style={cellStyle}>
+                  Aún no hay pagos rechazados.
+                </td>
+              </tr>
+            ) : null}
+          </tbody>
+        </table>
+      </section>
+
+      <section style={cardStyle}>
+        <h2 style={{ marginTop: 0 }}>Pagos con tarjeta confirmados</h2>
+        <p style={{ fontSize: 13, color: "var(--fg-subtle)", marginTop: 0 }}>
+          Entregas por coordinar. La referencia corresponde al pago DataFast.
+        </p>
+        <table style={tableStyle}>
+          <thead>
+            <tr>
+              <th style={cellStyle}>Referencia</th>
+              <th style={cellStyle}>Cliente</th>
+              <th style={cellStyle}>Total</th>
+              <th style={cellStyle}>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {dashboard.paidOrders.map((order) => (
+              <tr key={order.id}>
+                <td style={cellStyle}>
+                  <strong>{order.id}</strong>
+                  <br />
+                  {formatDate(order.createdAt)}
+                </td>
+                <td style={cellStyle}>
+                  {order.customer?.name || order.customer?.phone || "-"}
+                </td>
+                <td style={cellStyle}>{money(order.quote?.total)}</td>
+                <td style={cellStyle}>Pagado · coordinar entrega</td>
+              </tr>
+            ))}
+            {!dashboard.paidOrders.length ? (
+              <tr>
+                <td colSpan={4} style={cellStyle}>
+                  Aun no hay pagos con tarjeta confirmados.
                 </td>
               </tr>
             ) : null}

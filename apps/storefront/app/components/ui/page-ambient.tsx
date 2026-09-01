@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { ShoppingCart } from "lucide-react"
+import { useCart } from "../../../contexts/CartContext"
 
 /**
  * PageAmbient — capa decorativa de ambiente para el canvas night:
@@ -9,8 +11,8 @@ import { useEffect, useRef } from "react"
  *  - "Brasa", la llamita mascota: flota, parpadea como fuego y desciende
  *    acompañando el scroll (progreso de página → posición vertical).
  *
- * Reglas: solo transform (compositor), pointer-events none, aria-hidden,
- * apagado con prefers-reduced-motion. El padre necesita `relative isolate`.
+ * Reglas: solo transform (compositor); la brasa abre el carrito y conserva
+ * una etiqueta accesible. El padre necesita `relative isolate`.
  */
 
 type HaloSpec = {
@@ -182,9 +184,10 @@ function FlameSvg() {
 }
 
 export function PageAmbient({ flame = true }: { flame?: boolean }) {
-  const flameRef = useRef<HTMLDivElement>(null)
+  const flameRef = useRef<HTMLButtonElement>(null)
   const halosRef = useRef<HTMLDivElement>(null)
   const shapesRef = useRef<HTMLDivElement>(null)
+  const { openCart, totalItems } = useCart()
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
@@ -236,10 +239,12 @@ export function PageAmbient({ flame = true }: { flame?: boolean }) {
       </div>
 
       {flame && (
-        <div
+        <button
           ref={flameRef}
-          aria-hidden="true"
-          className="pointer-events-none fixed right-2 top-20 z-30 w-[68px] motion-reduce:hidden md:right-8 md:w-[104px]"
+          type="button"
+          onClick={openCart}
+          aria-label={`Abrir carrito${totalItems ? `, ${totalItems} productos` : ""}`}
+          className="group fixed right-2 top-20 z-30 w-[72px] cursor-pointer rounded-full motion-reduce:hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3fa99] md:right-8 md:w-[108px]"
           style={{ willChange: "transform" }}
         >
           <div style={{ animation: "pa-bob 3.4s ease-in-out infinite" }}>
@@ -247,7 +252,11 @@ export function PageAmbient({ flame = true }: { flame?: boolean }) {
               <FlameSvg />
             </div>
           </div>
-        </div>
+          <span className="absolute bottom-0 right-0 inline-flex h-8 min-w-8 items-center justify-center gap-1 rounded-full border-2 border-[#10160e] bg-[#d3fa99] px-2 text-[#10160e] shadow-lg transition-transform group-hover:scale-110 md:h-10 md:min-w-10">
+            <ShoppingCart size={16} strokeWidth={2.5} aria-hidden="true" />
+            {totalItems > 0 && <span className="text-xs font-bold">{totalItems}</span>}
+          </span>
+        </button>
       )}
 
       <style>{`

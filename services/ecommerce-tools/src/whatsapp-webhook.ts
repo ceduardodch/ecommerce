@@ -13,8 +13,9 @@ import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
 import { downloadWhatsappMedia, type WhatsappMediaReference } from "./whatsapp-media.js"
+import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
-import type { Product } from "./types.js"
+import { advanceWhatsappSale, type CommerceState } from "./whatsapp-sales-flow.js"
 
 // ---------------------------------------------------------------------------
 // Tipos de los mensajes que Meta envía al webhook
@@ -62,6 +63,12 @@ export type MetaWebhookBody = {
 
 const WEBHOOK_DEDUPE_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
+type WebhookDedupeRecord = Record<string, number>
+
+/**
+ * Conserva los IDs de Meta ya procesados en el volumen de datos. Meta puede
+ * reenviar el mismo evento; sólo el primer recibo puede disparar una respuesta.
+ */
 class WebhookMessageDeduper {
   private readonly filePath: string
   private readonly ids = new Map<string, number>()
@@ -74,21 +81,36 @@ class WebhookMessageDeduper {
 
   private async load() {
     try {
-      const values = JSON.parse(await readFile(this.filePath, "utf8")) as Record<string, number>
-      for (const [id, at] of Object.entries(values)) if (Number.isFinite(at) && at > Date.now() - WEBHOOK_DEDUPE_TTL_MS) this.ids.set(id, at)
-    } catch { /* Primer arranque: aún no hay deduplicador persistido. */ }
+      const raw = await readFile(this.filePath, "utf8")
+      const records = JSON.parse(raw) as WebhookDedupeRecord
+      for (const [id, at] of Object.entries(records)) {
+        if (Number.isFinite(at) && at > Date.now() - WEBHOOK_DEDUPE_TTL_MS) {
+          this.ids.set(id, at)
+        }
+      }
+    } catch {
+      // El primer arranque no tiene archivo; se crea al aceptar el primer evento.
+    }
   }
 
-  async claim(id: string) {
-    await this.loaded
-    if (this.ids.has(id)) return false
-    const cutoff = Date.now() - WEBHOOK_DEDUPE_TTL_MS
-    for (const [oldId, at] of this.ids) if (at < cutoff) this.ids.delete(oldId)
-    this.ids.set(id, Date.now())
+  private async persist() {
     await mkdir(path.dirname(this.filePath), { recursive: true })
+    const retained = Object.fromEntries(this.ids)
     const temporary = `${this.filePath}.tmp`
-    await writeFile(temporary, `${JSON.stringify(Object.fromEntries(this.ids))}\n`, "utf8")
+    await writeFile(temporary, `${JSON.stringify(retained)}\n`, "utf8")
     await rename(temporary, this.filePath)
+  }
+
+  async claim(messageId: string): Promise<boolean> {
+    await this.loaded
+    if (this.ids.has(messageId)) return false
+
+    const cutoff = Date.now() - WEBHOOK_DEDUPE_TTL_MS
+    for (const [id, at] of this.ids) {
+      if (at < cutoff) this.ids.delete(id)
+    }
+    this.ids.set(messageId, Date.now())
+    await this.persist()
     return true
   }
 }
@@ -320,9 +342,21 @@ export function mountWhatsappWebhookRoutes(
     nextFollowupAt?: string
     followupReason?: string
   }) => Promise<unknown>,
-  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
+  getCustomer?: (phone: string) => Promise<{
+    followupReason?: string | null
+    nextFollowupAt?: string
+    purchasedProducts?: PurchasedProduct[]
+    metadata?: Record<string, unknown>
+    name?: string
+    email?: string
+    events?: CustomerEventRecord[]
+  } | undefined>,
   searchProducts?: (query: string) => Promise<Product[]>,
   sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
+  commerce?: {
+    quote: (input: { items: Array<{ productId: string; variantId?: string; quantity: number }>; customer?: { phone?: string; name?: string; email?: string; metadata?: Record<string, unknown> } }) => Promise<any>
+    createCart: (input: { phone: string; customer: { name: string; city: string }; items: Array<{ productId: string; variantId: string; quantity: number }> }) => Promise<{ cartUrl: string; expiresAt: string }>
+  },
   isAiPaused?: (phone: string) => Promise<boolean>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
@@ -394,12 +428,15 @@ export function mountWhatsappWebhookRoutes(
             return
           }
           const optOut = isOptOutText(text)
-          // Buscar el followup_reason del cliente para lógica NPS (opcional)
-          let customerFollowupReason: string | null | undefined
+          // Se consulta ANTES de registrar el mensaje entrante: así el
+          // historial y el contexto que recibe Vicky (y el followupReason
+          // para NPS) reflejan el estado previo a este turno, sin duplicar
+          // el mensaje actual (ya en camino a guardarse) dentro del propio
+          // prompt.
+          let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
           if (!optOut && getCustomer) {
             try {
-              const customer = await getCustomer(`+${waId}`)
-              customerFollowupReason = customer?.followup_reason
+              customer = await getCustomer(`+${waId}`)
             } catch {
               // No bloquear el procesamiento si falla la búsqueda
             }
@@ -417,18 +454,38 @@ export function mountWhatsappWebhookRoutes(
               timestamp,
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
-              customerFollowupReason,
+              // Antes decía `customer?.followup_reason` (snake_case): el
+              // campo real es `followupReason` en ambos backends
+              // (`CustomerRecord` local y `serializeCustomer` de Medusa), así
+              // que esto siempre leía `undefined` y la lógica de NPS nunca
+              // detectaba que un cliente estaba en seguimiento NPS.
+              customer?.followupReason,
               messageId,
               media,
             )
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")
           }
-          // Vicky se invoca directamente; un caso tomado por un vendedor no puede disparar IA.
-          if (!optOut && text && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
+          // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
+          if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
             const products = await searchProducts(text).catch(() => [])
-            const replyText = await createWhatsAppAgentReply(config, { text, products })
-            if (replyText) await sendReply({ phone: `+${waId}`, text: replyText }).catch((err) => app.log.error({ err, waId }, "Unable to send Vicky reply"))
+            const sale = commerce ? await advanceWhatsappSale({
+              text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
+              state: customer?.metadata?.agentCommerce as CommerceState | undefined,
+              quote: commerce.quote,
+              createCart: commerce.createCart,
+            }).catch(() => undefined) : undefined
+            if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
+            const customerContext = customer ? {
+              purchasedProducts: customer.purchasedProducts,
+              journeyStage: customer.metadata?.journeyStage as string | undefined,
+              nextFollowupAt: customer.nextFollowupAt,
+              followupReason: customer.followupReason ?? undefined,
+            } : undefined
+            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
+            if (replyText) {
+              await sendReply({ phone: `+${waId}`, text: replyText })
+            }
           }
         }),
         ...statuses.map(async (status) => {

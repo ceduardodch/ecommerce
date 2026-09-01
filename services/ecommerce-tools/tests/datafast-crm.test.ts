@@ -3,8 +3,11 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { loadConfig } from "../src/config.js"
-import { createCommerceService } from "../src/service.js"
-import { readCustomers, readDatafastCheckouts } from "../src/storage.js"
+import {
+  checkoutCatalogProducts,
+  createCommerceService,
+} from "../src/service.js"
+import { readCustomers, readDatafastCheckouts, readOrders } from "../src/storage.js"
 
 describe("datafast → registro de venta en CRM (recompra)", () => {
   let dir: string
@@ -30,7 +33,7 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
       items: [
-        { title: "Olla de granito 24cm", sku: "MGC-OLLA-24", quantity: 1, unitPrice: 95 },
+        { title: "Olla de granito 24cm", sku: "MGC-FR-OLLA-24-GN", quantity: 1, unitPrice: 95 },
       ],
       customer: { givenName: "Maria", surname: "Prueba", phone: "0991234567" },
     })
@@ -42,6 +45,7 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     const records = await readDatafastCheckouts(dir)
     expect(records[0]?.status).toBe("paid")
     expect(records[0]?.registered).toBe(true)
+    expect(records[0]?.orderId).toBeTruthy()
     expect(records[0]?.resultCode).toBe("000.100.112")
     expect(records[0]?.resultDescription).toBe("DRY-RUN approved")
 
@@ -55,12 +59,19 @@ describe("datafast → registro de venta en CRM (recompra)", () => {
     expect(maria?.suggestedFrequencyDays).toBe(90)
     const paidEvents = (maria?.events || []).filter((e) => e.type === "paid")
     expect(paidEvents.length).toBe(1)
+
+    const orders = await readOrders(dir)
+    expect(orders).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: records[0]?.orderId, status: "paid" }),
+      ]),
+    )
   })
 
   it("es idempotente: consultar el resultado dos veces NO duplica la venta", async () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
-      items: [{ title: "Mat de yoga", sku: "BIE-MAT", quantity: 1, unitPrice: 30 }],
+      items: [{ title: "Sartén 20 cm", sku: "MGC-FR-SARTEN-20-GN", quantity: 1, unitPrice: 30 }],
       customer: { givenName: "Ana", surname: "Test", phone: "0987654321" },
     })
     await service.datafastResult(checkout.checkoutId)
@@ -114,7 +125,7 @@ describe("datafast → blindaje de precios (code review #1)", () => {
       items: [
         {
           title: "Sartén hackeada",
-          sku: "COC-SARTEN-PLANO-GRANITO-22",
+          sku: "MGC-FR-SARTEN-20-GN",
           quantity: 1,
           unitPrice: 0.1,
         },
@@ -136,11 +147,41 @@ describe("datafast → blindaje de precios (code review #1)", () => {
     ).rejects.toThrow(/no reconocido/)
   })
 
+  it("en LIVE acepta la paleta temporal y siempre cobra $1.00", async () => {
+    const service = svc({ DATAFAST_ENV: "live" })
+    const checkout = await service.datafastCheckout({
+      items: [
+        {
+          title: "Precio alterado desde el navegador",
+          sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+          quantity: 1,
+          unitPrice: 99,
+        },
+      ],
+    })
+
+    expect(checkout.amount).toBe(1)
+    const [record] = await readDatafastCheckouts(dir)
+    expect(record.items).toEqual([
+      expect.objectContaining({
+        sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+        title: "Paleta para wok · prueba DataFast",
+        unitPrice: 1,
+      }),
+    ])
+  })
+
   it("en test deja pasar ítems sin match (fixtures y certificación)", async () => {
     const service = svc()
     const checkout = await service.datafastCheckout({
       items: [{ title: "Fixture X", quantity: 1, unitPrice: 12.5 }],
     })
     expect(checkout.amount).toBe(12.5)
+  })
+})
+
+describe("contrato catálogo → DataFast", () => {
+  it("sólo conserva fixtures para pruebas locales", () => {
+    expect(checkoutCatalogProducts.some((product) => product.sku === "MGC-PALETA-WOK-DATAFAST-TEST")).toBe(true)
   })
 })

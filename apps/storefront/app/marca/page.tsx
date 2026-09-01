@@ -4,6 +4,8 @@ import { TrackedEventLink } from "../components/analytics"
 import { Isotipo } from "../components/ui/isotipo"
 import { Photo } from "../components/ui/photo"
 import { brandBaseUrl, kitchenBaseUrl, wellnessBaseUrl } from "../../lib/domains"
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "../../lib/seo"
+import { sellerWhatsappNumber } from "../../lib/whatsapp"
 
 export const metadata: Metadata = {
   title: "Eter Niu — Bienestar & Cocina Consciente",
@@ -17,14 +19,8 @@ export const metadata: Metadata = {
   },
 }
 
-function sellerNumber() {
-  const raw = process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"
-  const digits = raw.replace(/\D/g, "")
-  if (digits.startsWith("0") && digits.length === 10) {
-    return `593${digits.slice(1)}`
-  }
-  return digits
-}
+// Normalización compartida con el resto del sitio (lib/whatsapp).
+const sellerNumber = sellerWhatsappNumber
 
 type Door = {
   vertical: "cocina" | "bienestar"
@@ -75,8 +71,21 @@ export default function BrandPortalPage() {
     bienestar: wellnessBaseUrl,
   }
 
+  const organizationJsonLd = buildOrganizationJsonLd("Eter Niu", brandBaseUrl)
+  const websiteJsonLd = buildWebSiteJsonLd("Eter Niu", brandBaseUrl)
+
   return (
     <main className="brand-portal relative isolate min-h-screen bg-[#10160e] px-5 py-10 text-[#FAF7F2] sm:py-14">
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde constantes del sitio, no
+        // viene del usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <PageAmbient />
       <style>{`.brand-portal a { text-decoration: none; color: inherit; }`}</style>
 

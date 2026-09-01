@@ -3,7 +3,6 @@
 import { Suspense, useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useCart } from "../../../contexts/CartContext"
-import { trackStorefrontEvent } from "../../components/analytics"
 
 type Result = {
   status: "paid" | "failed"
@@ -15,7 +14,7 @@ type Result = {
 
 function Resultado() {
   const params = useSearchParams()
-  const { items, totalAmount, clearCart, unitPriceForItem } = useCart()
+  const { clearCart } = useCart()
   const [state, setState] = useState<"loading" | "paid" | "failed">("loading")
   const [result, setResult] = useState<Result | null>(null)
   const settled = useRef(false)
@@ -41,33 +40,10 @@ function Resultado() {
         const data = (await res.json()) as Result
         setResult(data)
         if (data.status === "paid") {
-          // El Purchase a Meta solo se dispara con la aprobación de PRODUCCIÓN
-          // (000.000.000). Los códigos de prueba (000.100.11x, certificación
-          // Datafast) muestran éxito al usuario pero no contaminan campañas.
-          if (data.code === "000.000.000") {
-            trackStorefrontEvent({
-              eventName: "Purchase",
-              type: "purchase_confirmed",
-              source: "storefront",
-              value: data.amount || totalAmount,
-              cta: "datafast_paid",
-              placement: "checkout_result",
-              products: items.map((i) => ({
-                id: i.id,
-                variantId: i.id,
-                sku: i.sku,
-                title: i.title,
-                category: i.category || "",
-                brand: "Eter Niu",
-                price: { amount: unitPriceForItem(i), currency: "USD" },
-                imageUrl: i.image || "",
-                productUrl: "",
-                tags: [],
-                stock: 0,
-              })),
-              metadata: { reference: data.reference, provider: "datafast" },
-            })
-          }
+          // El Purchase de Meta NO se dispara aquí: lo emite ecommerce-tools al
+          // confirmar el cobro, con el monto del ledger. Desde el navegador se
+          // perdía si el cliente cerraba la pestaña y era falsificable vía
+          // /api/events. Ver `sendDatafastPurchaseToMeta` en el servicio.
           clearCart()
           setState("paid")
         } else {
@@ -77,7 +53,7 @@ function Resultado() {
         setState("failed")
       }
     })()
-  }, [id, resourcePath, items, totalAmount, clearCart])
+  }, [id, resourcePath, clearCart])
 
   return (
     <div className="min-h-screen bg-[#10160e]">

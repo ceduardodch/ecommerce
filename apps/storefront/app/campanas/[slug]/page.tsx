@@ -17,6 +17,7 @@ import { getProducts, productPath, type Product } from "../../../lib/catalog"
 import { commercialInfo } from "../../../lib/commercial"
 import { mediaSlots, type MediaSlot } from "../../../lib/content"
 import { kitchenBaseUrl } from "../../../lib/domains"
+import { absoluteUrl } from "../../../lib/seo"
 import {
   CampaignAnalytics,
   CampaignStickyCta,
@@ -132,6 +133,38 @@ function hasPromo(product: Product) {
 
 function productBySku(products: Product[], sku?: string) {
   return products.find((product) => product.sku === sku)
+}
+
+/**
+ * Datos estructurados schema.org de la campana.
+ *
+ * Igual que la ficha de producto, para que Google pueda mostrar precio y
+ * disponibilidad en el resultado de busqueda de la landing de campana.
+ */
+function buildCampaignJsonLd(product: Product, slug: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description:
+      product.healthAngle || product.bundleUseCase || product.description,
+    sku: product.sku,
+    image: [absoluteUrl(product.imageUrl, kitchenBaseUrl)],
+    brand: { "@type": "Brand", name: product.brand || "Eter Niu" },
+    ...(product.material ? { material: product.material } : {}),
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(`/campanas/${slug}?sku=${product.sku}`, kitchenBaseUrl),
+      priceCurrency: product.price.currency,
+      price: product.price.amount.toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/PreOrder",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Eter Niu" },
+    },
+  }
 }
 
 function isKnifeProduct(product: Product) {
@@ -294,7 +327,7 @@ function CampaignPhotoGallery({
           Oferta de lanzamiento: $29.99
         </p>
         <p className="mb-4 text-[12px] text-[#b8c2ae]">
-          Envio gratis por Servientrega y pago por transferencia, deuna! o PayPhone.
+          Envío gratis por Servientrega y pago por transferencia, deuna! o tarjeta DataFast.
         </p>
         <TrackedWhatsAppLink
           className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white"
@@ -440,9 +473,16 @@ export default async function CampaignPage({
   const heroVideo = mediaPath(hero.video)
   const heroVideoSrc = heroVideo || undefined
   const heroPoster = hero.poster || selectedProduct.imageUrl
+  const campaignJsonLd = buildCampaignJsonLd(selectedProduct, slug)
 
   return (
     <main data-theme="cocina" className="relative isolate min-h-screen bg-[#10160e] pb-24">
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde el catálogo, no viene del
+        // usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(campaignJsonLd) }}
+      />
       <PageAmbient />
       <CampaignAnalytics
         context={{

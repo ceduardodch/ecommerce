@@ -17,6 +17,8 @@ export type Product = {
   /** Precio promocional por unidad cuando el carrito reúne el mínimo del combo. */
   comboPrice?: Money
   comboMinimumItems?: number
+  /** Solo productos del mismo grupo activan entre sí el precio de combo. */
+  comboGroup?: string
   discountPercent?: number
   promoLabel?: string
   stockSignal?: string
@@ -124,6 +126,8 @@ export type CustomerEventType =
   | "opt_out"
   | "no_response"
   | "conversation_escalated"
+  | "cart_link_sent"
+  | "human_handoff"
   | "note"
   | "followup_queued"
   | "followup_snoozed"
@@ -172,6 +176,8 @@ export type CustomerRecord = {
 export type DatafastCheckoutRecord = {
   reference: string
   checkoutId: string
+  orderId?: string
+  medusaOrderId?: string
   amount: number
   status: "pending" | "paid" | "failed"
   registered: boolean
@@ -199,7 +205,12 @@ export type OrderRecord = {
   medusaDraftOrderId?: string
   quote: Quote
   customer: CustomerInput
-  status: "pending_payment" | "paid" | "payment_review" | "cancelled"
+  status:
+    | "pending_payment"
+    | "paid"
+    | "payment_failed"
+    | "payment_review"
+    | "cancelled"
   paymentLink?: string
   clientTransactionId?: string
   createdAt: string

@@ -1,5 +1,5 @@
 export const defaultCouponCode = "GRANITOHOY"
-export const defaultPaymentMethods = ["transferencia", "deuna", "payphone"]
+export const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
 export const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 export const defaultFreeShippingLabel = "Envio gratis por Servientrega"
 
@@ -14,7 +14,7 @@ type CommercialProduct = {
 function paymentLabel(method: string) {
   const normalized = method.trim().toLowerCase()
   if (normalized === "deuna") return "deuna!"
-  if (normalized === "payphone") return "PayPhone/tarjeta"
+  if (normalized === "tarjeta") return "tarjeta DataFast"
   if (normalized === "transferencia") return "transferencia"
   return method
 }

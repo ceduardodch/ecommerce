@@ -25,9 +25,13 @@ export const orderInputSchema = quoteInputSchema.extend({
   notes: z.string().optional(),
 })
 
-export const payphoneInputSchema = z.object({
-  orderId: z.string().min(1),
-  description: z.string().optional(),
+export const whatsappCartInputSchema = z.object({
+  phone: z.string().min(1),
+  customer: z.object({
+    name: z.string().min(1).optional(),
+    city: z.string().min(2).optional(),
+  }),
+  items: z.array(lineInputSchema).min(1),
 })
 
 export const datafastCheckoutSchema = z.object({
@@ -145,6 +149,8 @@ export const customerEventInputSchema = z.object({
     "opt_out",
     "no_response",
     "conversation_escalated",
+    "cart_link_sent",
+    "human_handoff",
     "note",
     "followup_queued",
     "followup_snoozed",
@@ -250,6 +256,8 @@ export const toolsEventInputSchema = z.object({
       "opt_out",
       "no_response",
       "conversation_escalated",
+      "cart_link_sent",
+      "human_handoff",
     ])
     .optional(),
   eventId: z.string().min(1).optional(),
@@ -285,7 +293,7 @@ export const saleFeedbackInputSchema = z.object({
   currency: z.string().default("USD"),
   quantity: z.number().int().positive().default(1),
   paymentMethod: z
-    .enum(["transferencia", "deuna", "payphone", "tarjeta", "efectivo", "otro"])
+    .enum(["transferencia", "deuna", "tarjeta", "efectivo", "otro"])
     .optional(),
   leadId: z.string().min(1).optional(),
   sessionId: z.string().min(1).optional(),
@@ -304,13 +312,3 @@ export const saleFeedbackInputSchema = z.object({
 })
 
 export type SaleFeedbackInput = z.infer<typeof saleFeedbackInputSchema>
-
-export const payphoneWebhookSchema = z
-  .object({
-    clientTransactionId: z.string().optional(),
-    transactionId: z.union([z.string(), z.number()]).optional(),
-    statusCode: z.union([z.string(), z.number()]).optional(),
-    status: z.string().optional(),
-    amount: z.union([z.string(), z.number()]).optional(),
-  })
-  .passthrough()

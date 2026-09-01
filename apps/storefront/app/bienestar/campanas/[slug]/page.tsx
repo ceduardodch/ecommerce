@@ -17,6 +17,7 @@ import {
 } from "../../../../lib/catalog"
 import { commercialInfo } from "../../../../lib/commercial"
 import { publicCampaignPath, wellnessBaseUrl } from "../../../../lib/domains"
+import { absoluteUrl } from "../../../../lib/seo"
 import { wellnessOpeningLine } from "../../../../lib/wellness"
 import { TrackedWhatsAppLink } from "../../../components/analytics"
 import {
@@ -90,6 +91,37 @@ function hasPromo(product: Product) {
     product.originalPrice !== undefined &&
     product.originalPrice.amount > product.price.amount
   )
+}
+
+/**
+ * Datos estructurados schema.org de la campana de bienestar.
+ *
+ * Mismo patron que la campana de cocina, para que Google pueda mostrar precio
+ * y disponibilidad en el resultado de busqueda de la landing.
+ */
+function buildCampaignJsonLd(product: Product, slug: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description: product.bundleUseCase || product.description,
+    sku: product.sku,
+    image: [absoluteUrl(product.imageUrl, wellnessBaseUrl)],
+    brand: { "@type": "Brand", name: product.brand || "Eter Niu" },
+    ...(product.material ? { material: product.material } : {}),
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(`/campanas/${slug}?sku=${product.sku}`, wellnessBaseUrl),
+      priceCurrency: product.price.currency,
+      price: product.price.amount.toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/PreOrder",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Eter Niu" },
+    },
+  }
 }
 
 /** Trust grid 3-col (maqueta 2.3 point 6) */
@@ -232,9 +264,16 @@ export default async function WellnessCampaignPage({
     promo && selectedProduct.originalPrice
       ? selectedProduct.originalPrice.amount - selectedProduct.price.amount
       : 0
+  const campaignJsonLd = buildCampaignJsonLd(selectedProduct, slug)
 
   return (
     <main data-theme="bienestar" className="relative isolate min-h-screen bg-[#10160e] pb-24">
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde el catálogo, no viene del
+        // usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(campaignJsonLd) }}
+      />
       <PageAmbient />
       <WellnessAnalytics
         context={{

@@ -4,8 +4,12 @@ import {
   OrderStatus,
 } from "@medusajs/framework/utils"
 import {
+  createOrderPaymentCollectionWorkflow,
   createCustomersWorkflow,
   createOrderWorkflow,
+  markPaymentCollectionAsPaid,
+  updateOrderWorkflow,
+  updateProductsWorkflow,
 } from "@medusajs/medusa/core-flows"
 import { B2B_CRM_MODULE } from "../../../modules/b2b-crm"
 import type B2bCrmModuleService from "../../../modules/b2b-crm/service"
@@ -34,6 +38,7 @@ type QuoteLinePayload = {
 
 export type B2bOrderPayload = {
   externalId?: string
+  paymentStatus?: "pending_payment" | "paid" | "payment_failed"
   quote: {
     id: string
     lines: QuoteLinePayload[]
@@ -249,6 +254,21 @@ function customerNameParts(name?: string) {
   }
 }
 
+function orderAddressFromCustomer(customer: CustomerPayload) {
+  const address = customer.metadata?.shippingAddress as
+    | { street?: string; city?: string; countryCode?: string }
+    | undefined
+  if (!address?.street?.trim()) return undefined
+
+  return {
+    ...customerNameParts(customer.name),
+    address_1: address.street.trim(),
+    city: address.city?.trim() || undefined,
+    country_code: (address.countryCode || "EC").toLowerCase(),
+    phone: customer.phone ? normalizePhone(customer.phone) : undefined,
+  }
+}
+
 export async function findOrCreateMedusaCustomer(
   req: MedusaRequest,
   customer: CustomerPayload = {},
@@ -317,7 +337,7 @@ export async function firstRegion(req: MedusaRequest, preferredId?: string) {
   return data[0]
 }
 
-export async function createMedusaDraftOrder(
+export async function createMedusaSalesOrder(
   req: MedusaRequest,
   input: B2bOrderPayload,
   medusaCustomer: { id: string; email?: string | null },
@@ -328,14 +348,19 @@ export async function createMedusaDraftOrder(
     input.quote.currency?.toLowerCase() ||
     region.currency_code ||
     "usd"
+  const deliveryAddress = orderAddressFromCustomer(input.customer || {})
 
   const workflowInput = {
-      status: OrderStatus.DRAFT,
-      is_draft_order: true,
+      // No usamos borradores. Estos pedidos deben entrar a /app/orders desde
+      // que inicia el checkout para que Operaciones pueda ver el pago pendiente.
+      status: OrderStatus.PENDING,
+      is_draft_order: false,
       region_id: region.id,
       currency_code: currencyCode,
       email: medusaCustomer.email || undefined,
       customer_id: medusaCustomer.id,
+      shipping_address: deliveryAddress,
+      billing_address: deliveryAddress,
       no_notification: true,
       items: input.quote.lines.map((line) => ({
         title: line.title,
@@ -358,6 +383,9 @@ export async function createMedusaDraftOrder(
         quote_id: input.quote.id,
         external_order_id: input.externalId,
         channel: "b2b_ecommerce_tools",
+        payment_status: input.paymentStatus || "pending_payment",
+        fulfillment_status:
+          input.paymentStatus === "paid" ? "pending_fulfillment" : "not_ready",
       },
     }
 
@@ -366,6 +394,111 @@ export async function createMedusaDraftOrder(
   })
 
   return result
+}
+
+export async function updateMedusaSalesOrderStatus(
+  req: MedusaRequest,
+  medusaOrderId: string | undefined,
+  paymentStatus: "pending_payment" | "paid" | "payment_failed",
+  payment: Record<string, unknown> = {},
+  totalAmount?: number,
+) {
+  if (!medusaOrderId) return undefined
+
+  if (paymentStatus === "paid") {
+    const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+    const { data: orders } = await query.graph({
+      entity: "order",
+      fields: ["id", "payment_collections.id", "payment_collections.status"],
+      filters: { id: medusaOrderId },
+      pagination: { take: 1 },
+    })
+    let collection: { id: string; status?: string } | undefined =
+      orders[0]?.payment_collections?.[0] || undefined
+    if (!collection) {
+      const { result } = await createOrderPaymentCollectionWorkflow(req.scope).run({
+        input: { order_id: medusaOrderId, amount: Number(totalAmount || 0) },
+      })
+      collection = { id: result[0].id, status: result[0].status }
+    }
+    if (collection.status !== "completed") {
+      await markPaymentCollectionAsPaid(req.scope).run({
+        input: {
+          payment_collection_id: collection.id,
+          order_id: medusaOrderId,
+          captured_by: "b2b-tools",
+        },
+      })
+    }
+  }
+
+  const { result } = await updateOrderWorkflow(req.scope).run({
+    input: {
+      id: medusaOrderId,
+      metadata: {
+        payment_status: paymentStatus,
+        fulfillment_status:
+          paymentStatus === "paid" ? "pending_fulfillment" : "not_ready",
+        payment_method: "datafast",
+        datafast_reference: payment.reference,
+        datafast_checkout_id: payment.checkoutId,
+        datafast_result_code: payment.code,
+        datafast_payment_id: payment.paymentId,
+        datafast_authorization_code: payment.authorizationCode,
+      },
+    } as any,
+  })
+
+  return result
+}
+
+export async function decrementCatalogStockForOrder(
+  req: MedusaRequest,
+  lines: QuoteLinePayload[],
+) {
+  const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const updates: any[] = []
+  const grouped = new Map<string, QuoteLinePayload>()
+  for (const line of lines) {
+    const key = `${line.productId}:${line.variantId || ""}`
+    const existing = grouped.get(key)
+    grouped.set(
+      key,
+      existing ? { ...existing, quantity: existing.quantity + line.quantity } : line,
+    )
+  }
+
+  for (const line of grouped.values()) {
+    const { data } = await query.graph({
+      entity: "product",
+      fields: ["id", "metadata", "variants.id", "variants.metadata"],
+      filters: { id: line.productId },
+      pagination: { take: 1 },
+    })
+    const product = data?.[0]
+    const variant = product?.variants?.find(
+      (candidate: any) => candidate.id === line.variantId,
+    ) || product?.variants?.[0]
+    const current = Number(product?.metadata?.stock ?? variant?.metadata?.stock ?? 0)
+    if (!product || !variant || !Number.isFinite(current) || current < line.quantity) {
+      throw new Error(`Stock insuficiente para ${line.sku}`)
+    }
+    const stock = current - line.quantity
+    updates.push({
+      id: product.id,
+      metadata: { ...(product.metadata || {}), stock },
+      variants: [
+        {
+          id: variant.id,
+          metadata: { ...(variant.metadata || {}), stock },
+        },
+      ],
+    })
+  }
+
+  if (updates.length) {
+    await updateProductsWorkflow(req.scope).run({ input: { products: updates } })
+  }
 }
 
 export function customerInputFromPayload(

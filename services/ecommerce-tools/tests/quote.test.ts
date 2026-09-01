@@ -4,7 +4,6 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { loadConfig } from "../src/config.js"
 import { demoCatalog } from "../src/demo-catalog.js"
-import { buildClientTransactionId } from "../src/payphone.js"
 import { buildQuote } from "../src/quote.js"
 import { buildMetaCatalogCsv } from "../src/meta.js"
 import { createCommerceService } from "../src/service.js"
@@ -19,12 +18,7 @@ describe("commerce tools", () => {
     expect(quote.subtotal.amount).toBe(302.4)
     expect(quote.tax.amount).toBe(45.36)
     expect(quote.total.amount).toBe(347.76)
-    expect(quote.whatsappMessage).toContain("PayPhone")
-  })
-
-  it("keeps PayPhone client transaction ids within the API Link limit", () => {
-    const id = buildClientTransactionId("ETN-THIS-ORDER-ID-IS-LONG")
-    expect(id.length).toBeLessThanOrEqual(15)
+    expect(quote.whatsappMessage).toContain("DataFast")
   })
 
   it("exports required Meta catalog columns", () => {

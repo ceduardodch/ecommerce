@@ -46,7 +46,7 @@ export function isWindowOpen(
 // Envío free-form a Cloud API
 // ---------------------------------------------------------------------------
 
-export async function sendWhatsappCloudReply(
+export async function sendWhatsappFreeform(
   config: AppConfig,
   phone: string,
   text: string,
@@ -93,6 +93,61 @@ export async function sendWhatsappCloudReply(
   }
 }
 
+export async function sendWhatsappCloudReply(
+  config: AppConfig,
+  input: WhatsappReplyInput,
+  getCustomer: (phone: string) => Promise<unknown>,
+  addCustomerEvent: (input: {
+    phone: string
+    type: string
+    at: string
+    source: string
+    payload: unknown
+    metadata: Record<string, unknown>
+  }) => Promise<unknown>,
+  sender: { type?: "ai" | "human"; actorId?: string } = {},
+): Promise<{ ok: true; channel: "cloud_api_freeform"; sentAt: string } | { ok: false; status: number; error: string; detail?: string }> {
+  let lastInboundAt: string | null | undefined
+  try {
+    const customer = (await getCustomer(input.phone)) as
+      | { metadata?: { lastInboundAt?: string } }
+      | null
+      | undefined
+    lastInboundAt = customer?.metadata?.lastInboundAt
+  } catch {
+    lastInboundAt = null
+  }
+
+  if (!isWindowOpen(lastInboundAt)) {
+    return { ok: false, status: 409, error: "window_closed" }
+  }
+
+  const result = await sendWhatsappFreeform(config, input.phone, input.text)
+  if (!result.ok) {
+    return { ok: false, status: 502, error: "send_failed", detail: result.detail }
+  }
+
+  const sentAt = new Date().toISOString()
+  await addCustomerEvent({
+    phone: input.phone,
+    type: "message_out",
+    at: sentAt,
+    source: "whatsapp_cloud_api",
+    payload: {
+      text: input.text,
+      messageId: result.messageId,
+      mediaType: "text",
+      mediaUrl: null,
+      senderType: sender.type || "ai",
+      actor: sender.actorId ? { userId: sender.actorId } : undefined,
+      status: "sent",
+    },
+    metadata: {},
+  })
+
+  return { ok: true, channel: "cloud_api_freeform", sentAt }
+}
+
 // ---------------------------------------------------------------------------
 // Montaje de ruta Fastify
 // ---------------------------------------------------------------------------
@@ -115,50 +170,20 @@ export function mountWhatsappReplyRoute(
     async (request: FastifyRequest, reply: FastifyReply) => {
       const input = whatsappReplyInputSchema.parse(request.body)
 
-      // Consultar perfil CRM para obtener lastInboundAt
-      let lastInboundAt: string | null | undefined
-      try {
-        const customer = (await getCustomer(input.phone)) as
-          | { metadata?: { lastInboundAt?: string } }
-          | null
-          | undefined
-        lastInboundAt = customer?.metadata?.lastInboundAt
-      } catch {
-        lastInboundAt = null
-      }
-
-      if (!isWindowOpen(lastInboundAt)) {
-        return reply.code(409).send({ error: "window_closed" })
-      }
-
-      // Enviar free-form por Cloud API
-      const result = await sendWhatsappCloudReply(config, input.phone, input.text)
-
-      const now = new Date().toISOString()
-
-      if (result.ok) {
-        // Registrar message_out
-        const senderType = request.headers["x-crm-sender"] === "human" ? "human" : "ai"
-        const actorId = typeof request.headers["x-crm-actor-id"] === "string" ? request.headers["x-crm-actor-id"] : undefined
-        await addCustomerEvent({
-          phone: input.phone,
-          type: "message_out",
-          at: now,
-          source: "whatsapp_cloud_api",
-          payload: { text: input.text, messageId: result.messageId, mediaType: "text", mediaUrl: null, senderType, actor: actorId ? { userId: actorId } : undefined, status: "sent" },
-          metadata: {},
-        }).catch((err) => {
-          app.log.error({ err }, "Error recording message_out event")
-        })
-
-        return { ok: true, channel: "cloud_api_freeform", sentAt: now }
-      }
-
-      // Envío falló pero la ventana estaba abierta
-      return reply.code(502).send({
-        error: "send_failed",
-        detail: result.detail,
-      })
+      const result = await sendWhatsappCloudReply(
+        config,
+        input,
+        getCustomer,
+        addCustomerEvent,
+        {
+          type: request.headers["x-crm-sender"] === "human" ? "human" : "ai",
+          actorId: typeof request.headers["x-crm-actor-id"] === "string"
+            ? request.headers["x-crm-actor-id"]
+            : undefined,
+        },
+      )
+      if (result.ok) return result
+      return reply.code(result.status).send({ error: result.error, detail: result.detail })
     },
   )
 }

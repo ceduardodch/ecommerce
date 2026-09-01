@@ -70,7 +70,7 @@ export function buildQuote(
       `Subtotal: ${formatUsd(subtotal)}`,
       `Impuestos/configuracion: ${formatUsd(tax)}`,
       `Total: ${formatUsd(total)}`,
-      "Si estas de acuerdo, te envio el link de pago PayPhone y coordinamos entrega por WhatsApp.",
+      "Si estás de acuerdo, preparo tu carrito para que revises el pedido y pagues con tarjeta en DataFast.",
     ].join("\n"),
   }
 }

@@ -38,12 +38,23 @@ const EMPTY: Form = {
 }
 
 export default function PagoTarjetaPage() {
-  const { items, totalAmount, loaded, unitPriceForItem } = useCart()
+  const { items, totalAmount, loaded, unitPriceForItem, checkoutCustomer } = useCart()
   const [form, setForm] = useState<Form>(EMPTY)
   const [checkout, setCheckout] = useState<CheckoutResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const widgetRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!checkoutCustomer.name && !checkoutCustomer.city) return
+    const names = (checkoutCustomer.name || "").trim().split(/\s+/)
+    setForm((current) => ({
+      ...current,
+      givenName: current.givenName || names[0] || "",
+      surname: current.surname || names.slice(1).join(" "),
+      city: current.city || checkoutCustomer.city || "",
+    }))
+  }, [checkoutCustomer.city, checkoutCustomer.name])
 
   // Inyecta el widget Copy&Pay de Datafast cuando hay checkout real.
   useEffect(() => {
@@ -188,7 +199,7 @@ export default function PagoTarjetaPage() {
       return
     }
     if (!phoneOk) {
-      setError("Celular inválido: usa 10 dígitos, ej. 0979854905.")
+      setError("Celular inválido: usa 10 dígitos, ej. 0991234567.")
       return
     }
     setLoading(true)
@@ -307,12 +318,16 @@ export default function PagoTarjetaPage() {
             />
           </Row>
           <Field
-            label="Dirección"
+            label="Dirección de envío"
             value={form.street}
             onChange={(v) => setForm({ ...form, street: v })}
           />
+          <p className="-mt-2 text-[12px] leading-5 text-[#6B6B66]">
+            Aquí coordinaremos y entregaremos tu pedido. Incluye calle, número,
+            sector y una referencia útil.
+          </p>
           <Field
-            label="Ciudad (opcional)"
+            label="Ciudad de envío (opcional)"
             value={form.city}
             onChange={(v) => setForm({ ...form, city: v })}
           />

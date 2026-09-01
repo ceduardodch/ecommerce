@@ -1,6 +1,11 @@
 import { NewsletterSignup } from "./newsletter-signup"
 import { Isotipo } from "./isotipo"
 import { kitchenBaseUrl, wellnessBaseUrl } from "../../../lib/domains"
+import {
+  SELLER_PHONE_DISPLAY,
+  SELLER_PHONE_TEL,
+  SELLER_WHATSAPP_NUMBER,
+} from "../../../lib/whatsapp"
 
 function InstagramIcon() {
   return (
@@ -79,8 +84,8 @@ export function SiteFooter() {
 
           <p className="mt-6 text-[12px] text-[#b8c2ae]">
             Contacto:{" "}
-            <a href="tel:+593979854905" className="hover:text-[#d3fa99]">
-              +593 97 985 4905
+            <a href={`tel:${SELLER_PHONE_TEL}`} className="hover:text-[#d3fa99]">
+              {SELLER_PHONE_DISPLAY}
             </a>{" "}
             ·{" "}
             <a href="mailto:carlos.diaz@b2b.com.ec" className="hover:text-[#d3fa99]">
@@ -200,7 +205,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="https://wa.me/593979854905"
+                  href={`https://wa.me/${SELLER_WHATSAPP_NUMBER}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
@@ -210,10 +215,10 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
-                  href="tel:+593979854905"
+                  href={`tel:${SELLER_PHONE_TEL}`}
                   className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
-                  +593 97 985 4905
+                  {SELLER_PHONE_DISPLAY}
                 </a>
               </li>
               <li>
