@@ -12,7 +12,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
-import type { Product } from "./types.js"
+import type { CustomerEventRecord, Product } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
 import { advanceWhatsappSale, type CommerceState } from "./whatsapp-sales-flow.js"
 
@@ -307,7 +307,7 @@ export function mountWhatsappWebhookRoutes(
     nextFollowupAt?: string
     followupReason?: string
   }) => Promise<unknown>,
-  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null; metadata?: Record<string, unknown>; name?: string; email?: string } | undefined>,
+  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null; metadata?: Record<string, unknown>; name?: string; email?: string; events?: CustomerEventRecord[] } | undefined>,
   searchProducts?: (query: string) => Promise<Product[]>,
   sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
   commerce?: {
@@ -378,12 +378,14 @@ export function mountWhatsappWebhookRoutes(
             return
           }
           const optOut = isOptOutText(text)
-          // Buscar el followup_reason del cliente para lógica NPS (opcional)
-          let customerFollowupReason: string | null | undefined
+          // Se consulta ANTES de registrar el mensaje entrante: así el
+          // historial que recibe Vicky (y el followup_reason para NPS)
+          // reflejan el estado previo a este turno, sin duplicar el mensaje
+          // actual (ya en camino a guardarse) dentro del propio prompt.
+          let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
           if (!optOut && getCustomer) {
             try {
-              const customer = await getCustomer(`+${waId}`)
-              customerFollowupReason = customer?.followup_reason
+              customer = await getCustomer(`+${waId}`)
             } catch {
               // No bloquear el procesamiento si falla la búsqueda
             }
@@ -396,7 +398,7 @@ export function mountWhatsappWebhookRoutes(
               timestamp,
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
-              customerFollowupReason,
+              customer?.followup_reason,
               messageId,
             )
           } catch (err) {
@@ -404,7 +406,6 @@ export function mountWhatsappWebhookRoutes(
           }
           if (!optOut && searchProducts && sendReply) {
             const products = await searchProducts(text).catch(() => [])
-            const customer = getCustomer ? await getCustomer(`+${waId}`).catch(() => undefined) : undefined
             const sale = commerce ? await advanceWhatsappSale({
               text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
               state: customer?.metadata?.agentCommerce as CommerceState | undefined,
@@ -412,7 +413,7 @@ export function mountWhatsappWebhookRoutes(
               createCart: commerce.createCart,
             }).catch(() => undefined) : undefined
             if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
-            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products })
+            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events })
             if (replyText) {
               await sendReply({ phone: `+${waId}`, text: replyText })
             }
