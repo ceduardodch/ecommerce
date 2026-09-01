@@ -61,3 +61,36 @@ export function absoluteUrl(path: string, baseUrl = kitchenBaseUrl) {
 export function canonical(path: string, baseUrl = kitchenBaseUrl): Metadata {
   return { alternates: { canonical: absoluteUrl(path, baseUrl) } }
 }
+
+const instagramProfile = "https://instagram.com/eter.niu"
+
+/**
+ * Datos estructurados schema.org de `Organization` + `WebSite` para la
+ * portada de cada host.
+ *
+ * Sin `potentialAction` (`SearchAction`, lo que activa el sitelinks
+ * searchbox): el `?q=` de la portada de cocina existe en el tipo de
+ * `searchParams` pero hoy no filtra nada (solo llega a `PageAnalytics`), así
+ * que declarar una búsqueda que no busca de verdad sería un dato
+ * estructurado engañoso. Sumar `potentialAction` cuando ese `q` filtre el
+ * grid de verdad.
+ */
+export function buildOrganizationJsonLd(name: string, baseUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name,
+    url: baseUrl,
+    logo: absoluteUrl("/icon.svg", baseUrl),
+    sameAs: [instagramProfile],
+  }
+}
+
+export function buildWebSiteJsonLd(name: string, baseUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name,
+    url: baseUrl,
+  }
+}

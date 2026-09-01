@@ -2,6 +2,7 @@ import { PageAmbient } from "./components/ui/page-ambient";
 import type { Metadata } from "next";
 import { getProducts, type Product } from "../lib/catalog";
 import { kitchenBaseUrl } from "../lib/domains";
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "../lib/seo";
 import { PageAnalytics } from "./components/analytics";
 import { PromoBar } from "./components/ui/promo-bar";
 import { SiteHeader } from "./components/ui/site-header";
@@ -71,8 +72,24 @@ export default async function Home({ searchParams }: HomeProps) {
     .filter((p) => p.sku !== hero.sku)
     .sort((a, b) => gridRank(a) - gridRank(b));
 
+  const organizationJsonLd = buildOrganizationJsonLd(
+    "Eter Niu Cocina",
+    kitchenBaseUrl,
+  );
+  const websiteJsonLd = buildWebSiteJsonLd("Eter Niu Cocina", kitchenBaseUrl);
+
   return (
     <div data-theme="cocina" className="relative isolate bg-[#10160e]">
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde constantes del sitio, no
+        // viene del usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <PageAmbient />
       <PageAnalytics
         category={selectedCategory}
