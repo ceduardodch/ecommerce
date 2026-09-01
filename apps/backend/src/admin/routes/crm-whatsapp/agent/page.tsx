@@ -76,7 +76,7 @@ function AgentPlaybookPage() {
         <h1 style={{ margin: 0 }}>Guión de Vicky</h1>
         <p style={{ margin: "8px 0 0" }}>Reglas que la IA recibe junto al mensaje y catálogo real. No pongas precios, stock ni promesas que deban confirmarse.</p>
       </div>
-      <Link to="/admin/crm-whatsapp">Volver al CRM</Link>
+      <Link to="/crm-whatsapp">Volver al CRM</Link>
     </div>
 
     <section style={{ ...card, marginBottom: 18 }} aria-label="Mapa operativo de venta">
@@ -86,7 +86,7 @@ function AgentPlaybookPage() {
         {Object.entries(counts).map(([label, count]) => <span key={label} style={{ ...input, background: "var(--bg-subtle)" }}>{label}: {count}</span>)}
       </div>
       <p style={{ margin: "12px 0 0", fontSize: 13 }}>Vicky pide producto, cantidad, nombre y ciudad. Envía un carrito temporal para revisar antes del checkout. DataFast cobra la tarjeta; factura, descuentos, garantía, envío urgente y stock exacto pasan a una persona.</p>
-      <Link to="/admin/crm-whatsapp/leads" style={{ display: "inline-block", marginTop: 10, fontSize: 13 }}>Ver leads por etapa</Link>
+      <Link to="/crm-whatsapp/leads" style={{ display: "inline-block", marginTop: 10, fontSize: 13 }}>Ver leads por etapa</Link>
     </section>
 
     {message ? <p role="status">{message}</p> : null}
