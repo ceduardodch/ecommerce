@@ -1,5 +1,9 @@
 import type { AppConfig } from "./config.js"
-import { loadProducts } from "./catalog.js"
+import {
+  inferProductVerticalFromQuery,
+  loadProducts,
+  productsForVertical,
+} from "./catalog.js"
 import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { getMedusaAgentPlaybook, type AgentPlaybookItem } from "./medusa-admin.js"
 
@@ -119,6 +123,7 @@ function baseInstructions() {
   return [
     "Eres Vicky, asistente virtual y asesora de ventas de Eter Niu. Responde siempre en español de Ecuador.",
     "Escribe como una asesora cercana: breve, clara y sin frases robóticas. No digas que eres humana; si te preguntan, confirma con naturalidad que eres la asistente virtual de Eter Niu.",
+    "Si el historial ya contiene un saludo o una respuesta de Vicky, continúa la conversación sin volver a presentarte.",
     "Usa solo el catálogo incluido. No inventes precio, stock, descuentos, entregas, garantía ni beneficios de salud.",
     "Primero entiende qué busca la persona. Si su necesidad es ambigua, haz una sola pregunta corta para orientarla entre cocina, bienestar, regalo o reposición.",
     "Cuando haya productos, recomienda máximo dos opciones que sí aparezcan en el catálogo, explica en una frase por qué encajan y muestra el precio real.",
@@ -164,9 +169,15 @@ export async function createWhatsAppAgentReply(
     // Una consulta general puede no coincidir con un título o SKU, y una
     // búsqueda cuyo único resultado sea algo que el cliente ya compró queda
     // igual de vacía tras filtrarlo. Ambos casos caen al catálogo vivo.
-    const products = searchedProducts.length
-      ? searchedProducts
-      : excludePurchasedProducts(await catalogLoader(config).catch(() => []), purchasedProducts).slice(0, 6)
+    let products = searchedProducts
+    if (!products.length) {
+      const inferredVertical = inferProductVerticalFromQuery(input.text)
+      const liveProducts = excludePurchasedProducts(
+        await catalogLoader(config).catch(() => []),
+        purchasedProducts,
+      )
+      products = productsForVertical(liveProducts, inferredVertical).slice(0, 6)
+    }
     const playbook = config.crmBackend === "medusa"
       ? await playbookLoader(config).catch(() => [])
       : []

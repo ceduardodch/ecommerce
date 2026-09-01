@@ -6,7 +6,7 @@ const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"
-type ProductVertical = "cocina" | "bienestar"
+export type ProductVertical = "cocina" | "bienestar"
 
 type MedusaProduct = {
   id: string
@@ -381,6 +381,68 @@ const wellnessTerms = [
   "descanso",
 ]
 
+const searchStopWords = new Set([
+  "a", "al", "algo", "como", "con", "cual", "cuales", "de", "del",
+  "el", "ella", "en", "es", "esta", "estas", "este", "estos", "hay",
+  "la", "las", "lo", "los", "me", "mi", "mis", "mostrar", "muestra",
+  "necesito", "o", "ofrecer", "opcion", "opciones", "para", "podrias",
+  "por", "producto", "productos", "puede", "puedes", "que", "quiero",
+  "quisiera", "se", "si", "son", "te", "tiene", "tienen", "tienes",
+  "tu", "un", "una", "unas", "unos", "ver", "y", "yo", "busco",
+])
+
+const searchAliases = new Map([
+  ["ollas", "olla"],
+  ["sartenes", "sarten"],
+  ["woks", "wok"],
+  ["cuchillos", "cuchillo"],
+  ["tablas", "tabla"],
+  ["utensilios", "utensilio"],
+  ["combos", "combo"],
+  ["botellas", "botella"],
+  ["aromas", "aroma"],
+])
+
+const kitchenQueryTerms = new Set([
+  "cocina", "olla", "wok", "cuchillo", "tabla", "utensilio", "sarten",
+  "combo", "granito", "chef", "teflon", "pfoa", "pfas", "ptfe",
+])
+
+const wellnessQueryTerms = new Set([
+  "bienestar", "wellness", "yoga", "mat", "botella", "hidratacion",
+  "bowl", "ceramica", "aroma", "calma", "ritual", "mindful", "descanso",
+])
+
+function normalizedWords(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .match(/[a-z0-9]+/g) || []
+}
+
+function canonicalSearchWord(word: string) {
+  return searchAliases.get(word) || word
+}
+
+function queryTerms(query = "") {
+  return [...new Set(
+    normalizedWords(query)
+      .filter((word) => !searchStopWords.has(word))
+      .map(canonicalSearchWord),
+  )]
+}
+
+/** Detecta el área comercial antes de buscar productos por texto libre. */
+export function inferProductVerticalFromQuery(query = ""): ProductVertical | undefined {
+  const terms = queryTerms(query)
+  const kitchenScore = terms.filter((term) => kitchenQueryTerms.has(term)).length
+  const wellnessScore = terms.filter((term) => wellnessQueryTerms.has(term)).length
+  if (!kitchenScore && !wellnessScore) return undefined
+  if (kitchenScore === wellnessScore) return undefined
+  return kitchenScore > wellnessScore ? "cocina" : "bienestar"
+}
+
 function productHaystack(product: Product) {
   return [
     product.title,
@@ -516,9 +578,12 @@ export function searchProducts(
     vertical?: ProductVertical
   },
 ) {
-  const terms = (input.query || "").toLowerCase().split(/\s+/).filter(Boolean)
+  const vertical = input.vertical || inferProductVerticalFromQuery(input.query)
+  const terms = queryTerms(input.query).filter(
+    (term) => term !== "cocina" && term !== "bienestar" && term !== "wellness",
+  )
 
-  return productsForVertical(products, input.vertical)
+  return productsForVertical(products, vertical)
     .filter((product) => {
       if (input.category && product.category !== input.category) return false
       if (
@@ -548,14 +613,17 @@ export function searchProducts(
         product.bundleUseCase || "",
         product.careTips || "",
         product.healthAngle || "",
+        product.vertical || "",
         ...(product.sourceUrls || []),
         ...(product.contentAngles || []),
         ...product.tags,
       ]
         .join(" ")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
 
-      return terms.every((term) => haystack.includes(term))
+      return terms.every((term) => haystack.includes(canonicalSearchWord(term)))
     })
     .slice(0, input.limit || 10)
 }
