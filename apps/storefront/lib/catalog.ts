@@ -2617,7 +2617,7 @@ function isWellnessProduct(product: Product) {
   return wellnessTerms.some((term) => haystack.includes(term));
 }
 
-function normalizeProduct(
+export function normalizeProduct(
   product: Product,
   vertical: "cocina" | "bienestar" = "cocina",
 ): Product {
