@@ -344,7 +344,14 @@ Se agregó:
   (`jsdom`); si en el futuro se quiere testear componentes, hay que sumar
   esas piezas.
 
-**Nota fuera del plan**: ninguna.
+**Nota fuera del plan**: revisando el commit de este lote noté que
+`.github/workflows/ci.yml` solo tenía pasos "Test tools" y "Test backend" —
+los 37 tests nuevos del storefront no corrían en CI, solo si alguien
+ejecutaba `npm run storefront:test` a mano. Corregido en el mismo lote
+(commit `e2fec79`, separado de `3cf16b5` para no mezclar "agregar tests"
+con "hacer que el pipeline los corra"): se agregó el paso "Test storefront"
+al workflow. Verificado: el run `33544717620` en `main` muestra el paso
+nuevo en verde junto a los demás.
 
 **Siguiente lote**: S-3 · Carrito visible en móvil en las cards (🟢), según
 el orden de ejecución del plan.
