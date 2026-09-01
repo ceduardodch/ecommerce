@@ -503,3 +503,107 @@ correcto para 🔴)
 rama + PR, sin merge a `main`), según el orden de ejecución del plan. Puede
 construirse sobre la rama `feat/v1-vicky-historial` una vez que el dueño la
 revise, o esperar a que se mergee primero — a decidir por el dueño.
+
+---
+
+## 2026-09-01 · Lote 8 (dueño presente) — V-1 mergeado + V-2, 🔴
+
+**V-1 mergeado a `main`**: el dueño revisó y mergeó el
+[PR #10](https://github.com/ceduardodch/ecommerce/pull/10) directamente en
+GitHub mientras se trabajaba V-2 (commit `dd9e663` vía merge commit
+`19cb659`). Confirmado con `git log 49fb9e1..19cb659` — el historial de
+conversación en el prompt de Vicky ya está en producción tras el próximo
+deploy de Coolify.
+
+**Ítem trabajado**: V-2 · Contexto del cliente en el prompt de Vicky.
+Construido sobre la rama de V-1 (como quedó anotado en el lote 7), luego
+retargeteado a `main` cuando V-1 se mergeó.
+
+**Qué se hizo**: `createWhatsAppAgentReply` recibe ahora `customerContext`
+con tres cosas del cliente: qué ya compró (`purchasedProducts`), en qué
+etapa está la conversación (`journeyStage`, tomado de
+`customer.metadata.journeyStage`, el mismo campo que ya escribe el flujo de
+venta) y si tiene un seguimiento programado (`nextFollowupAt` +
+`followupReason`). Arma un bloque `"Contexto del cliente:"` en el prompt.
+
+**Decisión de diseño clave**: los productos ya comprados se sacan del
+catálogo candidato **en código**, no solo con una instrucción de texto al
+modelo — el CA pide que un cliente que ya compró una olla no reciba la
+oferta de esa misma olla, y confiar en que el modelo "lea" el contexto y
+decida no ofrecerla es más frágil que simplemente no dársela como opción.
+Si la búsqueda original solo encontraba el producto ya comprado (queda
+vacía tras filtrar), cae al catálogo vivo —también filtrado— en vez de
+quedarse sin nada que ofrecer, igual que el fallback que ya existía para
+búsquedas sin resultados.
+
+**Bug encontrado fuera del plan, corregido en el mismo commit**:
+`whatsapp-webhook.ts` leía `customer?.followup_reason` (snake_case) para la
+lógica de NPS, pero el campo real es `followupReason` (camelCase) en los
+dos backends (`CustomerRecord` local y `serializeCustomer` de Medusa, que
+sí devuelve camelCase pese a que la columna en Postgres es
+`followup_reason`). Esto significa que `customerFollowupReason` siempre fue
+`undefined`, así que `npsDecision()` nunca detectaba que un cliente estaba
+respondiendo a una encuesta NPS — el score no se registraba y el
+seguimiento de "referido" (cuando el score es ≥9) nunca se programaba. Se
+corrigió junto con el widening de tipos que V-2 ya necesitaba tocar en
+`getCustomer`. **No se agregó un test de integración nuevo para este fix
+específico** (habría requerido levantar Fastify con dependencias
+mockeadas, algo que `whatsapp-webhook.test.ts` no hace hoy — solo testea
+funciones puras); queda documentado aquí y en el commit en vez de ampliar
+el alcance de este lote con infraestructura de test nueva.
+
+**Commit en la rama**: `65c3f74`
+
+**Rama**: `feat/v2-vicky-contexto` (pusheada, **no mergeada a `main`**)
+
+**PR**: [#11](https://github.com/ceduardodch/ecommerce/pull/11)
+
+**Nota sobre el PR apilado**: se abrió originalmente con `--base
+feat/v1-vicky-historial` (diff limpio, solo el cambio de V-2) porque V-1
+todavía no estaba mergeado. Como GitHub Actions solo dispara `pull_request`
+contra `main`/`release` (`.github/workflows/ci.yml`), CI no corría en ese
+PR. Cuando V-1 se mergeó a mitad de este lote, se retargeteó el PR a `main`
+con `gh pr edit --base main` — pero cambiar la base sola no dispara una
+nueva corrida (el workflow no escucha el evento `edited`), así que hubo que
+cerrar y reabrir el PR para forzar el evento `reopened` y que CI corriera
+de verdad contra `main`.
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`
+- `npm run tools:test` → `Test Files 10 passed (10)` /
+  `Tests 95 passed (95)` (91 previos + 4 nuevos). Incluye el escenario
+  exacto del CA: un cliente que ya compró una olla no la recibe en
+  "Catálogo relevante" — verificado incluso cuando es el único resultado de
+  la búsqueda original y hay que caer al catálogo vivo (también filtrado).
+  Los otros tres tests cubren: el filtrado también aplica al catálogo vivo
+  de fallback, etapa/seguimiento aparecen en el contexto sin romper cuando
+  no hay compras previas, y no se agrega el bloque de contexto cuando no
+  hay `customerContext`.
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total` (sin cambios).
+- `npm run storefront:test` → `Test Files 3 passed (3)` /
+  `Tests 37 passed (37)` (sin cambios).
+- CI del PR #11 contra `main` (tras el retarget + reopen): run
+  `33549032426`, job `ci` en verde (Build, Typecheck, Test tools, Test
+  backend, Test storefront, Validate compose — todos ✓, 1m35s).
+
+**Pendiente/Asumido**:
+- Igual que V-1: **no verificado contra WhatsApp real** (sin credenciales
+  de producción en esta sesión). Verificación a nivel de unit test del
+  prompt armado.
+- El bug de `followup_reason`/NPS no tiene test de regresión dedicado (ver
+  nota arriba) — riesgo de que alguien lo reintroduzca sin que CI lo
+  atrape. Si el dueño quiere cerrarlo del todo, hace falta un test que
+  levante `mountWhatsappWebhookRoutes` con Fastify real o inyectado.
+- Queda 🔴 en rama/PR, tal como pide la regla del sprint. NO se mergeó a
+  `main`.
+
+**Nota fuera del plan**: el bug de `followup_reason` (ver arriba) y el
+manejo del PR apilado que dejó de tener sentido a mitad de camino cuando el
+dueño mergeó V-1 en paralelo.
+
+**Siguiente lote**: V-3 · Herramientas reales (quote/create_order vía
+tool-calling) (🔴 → rama + PR, sin merge a `main`, esfuerzo L — probablemente
+más de un lote), según el orden de ejecución del plan. Antes de arrancarlo
+convendría que el dueño revise y mergee (o pida cambios en) el PR #11.
