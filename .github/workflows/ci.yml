@@ -43,6 +43,9 @@ jobs:
       - name: Test backend
         run: npm run backend:test:unit
 
+      - name: Test storefront
+        run: npm run storefront:test
+
       - name: Validate compose
         env:
           POSTGRES_PASSWORD: ci-postgres-password
