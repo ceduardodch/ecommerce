@@ -11,6 +11,7 @@ import { StickyCTABar } from "./components/ui/sticky-cta-bar";
 import { HeroShowcase } from "./components/ui/hero-showcase";
 import { ProductShowcaseGrid } from "./components/ui/product-showcase-grid";
 import { ComboBuilder } from "./components/sahara-combo-builder";
+import { sellerWhatsappNumber } from "../lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Eter Niu Cocina | Ollas de granito y guias por WhatsApp",
@@ -68,6 +69,44 @@ export default async function Home({ searchParams }: HomeProps) {
   const cocina = products.filter((p) => p.vertical === "cocina");
   const hero =
     cocina.find((p) => p.sku === HERO_SKU) || cocina[0] || products[0];
+  if (!hero) {
+    const message = encodeURIComponent(
+      "Hola Vicky, no pude ver el catálogo en la web. ¿Me ayudas a elegir un producto?",
+    );
+    return (
+      <div data-theme="cocina" className="min-h-screen bg-[#10160e] text-[#fcfcf7]">
+        <PageAmbient />
+        <PromoBar message="Envío y disponibilidad sujetos a confirmación" />
+        <SiteHeader vertical="cocina" surface="dark" />
+        <main className="mx-auto flex min-h-[62vh] max-w-3xl items-center px-5 py-16">
+          <section
+            className="w-full rounded-[28px] border border-white/10 bg-white/[0.06] p-7 text-center shadow-2xl sm:p-12"
+            aria-labelledby="catalog-unavailable-title"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d3fa99]">
+              Catálogo en actualización
+            </p>
+            <h1
+              id="catalog-unavailable-title"
+              className="mt-3 text-3xl font-semibold sm:text-4xl"
+            >
+              Vicky puede ayudarte ahora
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-white/75">
+              No mostramos precios ni stock hasta recuperar el catálogo real. Escríbenos y te ayudamos a elegir sin inventar datos.
+            </p>
+            <a
+              href={`https://wa.me/${sellerWhatsappNumber()}?text=${message}`}
+              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-[#d3fa99] px-6 py-3 font-semibold text-[#10160e] no-underline transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3fa99]"
+            >
+              Hablar con Vicky por WhatsApp
+            </a>
+          </section>
+        </main>
+        <SiteFooter />
+      </div>
+    );
+  }
   const rest = cocina
     .filter((p) => p.sku !== hero.sku)
     .sort((a, b) => gridRank(a) - gridRank(b));

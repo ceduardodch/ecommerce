@@ -84,7 +84,7 @@ services:
     restart: unless-stopped
     depends_on:
       medusa-api:
-        condition: service_started
+        condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: 8787
@@ -192,7 +192,7 @@ services:
     restart: unless-stopped
     depends_on:
       ecommerce-tools:
-        condition: service_started
+        condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: 3000
