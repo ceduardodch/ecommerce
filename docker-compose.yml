@@ -62,7 +62,11 @@ services:
       # WhatsApp Cloud API (modo "meta"; dejar en blanco para no activar)
       WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
       WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
+      WHATSAPP_MEDIA_DIR: /app/data/whatsapp-media
+      CRM_WHATSAPP_MEDIA_MIN_FREE_BYTES: ${CRM_WHATSAPP_MEDIA_MIN_FREE_BYTES:-2147483648}
       REVIEWS_API_TOKEN: ${REVIEWS_API_TOKEN:-}
+    volumes:
+      - crm-whatsapp-media:/app/data/whatsapp-media
     ports:
       - "${MEDUSA_ADMIN_PORT_MAPPING:-127.0.0.1:18215:9000}"
     expose:
@@ -118,6 +122,8 @@ services:
       WHATSAPP_APP_SECRET: ${WHATSAPP_APP_SECRET:-}
       WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
       WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
+      WHATSAPP_MEDIA_DIR: /app/data/whatsapp-media
+      WHATSAPP_MEDIA_MAX_BYTES: ${WHATSAPP_MEDIA_MAX_BYTES:-52428800}
       # Agente directo de WhatsApp. Dejar modo off hasta cargar OPENAI_API_KEY.
       WHATSAPP_AGENT_MODE: ${WHATSAPP_AGENT_MODE:-off}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
@@ -127,6 +133,7 @@ services:
       OPENCLAW_HOOKS_TOKEN: ${OPENCLAW_HOOKS_TOKEN:-}
     volumes:
       - tools-data:/data
+      - crm-whatsapp-media:/app/data/whatsapp-media
     expose:
       - "8787"
     ports:
@@ -216,3 +223,4 @@ volumes:
   postgres-data:
   redis-data:
   tools-data:
+  crm-whatsapp-media:
