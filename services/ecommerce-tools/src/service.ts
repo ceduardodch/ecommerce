@@ -980,8 +980,8 @@ export function createCommerceService(config: AppConfig) {
               followupReason: "recompra_datafast",
             },
           )
-          // El evento Purchase de Meta lo dispara el storefront en /checkout/resultado;
-          // aquí solo registramos la venta en el CRM (recompra).
+          // El Purchase de Meta se dispara más abajo, en el mismo punto de
+          // registro único (isFirstRegistration): ver sendDatafastPurchaseToMeta.
         }
         // La orden se creó al iniciar el checkout. Aquí sólo se marca el
         // resultado; por eso una recarga o callback duplicado no duplica nada.
@@ -1065,6 +1065,9 @@ export function createCommerceService(config: AppConfig) {
               items: record.items.map((it) => ({ title: it.title, quantity: it.quantity })),
             })
           }
+          // El Purchase de Meta va fuera del try de creación de pedido: el
+          // cobro está aprobado aunque Medusa falle, y la conversión debe
+          // reportarse igual.
         } catch (cause) {
           // El pedido/aviso no debe romper la confirmación del pago:
           // la venta ya quedó registrada en el CRM y en el ledger.
@@ -1072,6 +1075,9 @@ export function createCommerceService(config: AppConfig) {
             `[datafast] fallo creando pedido/aviso para ${record.reference}:`,
             cause instanceof Error ? cause.message : cause,
           )
+        }
+        if (isFirstRegistration) {
+          await sendDatafastPurchaseToMeta(config, record, result)
         }
         await upsertDatafastCheckout(config.dataDir, {
           ...record,
@@ -1452,5 +1458,60 @@ async function notifyPurchaseByWhatsapp(
     // Vicky caída no debe romper la confirmación del pago.
   } finally {
     clearTimeout(timeout)
+  }
+}
+
+// ─── Purchase de Meta (CAPI) del pago con tarjeta ───────────────────────────
+/**
+ * Se dispara AQUÍ y no en el navegador, por dos motivos:
+ *
+ * 1. El storefront no puede declarar una compra. `/api/events` es público, así
+ *    que cualquiera podía inyectar un `Purchase` con el valor que quisiera y
+ *    Meta optimizaba las campañas contra esa señal falsa.
+ * 2. Un `Purchase` disparado en el render del resultado se pierde si el cliente
+ *    cierra la pestaña o se le corta la conexión — justo el caso en que sí pagó.
+ *
+ * El monto y los ítems salen del ledger (lo COBRADO), no del carrito del
+ * cliente. `event_id` es estable por referencia: si Meta recibe el mismo evento
+ * dos veces lo deduplica. Solo cuenta la aprobación de PRODUCCIÓN
+ * (`000.000.000`); los códigos del script de certificación de Datafast no
+ * contaminan las campañas.
+ *
+ * Nunca lanza: el pago ya está aprobado y confirmado al cliente.
+ */
+async function sendDatafastPurchaseToMeta(
+  config: AppConfig,
+  record: DatafastCheckoutRecord,
+  result: { code?: string },
+) {
+  if (result.code !== "000.000.000") return
+  try {
+    await sendMetaConversionEvent(
+      config,
+      {
+        eventName: "Purchase",
+        type: "purchase_confirmed",
+        source: "datafast",
+        currency: "USD",
+        value: record.amount,
+        customer: {
+          phone: record.customer?.phone,
+          email: record.customer?.email,
+          name: record.customer?.name,
+        },
+        products: record.items.map((item) => ({
+          productId: item.sku || item.title,
+          sku: item.sku,
+          title: item.title,
+          quantity: item.quantity,
+          price: item.unitPrice,
+          currency: "USD",
+        })),
+        metadata: { reference: record.reference, provider: "datafast" },
+      } as ToolsEventInput,
+      `datafast_purchase_${record.reference}`,
+    )
+  } catch {
+    // Meta caída no debe romper la confirmación del pago.
   }
 }
