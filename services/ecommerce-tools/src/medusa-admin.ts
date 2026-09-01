@@ -120,6 +120,17 @@ export async function getMedusaCustomer(config: AppConfig, phone: string) {
   return result.customer
 }
 
+export async function getMedusaConversationByPhone(config: AppConfig, phone: string) {
+  const result = await medusaAdminFetch<{ conversations: Array<{ id: string; phone?: string; mode?: string }> }>(
+    config,
+    `/admin/b2b/crm/conversations?q=${encodeURIComponent(phone)}`,
+  )
+  const normalized = phone.replace(/\D/g, "")
+  return result.conversations.find(
+    (conversation) => String(conversation.phone || "").replace(/\D/g, "") === normalized,
+  )
+}
+
 export async function addMedusaCustomerEvent(
   config: AppConfig,
   input: {

@@ -2,6 +2,7 @@ import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { z } from "zod"
 import { normalizeEcPhone } from "../../../lib/ec-phone"
 import { reviewsWriteAuth } from "./_shared"
+import type B2bCrmModuleService from "../../../modules/b2b-crm/service"
 
 const createReviewSchema = z.object({
   product_id: z.string().min(1).max(120),
@@ -32,7 +33,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return res.status(400).json({ error: "Teléfono inválido (usa formato ecuatoriano 09XXXXXXXX)" })
   }
 
-  const b2bCrm = req.scope.resolve("b2bCrm")
+  const b2bCrm = req.scope.resolve("b2bCrm") as B2bCrmModuleService
 
   try {
     const review = await b2bCrm.createVerifiedReview({
@@ -47,7 +48,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 }
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
-  const b2bCrm = req.scope.resolve("b2bCrm")
+  const b2bCrm = req.scope.resolve("b2bCrm") as B2bCrmModuleService
   const { product_id } = req.query
 
   if (!product_id || typeof product_id !== "string") {

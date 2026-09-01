@@ -9,6 +9,7 @@ import {
   createMedusaOrder,
   forwardPayphoneWebhook,
   getMedusaCustomer,
+  getMedusaConversationByPhone,
   getMedusaDashboard,
   getMedusaOrder,
   importMedusaCustomers,
@@ -42,6 +43,7 @@ import {
   voidDatafastPayment,
   type DatafastCheckoutInput,
 } from "./datafast.js"
+import { sendWhatsappCloudReply } from "./whatsapp-reply.js"
 import { buildMetaCatalogCsv, buildMetaDraft } from "./meta.js"
 import type { SaleFeedbackInput, ToolsEventInput } from "./contracts.js"
 import type {
@@ -1026,6 +1028,12 @@ export function createCommerceService(config: AppConfig) {
       return findCustomer(config.dataDir, phone)
     },
 
+    async isWhatsappAiPaused(phone: string) {
+      if (config.crmBackend !== "medusa") return false
+      const conversation = await getMedusaConversationByPhone(config, phone)
+      return conversation?.mode === "human"
+    },
+
     async addCustomerEvent(input: {
       phone: string
       type: CustomerEventRecord["type"]
@@ -1253,9 +1261,8 @@ export function createCommerceService(config: AppConfig) {
   }
 }
 
-// ─── Aviso de compra por WhatsApp (vía Vicky / OpenClaw) ────────────────────
-// Mismo contrato del gateway que usa el dispatcher de recompra del CRM.
-// Nunca lanza: si Vicky no está disponible, el pago se confirma igual.
+// ─── Aviso de compra por WhatsApp Cloud API ─────────────────────────────────
+// Nunca lanza: si la mensajería no está disponible, el pago se confirma igual.
 async function notifyPurchaseByWhatsapp(
   config: AppConfig,
   input: {
@@ -1266,8 +1273,6 @@ async function notifyPurchaseByWhatsapp(
     items: Array<{ title: string; quantity: number }>
   },
 ) {
-  if (!config.openclawGatewayUrl) return
-  const url = `${config.openclawGatewayUrl.replace(/\/$/, "")}${config.openclawHookPath}`
   const firstName = input.name?.trim().split(/\s+/)[0]
   const lines = input.items
     .map((it) => `• ${it.quantity}× ${it.title}`)
@@ -1280,29 +1285,9 @@ async function notifyPurchaseByWhatsapp(
     }\n${lines}\n\n` +
     `Por este chat te aviso apenas tu pedido salga con Servientrega. ` +
     `¡Gracias por tu compra!`
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 5_000)
   try {
-    await fetch(url, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...(config.openclawHooksToken
-          ? { Authorization: `Bearer ${config.openclawHooksToken}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        name: "purchase-confirmation",
-        channel: "whatsapp",
-        to: input.phone.startsWith("+") ? input.phone : `+${input.phone}`,
-        deliver: true,
-        message,
-      }),
-    })
+    await sendWhatsappCloudReply(config, input.phone.replace(/^\+/, ""), message)
   } catch {
-    // Vicky caída no debe romper la confirmación del pago.
-  } finally {
-    clearTimeout(timeout)
+    // El aviso no debe romper la confirmación del pago.
   }
 }

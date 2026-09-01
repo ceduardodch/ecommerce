@@ -46,11 +46,11 @@ export function isWindowOpen(
 // Envío free-form a Cloud API
 // ---------------------------------------------------------------------------
 
-async function sendFreeform(
+export async function sendWhatsappCloudReply(
   config: AppConfig,
   phone: string,
   text: string,
-): Promise<{ ok: boolean; detail?: string }> {
+): Promise<{ ok: boolean; detail?: string; messageId?: string }> {
   if (!config.whatsappPhoneNumberId || !config.whatsappCloudAccessToken) {
     return { ok: false, detail: "meta_credentials_missing" }
   }
@@ -81,7 +81,8 @@ async function sendFreeform(
       return { ok: false, detail: `meta_http_${response.status}${code ? `_${code}` : ""}` }
     }
 
-    return { ok: true }
+    const body = await response.json().catch(() => ({})) as { messages?: Array<{ id?: string }> }
+    return { ok: true, messageId: body.messages?.[0]?.id }
   } catch (cause) {
     return {
       ok: false,
@@ -131,18 +132,20 @@ export function mountWhatsappReplyRoute(
       }
 
       // Enviar free-form por Cloud API
-      const result = await sendFreeform(config, input.phone, input.text)
+      const result = await sendWhatsappCloudReply(config, input.phone, input.text)
 
       const now = new Date().toISOString()
 
       if (result.ok) {
         // Registrar message_out
+        const senderType = request.headers["x-crm-sender"] === "human" ? "human" : "ai"
+        const actorId = typeof request.headers["x-crm-actor-id"] === "string" ? request.headers["x-crm-actor-id"] : undefined
         await addCustomerEvent({
           phone: input.phone,
           type: "message_out",
           at: now,
           source: "whatsapp_cloud_api",
-          payload: { text: input.text, mediaType: "text", mediaUrl: null },
+          payload: { text: input.text, messageId: result.messageId, mediaType: "text", mediaUrl: null, senderType, actor: actorId ? { userId: actorId } : undefined, status: "sent" },
           metadata: {},
         }).catch((err) => {
           app.log.error({ err }, "Error recording message_out event")

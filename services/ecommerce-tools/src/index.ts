@@ -17,7 +17,7 @@ import {
   toolsEventInputSchema,
 } from "./contracts.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
-import { mountWhatsappReplyRoute } from "./whatsapp-reply.js"
+import { mountWhatsappReplyRoute, sendWhatsappCloudReply } from "./whatsapp-reply.js"
 
 const config = loadConfig()
 const service = createCommerceService(config)
@@ -221,6 +221,22 @@ mountWhatsappWebhookRoutes(
     return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
   },
   async (phone) => service.getCustomer(phone) as Promise<{ followup_reason?: string | null } | undefined>,
+  async (query) => service.products({ query, limit: 6 }),
+  async (input) => {
+    const result = await sendWhatsappCloudReply(config, input.phone, input.text)
+    if (result.ok) {
+      await service.addCustomerEvent({
+        phone: input.phone,
+        type: "message_out",
+        at: new Date().toISOString(),
+        source: "whatsapp_cloud_api",
+        payload: { text: input.text, messageId: result.messageId, senderType: "ai", status: "sent" },
+        metadata: {},
+      })
+    }
+    return result
+  },
+  async (phone) => service.isWhatsappAiPaused(phone),
 )
 
 // WhatsApp Cloud API — respuesta libre de Vicky (W3)

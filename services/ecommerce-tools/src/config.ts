@@ -39,9 +39,11 @@ export type AppConfig = {
   whatsappAppSecret?: string
   whatsappPhoneNumberId?: string
   whatsappCloudAccessToken?: string
-  openclawGatewayUrl?: string
-  openclawHookPath: string
-  openclawHooksToken?: string
+  whatsappMediaDir: string
+  whatsappMediaMaxBytes: number
+  whatsappAgentMode: "off" | "openai"
+  openaiApiKey?: string
+  openaiModel: string
 }
 
 function bool(value: string | undefined, fallback: boolean) {
@@ -120,8 +122,10 @@ export function loadConfig(env = process.env): AppConfig {
     whatsappAppSecret: env.WHATSAPP_APP_SECRET,
     whatsappPhoneNumberId: env.WHATSAPP_PHONE_NUMBER_ID,
     whatsappCloudAccessToken: env.WHATSAPP_ACCESS_TOKEN,
-    openclawGatewayUrl: env.OPENCLAW_GATEWAY_URL,
-    openclawHookPath: env.OPENCLAW_GATEWAY_HOOK_PATH || "/hooks/agent",
-    openclawHooksToken: env.OPENCLAW_HOOKS_TOKEN,
+    whatsappMediaDir: env.WHATSAPP_MEDIA_DIR || "/app/data/whatsapp-media",
+    whatsappMediaMaxBytes: Number(env.WHATSAPP_MEDIA_MAX_BYTES || 50 * 1024 * 1024),
+    whatsappAgentMode: env.WHATSAPP_AGENT_MODE === "openai" ? "openai" : "off",
+    openaiApiKey: env.OPENAI_API_KEY,
+    openaiModel: env.OPENAI_MODEL || "gpt-5-mini",
   }
 }

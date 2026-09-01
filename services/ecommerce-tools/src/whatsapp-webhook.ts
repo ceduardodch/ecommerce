@@ -8,8 +8,13 @@
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto"
+import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
+import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
+import { downloadWhatsappMedia, type WhatsappMediaReference } from "./whatsapp-media.js"
+import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
+import type { Product } from "./types.js"
 
 // ---------------------------------------------------------------------------
 // Tipos de los mensajes que Meta envía al webhook
@@ -21,6 +26,17 @@ export type MetaWebhookMessage = {
   timestamp: string   // unix epoch como string
   type: string        // "text" | "image" | "audio" | …
   text?: { body: string }
+  image?: WhatsappMediaReference
+  audio?: WhatsappMediaReference
+  document?: WhatsappMediaReference
+  video?: WhatsappMediaReference
+}
+
+export type MetaWebhookStatus = {
+  id: string
+  status: "sent" | "delivered" | "read" | "failed" | string
+  timestamp?: string
+  errors?: Array<{ code?: number; title?: string }>
 }
 
 export type MetaWebhookChange = {
@@ -29,7 +45,7 @@ export type MetaWebhookChange = {
     metadata?: { phone_number_id?: string; display_phone_number?: string }
     contacts?: Array<{ profile?: { name?: string }; wa_id?: string }>
     messages?: MetaWebhookMessage[]
-    statuses?: unknown[]
+    statuses?: MetaWebhookStatus[]
   }
   field: string
 }
@@ -42,6 +58,39 @@ export type MetaWebhookEntry = {
 export type MetaWebhookBody = {
   object?: string
   entry?: MetaWebhookEntry[]
+}
+
+const WEBHOOK_DEDUPE_TTL_MS = 7 * 24 * 60 * 60 * 1000
+
+class WebhookMessageDeduper {
+  private readonly filePath: string
+  private readonly ids = new Map<string, number>()
+  private readonly loaded: Promise<void>
+
+  constructor(dataDir: string) {
+    this.filePath = path.join(dataDir, "whatsapp-webhook-dedupe.json")
+    this.loaded = this.load()
+  }
+
+  private async load() {
+    try {
+      const values = JSON.parse(await readFile(this.filePath, "utf8")) as Record<string, number>
+      for (const [id, at] of Object.entries(values)) if (Number.isFinite(at) && at > Date.now() - WEBHOOK_DEDUPE_TTL_MS) this.ids.set(id, at)
+    } catch { /* Primer arranque: aún no hay deduplicador persistido. */ }
+  }
+
+  async claim(id: string) {
+    await this.loaded
+    if (this.ids.has(id)) return false
+    const cutoff = Date.now() - WEBHOOK_DEDUPE_TTL_MS
+    for (const [oldId, at] of this.ids) if (at < cutoff) this.ids.delete(oldId)
+    this.ids.set(id, Date.now())
+    await mkdir(path.dirname(this.filePath), { recursive: true })
+    const temporary = `${this.filePath}.tmp`
+    await writeFile(temporary, `${JSON.stringify(Object.fromEntries(this.ids))}\n`, "utf8")
+    await rename(temporary, this.filePath)
+    return true
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -106,6 +155,28 @@ export function extractInboundMessages(
   return result
 }
 
+export function extractInboundMediaMessages(
+  body: MetaWebhookBody,
+): Array<{ waId: string; text: string; timestamp: number; messageId: string; mediaType: string; media: WhatsappMediaReference }> {
+  const result: Array<{ waId: string; text: string; timestamp: number; messageId: string; mediaType: string; media: WhatsappMediaReference }> = []
+  for (const entry of body.entry ?? []) {
+    for (const change of entry.changes ?? []) {
+      for (const msg of change.value?.messages ?? []) {
+        const mediaType = ["image", "audio", "document", "video"].find((kind) => Boolean(msg[kind as keyof MetaWebhookMessage]))
+        if (!mediaType) continue
+        const media = msg[mediaType as keyof MetaWebhookMessage] as WhatsappMediaReference | undefined
+        if (!media?.id) continue
+        result.push({ waId: msg.from, text: media.caption || "", timestamp: Number(msg.timestamp), messageId: msg.id, mediaType, media })
+      }
+    }
+  }
+  return result
+}
+
+export function extractMessageStatuses(body: MetaWebhookBody): MetaWebhookStatus[] {
+  return body.entry?.flatMap((entry) => entry.changes.flatMap((change) => change.value?.statuses || [])) || []
+}
+
 /**
  * Detecta si el texto es una solicitud de opt-out.
  * "BAJA" al inicio o como mensaje completo (case-insensitive).
@@ -152,51 +223,6 @@ export function npsDecision(
 }
 
 // ---------------------------------------------------------------------------
-// Forward a Vicky (OpenClaw) — sin romper el webhook si Vicky no responde
-// ---------------------------------------------------------------------------
-
-async function forwardToVicky(
-  config: AppConfig,
-  payload: {
-    phone: string
-    text: string
-    replyVia: "cloud_api"
-  },
-): Promise<void> {
-  if (!config.openclawGatewayUrl) return
-
-  const url = `${config.openclawGatewayUrl.replace(/\/$/, "")}${config.openclawHookPath}`
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 5_000)
-
-  try {
-    await fetch(url, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...(config.openclawHooksToken
-          ? { Authorization: `Bearer ${config.openclawHooksToken}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        name: "whatsapp-inbound",
-        channel: "whatsapp",
-        to: `+${payload.phone}`,
-        deliver: true,
-        message: payload.text,
-        replyVia: payload.replyVia,
-      }),
-    })
-  } catch {
-    // Silenciar: Vicky no disponible no debe romper el webhook
-    // Meta reintenta si devolvemos no-2xx, así que siempre respondemos 200
-  } finally {
-    clearTimeout(timeout)
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Registro de eventos CRM (reutiliza el flujo existente de service)
 // ---------------------------------------------------------------------------
 
@@ -217,6 +243,8 @@ async function recordInboundEvent(
   }) => Promise<unknown>,
   isOptOut: boolean,
   customerFollowupReason?: string | null,
+  messageId?: string,
+  media?: { type: string; path: string; name: string; mimeType: string; size: number },
 ): Promise<void> {
   const phone = `+${waId}`
   const at = new Date(timestamp * 1000).toISOString()
@@ -227,8 +255,8 @@ async function recordInboundEvent(
     type: "message_in",
     at,
     source: "whatsapp_cloud_api",
-    payload: { text, mediaType: "text", mediaUrl: null },
-    metadata: { lastInboundAt: at },
+    payload: { text, messageId, mediaType: media?.type || "text", mediaUrl: media?.path || null, media },
+    metadata: { lastInboundAt: at, whatsappMessageId: messageId },
   })
 
   // Registrar opt_out si corresponde
@@ -293,8 +321,12 @@ export function mountWhatsappWebhookRoutes(
     followupReason?: string
   }) => Promise<unknown>,
   getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null } | undefined>,
+  searchProducts?: (query: string) => Promise<Product[]>,
+  sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
+  isAiPaused?: (phone: string) => Promise<boolean>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
+  const deduper = new WebhookMessageDeduper(config.dataDir)
 
   // GET /webhooks/whatsapp — verificación del webhook en Meta
   app.get(
@@ -347,10 +379,20 @@ export function mountWhatsappWebhookRoutes(
       // Siempre responder 200 inmediatamente (Meta reintenta si no-2xx)
       // Procesar de forma async sin bloquear la respuesta
       const messages = extractInboundMessages(body)
+      const mediaMessages = extractInboundMediaMessages(body)
+      const statuses = extractMessageStatuses(body)
 
       // Procesar mensajes en paralelo (fire-and-forget con log de errores)
-      Promise.all(
-        messages.map(async ({ waId, text, timestamp }) => {
+      const inbound = [
+        ...messages.map((message) => ({ ...message, mediaType: undefined as string | undefined, media: undefined as WhatsappMediaReference | undefined })),
+        ...mediaMessages,
+      ]
+      Promise.all([
+        ...inbound.map(async ({ waId, text, timestamp, messageId, mediaType, media: mediaReference }) => {
+          if (!(await deduper.claim(messageId))) {
+            app.log.info({ messageId }, "Ignoring duplicate WhatsApp webhook event")
+            return
+          }
           const optOut = isOptOutText(text)
           // Buscar el followup_reason del cliente para lógica NPS (opcional)
           let customerFollowupReason: string | null | undefined
@@ -363,6 +405,11 @@ export function mountWhatsappWebhookRoutes(
             }
           }
           try {
+            let media
+            if (mediaType && mediaReference) {
+              try { media = await downloadWhatsappMedia(config, mediaType, messageId, mediaReference) }
+              catch (err) { app.log.error({ err, messageId }, "Unable to download WhatsApp media") }
+            }
             await recordInboundEvent(
               config,
               waId,
@@ -371,20 +418,30 @@ export function mountWhatsappWebhookRoutes(
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
               customerFollowupReason,
+              messageId,
+              media,
             )
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")
           }
-          // Forward a Vicky sólo si no es opt_out
-          if (!optOut) {
-            await forwardToVicky(config, {
-              phone: waId,
-              text,
-              replyVia: "cloud_api",
-            })
+          // Vicky se invoca directamente; un caso tomado por un vendedor no puede disparar IA.
+          if (!optOut && text && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
+            const products = await searchProducts(text).catch(() => [])
+            const replyText = await createWhatsAppAgentReply(config, { text, products })
+            if (replyText) await sendReply({ phone: `+${waId}`, text: replyText }).catch((err) => app.log.error({ err, waId }, "Unable to send Vicky reply"))
           }
         }),
-      ).catch((err) => {
+        ...statuses.map(async (status) => {
+          await addCustomerEvent({
+            phone: "status",
+            type: "message_status",
+            at: status.timestamp ? new Date(Number(status.timestamp) * 1000).toISOString() : new Date().toISOString(),
+            source: "whatsapp_cloud_api",
+            payload: { messageId: status.id, status: status.status, failedReason: status.errors?.[0]?.title || status.errors?.[0]?.code },
+            metadata: {},
+          }).catch((err) => app.log.error({ err, statusId: status.id }, "Error recording WhatsApp message status"))
+        }),
+      ]).catch((err) => {
         app.log.error({ err }, "Error processing whatsapp webhook messages")
       })
 

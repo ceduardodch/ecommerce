@@ -150,6 +150,7 @@ export const customerEventInputSchema = z.object({
     "followup_snoozed",
     "message_in",
     "message_out",
+    "message_status",
     "broadcast_sent",
     "broadcast_queued",
     "nps_score",
