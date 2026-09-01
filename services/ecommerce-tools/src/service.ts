@@ -135,7 +135,6 @@ const checkoutCatalogEntries = [
   ["MGC-SAHARA-GRIS-SARTEN-20", "Sartén Sahara gris 20 cm", 55, 1, 39.99, "sahara-gris"],
   ["MGC-SAHARA-GRIS-SARTEN-24", "Sartén Sahara gris 24 cm", 60, 1, 49.99, "sahara-gris"],
   ["MGC-SAHARA-GRIS-SARTEN-28", "Sartén Sahara gris 28 cm", 65, 1, 59.99, "sahara-gris"],
-  ["MGC-PALETA-WOK-DATAFAST-TEST", "Paleta para wok · prueba DataFast", 1, 1],
 ] satisfies CheckoutCatalogEntry[]
 
 export const checkoutCatalogProducts = checkoutCatalogEntries.map(

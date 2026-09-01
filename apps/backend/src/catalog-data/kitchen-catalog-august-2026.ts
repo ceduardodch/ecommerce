@@ -316,29 +316,4 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
       })
     }),
   ),
-  {
-    title: "Paleta para wok · prueba DataFast",
-    handle: "paleta-wok-datafast-prueba",
-    sku: "MGC-PALETA-WOK-DATAFAST-TEST",
-    category: "Utensilios de cocina",
-    description:
-      "Paleta para wok habilitada temporalmente para validar el flujo de pago DataFast.",
-    price: 1,
-    originalPrice: 1,
-    stock: 1,
-    image: imageUrl("catalogo-sarten-con-tapa-gris-negro.jpg"),
-    metadata: {
-      brand: "MGC",
-      vertical: "cocina",
-      material: "Utensilio para wok",
-      price: 1,
-      originalPrice: 1,
-      stock: 1,
-      catalogActive: true,
-      temporaryPaymentTest: true,
-      deliveryBadge: "Entrega por coordinar",
-      stockSignal: "1 unidad de prueba",
-      bundleEligible: false,
-    },
-  },
 ]

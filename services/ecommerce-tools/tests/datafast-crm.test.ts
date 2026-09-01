@@ -147,28 +147,20 @@ describe("datafast → blindaje de precios (code review #1)", () => {
     ).rejects.toThrow(/no reconocido/)
   })
 
-  it("en LIVE acepta la paleta temporal y siempre cobra $1.00", async () => {
+  it("en LIVE rechaza la paleta temporal retirada", async () => {
     const service = svc({ DATAFAST_ENV: "live" })
-    const checkout = await service.datafastCheckout({
-      items: [
-        {
-          title: "Precio alterado desde el navegador",
-          sku: "MGC-PALETA-WOK-DATAFAST-TEST",
-          quantity: 1,
-          unitPrice: 99,
-        },
-      ],
-    })
-
-    expect(checkout.amount).toBe(1)
-    const [record] = await readDatafastCheckouts(dir)
-    expect(record.items).toEqual([
-      expect.objectContaining({
-        sku: "MGC-PALETA-WOK-DATAFAST-TEST",
-        title: "Paleta para wok · prueba DataFast",
-        unitPrice: 1,
+    await expect(
+      service.datafastCheckout({
+        items: [
+          {
+            title: "Producto temporal retirado",
+            sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+            quantity: 1,
+            unitPrice: 1,
+          },
+        ],
       }),
-    ])
+    ).rejects.toThrow(/no reconocido/)
   })
 
   it("en test deja pasar ítems sin match (fixtures y certificación)", async () => {
@@ -181,7 +173,7 @@ describe("datafast → blindaje de precios (code review #1)", () => {
 })
 
 describe("contrato catálogo → DataFast", () => {
-  it("sólo conserva fixtures para pruebas locales", () => {
-    expect(checkoutCatalogProducts.some((product) => product.sku === "MGC-PALETA-WOK-DATAFAST-TEST")).toBe(true)
+  it("no autoriza el SKU temporal retirado", () => {
+    expect(checkoutCatalogProducts.some((product) => product.sku === "MGC-PALETA-WOK-DATAFAST-TEST")).toBe(false)
   })
 })

@@ -2583,6 +2583,16 @@ function isWellnessProduct(product: Product) {
   return wellnessTerms.some((term) => haystack.includes(term));
 }
 
+const retiredPublicSkus = new Set(["MGC-PALETA-WOK-DATAFAST-TEST"]);
+
+/**
+ * Productos retirados pueden seguir en Medusa para conservar la auditoria de
+ * pagos anteriores. Esta frontera evita volver a publicarlos o venderlos.
+ */
+export function isPublicCatalogProduct(product: Product) {
+  return !retiredPublicSkus.has(product.sku.trim().toUpperCase());
+}
+
 export function normalizeProduct(
   product: Product,
   vertical: "cocina" | "bienestar" = "cocina",
@@ -2674,6 +2684,7 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
 
   if (products) {
     const verticalProducts = products
+      .filter(isPublicCatalogProduct)
       .filter(vertical === "bienestar" ? isWellnessProduct : isKitchenProduct)
       .map((product) => normalizeProduct(product, vertical));
     if (verticalProducts.length) return verticalProducts;
@@ -2710,12 +2721,14 @@ export async function getAllProducts() {
   const products = await fetchProducts();
 
   if (products) {
-    const normalized = products.map((product) =>
-      normalizeProduct(
-        product,
-        isWellnessProduct(product) ? "bienestar" : "cocina",
-      ),
-    );
+    const normalized = products
+      .filter(isPublicCatalogProduct)
+      .map((product) =>
+        normalizeProduct(
+          product,
+          isWellnessProduct(product) ? "bienestar" : "cocina",
+        ),
+      );
     return normalized.length
       ? normalized
       : allowDemoCatalog
