@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest"
 import {
   august2026FallbackProducts,
   cocinaFallbackProducts,
+  isPublicCatalogProduct,
   mgcSaharaPanProducts,
   normalizeProduct,
   productPath,
@@ -195,6 +196,15 @@ describe("catálogo de campaña", () => {
         product.sku.includes("DATAFAST-TEST"),
       ),
     ).toBe(false)
+  })
+
+  it("oculta la prueba DataFast aunque Medusa todavía la devuelva", () => {
+    expect(
+      isPublicCatalogProduct(
+        baseProduct({ sku: "MGC-PALETA-WOK-DATAFAST-TEST" }),
+      ),
+    ).toBe(false)
+    expect(isPublicCatalogProduct(baseProduct())).toBe(true)
   })
 
   it("mantiene los cuatro totales anunciados al armar el combo", () => {

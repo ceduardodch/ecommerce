@@ -525,9 +525,14 @@ export function productsForVertical(
   products: Product[],
   vertical?: ProductVertical,
 ) {
-  if (vertical === "bienestar") return products.filter(isWellnessProduct)
-  if (vertical === "cocina") return products.filter(isKitchenProduct)
-  return products.filter(
+  const publicProducts = products.filter(
+    (product) =>
+      product.sku.trim().toUpperCase() !==
+      "MGC-PALETA-WOK-DATAFAST-TEST",
+  )
+  if (vertical === "bienestar") return publicProducts.filter(isWellnessProduct)
+  if (vertical === "cocina") return publicProducts.filter(isKitchenProduct)
+  return publicProducts.filter(
     (product) => isKitchenProduct(product) || isWellnessProduct(product),
   )
 }

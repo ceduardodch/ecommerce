@@ -63,4 +63,17 @@ describe("búsqueda de catálogo para WhatsApp", () => {
     const result = searchProducts(products, { query: "¿Qué productos de cocina tienes?" })
     expect(result.map((product) => product.vertical)).toEqual(["cocina", "cocina"])
   })
+
+  it("no devuelve el SKU temporal retirado aunque Medusa lo conserve", () => {
+    const retired = {
+      ...products[1],
+      id: "datafast-test",
+      variantId: "datafast-test-v1",
+      sku: "MGC-PALETA-WOK-DATAFAST-TEST",
+      title: "Paleta para wok · prueba DataFast",
+    }
+    const result = searchProducts([...products, retired], { vertical: "cocina" })
+
+    expect(result.map((product) => product.sku)).not.toContain(retired.sku)
+  })
 })
