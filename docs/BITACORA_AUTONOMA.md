@@ -94,3 +94,54 @@ descrito en el backlog, sin sorpresas.
 
 **Siguiente lote**: S-1 · JSON-LD en `/campanas/[slug]` (🟢), según el orden
 de ejecución del plan.
+
+---
+
+## 2026-09-01 · Lote 2 (autónomo)
+
+**Ítem trabajado**: S-1 · JSON-LD en campañas (🟢, primer ítem no terminado
+del orden de ejecución).
+
+**Qué se hizo**: ni `/campanas/[slug]` (cocina) ni `/bienestar/campanas/[slug]`
+(bienestar) declaraban schema.org, a diferencia de la ficha de producto que ya
+lo tiene desde el lote anterior. Se agregó `buildCampaignJsonLd` en cada
+página (mismo patrón que `buildProductJsonLd`: `Product` + `Offer` con precio,
+disponibilidad y `url` apuntando a la campaña con el `sku` seleccionado) y se
+inyecta con el mismo `<script type="application/ld+json">` que ya usa la
+ficha.
+
+**Commit en `main`**: `7cb4a5b`
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total` (storefront: 20/20 páginas
+  generadas, sin errores)
+- `npm run tools:test` → `Test Files 10 passed (10)` / `Tests 88 passed (88)`
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total`
+- Levantado el storefront local (`npm run dev` en `apps/storefront`) y `curl`
+  real:
+  - `/campanas/wok-granito` (host cocina) → `<script type="application/ld+json">`
+    con `{"@type":"Product","sku":"MGC-FR-SARTEN-20-GN","offers":{"@type":"Offer","price":"55.00","availability":"https://schema.org/InStock",...}}`.
+  - `/bienestar/campanas/termo-acero` (host bienestar) → mismo patrón con
+    `"sku":"BIEN-TERMO-SUS304-500"`, `"price":"20.00"`, imagen y `url`
+    absolutas al dominio de bienestar.
+- CI: pendiente de confirmar tras el push (ver abajo).
+
+**Pendiente/Asumido**:
+- Igual que en S-2: sin test automatizado (R-1, aún no ejecutado, sigue
+  siendo el siguiente ítem grande de la lista).
+- No se corrió un validador externo de datos estructurados (Rich Results
+  Test); la verificación se limitó al JSON emitido siendo válido y con la
+  forma esperada por schema.org.
+- Confirmar el run de CI en GitHub Actions tras este push (se anota aquí el
+  resultado real después de correrlo).
+
+**Nota fuera del plan**: la campaña de bienestar (`/bienestar/campanas/[slug]`)
+no estaba mencionada explícitamente en la historia S-1 del backlog (que solo
+nombra `/campanas/[slug]`), pero es la misma landing duplicada para la otra
+vertical con el mismo problema de SEO. Se corrigió también para no dejar la
+mitad del catálogo sin datos estructurados.
+
+**Siguiente lote**: S-4 · `Organization` + `WebSite` en el layout (🟢), según
+el orden de ejecución del plan.
