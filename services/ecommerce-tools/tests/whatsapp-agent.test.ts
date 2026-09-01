@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { loadConfig } from "../src/config.js"
-import { cityFromConversation, createWhatsAppAgentReply, lockedProductFromHistory, mentionedProducts } from "../src/whatsapp-agent.js"
+import { cityFromConversation, commerceHistoryAfterReset, createWhatsAppAgentReply, lockedProductFromHistory, mentionedProducts } from "../src/whatsapp-agent.js"
 
 function config(overrides: Record<string, string> = {}) {
   return loadConfig({
@@ -38,6 +38,47 @@ describe("createWhatsAppAgentReply", () => {
     expect(locked?.sku).toBe("OLLA-01")
     expect(mentionedProducts("1 x Pistola de percusión profesional", [products[0], other]).map((product) => product.sku))
       .toEqual(["PISTOLA-01"])
+  })
+
+  it("encuentra en el catálogo completo el producto mostrado antes de una respuesta corta", async () => {
+    const other = { ...products[0], id: "p2", variantId: "v2", sku: "PISTOLA-01", title: "Pistola de percusión profesional" }
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "¿Confirmas una unidad de la olla?" }] }],
+    }), { status: 200 }))
+    const catalogLoader = vi.fn().mockResolvedValue([products[0], other])
+
+    await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "1",
+        // Simula una búsqueda pobre para el texto corto: devolvió bienestar,
+        // aunque el turno anterior había fijado una olla.
+        products: [other],
+        history: [{
+          type: "message_out",
+          at: "2026-09-01T20:00:00.000Z",
+          payload: { text: "Te recomiendo la Olla de granito. ¿Cuántas unidades quieres?" },
+        }],
+      },
+      fetchMock as unknown as typeof fetch,
+      catalogLoader,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(catalogLoader).toHaveBeenCalledOnce()
+    expect(payload.input).toContain("Catálogo relevante:\n- Olla de granito")
+    expect(payload.input).not.toContain("Catálogo relevante:\n- Pistola de percusión profesional")
+  })
+
+  it("descarta una cotización cuando el cliente dice que no pidió ese producto", () => {
+    const history = [
+      { type: "quote_created", at: "2026-09-01T20:00:00.000Z", payload: { items: [{ sku: "PISTOLA-01" }] } },
+      { type: "message_in", at: "2026-09-01T20:01:00.000Z", payload: { text: "Eso no pedí" } },
+      { type: "message_in", at: "2026-09-01T20:02:00.000Z", payload: { text: "Quito" } },
+    ]
+
+    expect(commerceHistoryAfterReset(history)).toEqual([history[2]])
+    expect(commerceHistoryAfterReset(history, "Eso no pedí")).toEqual([])
   })
 
   it("reconoce una ciudad enviada sola y la deja disponible para el siguiente paso", () => {

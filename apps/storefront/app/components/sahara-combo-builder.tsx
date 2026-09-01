@@ -152,6 +152,7 @@ export function ComboBuilder() {
 
   return (
     <section
+      id="arma-tu-combo"
       className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8"
       aria-labelledby="combo-builder-title"
     >

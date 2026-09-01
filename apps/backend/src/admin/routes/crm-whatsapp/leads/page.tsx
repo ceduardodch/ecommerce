@@ -158,6 +158,7 @@ const TEMPLATE_KEYS = [
   "estacional",
   "cross_sell_cocina",
   "cross_sell_bienestar",
+  "promo_coleccion_exotica",
   "generico",
 ]
 

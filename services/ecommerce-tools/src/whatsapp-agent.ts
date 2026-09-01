@@ -96,6 +96,34 @@ function quoteSku(event: CustomerEventRecord): string | undefined {
   return typeof sku === "string" ? sku : undefined
 }
 
+function rejectsCurrentSelection(text: string): boolean {
+  const normalized = normalizeForMatch(text)
+  return /(eso no (?:lo )?pedi|no pedi eso|te equivocaste|producto equivocado|cambiar (?:de )?producto|empezar de nuevo|reiniciar (?:la )?compra)/i.test(normalized)
+}
+
+/**
+ * Una cotización rechazada deja de ser evidencia válida para los turnos
+ * siguientes. Sin este corte, un SKU incorrecto queda bloqueado para siempre
+ * y respuestas cortas como "Quito" siguen arrastrando el producto anterior.
+ */
+export function commerceHistoryAfterReset(
+  history: CustomerEventRecord[] = [],
+  currentText = "",
+): CustomerEventRecord[] {
+  if (rejectsCurrentSelection(currentText)) return []
+
+  const ordered = [...history].sort((a, b) => a.at.localeCompare(b.at))
+  let resetAt = ""
+  for (const event of ordered) {
+    if (event.type !== "message_in") continue
+    const text = (event.payload as { text?: unknown } | undefined)?.text
+    if (typeof text === "string" && rejectsCurrentSelection(text)) {
+      resetAt = event.at
+    }
+  }
+  return resetAt ? ordered.filter((event) => event.at > resetAt) : ordered
+}
+
 /**
  * El historial es evidencia de venta, no sólo contexto de lenguaje. Si ya se
  * cotizó una referencia, una respuesta corta como "1", "Quito" o "sí" debe
@@ -391,21 +419,35 @@ export async function createWhatsAppAgentReply(
   const timeout = setTimeout(() => controller.abort(), 12_000)
   try {
     const purchasedProducts = input.customerContext?.purchasedProducts
+    const commerceHistory = commerceHistoryAfterReset(input.history, input.text)
     const searchedProducts = excludePurchasedProducts(input.products, purchasedProducts)
     // Una consulta general puede no coincidir con un título o SKU, y una
     // búsqueda cuyo único resultado sea algo que el cliente ya compró queda
     // igual de vacía tras filtrarlo. Ambos casos caen al catálogo vivo.
     let products = searchedProducts
     let catalogProducts = searchedProducts
-    let lockedProduct = lockedProductFromHistory(searchedProducts, input.history)
-    if (!products.length) {
-      const inferredVertical = inferProductVerticalFromQuery(input.text)
-      const liveProducts = excludePurchasedProducts(
+    let liveProducts: Product[] | undefined
+    let lockedProduct = lockedProductFromHistory(searchedProducts, commerceHistory)
+
+    // Una respuesta corta ("1", "sí", "Quito") puede no devolver el
+    // producto que Vicky mostró en el turno anterior. Buscamos el bloqueo en
+    // el catálogo completo antes de permitir que el modelo elija otro SKU.
+    if (!lockedProduct && commerceHistory.length) {
+      liveProducts = excludePurchasedProducts(
         await catalogLoader(config).catch(() => []),
         purchasedProducts,
       )
       catalogProducts = liveProducts
-      lockedProduct = lockedProduct || lockedProductFromHistory(liveProducts, input.history)
+      lockedProduct = lockedProductFromHistory(liveProducts, commerceHistory)
+    }
+    if (!products.length) {
+      const inferredVertical = inferProductVerticalFromQuery(input.text)
+      liveProducts ||= excludePurchasedProducts(
+        await catalogLoader(config).catch(() => []),
+        purchasedProducts,
+      )
+      catalogProducts = liveProducts
+      lockedProduct = lockedProduct || lockedProductFromHistory(liveProducts, commerceHistory)
       products = productsForVertical(liveProducts, inferredVertical).slice(0, 6)
     }
     if (lockedProduct && !asksForAnotherProduct(input.text)) {
@@ -423,7 +465,7 @@ export async function createWhatsAppAgentReply(
     const instructions = instructionsWithPlaybook(playbook, canUseTools)
 
     const quotedSkus = new Set(
-      (input.history || []).map(quoteSku).filter((sku): sku is string => Boolean(sku)),
+      commerceHistory.map(quoteSku).filter((sku): sku is string => Boolean(sku)),
     )
     let previousResponseId: string | undefined
     let nextInput: string | Array<Record<string, unknown>> = [
