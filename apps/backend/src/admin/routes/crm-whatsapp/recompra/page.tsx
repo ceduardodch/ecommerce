@@ -148,7 +148,7 @@ function CrmRecompraPage() {
       >
         <h1 style={{ margin: 0 }}>Reporte de Recompra y LTV</h1>
         <Link
-          to="/admin/crm-whatsapp"
+          to="/crm-whatsapp"
           style={{
             padding: "8px 16px",
             background: "var(--color-bg-base)",
