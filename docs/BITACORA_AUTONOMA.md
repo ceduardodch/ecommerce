@@ -607,3 +607,67 @@ dueño mergeó V-1 en paralelo.
 tool-calling) (🔴 → rama + PR, sin merge a `main`, esfuerzo L — probablemente
 más de un lote), según el orden de ejecución del plan. Antes de arrancarlo
 convendría que el dueño revise y mergee (o pida cambios en) el PR #11.
+
+---
+
+## 2026-09-01 · Lote 9 (dueño presente) — sincronizar planes + investigación V-3
+
+**Motivo**: el dueño pidió investigar V-3 y, en paralelo, mergeó directo a
+`main` (fuera de esta rutina) cuatro PRs con una feature grande — la
+bandeja operativa de WhatsApp — más tres fixes. Pidió actualizar la
+planificación contra el estado real de `main` antes de seguir.
+
+**Investigación de V-3 (sin código)**: se encontró que `whatsapp-sales-flow.ts`
+(`advanceWhatsappSale`) ya es una máquina de estados determinista (sin IA)
+que cotiza, exige confirmación explícita y manda el carrito — con 5 tests
+en verde protegiendo exactamente "ningún cobro sin confirmación". Como ese
+flujo intercepta casi todos los mensajes una vez que hay venta en curso,
+darle tool-calling a `createWhatsAppAgentReply` obliga a decidir entre
+tools solo para conversación libre (sin tocar el flujo probado) o que la IA
+tome el control de confirmar/crear pedido. Detalle completo, con la
+colisión de nombres `create_order` (dos implementaciones reales distintas
+en el código) y la actualización tras la bandeja de WhatsApp (nuevo modo
+`human`/`ai` por conversación que cualquier tool-calling tendría que
+respetar), quedó documentado en `docs/SPRINT_AUTONOMO.md`, sección EPIC V.
+**No se escribió código de V-3** — se dejó pausado explícitamente.
+
+**Qué se hizo (sincronización de planes)**:
+- `docs/SPRINT_AUTONOMO.md`: V-1 y V-2 marcados hechos (tachados, con
+  commit/PR/lote) en la tabla de EPIC V, en el orden de ejecución y en el
+  contexto en frío (sección 0). Se agregó la nota de arquitectura de V-3
+  (arriba) y se anotaron los 4 commits que el dueño mergeó directo
+  (`f89ac2c` bandeja WhatsApp, `ee7c585` fix de persistencia de media,
+  `75f1da0` fix de crash con catálogo vacío + `docker-compose.yml`,
+  `9a9d97e` fix de links de navegación del admin).
+- `docs/CRM_BACKLOG.md`: no tenía ninguna entrada para la bandeja
+  operativa de WhatsApp (es una feature nueva, fuera de las épicas
+  TPL/CONV/RPT/BRC/XSELL/BMK ya cerradas). Se agregó a "Estado real" con
+  una nota de verificación pendiente (ver abajo).
+
+**Commits en `main`**: `73fb026` (V-1/V-2 + bandeja, primera pasada),
+`986fb22` (sincronización con los 3 PRs adicionales del dueño)
+
+**Verificado**: cambios solo en `docs/`, `npm run typecheck` en verde
+(no se tocó código de la app). CI del push `986fb22`: run `33555500206`,
+verde (Build, Typecheck, Test tools, Test backend, Test storefront,
+Validate compose — todos ✓, 1m44s).
+
+**Pendiente/Asumido — importante, no verificado en esta sesión**:
+- `docs/CRM_WHATSAPP_INBOX.md` (el propio doc de la bandeja) lista pasos
+  explícitos "Antes de promover": aplicar la migración en staging,
+  confirmar upgrade/downgrade/re-upgrade, montar el volumen persistente
+  `crm-whatsapp-media` en Coolify, y probar con un número real (texto,
+  imagen, PDF, audio, video, tomado por humano, liberado a Vicky). **No
+  tengo forma de confirmar si esto se hizo** antes de mergear a `main` (que
+  auto-despliega). Si no se hizo, la bandeja podría estar en producción sin
+  el volumen montado — los adjuntos fallarían o se perderían.
+- El bug conocido de retención (job diario que borra mensajes/archivos de
+  más de 24 meses) tampoco se verificó que esté activo o programado.
+
+**Nota fuera del plan**: ninguna adicional a lo ya registrado en el lote 8.
+
+**Siguiente lote**: pendiente de la decisión del dueño sobre V-3 (ver nota
+de arquitectura). Mientras tanto, valdría confirmar los pasos de
+"Antes de promover" de la bandeja de WhatsApp en producción (ver
+Pendiente/Asumido arriba) — no es un ítem del backlog, es una verificación
+operativa urgente.
