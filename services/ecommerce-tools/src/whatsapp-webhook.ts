@@ -12,7 +12,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
 import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
-import type { CustomerEventRecord, Product } from "./types.js"
+import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
 import { advanceWhatsappSale, type CommerceState } from "./whatsapp-sales-flow.js"
 
@@ -307,7 +307,15 @@ export function mountWhatsappWebhookRoutes(
     nextFollowupAt?: string
     followupReason?: string
   }) => Promise<unknown>,
-  getCustomer?: (phone: string) => Promise<{ followup_reason?: string | null; metadata?: Record<string, unknown>; name?: string; email?: string; events?: CustomerEventRecord[] } | undefined>,
+  getCustomer?: (phone: string) => Promise<{
+    followupReason?: string | null
+    nextFollowupAt?: string
+    purchasedProducts?: PurchasedProduct[]
+    metadata?: Record<string, unknown>
+    name?: string
+    email?: string
+    events?: CustomerEventRecord[]
+  } | undefined>,
   searchProducts?: (query: string) => Promise<Product[]>,
   sendReply?: (input: { phone: string; text: string }) => Promise<unknown>,
   commerce?: {
@@ -379,9 +387,10 @@ export function mountWhatsappWebhookRoutes(
           }
           const optOut = isOptOutText(text)
           // Se consulta ANTES de registrar el mensaje entrante: así el
-          // historial que recibe Vicky (y el followup_reason para NPS)
-          // reflejan el estado previo a este turno, sin duplicar el mensaje
-          // actual (ya en camino a guardarse) dentro del propio prompt.
+          // historial y el contexto que recibe Vicky (y el followupReason
+          // para NPS) reflejan el estado previo a este turno, sin duplicar
+          // el mensaje actual (ya en camino a guardarse) dentro del propio
+          // prompt.
           let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
           if (!optOut && getCustomer) {
             try {
@@ -398,7 +407,12 @@ export function mountWhatsappWebhookRoutes(
               timestamp,
               addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
               optOut,
-              customer?.followup_reason,
+              // Antes decía `customer?.followup_reason` (snake_case): el
+              // campo real es `followupReason` en ambos backends
+              // (`CustomerRecord` local y `serializeCustomer` de Medusa), así
+              // que esto siempre leía `undefined` y la lógica de NPS nunca
+              // detectaba que un cliente estaba en seguimiento NPS.
+              customer?.followupReason,
               messageId,
             )
           } catch (err) {
@@ -413,7 +427,13 @@ export function mountWhatsappWebhookRoutes(
               createCart: commerce.createCart,
             }).catch(() => undefined) : undefined
             if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
-            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events })
+            const customerContext = customer ? {
+              purchasedProducts: customer.purchasedProducts,
+              journeyStage: customer.metadata?.journeyStage as string | undefined,
+              nextFollowupAt: customer.nextFollowupAt,
+              followupReason: customer.followupReason ?? undefined,
+            } : undefined
+            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
             if (replyText) {
               await sendReply({ phone: `+${waId}`, text: replyText })
             }

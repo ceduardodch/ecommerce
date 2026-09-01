@@ -17,6 +17,7 @@ import {
 } from "./contracts.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 import { mountWhatsappReplyRoute, sendWhatsappCloudReply } from "./whatsapp-reply.js"
+import type { CustomerRecord } from "./types.js"
 
 const config = loadConfig()
 const service = createCommerceService(config)
@@ -214,7 +215,10 @@ mountWhatsappWebhookRoutes(
   async (input) => {
     return service.addCustomerEvent(input as Parameters<typeof service.addCustomerEvent>[0])
   },
-  async (phone) => service.getCustomer(phone) as Promise<{ followup_reason?: string | null } | undefined>,
+  // `service.getCustomer` es `unknown` cuando CRM_BACKEND=medusa (viene de
+  // un fetch HTTP tipado laxo), pero en runtime ambos backends devuelven la
+  // misma forma que `CustomerRecord` (ver `serializeCustomer` del backend).
+  async (phone) => service.getCustomer(phone) as Promise<CustomerRecord | undefined>,
   async (query) => service.products({ query, limit: 6 }),
   async (input) => sendWhatsappCloudReply(
     config,

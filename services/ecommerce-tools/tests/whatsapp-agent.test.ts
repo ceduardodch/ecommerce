@@ -192,4 +192,111 @@ describe("createWhatsAppAgentReply", () => {
     expect(JSON.parse(String(fetchMock.mock.calls[0][1].body)).input)
       .toContain("Olla de granito")
   })
+
+  it("un cliente que ya compró una olla no recibe la oferta de esa misma olla", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Te muestro otras opciones." }] }],
+    }), { status: 200 }))
+    const otherProduct = { ...products[0], sku: "SARTEN-01", title: "Sartén de granito" }
+    const catalogLoader = vi.fn().mockResolvedValue([products[0], otherProduct])
+
+    await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "quiero una olla",
+        products, // el único resultado de la búsqueda es justo la olla ya comprada
+        customerContext: {
+          purchasedProducts: [{
+            productId: "p1",
+            sku: "OLLA-01",
+            title: "Olla de granito",
+            quantity: 1,
+            purchasedAt: "2026-08-01T00:00:00.000Z",
+          }],
+        },
+      },
+      fetchMock as unknown as typeof fetch,
+      catalogLoader,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    // No aparece listada en "Catálogo relevante" (el guion es el formato de
+    // cada línea del catálogo); sí se menciona en el bloque de contexto.
+    expect(payload.input).not.toContain("- Olla de granito")
+    expect(payload.input).toContain("Sartén de granito")
+    expect(payload.input).toContain("Ya compró: Olla de granito")
+    expect(payload.input).toContain("No le ofrezcas estos mismos productos de nuevo")
+  })
+
+  it("cuando el catálogo vivo también trae el producto ya comprado, lo filtra igual", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Ok" }] }],
+    }), { status: 200 }))
+    const otherProduct = { ...products[0], sku: "SARTEN-01", title: "Sartén de granito" }
+    const catalogLoader = vi.fn().mockResolvedValue([products[0], otherProduct])
+
+    await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "quiero ver productos",
+        products: [], // fuerza el fallback al catálogo vivo
+        customerContext: {
+          purchasedProducts: [{
+            productId: "p1",
+            sku: "OLLA-01",
+            title: "Olla de granito",
+            quantity: 1,
+            purchasedAt: "2026-08-01T00:00:00.000Z",
+          }],
+        },
+      },
+      fetchMock as unknown as typeof fetch,
+      catalogLoader,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).not.toContain("- Olla de granito")
+    expect(payload.input).toContain("Sartén de granito")
+  })
+
+  it("incluye la etapa y el próximo seguimiento en el contexto, sin romper si faltan compras previas", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Ok" }] }],
+    }), { status: 200 }))
+
+    await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "hola",
+        products,
+        customerContext: {
+          journeyStage: "cotizacion_pendiente",
+          nextFollowupAt: "2026-09-10T15:00:00.000Z",
+          followupReason: "recompra_90d",
+        },
+      },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).toContain("Contexto del cliente")
+    expect(payload.input).toContain("Etapa actual de la conversación: cotizacion_pendiente")
+    expect(payload.input).toContain("Tiene un seguimiento programado para 2026-09-10T15:00:00.000Z (motivo: recompra_90d)")
+    expect(payload.input).not.toContain("Ya compró")
+  })
+
+  it("no agrega bloque de contexto cuando no hay customerContext", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Ok" }] }],
+    }), { status: 200 }))
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "hola", products },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).not.toContain("Contexto del cliente")
+  })
 })
