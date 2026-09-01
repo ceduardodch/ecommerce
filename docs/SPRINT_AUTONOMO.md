@@ -97,7 +97,7 @@ backlog.
 |---|---|---|---|
 | S-1 | JSON-LD en páginas de campaña | S | `Product` + `Offer` en `/campanas/[slug]`, como en las fichas. |
 | S-2 | `BreadcrumbList` en fichas | S | El componente `Breadcrumbs` ya existe; falta emitir el schema. |
-| S-3 | Carrito visible en móvil en las cards | S | Hoy la card del listado muestra solo WhatsApp en móvil y solo carrito en desktop. La ficha sí tiene ambos. Igualar. |
+| ~~S-3~~ | ~~Carrito visible en móvil en las cards~~ | S | **CERRADA COMO OBSOLETA (lote 6, 2026-09-01).** El patrón que describe existió (commit `e943bae`, INTEG-2) pero el rediseño premium posterior (`18b1fdd` cocina, `d541aee` bienestar) lo eliminó a propósito al consolidar componentes duplicados. Hoy: listado cocina (`ShowcaseTile`) solo carrito, listado bienestar (`WellnessProductCard`) solo WhatsApp, ficha solo carrito (sin WhatsApp en ningún punto). Ninguna parte de la premisa ("la ficha tiene ambos") es cierta. Ver bitácora lote 6 para el detalle completo. |
 | S-4 | `Organization` + `WebSite` en el layout | S | Sitelinks searchbox y panel de marca en Google. |
 
 ### EPIC O — Operación (P1) — **del dueño, no de la rutina**
@@ -116,11 +116,12 @@ backlog.
 
 Cada lote de 2h toma **el primer ítem no terminado** de esta lista:
 
-1. S-2 · `BreadcrumbList` (🟢)
-2. S-1 · JSON-LD en campañas (🟢)
-3. S-4 · `Organization` + `WebSite` (🟢)
-4. R-1 · Tests del storefront (🟢) — probablemente 2 lotes
-5. S-3 · Carrito en móvil en las cards (🟢)
+1. S-2 · `BreadcrumbList` (🟢) — ✅ hecho, lote 1
+2. S-1 · JSON-LD en campañas (🟢) — ✅ hecho, lote 2
+3. S-4 · `Organization` + `WebSite` (🟢) — ✅ hecho, lote 4
+4. R-1 · Tests del storefront (🟢) — ✅ hecho, lote 5 (en 1 lote, no 2)
+5. ~~S-3~~ · ~~Carrito en móvil en las cards~~ (🟢) — ❌ cerrada como
+   obsoleta, lote 6 (premisa ya no aplica tras el rediseño; ver tabla arriba)
 6. V-1 · Historial de Vicky (🔴 → para en rama)
 7. V-2 · Contexto del cliente (🔴 → para en rama)
 

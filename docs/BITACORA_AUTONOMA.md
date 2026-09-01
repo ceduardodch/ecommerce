@@ -355,3 +355,68 @@ nuevo en verde junto a los demás.
 
 **Siguiente lote**: S-3 · Carrito visible en móvil en las cards (🟢), según
 el orden de ejecución del plan.
+
+---
+
+## 2026-09-01 · Lote 6 (autónomo + dueño presente)
+
+**Ítem trabajado**: S-3 · Carrito visible en móvil en las cards. El dueño
+estaba presente en esta sesión (no fue un run desatendido), así que antes de
+implementar se le reportó el hallazgo y se le pidió dirección. Confirmó:
+"Cierra S-3 como obsoleta y pasa al siguiente ítem".
+
+**Qué se investigó**: la premisa de S-3 ("la card del listado muestra solo
+WhatsApp en móvil y solo carrito en desktop; la ficha sí tiene ambos") no
+calza con ningún componente del código actual. Se rastreó el origen:
+
+- El patrón sí existió: commit `e943bae` ("Add AddToCartButton desktop
+  coexistence...", INTEG-2), documentado en `docs/WEB_DESIGN_CART.md`. Un
+  `ProductCard` dentro de `app/page.tsx` mostraba
+  `TrackedWhatsAppLink` con clase `lg:hidden` (móvil) y `AddToCartButton`
+  con clase `hidden lg:flex` (desktop).
+- Ese `ProductCard` fue **eliminado a propósito** por el rediseño premium
+  posterior: `18b1fdd` ("Redesign home cocina...", WHOM-1) en cocina y
+  `d541aee` (WHOM-2) en bienestar, que consolidaron los componentes
+  duplicados (`docs/WEB_REDESIGN_PLAN.md` lo documenta explícitamente como
+  problema resuelto: *"Componentes duplicados | `.product-card` vs
+  `.wellness-product-card`"*).
+- Estado real verificado hoy (grep exhaustivo de clases `hidden`/`md:`/
+  `lg:` combinadas con WhatsApp/carrito en todo `apps/storefront/app`, sin
+  coincidencias del patrón descrito):
+  - Listado cocina (`ShowcaseTile`, vía `ProductShowcaseGrid` en la
+    portada): solo `AddToCartButton` + "Ver ficha", siempre visibles, sin
+    WhatsApp.
+  - Listado bienestar (`WellnessProductCard` en `app/bienestar/page.tsx`):
+    solo WhatsApp + "Ver landing", siempre visibles, sin carrito.
+  - Ficha de producto (`app/products/[slug]/page.tsx`, leída completa):
+    solo carrito, dos veces (inline línea 468 + `StickyCTABar` línea 622),
+    cero WhatsApp en toda la página. El comentario del código es explícito:
+    "Carrito fijo: WhatsApp queda al final del pedido completo".
+
+**Por qué no se implementó tal cual**: forzar la coexistencia
+WhatsApp-móvil/carrito-desktop de vuelta habría revertido una decisión de
+diseño más reciente y deliberada (la consolidación del rediseño premium)
+sin saber si sigue siendo válida. Ninguna mitad de la premisa original es
+cierta hoy, así que no había nada que "igualar" — la comparación de
+referencia (la ficha) tampoco tiene ambos CTAs.
+
+**Qué se hizo**: se cerró S-3 en `docs/SPRINT_AUTONOMO.md` (tachada, con
+nota completa del hallazgo) y se actualizó la sección "Orden de ejecución"
+marcando los ítems 🟢 ya hechos (S-2, S-1, S-4, R-1) y S-3 como cerrada. Sin
+cambios de código — es un lote 100% de documentación.
+
+**Commit en `main`**: (este lote, junto con la bitácora)
+
+**Verificado**: cambio solo en `docs/`, no aplica build/test — no se
+tocó código de la aplicación.
+
+**Pendiente/Asumido**:
+- Si el dueño quiere una versión actual de "igualar CTAs entre listado y
+  ficha", es una decisión de producto nueva (¿debería el listado de cocina
+  tener también WhatsApp? ¿el de bienestar también carrito?), no algo que la
+  rutina deba inventar. Queda fuera del backlog hasta que se redefina.
+
+**Nota fuera del plan**: ninguna.
+
+**Siguiente lote**: V-1 · Historial de conversación en el prompt de Vicky
+(🔴 → rama + PR, sin merge a `main`), según el orden de ejecución del plan.
