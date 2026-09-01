@@ -126,7 +126,9 @@ ficha.
   - `/bienestar/campanas/termo-acero` (host bienestar) → mismo patrón con
     `"sku":"BIEN-TERMO-SUS304-500"`, `"price":"20.00"`, imagen y `url`
     absolutas al dominio de bienestar.
-- CI: pendiente de confirmar tras el push (ver abajo).
+- CI en `main` tras el push (incluye el commit de esta bitácora): run
+  `33537301564`, job `ci` en verde (Build, Typecheck, Test tools, Test
+  backend, Validate compose — todos ✓, 2m42s).
 
 **Pendiente/Asumido**:
 - Igual que en S-2: sin test automatizado (R-1, aún no ejecutado, sigue
@@ -134,8 +136,6 @@ ficha.
 - No se corrió un validador externo de datos estructurados (Rich Results
   Test); la verificación se limitó al JSON emitido siendo válido y con la
   forma esperada por schema.org.
-- Confirmar el run de CI en GitHub Actions tras este push (se anota aquí el
-  resultado real después de correrlo).
 
 **Nota fuera del plan**: la campaña de bienestar (`/bienestar/campanas/[slug]`)
 no estaba mencionada explícitamente en la historia S-1 del backlog (que solo
