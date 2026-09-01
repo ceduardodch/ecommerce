@@ -230,6 +230,7 @@ mountWhatsappWebhookRoutes(
     quote: (input) => service.quote(input),
     createCart: (input) => service.createWhatsappCart(input),
   },
+  async (phone) => service.isWhatsappAiPaused(phone),
 )
 
 // WhatsApp Cloud API — respuesta libre de Vicky (W3)

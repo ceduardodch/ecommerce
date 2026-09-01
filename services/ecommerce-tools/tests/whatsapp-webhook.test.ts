@@ -8,6 +8,8 @@ import { createHmac } from "node:crypto"
 import {
   validateHubSignature,
   extractInboundMessages,
+  extractInboundMediaMessages,
+  extractMessageStatuses,
   isOptOutText,
   parseNpsScore,
   npsDecision,
@@ -197,6 +199,30 @@ describe("extractInboundMessages", () => {
         },
       ],
     }
+    expect(extractInboundMessages(body)).toEqual([])
+  })
+})
+
+describe("archivos y estados de Meta", () => {
+  it("extrae imagen, PDF, audio y video con su ID único", () => {
+    const body: MetaWebhookBody = {
+      entry: [{ id: "E1", changes: [{ field: "messages", value: { messages: [
+        { id: "i1", from: "5931", timestamp: "1", type: "image", image: { id: "media-image", caption: "foto" } },
+        { id: "d1", from: "5931", timestamp: "2", type: "document", document: { id: "media-pdf", filename: "catalogo.pdf" } },
+        { id: "a1", from: "5931", timestamp: "3", type: "audio", audio: { id: "media-audio" } },
+        { id: "v1", from: "5931", timestamp: "4", type: "video", video: { id: "media-video" } },
+      ] } }] }],
+    }
+    expect(extractInboundMediaMessages(body).map((message) => [message.messageId, message.mediaType, message.media.id])).toEqual([
+      ["i1", "image", "media-image"], ["d1", "document", "media-pdf"], ["a1", "audio", "media-audio"], ["v1", "video", "media-video"],
+    ])
+  })
+
+  it("extrae estados de mensajes sin confundirlos con mensajes entrantes", () => {
+    const body: MetaWebhookBody = { entry: [{ id: "E1", changes: [{ field: "messages", value: { statuses: [
+      { id: "wamid.out", status: "delivered", timestamp: "100" }, { id: "wamid.read", status: "read", timestamp: "101" },
+    ] } }] }] }
+    expect(extractMessageStatuses(body).map((status) => status.status)).toEqual(["delivered", "read"])
     expect(extractInboundMessages(body)).toEqual([])
   })
 })

@@ -46,11 +46,11 @@ export function isWindowOpen(
 // Envío free-form a Cloud API
 // ---------------------------------------------------------------------------
 
-async function sendFreeform(
+export async function sendWhatsappFreeform(
   config: AppConfig,
   phone: string,
   text: string,
-): Promise<{ ok: boolean; detail?: string }> {
+): Promise<{ ok: boolean; detail?: string; messageId?: string }> {
   if (!config.whatsappPhoneNumberId || !config.whatsappCloudAccessToken) {
     return { ok: false, detail: "meta_credentials_missing" }
   }
@@ -81,7 +81,8 @@ async function sendFreeform(
       return { ok: false, detail: `meta_http_${response.status}${code ? `_${code}` : ""}` }
     }
 
-    return { ok: true }
+    const body = await response.json().catch(() => ({})) as { messages?: Array<{ id?: string }> }
+    return { ok: true, messageId: body.messages?.[0]?.id }
   } catch (cause) {
     return {
       ok: false,
@@ -104,6 +105,7 @@ export async function sendWhatsappCloudReply(
     payload: unknown
     metadata: Record<string, unknown>
   }) => Promise<unknown>,
+  sender: { type?: "ai" | "human"; actorId?: string } = {},
 ): Promise<{ ok: true; channel: "cloud_api_freeform"; sentAt: string } | { ok: false; status: number; error: string; detail?: string }> {
   let lastInboundAt: string | null | undefined
   try {
@@ -120,7 +122,7 @@ export async function sendWhatsappCloudReply(
     return { ok: false, status: 409, error: "window_closed" }
   }
 
-  const result = await sendFreeform(config, input.phone, input.text)
+  const result = await sendWhatsappFreeform(config, input.phone, input.text)
   if (!result.ok) {
     return { ok: false, status: 502, error: "send_failed", detail: result.detail }
   }
@@ -131,7 +133,15 @@ export async function sendWhatsappCloudReply(
     type: "message_out",
     at: sentAt,
     source: "whatsapp_cloud_api",
-    payload: { text: input.text, mediaType: "text", mediaUrl: null },
+    payload: {
+      text: input.text,
+      messageId: result.messageId,
+      mediaType: "text",
+      mediaUrl: null,
+      senderType: sender.type || "ai",
+      actor: sender.actorId ? { userId: sender.actorId } : undefined,
+      status: "sent",
+    },
     metadata: {},
   })
 
@@ -160,7 +170,18 @@ export function mountWhatsappReplyRoute(
     async (request: FastifyRequest, reply: FastifyReply) => {
       const input = whatsappReplyInputSchema.parse(request.body)
 
-      const result = await sendWhatsappCloudReply(config, input, getCustomer, addCustomerEvent)
+      const result = await sendWhatsappCloudReply(
+        config,
+        input,
+        getCustomer,
+        addCustomerEvent,
+        {
+          type: request.headers["x-crm-sender"] === "human" ? "human" : "ai",
+          actorId: typeof request.headers["x-crm-actor-id"] === "string"
+            ? request.headers["x-crm-actor-id"]
+            : undefined,
+        },
+      )
       if (result.ok) return result
       return reply.code(result.status).send({ error: result.error, detail: result.detail })
     },

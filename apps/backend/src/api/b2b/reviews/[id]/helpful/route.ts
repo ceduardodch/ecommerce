@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { reviewsWriteAuth } from "../../_shared"
+import type B2bCrmModuleService from "../../../../../modules/b2b-crm/service"
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const denied = reviewsWriteAuth(req)
@@ -7,7 +8,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     return res.status(denied.status).json({ error: denied.error })
   }
 
-  const b2bCrm = req.scope.resolve("b2bCrm")
+  const b2bCrm = req.scope.resolve("b2bCrm") as B2bCrmModuleService
   const { id } = req.params
 
   try {

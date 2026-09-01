@@ -4,8 +4,12 @@ import { DEFAULT_CRM_TEMPLATES } from "./default-templates"
 import { DEFAULT_AGENT_PLAYBOOK } from "./default-agent-playbook"
 import {
   ConversationalOrder,
+  CrmConversation,
+  CrmConversationAssignment,
+  CrmConversationMessage,
   CrmCustomerEvent,
   CrmCustomerProfile,
+  CrmInternalNote,
   CrmMessageTemplate,
   ProductReview,
 } from "./models"
@@ -31,6 +35,18 @@ type AnyB2bCrmService = {
   listConversationalOrders: (filters?: unknown, config?: unknown) => Promise<any[]>
   createConversationalOrders: (data: unknown) => Promise<any>
   updateConversationalOrders: (data: unknown) => Promise<any>
+  listCrmConversations: (filters?: unknown, config?: unknown) => Promise<any[]>
+  listAndCountCrmConversations: (filters?: unknown, config?: unknown) => Promise<[any[], number]>
+  createCrmConversations: (data: unknown) => Promise<any>
+  updateCrmConversations: (data: unknown) => Promise<any>
+  listCrmConversationMessages: (filters?: unknown, config?: unknown) => Promise<any[]>
+  createCrmConversationMessages: (data: unknown) => Promise<any>
+  updateCrmConversationMessages: (data: unknown) => Promise<any>
+  deleteCrmConversationMessages: (ids: string[]) => Promise<void>
+  listCrmConversationAssignments: (filters?: unknown, config?: unknown) => Promise<any[]>
+  createCrmConversationAssignments: (data: unknown) => Promise<any>
+  listCrmInternalNotes: (filters?: unknown, config?: unknown) => Promise<any[]>
+  createCrmInternalNotes: (data: unknown) => Promise<any>
   listCrmMessageTemplates: (filters?: unknown, config?: unknown) => Promise<any[]>
   createCrmMessageTemplates: (data: unknown) => Promise<any>
   updateCrmMessageTemplates: (data: unknown) => Promise<any>
@@ -53,6 +69,21 @@ export type CustomerSearchInput = {
   rfmSegment?: RfmSegment
   offset?: number
   limit?: number
+}
+
+export type ConversationSearchInput = {
+  status?: string
+  mode?: string
+  assignedUserId?: string
+  unreadOnly?: boolean
+  q?: string
+  offset?: number
+  limit?: number
+}
+
+export type ConversationActor = {
+  userId?: string
+  userName?: string
 }
 
 /**
@@ -201,8 +232,12 @@ function payloadWithMetadata(
 
 class B2bCrmModuleService extends MedusaService({
   ConversationalOrder,
+  CrmConversation,
+  CrmConversationAssignment,
+  CrmConversationMessage,
   CrmCustomerEvent,
   CrmCustomerProfile,
+  CrmInternalNote,
   CrmMessageTemplate,
   ProductReview,
 }) {
@@ -463,7 +498,232 @@ class B2bCrmModuleService extends MedusaService({
     )
   }
 
+  async getConversationByPhone(phone: string) {
+    const [conversation] = await this.service_().listCrmConversations(
+      { phone: normalizePhone(phone), channel: "whatsapp" },
+      { take: 1 },
+    )
+    return conversation
+  }
+
+  async getOrCreateConversation(phone: string) {
+    const normalizedPhone = normalizePhone(phone)
+    const existing = await this.getConversationByPhone(normalizedPhone)
+    if (existing) return existing
+
+    return this.service_().createCrmConversations({
+      phone: normalizedPhone,
+      channel: "whatsapp",
+      status: "new",
+      mode: "ai",
+      unread_count: 0,
+      metadata: {},
+    })
+  }
+
+  async listConversations(input: ConversationSearchInput = {}) {
+    const service = this.service_()
+    const where: Record<string, unknown> = { channel: "whatsapp" }
+    if (input.status) where.status = input.status
+    if (input.mode) where.mode = input.mode
+    if (input.assignedUserId && input.assignedUserId !== "__unassigned__") {
+      where.assigned_user_id = input.assignedUserId
+    }
+    const [conversations, count] = await service.listAndCountCrmConversations(where, {
+      skip: input.offset || 0,
+      take: Math.min(Math.max(input.limit || 50, 1), 100),
+      order: { last_message_at: "DESC" },
+    })
+
+    const filtered = conversations.filter((conversation) => {
+      if (input.assignedUserId === "__unassigned__" && conversation.assigned_user_id) return false
+      if (input.unreadOnly && !Number(conversation.unread_count || 0)) return false
+      if (input.q && !String(conversation.phone || "").includes(input.q.replace(/\D/g, ""))) return false
+      return true
+    })
+    return { conversations: filtered, count: input.q || input.unreadOnly || input.assignedUserId === "__unassigned__" ? filtered.length : count }
+  }
+
+  async getConversation(id: string) {
+    const [conversation] = await this.service_().listCrmConversations({ id }, { take: 1 })
+    return conversation
+  }
+
+  async conversationDetail(id: string) {
+    const conversation = await this.getConversation(id)
+    if (!conversation) return undefined
+    const service = this.service_()
+    const [messages, notes, assignments, customer, orders] = await Promise.all([
+      service.listCrmConversationMessages(
+        { conversation_id: id },
+        { take: 200, order: { meta_timestamp: "ASC", created_at: "ASC" } },
+      ),
+      service.listCrmInternalNotes(
+        { conversation_id: id },
+        { take: 100, order: { at: "ASC" } },
+      ),
+      service.listCrmConversationAssignments(
+        { conversation_id: id },
+        { take: 100, order: { at: "ASC" } },
+      ),
+      this.getCustomer(conversation.phone),
+      service.listConversationalOrders({ phone: conversation.phone }, { take: 20, order: { created_at: "DESC" } }),
+    ])
+    return { conversation, messages, notes, assignments, customer, orders }
+  }
+
+  async recordConversationMessage(input: {
+    phone: string
+    direction: "in" | "out"
+    senderType: "customer" | "ai" | "human" | "system"
+    text?: string
+    metaMessageId?: string
+    media?: { type?: string; path?: string; name?: string; mimeType?: string; size?: number }
+    status?: string
+    failedReason?: string
+    at?: string
+    payload?: unknown
+    actor?: ConversationActor
+  }) {
+    const service = this.service_()
+    const conversation = await this.getOrCreateConversation(input.phone)
+    if (input.metaMessageId) {
+      const [existing] = await service.listCrmConversationMessages(
+        { meta_message_id: input.metaMessageId },
+        { take: 1 },
+      )
+      if (existing) return { conversation, message: existing, duplicate: true }
+    }
+
+    const at = asDate(input.at) || new Date()
+    const message = await service.createCrmConversationMessages({
+      conversation_id: conversation.id,
+      meta_message_id: input.metaMessageId,
+      direction: input.direction,
+      sender_type: input.senderType,
+      sender_user_id: input.actor?.userId,
+      text: input.text,
+      media_type: input.media?.type,
+      media_path: input.media?.path,
+      media_name: input.media?.name,
+      media_mime_type: input.media?.mimeType,
+      media_size: input.media?.size,
+      status: input.status || (input.direction === "in" ? "received" : "sent"),
+      failed_reason: input.failedReason,
+      meta_timestamp: at,
+      payload: input.payload,
+    })
+    const isInbound = input.direction === "in"
+    await service.updateCrmConversations({
+      id: conversation.id,
+      last_message_at: at,
+      last_inbound_at: isInbound ? at : conversation.last_inbound_at,
+      unread_count: isInbound ? Number(conversation.unread_count || 0) + 1 : conversation.unread_count || 0,
+      status: isInbound && conversation.mode === "ai" ? "ai_active" : conversation.status,
+    })
+    return { conversation: { ...conversation, last_message_at: at }, message, duplicate: false }
+  }
+
+  async updateConversationMessageStatus(metaMessageId: string, status: string, failedReason?: string) {
+    const [message] = await this.service_().listCrmConversationMessages(
+      { meta_message_id: metaMessageId },
+      { take: 1 },
+    )
+    if (!message) return undefined
+    return this.service_().updateCrmConversationMessages({
+      id: message.id,
+      status,
+      failed_reason: failedReason,
+    })
+  }
+
+  async updateConversation(
+    id: string,
+    patch: { status?: string; mode?: string; assignedUserId?: string | null; assignedUserName?: string | null },
+    actor: ConversationActor = {},
+  ) {
+    const conversation = await this.getConversation(id)
+    if (!conversation) return undefined
+    const service = this.service_()
+    const changedAssignment = patch.assignedUserId !== undefined && patch.assignedUserId !== conversation.assigned_user_id
+    const updated = await service.updateCrmConversations({
+      id,
+      ...(patch.status ? { status: patch.status } : {}),
+      ...(patch.mode ? { mode: patch.mode } : {}),
+      ...(patch.assignedUserId !== undefined ? { assigned_user_id: patch.assignedUserId } : {}),
+      ...(patch.assignedUserName !== undefined ? { assigned_user_name: patch.assignedUserName } : {}),
+      ...(patch.status === "closed" ? { closed_at: new Date() } : {}),
+    })
+    if (changedAssignment || patch.mode || patch.status) {
+      await service.createCrmConversationAssignments({
+        conversation_id: id,
+        assigned_user_id: patch.assignedUserId === undefined ? conversation.assigned_user_id : patch.assignedUserId,
+        assigned_user_name: patch.assignedUserName === undefined ? conversation.assigned_user_name : patch.assignedUserName,
+        action: changedAssignment ? (patch.assignedUserId ? "assigned" : "released") : patch.mode === "human" ? "human_mode" : patch.mode === "ai" ? "ai_mode" : `status:${patch.status}`,
+        actor_user_id: actor.userId,
+        actor_user_name: actor.userName,
+        at: new Date(),
+      })
+    }
+    return updated
+  }
+
+  async markConversationRead(id: string) {
+    const conversation = await this.getConversation(id)
+    if (!conversation) return undefined
+    return this.service_().updateCrmConversations({ id, unread_count: 0 })
+  }
+
+  async addInternalNote(id: string, body: string, actor: ConversationActor = {}) {
+    const conversation = await this.getConversation(id)
+    if (!conversation) return undefined
+    return this.service_().createCrmInternalNotes({
+      conversation_id: id,
+      body,
+      author_user_id: actor.userId,
+      author_user_name: actor.userName,
+      at: new Date(),
+    })
+  }
+
+  async shouldPauseAi(phone: string) {
+    const conversation = await this.getConversationByPhone(phone)
+    return conversation?.mode === "human"
+  }
+
+  /** Borra contenido vencido; la conversación queda como rastro operativo. */
+  async purgeExpiredConversationMessages(cutoff: Date) {
+    const service = this.service_()
+    const messages = await service.listCrmConversationMessages(
+      { meta_timestamp: { $lt: cutoff } },
+      { take: 1000 },
+    )
+    if (!messages.length) return { deleted: 0, mediaPaths: [] as string[] }
+    const mediaPaths = messages
+      .map((message) => message.media_path)
+      .filter((value): value is string => typeof value === "string" && Boolean(value))
+    await service.deleteCrmConversationMessages(messages.map((message) => message.id))
+    await service.createCrmCustomerEvents({
+      phone: "system:whatsapp-retention",
+      type: "whatsapp_retention_purged",
+      at: new Date(),
+      source: "system",
+      payload: { deleted: messages.length, cutoff: cutoff.toISOString() },
+    })
+    return { deleted: messages.length, mediaPaths }
+  }
+
   async addCustomerEvent(input: CrmCustomerEventInput) {
+    if (input.type === "message_status") {
+      const payload = (input.payload || {}) as { messageId?: string; status?: string; failedReason?: string | number }
+      if (!payload.messageId || !payload.status) return undefined
+      const updated = await this.updateConversationMessageStatus(
+        payload.messageId,
+        payload.status,
+        payload.failedReason ? String(payload.failedReason) : undefined,
+      )
+      return updated
+    }
     const phone = normalizePhone(input.phone)
     const customer = input.customer || {}
     const metadata = {
@@ -501,6 +761,25 @@ class B2bCrmModuleService extends MedusaService({
       source: input.source,
       payload: payloadWithMetadata(input.payload, metadata),
     })
+
+    if (input.type === "message_in" || input.type === "message_out") {
+      const payload = (input.payload || {}) as Record<string, unknown>
+      const media = payload.media && typeof payload.media === "object"
+        ? payload.media as { type?: string; path?: string; name?: string; mimeType?: string; size?: number }
+        : { type: payload.mediaType as string | undefined, path: payload.mediaUrl as string | undefined }
+      await this.recordConversationMessage({
+        phone,
+        direction: input.type === "message_in" ? "in" : "out",
+        senderType: input.type === "message_in" ? "customer" : String(payload.senderType || "ai") as "ai" | "human" | "system",
+        text: typeof payload.text === "string" ? payload.text : undefined,
+        metaMessageId: typeof payload.messageId === "string" ? payload.messageId : undefined,
+        media,
+        status: typeof payload.status === "string" ? payload.status : undefined,
+        at: input.at,
+        payload,
+        actor: typeof payload.actor === "object" && payload.actor ? payload.actor as ConversationActor : undefined,
+      })
+    }
 
     // Al registrar un evento `delivered`, agendar followup NPS a +7 días,
     // SOLO si el cliente no tiene un followup más próximo.
