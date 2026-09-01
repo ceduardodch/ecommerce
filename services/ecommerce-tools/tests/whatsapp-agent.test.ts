@@ -65,6 +65,31 @@ describe("createWhatsAppAgentReply", () => {
     expect(payload.instructions).toContain("asistente virtual")
     expect(payload.instructions).toContain("recomienda máximo dos opciones")
     expect(payload.instructions).toContain("Guía el cierre sin presionar")
+    expect(payload.instructions).toContain("Ante una objeción")
+  })
+
+  it("agrega las reglas activas del backoffice al prompt", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Te ayudo." }] }],
+    }), { status: 200 }))
+    const playbookLoader = vi.fn().mockResolvedValue([{
+      key: "agent_objecion_precio",
+      label: "Objeción: precio",
+      body: "Compara solo alternativas del catálogo y no inventes descuentos.",
+      active: true,
+    }, {
+      key: "agent_cierre",
+      label: "Cierre",
+      body: "No debe aparecer porque está desactivada.",
+      active: false,
+    }])
+
+    await createWhatsAppAgentReply(config({ CRM_BACKEND: "medusa" }), { text: "Está caro", products }, fetchMock as unknown as typeof fetch, undefined, playbookLoader)
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { instructions: string }
+    expect(playbookLoader).toHaveBeenCalledOnce()
+    expect(payload.instructions).toContain("Compara solo alternativas")
+    expect(payload.instructions).not.toContain("No debe aparecer")
   })
 
   it("consulta el catálogo vivo si una consulta general no tuvo coincidencias", async () => {

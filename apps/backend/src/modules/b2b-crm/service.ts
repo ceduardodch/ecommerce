@@ -1,6 +1,7 @@
 import { MedusaService } from "@medusajs/framework/utils"
 import { normalizeEcPhone } from "../../lib/ec-phone"
 import { DEFAULT_CRM_TEMPLATES } from "./default-templates"
+import { DEFAULT_AGENT_PLAYBOOK } from "./default-agent-playbook"
 import {
   ConversationalOrder,
   CrmCustomerEvent,
@@ -734,6 +735,50 @@ class B2bCrmModuleService extends MedusaService({
       { order: { key: "ASC" } },
     )
     return templates
+  }
+
+  /**
+   * Devuelve el guión comercial para la IA. Si el dueño aún no lo guardó en
+   * Admin, usa los valores base: Vicky nunca queda sin reglas de objeciones.
+   */
+  async agentPlaybook() {
+    const templates = await this.listTemplates(false)
+    const byKey = new Map(
+      templates
+        .filter((template: any) => template.key?.startsWith("agent_"))
+        .map((template: any) => [template.key, template]),
+    )
+
+    return DEFAULT_AGENT_PLAYBOOK.map((base) => {
+      const saved: any = byKey.get(base.key)
+      return {
+        key: base.key,
+        label: saved?.label || base.label,
+        body: saved?.body || base.body,
+        active: saved?.active ?? true,
+        updatedAt: saved?.updated_at,
+      }
+    })
+  }
+
+  async saveAgentPlaybook(items: Array<{
+    key: string
+    label: string
+    body: string
+    active: boolean
+  }>) {
+    const allowed = new Set(DEFAULT_AGENT_PLAYBOOK.map((item) => item.key))
+    const saved: any[] = []
+    for (const item of items) {
+      if (!allowed.has(item.key)) continue
+      saved.push(await this.upsertTemplate({
+        key: item.key,
+        label: item.label,
+        body: item.body,
+        active: item.active,
+      }))
+    }
+    return saved
   }
 
   async getTemplate(key: string) {

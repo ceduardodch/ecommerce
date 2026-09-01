@@ -210,51 +210,6 @@ export function npsDecision(
 }
 
 // ---------------------------------------------------------------------------
-// Forward a Vicky (OpenClaw) — sin romper el webhook si Vicky no responde
-// ---------------------------------------------------------------------------
-
-async function forwardToVicky(
-  config: AppConfig,
-  payload: {
-    phone: string
-    text: string
-    replyVia: "cloud_api"
-  },
-): Promise<void> {
-  if (!config.openclawGatewayUrl) return
-
-  const url = `${config.openclawGatewayUrl.replace(/\/$/, "")}${config.openclawHookPath}`
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 5_000)
-
-  try {
-    await fetch(url, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...(config.openclawHooksToken
-          ? { Authorization: `Bearer ${config.openclawHooksToken}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        name: "whatsapp-inbound",
-        channel: "whatsapp",
-        to: `+${payload.phone}`,
-        deliver: true,
-        message: payload.text,
-        replyVia: payload.replyVia,
-      }),
-    })
-  } catch {
-    // Silenciar: Vicky no disponible no debe romper el webhook
-    // Meta reintenta si devolvemos no-2xx, así que siempre respondemos 200
-  } finally {
-    clearTimeout(timeout)
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Registro de eventos CRM (reutiliza el flujo existente de service)
 // ---------------------------------------------------------------------------
 

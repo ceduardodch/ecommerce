@@ -196,3 +196,18 @@ export async function getMedusaDashboard(
 
   return medusaAdminFetch<unknown>(config, `${url.pathname}${url.search}`)
 }
+
+export type AgentPlaybookItem = {
+  key: string
+  label: string
+  body: string
+  active: boolean
+}
+
+export async function getMedusaAgentPlaybook(config: AppConfig) {
+  const result = await medusaAdminFetch<{ items: AgentPlaybookItem[] }>(
+    config,
+    "/admin/b2b/crm/agent-playbook",
+  )
+  return result.items
+}

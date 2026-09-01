@@ -32,10 +32,10 @@ INICIAR (fuera de ventana — recompra, broadcasts)
                                                                     │ responde
 VENTANA 24h ABIERTA                                                 ▼
   Meta webhook ──► ecommerce-tools /webhooks/whatsapp ──► registra message_in
-        │                                                + actualiza last_inbound_at
-        └──► forward al hook de Vicky (OpenClaw) ──► Vicky razona
-                  Vicky responde ──► ecommerce-tools ──► Cloud API free-form (GRATIS)
-                                                       + registra message_out
+                                                         + actualiza last_inbound_at
+                                                         + OpenAI directo arma respuesta
+                                                         + Cloud API free-form
+                                                         + registra message_out
 
 ENTRANTE ACTUAL (campañas wa.me) — SIN CAMBIOS
   cliente inicia en el número actual ──► sesión OpenClaw de Vicky (como hoy)
@@ -80,17 +80,14 @@ de ban). Consolidar a un solo número se decide DESPUÉS, con datos de respuesta
   `POST /webhooks/whatsapp` (mensajes): valida firma `X-Hub-Signature-256`,
   extrae wa_id/texto, registra `message_in` (evento CONV existente) y guarda
   `metadata.lastInboundAt` en el perfil (para calcular la ventana).
-- Forward del texto al hook de Vicky (`OPENCLAW_GATEWAY_URL` + token, contrato
-  ya documentado en VICKY_BOT.md) con flag `replyVia: "cloud_api"`.
+- Enviar el texto y catálogo relevante a OpenAI desde `ecommerce-tools`; el
+  guión comercial se administra en Medusa Admin → CRM WhatsApp → Guión IA.
 - Registrar el webhook en la app de Meta (URL pública del ecommerce-tools).
 
-### W3 — Respuesta de Vicky por API (S/M)
-- Endpoint en ecommerce-tools `POST /tools/whatsapp/reply` (token interno):
-  `{ phone, text }` → si `now - lastInboundAt < 24h` → free-form vía Cloud API
-  (gratis) + `message_out`; si la ventana está cerrada → responde 409 con
-  `window_closed` (Vicky/coordinador decide si va plantilla).
-- Documentar en VICKY_BOT.md cómo OpenClaw responde por este endpoint cuando
-  el mensaje llegó con `replyVia: "cloud_api"`.
+### W3 — Respuesta IA por API (S/M)
+- El webhook genera la respuesta con OpenAI y la envía por Cloud API dentro de
+  la ventana de 24 horas. `POST /tools/whatsapp/reply` queda para mensajes
+  internos autorizados, con la misma validación de ventana.
 
 ### W4 — Selector inteligente de canal (S)
 - En el dispatcher: si el cliente tiene ventana abierta (lastInboundAt < 24h) →
