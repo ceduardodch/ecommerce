@@ -1,10 +1,5 @@
-import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { mgcCollectionComboDeals } from "../../lib/catalog";
-import { sellerWhatsappNumber } from "../../lib/whatsapp";
-import { AddToCartButton } from "./ui/add-to-cart-button";
-
-const sellerNumber = sellerWhatsappNumber();
 
 const otherCombos = [
   {
@@ -24,11 +19,6 @@ const otherCombos = [
     detail: "Sartenes 20, 24 y 28 cm; ollas 16, 20 y 24 cm.",
   },
 ];
-
-function comboLink(name: string) {
-  const text = `Hola, quiero reservar el combo ${name}. ¿Me confirmas disponibilidad y entrega?`;
-  return `https://wa.me/${sellerNumber.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
-}
 
 export function StarterKitSection() {
   return (
@@ -95,11 +85,12 @@ export function StarterKitSection() {
                     ${combo.price.amount.toFixed(2)}
                   </p>
                 </div>
-                <AddToCartButton
-                  product={combo}
-                  label="Agregar combo al carrito"
+                <a
+                  href="#arma-tu-combo"
                   className="mt-5 inline-flex items-center rounded-full bg-[#d3fa99] px-5 py-3 text-sm font-semibold text-[#10160e] hover:opacity-90"
-                />
+                >
+                  Armar este combo
+                </a>
               </article>
             );
           })}
@@ -133,11 +124,10 @@ export function StarterKitSection() {
                 </p>
               </div>
               <a
-                href={comboLink(combo.name)}
+                href="#arma-tu-combo"
                 className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/35 px-5 py-3 text-sm font-semibold text-white hover:border-white"
               >
-                <MessageCircle size={17} />
-                Reservar este combo
+                Armar este combo
               </a>
             </article>
           ))}

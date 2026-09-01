@@ -1,10 +1,25 @@
 import { describe, expect, it } from "vitest"
 import {
+  august2026FallbackProducts,
+  cocinaFallbackProducts,
+  mgcSaharaPanProducts,
   normalizeProduct,
   productPath,
   productSlug,
   type Product,
 } from "../lib/catalog"
+
+function comboTotal(products: Product[]) {
+  return Number(
+    products
+      .reduce(
+        (sum, product) =>
+          sum + (product.comboPrice?.amount ?? product.price.amount),
+        0,
+      )
+      .toFixed(2),
+  )
+}
 
 function baseProduct(overrides: Partial<Product> = {}): Product {
   return {
@@ -170,5 +185,36 @@ describe("normalizeProduct", () => {
     const normalized = normalizeProduct(product, "cocina")
 
     expect(normalized.stoveCompatibility).toBe("No aplica; cuida ollas de granito")
+  })
+})
+
+describe("catálogo de campaña", () => {
+  it("no expone el producto temporal de prueba DataFast", () => {
+    expect(
+      cocinaFallbackProducts.some((product) =>
+        product.sku.includes("DATAFAST-TEST"),
+      ),
+    ).toBe(false)
+  })
+
+  it("mantiene los cuatro totales anunciados al armar el combo", () => {
+    const onyx = august2026FallbackProducts.filter(
+      (product) =>
+        product.sku.startsWith("MGC-FR-") && !product.sku.endsWith("-RO"),
+    )
+    const ebano = onyx.filter(
+      (product) => product.sku !== "MGC-FR-WOK-32-GN",
+    )
+    const azul = august2026FallbackProducts.filter((product) =>
+      product.sku.startsWith("MGC-EU-"),
+    )
+    const sahara = mgcSaharaPanProducts.filter(
+      (product) => product.color === "Negro",
+    )
+
+    expect(comboTotal(onyx)).toBe(426.96)
+    expect(comboTotal(ebano)).toBe(296.97)
+    expect(comboTotal(sahara)).toBe(149.97)
+    expect(comboTotal(azul)).toBe(325)
   })
 })

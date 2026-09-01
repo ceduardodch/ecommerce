@@ -114,11 +114,22 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       daysSincePurchase,
     })
 
-    // Broadcasts: siempre template (pasar lastInboundAt: null fuerza template en modo meta)
+    // Si el cliente escribió en las últimas 24 h, Meta permite el mensaje de
+    // campaña con su media como free-form. Fuera de esa ventana se mantiene la
+    // plantilla aprobada y nunca se intenta adjuntar media libre.
     const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
     const lastProductTitle =
       (customer.purchased_products as Array<{ title?: string }> | null | undefined)
         ?.slice(-1)[0]?.title || "tu compra"
+
+    const lastInboundRaw = customer.metadata?.lastInboundAt
+    const lastInboundAt = typeof lastInboundRaw === "string"
+      ? new Date(lastInboundRaw)
+      : null
+    const windowOpen =
+      lastInboundAt instanceof Date &&
+      Number.isFinite(lastInboundAt.getTime()) &&
+      now.getTime() - lastInboundAt.getTime() < 24 * 60 * 60 * 1000
 
     const outcome = await dispatchFollowup(customer, message, config, {
       templateKey: input.templateKey,
@@ -127,7 +138,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         producto: lastProductTitle,
         dias: daysSincePurchase !== undefined ? String(daysSincePurchase) : "30",
       },
-      lastInboundAt: null, // Broadcasts siempre usan plantilla
+      lastInboundAt,
       now,
       media:
         template.media_url && template.media_type
@@ -135,8 +146,9 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
           : null,
     })
 
-    const eventMode =
-      config.mode === "meta" ? "meta_template" : config.mode
+    const eventMode = config.mode === "meta"
+      ? windowOpen ? "meta_freeform" : "meta_template"
+      : config.mode
 
     // Registrar evento
     await crm.addCustomerEvent({
