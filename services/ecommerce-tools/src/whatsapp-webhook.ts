@@ -15,7 +15,7 @@ import type { AppConfig } from "./config.js"
 import { downloadWhatsappMedia, type WhatsappMediaReference } from "./whatsapp-media.js"
 import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
-import { advanceWhatsappSale, type CommerceState } from "./whatsapp-sales-flow.js"
+import { advanceWhatsappSale, requiresHuman, type CommerceState } from "./whatsapp-sales-flow.js"
 
 // ---------------------------------------------------------------------------
 // Tipos de los mensajes que Meta envía al webhook
@@ -469,20 +469,49 @@ export function mountWhatsappWebhookRoutes(
           // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
           if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
             const products = await searchProducts(text).catch(() => [])
-            const sale = commerce ? await advanceWhatsappSale({
-              text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
-              state: customer?.metadata?.agentCommerce as CommerceState | undefined,
-              quote: commerce.quote,
-              createCart: commerce.createCart,
-            }).catch(() => undefined) : undefined
-            if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
             const customerContext = customer ? {
               purchasedProducts: customer.purchasedProducts,
               journeyStage: customer.metadata?.journeyStage as string | undefined,
               nextFollowupAt: customer.nextFollowupAt,
               followupReason: customer.followupReason ?? undefined,
             } : undefined
-            const replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
+
+            let replyText: string | null | undefined
+
+            if (requiresHuman(text)) {
+              // Mismo criterio y mismo mensaje que usaba advanceWhatsappSale:
+              // factura, garantía, descuento y similares nunca los resuelve
+              // un agente (regex o IA) sin una persona.
+              replyText = "Para confirmar eso sin inventarte datos, te conecto con una persona del equipo."
+              await addCustomerEvent({ phone: `+${waId}`, type: "human_handoff", at: new Date().toISOString(), source: "whatsapp_ai", payload: {}, metadata: { journeyStage: "revision_humana" } })
+            } else if (commerce && config.whatsappAgentMode === "openai") {
+              // V-3: Vicky cierra la venta por su cuenta (cotiza y crea el
+              // carrito de pago vía tool-calling) en vez de pasar por la
+              // máquina de estados de whatsapp-sales-flow.ts. quote/createCart
+              // ya registran sus propios eventos CRM (quote_created,
+              // cart_link_sent), así que no hace falta duplicarlos acá.
+              replyText = await createWhatsAppAgentReply(config, {
+                text,
+                products,
+                history: customer?.events,
+                customerContext,
+                phone: `+${waId}`,
+                commerce: { quote: commerce.quote, createCart: commerce.createCart },
+              })
+            } else {
+              // Vicky (IA) apagada: se conserva el flujo determinista como
+              // respaldo, para no dejar la venta sin respuesta si
+              // WHATSAPP_AGENT_MODE no es "openai".
+              const sale = commerce ? await advanceWhatsappSale({
+                text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
+                state: customer?.metadata?.agentCommerce as CommerceState | undefined,
+                quote: commerce.quote,
+                createCart: commerce.createCart,
+              }).catch(() => undefined) : undefined
+              if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
+              replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
+            }
+
             if (replyText) {
               await sendReply({ phone: `+${waId}`, text: replyText })
             }

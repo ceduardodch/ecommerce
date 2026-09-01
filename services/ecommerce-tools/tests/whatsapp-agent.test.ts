@@ -330,3 +330,171 @@ describe("createWhatsAppAgentReply", () => {
     expect(payload.input).not.toContain("Contexto del cliente")
   })
 })
+
+describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
+  const quoteResult = {
+    id: "q1",
+    lines: [],
+    subtotal: { amount: 29.9, currency: "USD" as const },
+    tax: { amount: 3.59, currency: "USD" as const },
+    total: { amount: 33.49, currency: "USD" as const },
+    currency: "USD" as const,
+    whatsappMessage: "Olla de granito: $33.49 con impuestos.",
+  }
+
+  function functionCallResponse(id: string, callId: string, name: string, args: Record<string, unknown>) {
+    return new Response(JSON.stringify({
+      id,
+      output: [{ type: "function_call", call_id: callId, name, arguments: JSON.stringify(args) }],
+    }), { status: 200 })
+  }
+
+  function textResponse(id: string, text: string) {
+    return new Response(JSON.stringify({
+      id,
+      output: [{ type: "message", content: [{ type: "output_text", text }] }],
+    }), { status: 200 })
+  }
+
+  it("no ofrece herramientas si falta phone o commerce", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(textResponse("r1", "Hola"))
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "hola", products, phone: "+593987654321" }, // sin commerce
+      fetchMock as unknown as typeof fetch,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { tools?: unknown }
+    expect(payload.tools).toBeUndefined()
+  })
+
+  it("llama create_cart cuando el cliente confirma, con nombre y ciudad, y devuelve el link", async () => {
+    const createCart = vi.fn().mockResolvedValue({ cartUrl: "https://cocina.b2b.com.ec/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" })
+    const quote = vi.fn()
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(functionCallResponse("r1", "call_1", "create_cart", {
+        sku: "OLLA-01",
+        quantity: 1,
+        customerName: "María",
+        city: "Quito",
+      }))
+      .mockResolvedValueOnce(textResponse("r2", "Listo María, tu carrito: https://cocina.b2b.com.ec/cart?session=abc"))
+
+    const result = await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "sí, lo quiero, soy María de Quito",
+        products,
+        phone: "+593987654321",
+        commerce: { quote, createCart },
+      },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(result).toContain("carrito")
+    expect(createCart).toHaveBeenCalledWith({
+      phone: "+593987654321",
+      customer: { name: "María", city: "Quito" },
+      items: [{ productId: "p1", variantId: "v1", quantity: 1 }],
+    })
+    expect(quote).not.toHaveBeenCalled()
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+
+    // La primera llamada declara las tools; la segunda continúa con
+    // previous_response_id y manda el resultado de la tool ejecutada.
+    const firstBody = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { tools?: Array<{ name: string }> }
+    expect(firstBody.tools?.map((tool) => tool.name)).toEqual(["quote", "create_cart"])
+
+    const secondBody = JSON.parse(String(fetchMock.mock.calls[1][1].body)) as {
+      previous_response_id?: string
+      input: Array<{ type: string; call_id: string; output: string }>
+    }
+    expect(secondBody.previous_response_id).toBe("r1")
+    expect(secondBody.input).toEqual([{
+      type: "function_call_output",
+      call_id: "call_1",
+      output: JSON.stringify({ cartUrl: "https://cocina.b2b.com.ec/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" }),
+    }])
+  })
+
+  it("cotiza con quote antes de responder cuando el modelo lo pide", async () => {
+    const quote = vi.fn().mockResolvedValue(quoteResult)
+    const createCart = vi.fn()
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(functionCallResponse("r1", "call_1", "quote", { sku: "OLLA-01", quantity: 1 }))
+      .mockResolvedValueOnce(textResponse("r2", "Con impuestos son $33.49."))
+
+    const result = await createWhatsAppAgentReply(
+      config(),
+      { text: "cuánto sale con impuestos", products, phone: "+593987654321", commerce: { quote, createCart } },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(result).toBe("Con impuestos son $33.49.")
+    expect(quote).toHaveBeenCalledWith({
+      items: [{ productId: "p1", variantId: "v1", quantity: 1 }],
+      customer: { phone: "+593987654321" },
+    })
+    expect(createCart).not.toHaveBeenCalled()
+  })
+
+  it("no ejecuta create_cart si el SKU no existe en el catálogo mostrado", async () => {
+    const createCart = vi.fn()
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(functionCallResponse("r1", "call_1", "create_cart", {
+        sku: "SKU-INVENTADO",
+        quantity: 1,
+        customerName: "María",
+        city: "Quito",
+      }))
+      .mockResolvedValueOnce(textResponse("r2", "No encontré ese producto, ¿me confirmas cuál te interesa?"))
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "sí, lo quiero", products, phone: "+593987654321", commerce: { quote: vi.fn(), createCart } },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(createCart).not.toHaveBeenCalled()
+    const secondBody = JSON.parse(String(fetchMock.mock.calls[1][1].body)) as { input: Array<{ output: string }> }
+    expect(JSON.parse(secondBody.input[0].output)).toMatchObject({ error: "sku_not_found" })
+  })
+
+  it("no crea el carrito si faltan nombre o ciudad, aunque el modelo llame la herramienta", async () => {
+    const createCart = vi.fn()
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(functionCallResponse("r1", "call_1", "create_cart", {
+        sku: "OLLA-01",
+        quantity: 1,
+        customerName: "",
+        city: "",
+      }))
+      .mockResolvedValueOnce(textResponse("r2", "¿Me confirmas tu nombre y ciudad para preparar el carrito?"))
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "sí, dale", products, phone: "+593987654321", commerce: { quote: vi.fn(), createCart } },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(createCart).not.toHaveBeenCalled()
+  })
+
+  it("corta al llegar al techo de rondas si el modelo insiste en llamar herramientas", async () => {
+    const quote = vi.fn().mockResolvedValue(quoteResult)
+    const fetchMock = vi.fn().mockImplementation(() =>
+      Promise.resolve(functionCallResponse("r-loop", "call_x", "quote", { sku: "OLLA-01", quantity: 1 })),
+    )
+
+    const result = await createWhatsAppAgentReply(
+      config(),
+      { text: "hola", products, phone: "+593987654321", commerce: { quote, createCart: vi.fn() } },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(result).toBeNull()
+    // 1 llamada inicial + MAX_TOOL_ROUNDS(3) reintentos = 4 llamadas a fetch.
+    expect(fetchMock).toHaveBeenCalledTimes(4)
+  })
+})

@@ -26,7 +26,14 @@ export function nameFromText(text: string) {
   return match?.[1]?.trim().replace(/[.,!?].*$/, "")
 }
 
-function requiresHuman(text: string) {
+/**
+ * Temas que nunca debe resolver un agente (regex o IA) sin una persona:
+ * comprometen precio, plazos legales o inventario que el catálogo no
+ * garantiza en tiempo real. Se usa tanto en el flujo determinista como en
+ * el flujo con IA de V-3 (`createWhatsAppAgentReply`), como pre-filtro
+ * previo a cualquiera de los dos.
+ */
+export function requiresHuman(text: string) {
   return /\b(factura|garant[ií]a|descuento|rebaja|env[ií]o urgente|hoy mismo|stock exacto)\b/i.test(text)
 }
 
