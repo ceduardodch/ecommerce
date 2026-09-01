@@ -1,3 +1,12 @@
+/**
+ * Datos del catálogo de cocina de agosto 2026, que consume
+ * `migration-scripts/kitchen-catalog-seed.ts`.
+ *
+ * Vive FUERA de `migration-scripts/`: Medusa trata cada archivo de ese
+ * directorio como un script ejecutable y exige `export default`. Al ser solo
+ * datos, `db:migrate` abortaba con "No default export found" y no llegaba a
+ * correr ningún script posterior.
+ */
 type KitchenCatalogProduct = {
   title: string
   handle: string

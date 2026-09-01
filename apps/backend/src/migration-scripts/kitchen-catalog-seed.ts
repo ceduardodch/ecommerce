@@ -12,7 +12,7 @@ import {
   updateInventoryLevelsWorkflow,
   updateProductsWorkflow,
 } from "@medusajs/medusa/core-flows";
-import { august2026KitchenProducts } from "./kitchen-catalog-august-2026";
+import { august2026KitchenProducts } from "../data/kitchen-catalog-august-2026";
 
 type KitchenProduct = {
   title: string;
