@@ -208,3 +208,73 @@ el dueño lo reportó activamente durante la sesión y un deploy roto bloquea
 cualquier otro trabajo (nada de lo que la rutina haga en `main` llega a
 producción hasta que esto se arregle). Después de esto, la rutina retoma
 S-4 donde lo había dejado.
+
+---
+
+## 2026-09-01 · Lote 4 (autónomo)
+
+**Ítem trabajado**: S-4 · `Organization` + `WebSite` en el layout (🟢, primer
+ítem no terminado del orden de ejecución tras el fix del lote 3).
+
+**Qué se hizo**: ninguna de las tres portadas (`/` cocina, `/bienestar`,
+`/marca`) declaraba schema.org de sitio. Se agregó `buildOrganizationJsonLd` y
+`buildWebSiteJsonLd` en `lib/seo.ts` y se inyectan con el mismo patrón
+`<script type="application/ld+json">` de S-1/S-2, en las tres homepages.
+
+**Decisión de diseño (desviación del literal "en el layout")**: el backlog
+dice "en el layout", pero `app/layout.tsx` es compartido por los tres hosts
+(marca, cocina, bienestar) y detectar cuál es el host activo requiere
+`headers()` (`siteContextFromRequest()` en `lib/seo.ts`), que fuerza
+renderizado dinámico en Next y habría roto el ISR de `/bienestar`
+(`revalidate: 300`, del lote de caché del catálogo — commit `885b26f`). Cada
+homepage ya conoce su propio `baseUrl` en build time vía `lib/domains`, así
+que se implementó ahí en vez de en el layout compartido. Verificado con el
+build: `/`, `/bienestar` y `/marca` siguen marcados `○` (estático) en el
+output de `next build`, igual que antes del cambio.
+
+**Decisión de alcance**: sin `potentialAction` (`SearchAction`, lo que
+activa el sitelinks searchbox en el resultado de Google). El `?q=` de la
+portada de cocina (`app/page.tsx`, tipo `HomeProps.searchParams`) existe pero
+no filtra el grid de productos — solo llega a `PageAnalytics` para
+tracking. No hay ninguna ruta `/buscar` ni filtrado client-side en ningún
+componente de la portada (confirmado por grep). Declarar un `SearchAction`
+sobre una búsqueda que no busca de verdad sería un dato estructurado
+engañoso, así que el CA de "sitelinks searchbox" del backlog queda
+parcialmente cumplido: se logra el panel de marca (`Organization`), no el
+searchbox. Sumar `potentialAction` cuando `?q=` filtre productos de verdad.
+
+**Commit en `main`**: `1aa6c78`
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`; `/`, `/bienestar`,
+  `/marca` siguen `○ Static` en el output de rutas (no se volvieron
+  dinámicas).
+- `npm run tools:test` → `Test Files 10 passed (10)` / `Tests 88 passed (88)`
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total`
+- Levantado el storefront local y `curl` real a los tres hosts:
+  - `/` con `Host: cocina.b2b.com.ec` → `Organization` (`name: "Eter Niu
+    Cocina"`, `url`/`logo` en el dominio de cocina) + `WebSite`.
+  - `/` con `Host: bienestar.b2b.com.ec` → mismo patrón con "Eter Niu
+    Bienestar" y el dominio de bienestar.
+  - `/` con `Host: eter-niu.com` → mismo patrón con "Eter Niu" y
+    `www.eter-niu.com` (el middleware reescribe `/` a `/marca` en ese host;
+    pedir `/marca` directo devuelve 307 a `/`, así que se verificó contra
+    `/`, que es la URL real que sirve Google).
+
+**Pendiente/Asumido**:
+- Sin test automatizado (R-1, sigue sin ejecutarse).
+- `sameAs` solo incluye Instagram (`instagram.com/eter.niu`), el único
+  perfil social real encontrado en el código (`site-footer.tsx`); no se
+  inventó ningún otro canal.
+- No se corrió un validador externo de datos estructurados (Rich Results
+  Test).
+- El CA de "sitelinks searchbox" del backlog no se cumple del todo (ver
+  decisión de alcance arriba) — queda como trabajo futuro atado a que la
+  búsqueda de la portada de cocina funcione de verdad.
+
+**Nota fuera del plan**: ninguna, además de la ya registrada en el lote 3.
+
+**Siguiente lote**: R-1 · Tests del storefront (🟢, probablemente 2 lotes),
+según el orden de ejecución del plan.
