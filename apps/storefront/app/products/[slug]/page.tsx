@@ -12,7 +12,14 @@ import {
   type Product,
 } from "../../../lib/catalog"
 import { commercialInfo } from "../../../lib/commercial"
-import { comparableMgcProducts, productMedia } from "../../../lib/product-media"
+import { publicBaseUrlForVertical } from "../../../lib/domains"
+import {
+  comparableMgcProducts,
+  productMedia,
+  type ProductMediaItem,
+} from "../../../lib/product-media"
+import { getReviewSummary, type ReviewSummary } from "../../../lib/reviews"
+import { absoluteUrl, canonical } from "../../../lib/seo"
 import {
   PageAnalytics,
   TrackedEventLink,
@@ -165,6 +172,60 @@ function specRows(product: Product) {
   return rows
 }
 
+/**
+ * Datos estructurados schema.org de la ficha.
+ *
+ * Es lo que permite que Google muestre precio, disponibilidad y estrellas en el
+ * resultado de búsqueda. El `aggregateRating` se incluye SOLO si hay reseñas
+ * reales y visibles en la página: declarar una valoración que el usuario no ve
+ * es motivo de acción manual.
+ */
+function buildProductJsonLd(
+  product: Product,
+  gallery: ProductMediaItem[],
+  reviews?: ReviewSummary,
+) {
+  const baseUrl = publicBaseUrlForVertical(product.vertical)
+  const images = gallery
+    .filter((item) => item.type === "image")
+    .map((item) => absoluteUrl(item.src, baseUrl))
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    description:
+      product.healthAngle || product.bundleUseCase || product.description,
+    sku: product.sku,
+    image: images.length ? images : [absoluteUrl(product.imageUrl, baseUrl)],
+    brand: { "@type": "Brand", name: product.brand || "Eter Niu" },
+    ...(product.material ? { material: product.material } : {}),
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(productPath(product), baseUrl),
+      priceCurrency: product.price.currency,
+      price: product.price.amount.toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/PreOrder",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: "Eter Niu" },
+    },
+    ...(reviews
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviews.averageRating.toFixed(1),
+            reviewCount: reviews.totalCount,
+            bestRating: "5",
+            worstRating: "1",
+          },
+        }
+      : {}),
+  }
+}
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
@@ -174,6 +235,7 @@ export async function generateMetadata({
   if (!product) {
     return {
       title: "Producto no disponible | Eter Niu Cocina",
+      robots: { index: false, follow: true },
     }
   }
 
@@ -187,6 +249,10 @@ export async function generateMetadata({
       product.bundleUseCase ||
       product.description ||
       "Ficha de producto de cocina saludable con cotizacion por WhatsApp.",
+    // La canónica apunta a la ficha misma. Sin esto heredaba la del layout y
+    // cada producto se declaraba duplicado de la portada — es decir, la página
+    // a la que apunta el feed de Meta le pedía a Google que no la indexara.
+    ...canonical(productPath(product), publicBaseUrlForVertical(product.vertical)),
     openGraph: {
       title: product.title,
       description: product.healthAngle || product.description,
@@ -215,11 +281,19 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const promo = hasPromo(product)
   const related = relatedProducts(product, catalogProducts)
   const useCases = productUseCases(product)
+  const reviewSummary = await getReviewSummary(product.id)
+  const productJsonLd = buildProductJsonLd(product, gallery, reviewSummary)
   return (
     <main
       data-theme="cocina"
       className="relative isolate min-h-screen bg-[#10160e] pb-28"
     >
+      <script
+        type="application/ld+json"
+        // El contenido lo construimos nosotros desde el catálogo, no viene del
+        // usuario; JSON.stringify ya escapa las comillas del texto.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <PageAmbient />
       <PageAnalytics featured={product} />
 

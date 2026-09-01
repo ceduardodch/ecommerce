@@ -1,10 +1,10 @@
 import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { mgcCollectionComboDeals } from "../../lib/catalog";
+import { sellerWhatsappNumber } from "../../lib/whatsapp";
 import { AddToCartButton } from "./ui/add-to-cart-button";
 
-const sellerNumber =
-  process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905";
+const sellerNumber = sellerWhatsappNumber();
 
 const otherCombos = [
   {
