@@ -36,6 +36,12 @@ export type CommerceTools = {
   }) => Promise<{ cartUrl: string; expiresAt: string }>
 }
 
+export type AgentDiagnostic = {
+  event: "product_locked" | "product_mismatch_blocked" | "cart_without_quote_blocked"
+  sku?: string
+  detail?: string
+}
+
 /** Techo de rondas de tool-calling por turno: evita un loop de costo/latencia sin fin. */
 const MAX_TOOL_ROUNDS = 3
 
@@ -73,6 +79,71 @@ function productContext(products: Product[]): string {
     product.stock > 0 ? "disponible" : "sin stock confirmado",
     product.productUrl ? `link: ${product.productUrl}` : "",
   ].filter(Boolean).join("; ")).join("\n")
+}
+
+function normalizeForMatch(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+}
+
+function quoteSku(event: CustomerEventRecord): string | undefined {
+  if (event.type !== "quote_created" || !event.payload || typeof event.payload !== "object") return undefined
+  const items = (event.payload as { items?: unknown }).items
+  if (!Array.isArray(items) || items.length !== 1 || !items[0] || typeof items[0] !== "object") return undefined
+  const sku = (items[0] as { sku?: unknown }).sku
+  return typeof sku === "string" ? sku : undefined
+}
+
+/**
+ * El historial es evidencia de venta, no sólo contexto de lenguaje. Si ya se
+ * cotizó una referencia, una respuesta corta como "1", "Quito" o "sí" debe
+ * seguir sobre esa referencia y no volver a buscar el catálogo completo.
+ */
+export function lockedProductFromHistory(products: Product[], history: CustomerEventRecord[] = []): Product | undefined {
+  const latestFirst = [...history].sort((a, b) => b.at.localeCompare(a.at))
+  for (const event of latestFirst) {
+    const sku = quoteSku(event)
+    if (sku) return products.find((product) => product.sku === sku)
+  }
+
+  // Compatibilidad con conversaciones anteriores a V3, cuando la asesora
+  // mostró el título pero no dejó una cotización estructurada.
+  for (const event of latestFirst) {
+    if (event.type !== "message_out") continue
+    const text = (event.payload as { text?: unknown } | undefined)?.text
+    if (typeof text !== "string") continue
+    const normalized = normalizeForMatch(text)
+    const matches = products.filter((product) => normalized.includes(normalizeForMatch(product.title)))
+    if (matches.length === 1) return matches[0]
+  }
+  return undefined
+}
+
+function asksForAnotherProduct(text: string): boolean {
+  return /\b(que|cu[aá]l|muestr|ver|otra|otras|otros|catalogo|cat[aá]logo|olla|ollas|wok|set|sarten|sart[eé]n)\b/i.test(text)
+}
+
+export function mentionedProducts(text: string, products: Product[]): Product[] {
+  const normalized = normalizeForMatch(text)
+  return products.filter((product) => normalized.includes(normalizeForMatch(product.title)))
+}
+
+const ECUADOR_CITIES = [
+  "Ambato", "Azogues", "Babahoyo", "Cuenca", "Esmeraldas", "Guaranda",
+  "Guayaquil", "Ibarra", "Latacunga", "Loja", "Machala", "Manta",
+  "Nueva Loja", "Portoviejo", "Puyo", "Quito", "Quevedo", "Riobamba",
+  "Santo Domingo", "Tulcán", "Zamora",
+]
+
+/** Ciudad mencionada sola o dentro de un turno; evita pedirla dos veces. */
+export function cityFromConversation(text: string, history: CustomerEventRecord[] = []): string | undefined {
+  const source = [text, ...history.map((event) => (event.payload as { text?: unknown } | undefined)?.text)]
+    .filter((value): value is string => typeof value === "string")
+    .join("\n")
+  const normalized = normalizeForMatch(source)
+  return ECUADOR_CITIES.find((city) => new RegExp(`\\b${normalizeForMatch(city)}\\b`, "i").test(normalized))
 }
 
 /**
@@ -184,7 +255,7 @@ function commerceToolSchemas() {
 async function executeCommerceTool(
   name: string,
   rawArguments: string,
-  ctx: { phone: string; products: Product[]; commerce: CommerceTools },
+  ctx: { phone: string; products: Product[]; commerce: CommerceTools; quotedSkus: Set<string>; lockedSku?: string; onDiagnostic?: (diagnostic: AgentDiagnostic) => void | Promise<void> },
 ): Promise<Record<string, unknown>> {
   let args: Record<string, unknown>
   try {
@@ -205,6 +276,7 @@ async function executeCommerceTool(
         items: [{ productId: product.id, variantId: product.variantId, quantity }],
         customer: { phone: ctx.phone },
       })
+      ctx.quotedSkus.add(product.sku)
       return {
         quoteId: quote.id,
         whatsappMessage: quote.whatsappMessage,
@@ -217,6 +289,14 @@ async function executeCommerceTool(
   }
 
   if (name === "create_cart") {
+    if (!ctx.quotedSkus.has(product.sku)) {
+      await ctx.onDiagnostic?.({ event: "cart_without_quote_blocked", sku: product.sku })
+      return { error: "cart_requires_quote", sku: product.sku }
+    }
+    if (ctx.lockedSku && ctx.lockedSku !== product.sku) {
+      await ctx.onDiagnostic?.({ event: "product_mismatch_blocked", sku: product.sku, detail: `locked:${ctx.lockedSku}` })
+      return { error: "cart_product_mismatch", sku: product.sku }
+    }
     const customerName = typeof args.customerName === "string" ? args.customerName.trim() : ""
     const city = typeof args.city === "string" ? args.city.trim() : ""
     if (!customerName || !city) return { error: "missing_customer_info" }
@@ -292,6 +372,8 @@ export async function createWhatsAppAgentReply(
     phone?: string
     /** V-3: si están presentes (y hay `phone`), Vicky puede cotizar y crear el carrito por su cuenta. */
     commerce?: CommerceTools
+    /** Guarda una traza mínima, sin secretos, para supervisar decisiones de venta. */
+    onDiagnostic?: (diagnostic: AgentDiagnostic) => void | Promise<void>
   },
   fetchImpl: typeof fetch = fetch,
   catalogLoader: typeof loadProducts = loadProducts,
@@ -314,27 +396,40 @@ export async function createWhatsAppAgentReply(
     // búsqueda cuyo único resultado sea algo que el cliente ya compró queda
     // igual de vacía tras filtrarlo. Ambos casos caen al catálogo vivo.
     let products = searchedProducts
+    let catalogProducts = searchedProducts
+    let lockedProduct = lockedProductFromHistory(searchedProducts, input.history)
     if (!products.length) {
       const inferredVertical = inferProductVerticalFromQuery(input.text)
       const liveProducts = excludePurchasedProducts(
         await catalogLoader(config).catch(() => []),
         purchasedProducts,
       )
+      catalogProducts = liveProducts
+      lockedProduct = lockedProduct || lockedProductFromHistory(liveProducts, input.history)
       products = productsForVertical(liveProducts, inferredVertical).slice(0, 6)
+    }
+    if (lockedProduct && !asksForAnotherProduct(input.text)) {
+      products = [lockedProduct]
+      await input.onDiagnostic?.({ event: "product_locked", sku: lockedProduct.sku })
     }
     const playbook = config.crmBackend === "medusa"
       ? await playbookLoader(config).catch(() => [])
       : []
     const conversationHistory = conversationHistoryText(input.history)
     const customerContext = customerContextText(input.customerContext)
+    const knownCity = cityFromConversation(input.text, input.history)
     const canUseTools = Boolean(input.commerce && input.phone)
     const tools = canUseTools ? commerceToolSchemas() : undefined
     const instructions = instructionsWithPlaybook(playbook, canUseTools)
 
+    const quotedSkus = new Set(
+      (input.history || []).map(quoteSku).filter((sku): sku is string => Boolean(sku)),
+    )
     let previousResponseId: string | undefined
     let nextInput: string | Array<Record<string, unknown>> = [
       customerContext && `Contexto del cliente:\n${customerContext}`,
       conversationHistory && `Historial reciente (más antiguo primero):\n${conversationHistory}`,
+      knownCity && `Dato confirmado durante esta conversación: ciudad de entrega = ${knownCity}. No vuelvas a pedir la ciudad; si falta algo para el carrito, pide solo el nombre o la confirmación de compra.`,
       `Mensaje del cliente: ${input.text}`,
       `Catálogo relevante:\n${productContext(products)}`,
     ]
@@ -377,6 +472,16 @@ export async function createWhatsAppAgentReply(
       if (!functionCalls.length || !canUseTools) {
         const reply = extractOutputText(data)
         if (!reply) logAgentDiagnostic("openai_empty_reply")
+        if (!reply) return reply
+        const mentioned = mentionedProducts(reply, catalogProducts)
+        if (lockedProduct && mentioned.some((product) => product.sku !== lockedProduct.sku)) {
+          await input.onDiagnostic?.({
+            event: "product_mismatch_blocked",
+            sku: mentioned.find((product) => product.sku !== lockedProduct.sku)?.sku,
+            detail: `locked:${lockedProduct.sku}`,
+          })
+          return `Para no cambiarte el producto por error, sigo con ${lockedProduct.title}. ¿Confirmas que quieres esa opción?`
+        }
         return reply
       }
 
@@ -387,6 +492,9 @@ export async function createWhatsAppAgentReply(
           phone: input.phone!,
           products,
           commerce: input.commerce!,
+          quotedSkus,
+          lockedSku: lockedProduct?.sku,
+          onDiagnostic: input.onDiagnostic,
         })),
       })))
       previousResponseId = data.id

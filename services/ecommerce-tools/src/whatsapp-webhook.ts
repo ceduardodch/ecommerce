@@ -497,6 +497,19 @@ export function mountWhatsappWebhookRoutes(
                 customerContext,
                 phone: `+${waId}`,
                 commerce: { quote: commerce.quote, createCart: commerce.createCart },
+                // La traza queda en la conversación CRM y no expone texto,
+                // credenciales ni URLs de carrito. Permite detectar cambios
+                // de SKU, intentos de carrito sin cotización y bloqueos.
+                onDiagnostic: async (diagnostic) => {
+                  await addCustomerEvent({
+                    phone: `+${waId}`,
+                    type: "note",
+                    at: new Date().toISOString(),
+                    source: "whatsapp_ai_guardrail",
+                    payload: { event: diagnostic.event, sku: diagnostic.sku, detail: diagnostic.detail },
+                    metadata: { agentGuardrail: diagnostic.event, agentGuardrailSku: diagnostic.sku },
+                  })
+                },
               })
             } else {
               // Vicky (IA) apagada: se conserva el flujo determinista como

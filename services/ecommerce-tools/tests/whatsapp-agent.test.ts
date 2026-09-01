@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { loadConfig } from "../src/config.js"
-import { createWhatsAppAgentReply } from "../src/whatsapp-agent.js"
+import { cityFromConversation, createWhatsAppAgentReply, lockedProductFromHistory, mentionedProducts } from "../src/whatsapp-agent.js"
 
 function config(overrides: Record<string, string> = {}) {
   return loadConfig({
@@ -27,6 +27,54 @@ const products = [{
 }]
 
 describe("createWhatsAppAgentReply", () => {
+  it("conserva el SKU de la última cotización ante una respuesta corta", () => {
+    const other = { ...products[0], id: "p2", variantId: "v2", sku: "PISTOLA-01", title: "Pistola de percusión profesional" }
+    const locked = lockedProductFromHistory([products[0], other], [{
+      type: "quote_created",
+      at: "2026-09-01T20:00:00.000Z",
+      payload: { items: [{ sku: "OLLA-01", quantity: 1 }] },
+    }])
+
+    expect(locked?.sku).toBe("OLLA-01")
+    expect(mentionedProducts("1 x Pistola de percusión profesional", [products[0], other]).map((product) => product.sku))
+      .toEqual(["PISTOLA-01"])
+  })
+
+  it("reconoce una ciudad enviada sola y la deja disponible para el siguiente paso", () => {
+    expect(cityFromConversation("Quito")).toBe("Quito")
+    expect(cityFromConversation("sí", [{
+      type: "message_in",
+      at: "2026-09-01T20:00:00.000Z",
+      payload: { text: "Quito" },
+    }])).toBe("Quito")
+  })
+
+  it("bloquea una respuesta que cambia el producto cotizado", async () => {
+    const other = { ...products[0], id: "p2", variantId: "v2", sku: "PISTOLA-01", title: "Pistola de percusión profesional" }
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "1 x Pistola de percusión profesional: $199.00" }] }],
+    }), { status: 200 }))
+    const diagnostics: unknown[] = []
+
+    const result = await createWhatsAppAgentReply(
+      config(),
+      {
+        text: "1",
+        products: [products[0], other],
+        history: [{
+          type: "quote_created",
+          at: "2026-09-01T20:00:00.000Z",
+          payload: { items: [{ sku: "OLLA-01", quantity: 1 }] },
+        }],
+        onDiagnostic: (diagnostic) => { diagnostics.push(diagnostic) },
+      },
+      fetchMock as unknown as typeof fetch,
+    )
+
+    expect(result).toContain("Olla de granito")
+    expect(diagnostics).toContainEqual(expect.objectContaining({ event: "product_mismatch_blocked", sku: "PISTOLA-01" }))
+  })
+
   it("no llama a OpenAI cuando el agente está apagado", async () => {
     const fetchMock = vi.fn()
     const result = await createWhatsAppAgentReply(
@@ -388,6 +436,11 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
         products,
         phone: "+593987654321",
         commerce: { quote, createCart },
+        history: [{
+          type: "quote_created",
+          at: "2026-09-01T20:00:00.000Z",
+          payload: { items: [{ sku: "OLLA-01", quantity: 1 }] },
+        }],
       },
       fetchMock as unknown as typeof fetch,
     )
