@@ -48,15 +48,25 @@ function bool(value: string | undefined, fallback: boolean) {
   return ["1", "true", "yes", "y"].includes(value.toLowerCase())
 }
 
+/**
+ * Número de venta de Eter Niu (Vicky), en formato internacional sin "+".
+ *
+ * Debe coincidir con `SELLER_WHATSAPP_NUMBER` del storefront
+ * (`apps/storefront/lib/whatsapp.ts`). Antes cada servicio tenía el suyo y eran
+ * números DISTINTOS: el chat caía en un teléfono o en otro según por dónde
+ * entrara el cliente.
+ */
+const SELLER_WHATSAPP_NUMBER = "593987135207"
+
 function normalizeWhatsappSellerNumber(value: string) {
   const digits = value.replace(/\D/g, "")
   if (digits === "593999999999" || digits === "9999999999") {
-    return "593979854915"
+    return SELLER_WHATSAPP_NUMBER
   }
   if (digits.startsWith("0") && digits.length === 10) {
     return `593${digits.slice(1)}`
   }
-  return digits || "593979854915"
+  return digits || SELLER_WHATSAPP_NUMBER
 }
 
 export function loadConfig(env = process.env): AppConfig {
@@ -88,7 +98,7 @@ export function loadConfig(env = process.env): AppConfig {
     medusaAdminApiKey: env.MEDUSA_ADMIN_API_KEY,
     taxRate: Number(env.ECOMMERCE_TAX_RATE ?? 0.15),
     whatsappSellerNumber: normalizeWhatsappSellerNumber(
-      env.WHATSAPP_SELLER_NUMBER || "0979854915",
+      env.WHATSAPP_SELLER_NUMBER || "0987135207",
     ),
     // Datafast: dry-run por defecto hasta tener credenciales aprobadas
     datafastEnv: env.DATAFAST_ENV === "live" ? "live" : "test",

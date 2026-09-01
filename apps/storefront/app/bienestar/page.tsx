@@ -19,6 +19,7 @@ import {
 import { commercialInfo } from "../../lib/commercial"
 import { kitchenBaseUrl, publicCampaignPath, wellnessBaseUrl } from "../../lib/domains"
 import { wellnessOpeningLine } from "../../lib/wellness"
+import { sellerWhatsappNumber } from "../../lib/whatsapp"
 import { TrackedWhatsAppLink } from "../components/analytics"
 import { PromoBar } from "../components/ui/promo-bar"
 import { SiteHeader } from "../components/ui/site-header"
@@ -160,7 +161,7 @@ export default async function WellnessPage() {
   const products = await getWellnessProducts()
   const featured = products[0]
 
-  const waHref = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_SELLER_NUMBER || "593979854905"}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
+  const waHref = `https://wa.me/${sellerWhatsappNumber()}?text=${encodeURIComponent("Hola, quiero asesoría sobre productos de bienestar Eter Niu.")}`
 
   return (
     <div data-theme="bienestar" className="relative isolate bg-[#10160e]">

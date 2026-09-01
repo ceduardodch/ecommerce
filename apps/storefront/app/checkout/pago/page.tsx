@@ -199,7 +199,7 @@ export default function PagoTarjetaPage() {
       return
     }
     if (!phoneOk) {
-      setError("Celular inválido: usa 10 dígitos, ej. 0979854905.")
+      setError("Celular inválido: usa 10 dígitos, ej. 0991234567.")
       return
     }
     setLoading(true)

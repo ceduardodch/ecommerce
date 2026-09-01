@@ -1,6 +1,7 @@
 import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { brandBaseUrl } from "../../lib/domains"
+import { SELLER_WHATSAPP_LOCAL } from "../../lib/whatsapp"
 
 export const metadata: Metadata = {
   title: "Envíos y Devoluciones | Eter Niu",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 const INFO = {
   email: process.env.NEXT_PUBLIC_PRIVACY_CONTACT_EMAIL || "carlos.diaz@b2b.com.ec",
-  whatsapp: "0979854905",
+  whatsapp: SELLER_WHATSAPP_LOCAL,
   actualizacion: "30 de junio de 2026",
 }
 
