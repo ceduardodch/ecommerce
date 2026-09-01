@@ -671,3 +671,108 @@ de arquitectura). Mientras tanto, valdría confirmar los pasos de
 "Antes de promover" de la bandeja de WhatsApp en producción (ver
 Pendiente/Asumido arriba) — no es un ítem del backlog, es una verificación
 operativa urgente.
+
+---
+
+## 2026-09-01 · Lote 10 (dueño presente) — V-3, 🔴
+
+**Decisión del dueño** (respuesta a la pregunta del lote 9): "quiero que la
+IA tome el control, haga todo y deje listo para yo solo enviar". Aclarado
+con una pregunta de opción múltiple: la IA cierra la venta completa —
+cotiza, confirma, crea el carrito de pago— porque son tickets de bajo valor
+(ollas); lo único manual que le queda al dueño es despachar a logística una
+vez que el cliente ya pagó. Esto resuelve la decisión de arquitectura
+pausada en el lote 9: la IA reemplaza a `advanceWhatsappSale` como camino
+principal (no solo tools para conversación libre).
+
+**Qué se hizo**: `createWhatsAppAgentReply` acepta ahora `phone` +
+`commerce: { quote, createCart }` y declara dos tools reales a la API de
+OpenAI Responses (`quote`, `create_cart`), con un loop de tool-calling
+(`previous_response_id`, tope de 3 rondas). Los tools ejecutan las mismas
+funciones que ya usaba `advanceWhatsappSale`
+(`service.quote`/`service.createWhatsappCart`), que ya registran sus
+propios eventos CRM — no hizo falta duplicar ese registro.
+`requiresHuman()` se exportó de `whatsapp-sales-flow.ts` y se usa como
+pre-filtro determinista antes de darle el turno a la IA (factura, garantía,
+descuento, envío urgente siguen yendo a una persona, sin cambios).
+`whatsapp-webhook.ts`: cuando `WHATSAPP_AGENT_MODE=openai` (el modo de
+producción), la IA con tools reemplaza a `advanceWhatsappSale`; si la IA
+está apagada, `advanceWhatsappSale` se conserva como respaldo determinista
+para no dejar la venta sin respuesta.
+
+**Salvaguarda que se mantuvo pese a la autonomía completa**: `create_cart`
+valida el SKU contra el catálogo mostrado (rechaza SKUs inventados) y exige
+nombre+ciudad no vacíos ANTES de ejecutar, en código — no confía solo en lo
+que el modelo diga que confirmó. El prompt también instruye explícitamente
+no crear el carrito sin confirmación explícita del cliente. La garantía de
+fondo no cambió: `createWhatsappCart` solo genera un link de un solo uso;
+el cliente ingresa su propia tarjeta en DataFast, fuera de este flujo —
+ninguna herramienta que la IA puede llamar mueve dinero por sí sola.
+
+**Imprevisto durante el lote**: mientras se armaba la rama, el dueño
+mergeó directo a `main` el commit `542ed6c` ("fix(whatsapp): match natural
+product requests"), que también toca `whatsapp-agent.ts` (inferencia de
+vertical para el catálogo de respaldo cuando la búsqueda no encuentra
+nada) y su archivo de tests — los mismos dos archivos que esta historia. Se
+rebaseó la rama sobre `main` actualizado; el único conflicto real fue en
+los imports (ambos commits agregaron imports nuevos en las mismas líneas),
+resuelto combinando los dos. El resto del archivo (la lógica de fallback al
+catálogo vivo) se auto-mergeó limpio porque esta historia no había tocado
+esas líneas. Verificado que el test de esa otra historia ("limita el
+catálogo de respaldo a cocina...") sigue pasando junto con los 6 nuevos de
+V-3.
+
+**Commit en la rama**: `b0fd7c0` (tras el rebase; el commit original antes
+de rebasear fue `d6a2ec9`, ya no existe como tal)
+
+**Rama**: `feat/v3-vicky-tool-calling` (pusheada, **no mergeada a `main`**)
+
+**PR**: [#17](https://github.com/ceduardodch/ecommerce/pull/17)
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`
+- `npm run tools:test` → `Test Files 11 passed (11)` /
+  `Tests 107 passed (107)` (103 previos + 3 de la historia concurrente
+  `catalog-search.test.ts` + 6 nuevos de tool-calling — algunos ya estaban
+  contados en el total previo por el rebase). Los 6 nuevos cubren: crea
+  `create_cart` con confirmación/nombre/ciudad y devuelve el link;
+  `quote` antes de responder cuando hace falta precio exacto; no ofrece
+  tools si falta `phone`/`commerce`; no ejecuta `create_cart` con un SKU
+  que no está en el catálogo mostrado; no crea el carrito si faltan
+  nombre/ciudad aunque el modelo llame la herramienta; corta al llegar al
+  techo de 3 rondas si el modelo insiste en llamar herramientas sin parar.
+- `npm run backend:test:unit` → `Test Suites: 8 passed, 8 total` /
+  `Tests: 86 passed, 86 total` (sin cambios).
+- `npm run storefront:test` → `Test Files 3 passed (3)` /
+  `Tests 37 passed (37)` (sin cambios).
+- Smoke test de arranque real: `ecommerce-tools` levantado local con
+  `WHATSAPP_AGENT_MODE=off`, `GET /healthz` → 200 con el JSON esperado —
+  confirma que `mountWhatsappWebhookRoutes` con la nueva rama de código no
+  rompe el arranque del servidor.
+- CI del PR #17: run `33558328771`, job `ci` en verde (Build, Typecheck,
+  Test tools, Test backend, Test storefront, Validate compose — todos ✓,
+  1m51s).
+
+**Pendiente/Asumido**:
+- **No verificado contra una llamada real a OpenAI**: sin `OPENAI_API_KEY`
+  real en esta sesión. El formato de `tools`/`function_call`/
+  `function_call_output` sigue el contrato documentado de la Responses
+  API, pero es la pieza de mayor riesgo de todo el lote — antes de confiar
+  en producción hace falta probar una conversación real de punta a punta
+  (cotizar, confirmar, recibir el link de carrito) con una cuenta de
+  WhatsApp de prueba.
+- El techo de `MAX_TOOL_ROUNDS = 3` es una elección propia razonable, no
+  algo que el dueño haya pedido con un número — ajustable si en la
+  práctica hace falta más.
+- Sigue pendiente (heredado del lote 9, no se avanzó en este) confirmar los
+  pasos de "Antes de promover" de la bandeja de WhatsApp en producción.
+- Queda 🔴 en rama/PR. NO se mergeó a `main`.
+
+**Nota fuera del plan**: el conflicto de rebase con `542ed6c` (ver arriba).
+
+**Siguiente lote**: pendiente de que el dueño revise el PR #17 — idealmente
+con una prueba real de WhatsApp antes de mergear, dado que es el cambio de
+mayor alcance de todo el sprint (reemplaza el camino principal de cierre de
+venta). Después de eso, V-4 (notas de voz) y V-5 (comprobantes por foto)
+siguen en la cola, ambos 🔴.

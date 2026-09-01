@@ -97,7 +97,7 @@ backlog.
 |---|---|---|---|
 | ~~V-1~~ | ~~Historial de conversación en el prompt~~ | M | **✅ HECHO (lote 7, commit `dd9e663`, PR [#10](https://github.com/ceduardodch/ecommerce/pull/10), mergeado a `main`).** `createWhatsAppAgentReply` recibe los últimos 10 turnos (`message_in`/`message_out`, ya guardados en el CRM) ordenados cronológicamente. Test del CA cubierto: el cliente responde "4" a "¿para cuántas personas?" y el historial se lo pasa al prompt antes del mensaje actual. |
 | ~~V-2~~ | ~~Contexto del cliente~~ | M | **✅ HECHO (lote 8, commit `65c3f74`, PR [#11](https://github.com/ceduardodch/ecommerce/pull/11), mergeado a `main`).** El prompt incluye compras previas, etapa (`journeyStage`) y próximo seguimiento del perfil CRM. Test del CA cubierto: un cliente que ya compró una olla no la recibe en el catálogo relevante (filtrado en código, no solo instrucción al modelo). De paso se corrigió un bug de NPS (`followup_reason` vs `followupReason`) que llevaba roto desde siempre. |
-| V-3 | Herramientas reales | L | El agente puede llamar `quote` y `create_order` vía tool-calling. Ningún cobro sin confirmación explícita del cliente en el chat. **Pausado**: hay una decisión de diseño sin resolver (ver nota abajo) — no re-arrancar sin que el dueño la cierre. |
+| ~~V-3~~ | ~~Herramientas reales~~ | L | **✅ HECHO, en PR (lote 10, commit `b0fd7c0`, PR [#17](https://github.com/ceduardodch/ecommerce/pull/17), sin mergear a `main`).** Decisión del dueño: la IA cierra la venta completa por tool-calling (`quote` + `create_cart`), reemplazando a `advanceWhatsappSale` como camino principal — son tickets de bajo valor, autonomía completa hasta el link de pago es aceptable. Ver nota actualizada abajo. |
 | V-4 | Notas de voz | M | `type === "audio"` se transcribe y entra al mismo flujo. Hoy se descartan en silencio, y en Ecuador son una fracción enorme del tráfico. |
 | V-5 | Comprobantes por foto | M | `type === "image"` registra evento `payment_proof_received` con la imagen y escala a humano. Hoy la foto del comprobante de transferencia/deuna! se pierde. |
 
@@ -136,6 +136,33 @@ algo (crear carrito/orden) protegido en código por el mismo `isConfirmation()`
 que ya usa `advanceWhatsappSale` sobre el mensaje real del cliente — nunca
 confiar en que el modelo "declare" que hubo confirmación. Pendiente de que
 el dueño confirme el enfoque antes de retomar V-3.
+
+**Decisión final del dueño (2026-09-01, lote 10)**: opción (b) — la IA toma
+el control completo del cierre, no solo de la conversación libre.
+Justificación: tickets de bajo valor (ollas), así que la automatización
+hasta el link de pago es aceptable; lo único manual que le queda al dueño
+es despachar a logística una vez pagado. Implementado en el PR #17:
+`createWhatsAppAgentReply` reemplaza a `advanceWhatsappSale` como camino
+principal cuando `WHATSAPP_AGENT_MODE=openai`, con `advanceWhatsappSale`
+como respaldo si la IA está apagada. La salvaguarda de código no se
+relajó del todo: `create_cart` sigue validando el SKU contra el catálogo
+mostrado y exige nombre+ciudad no vacíos antes de ejecutar (en vez de
+`isConfirmation()` sobre el texto, que ya no aplica porque la decisión de
+cuándo cerrar ahora vive en el modelo, guiado por instrucciones explícitas
+del prompt en vez de un regex).
+
+Sobre el modo `human`/`ai` de la bandeja (PR #12): ya queda respetado sin
+cambios adicionales — el guard `isAiPaused` que ya envolvía toda la lógica
+de respuesta en `whatsapp-webhook.ts` sigue envolviendo también el nuevo
+camino con tools, así que un caso tomado por una persona nunca llega a
+invocar a la IA (con o sin tools).
+
+**Pendiente antes de confiar en producción**: no se probó contra una
+llamada real a OpenAI (sin API key real en la sesión que lo implementó) —
+el formato de `tools`/`function_call`/`function_call_output` sigue el
+contrato documentado de la Responses API pero no está verificado
+end-to-end. Probar una conversación real (cotizar → confirmar → recibir el
+link) antes de mergear el PR #17.
 
 ### EPIC R — Robustez (P1/P2)
 
@@ -179,8 +206,10 @@ Cada lote de 2h toma **el primer ítem no terminado** de esta lista:
    obsoleta, lote 6 (premisa ya no aplica tras el rediseño; ver tabla arriba)
 6. ~~V-1~~ · ~~Historial de Vicky~~ (🔴) — ✅ hecho, lote 7, PR #10 mergeado
 7. ~~V-2~~ · ~~Contexto del cliente~~ (🔴) — ✅ hecho, lote 8, PR #11 mergeado
-8. V-3 · Herramientas reales (🔴, esfuerzo L) — ⏸️ pausado, lote 9: decisión
-   de diseño sin resolver (ver nota en la tabla de EPIC V arriba)
+8. ~~V-3~~ · ~~Herramientas reales~~ (🔴, esfuerzo L) — ✅ hecho, lote 10,
+   PR #17 (sin mergear — pendiente de revisión y prueba real con OpenAI)
+9. V-4 · Notas de voz (🔴 → para en rama)
+10. V-5 · Comprobantes por foto (🔴 → para en rama)
 
 Los 🔴 se preparan igual: rama, tests, CI verde, y anotación en la bitácora.
 
