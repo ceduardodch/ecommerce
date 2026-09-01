@@ -6,6 +6,13 @@
  * directorio como un script ejecutable y exige `export default`. Al ser solo
  * datos, `db:migrate` abortaba con "No default export found" y no llegaba a
  * correr ningún script posterior.
+ *
+ * El directorio se llama `catalog-data/`, NO `data/`: el .dockerignore de la
+ * raíz excluye cualquier carpeta llamada "data", a cualquier profundidad, del
+ * contexto de build para no mandar volúmenes locales (uploads, dumps) a
+ * Docker. Un `src/data/` aquí queda tracked en git pero invisible para
+ * `COPY . .`, y `medusa build` rompe con "Cannot find module" solo dentro del
+ * contenedor.
  */
 type KitchenCatalogProduct = {
   title: string
