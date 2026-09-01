@@ -139,6 +139,7 @@ agendada automáticamente en noviembre.
 | XSELL | ✅ XS-1..4 completados |
 | BMK (P3) | ✅ BMK-1, BMK-2, BMK-3 completados (jun 2026) |
 | EPIC 0 (operación) | ⚠️ Tareas del dueño — sin verificar (leads reales, hook OpenClaw) |
+| Bandeja operativa de WhatsApp | ✅ Hecha por el dueño (2026-09-01, PR #12+#13, fuera de este backlog — no tiene ID de historia aquí). Conversación + asignación + modo `human`/`ai` + notas internas + adjuntos, ver `docs/CRM_WHATSAPP_INBOX.md`. **Pendiente de verificar**: los pasos de "Antes de promover" del propio doc (migración en staging, volumen `crm-whatsapp-media` montado en Coolify, prueba con un número real) — no confirmados en esta sesión. |
 
 **Decisión jun 2026**: se prioriza el frente VISUAL (ver
 [WEB_REDESIGN_PLAN.md](./WEB_REDESIGN_PLAN.md), Sprint B). El CRM retoma con
