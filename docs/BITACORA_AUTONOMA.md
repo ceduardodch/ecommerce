@@ -278,3 +278,73 @@ searchbox. Sumar `potentialAction` cuando `?q=` filtre productos de verdad.
 
 **Siguiente lote**: R-1 · Tests del storefront (🟢, probablemente 2 lotes),
 según el orden de ejecución del plan.
+
+---
+
+## 2026-09-01 · Lote 5 (autónomo)
+
+**Ítem trabajado**: R-1 · Tests del storefront (🟢, primer ítem no terminado
+del orden de ejecución). El plan estimaba 2 lotes; se cerró completo en 1.
+
+**Qué se hizo**: el storefront no tenía vitest configurado ni ningún test.
+Se agregó:
+- `vitest` como devDependency de `@b2b/storefront` (misma versión que
+  `ecommerce-tools`, `4.1.7`) y el script `"test": "vitest run"`.
+- `storefront:test` en el `package.json` raíz, igual que `tools:test`.
+- `vitest.config.ts` + `vitest.setup.ts`: `lib/catalog.ts` importa `cache`
+  de `"react"` a nivel de módulo, pero `cache` solo existe en el build de
+  React que Next.js vendoriza para el App Router — el paquete `"react"`
+  real (`18.3.1`) que ve Node/vitest fuera de Next no lo exporta, así que
+  cualquier test que importe ese archivo fallaba con
+  `TypeError: cache is not a function`. El setup mockea `cache` como
+  passthrough (`(fn) => fn`, sin memoizar) solo para que el módulo cargue
+  en tests; no toca el comportamiento real de la app (Next sigue
+  vendorizando su propio `cache` en build/runtime).
+- 37 tests en `apps/storefront/tests/`, exactamente los tres archivos que
+  pedía el CA de R-1:
+  - `cart-pricing.test.ts` (9): agrupación por `comboGroup`, mínimo por
+    grupo cuando difiere entre items del mismo grupo, carrito vacío,
+    mezcla de items con y sin `comboPrice`.
+  - `whatsapp.test.ts` (15): normalización del número de venta (incluye
+    el caso del placeholder de prueba `9999999999`), `openingLine` por
+    vertical/tipo de producto (bienestar, cuchillo como complemento),
+    mensaje del carrito con y sin combo activo, referencia de sesión.
+  - `catalog.test.ts` (13): `productSlug` (extracción desde `productUrl`,
+    decode de caracteres escapados, fallback a `slugify` del título/sku
+    cuando la URL no calza el patrón) y `normalizeProduct` (defaults
+    comerciales, vertical/brand, `stoveCompatibility` por categoría). Se
+    exportó `normalizeProduct`, que antes era una función privada del
+    módulo — es la función de "normalize" que pide el CA.
+- Dos tests fallaron en el primer intento por errores míos en las
+  aserciones (esperaba `"precio combo aplicado"` cuando el código dice
+  `"precio verde aplicado"`; el input de prueba para el número placeholder
+  no calzaba con la rama del código que lo detecta) — corregidos antes de
+  dar el lote por bueno, no son bugs del código bajo test.
+
+**Commit en `main`**: `3cf16b5`
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`
+- `npm run storefront:test` → `Test Files 3 passed (3)` /
+  `Tests 37 passed (37)`
+- `npm test` (raíz, `turbo test`) → corre `@b2b/storefront` y
+  `@b2b/ecommerce-tools` juntos, ambos en verde (37 + 88 tests).
+- `npm run tools:test` → `Test Files 10 passed (10)` / `Tests 88 passed (88)`
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total`
+
+**Pendiente/Asumido**:
+- El CA de R-1 solo pedía estos tres archivos; el resto de
+  `apps/storefront/lib` (14k líneas totales, incluye `commercial.ts`,
+  `content.ts`, `product-media.ts`, etc.) sigue sin cobertura. No se
+  amplió el alcance más allá de lo que el backlog pide explícitamente.
+- No se agregó cobertura de componentes React (solo lib/lógica pura) —
+  vitest está configurado sin `@testing-library/react` ni entorno DOM
+  (`jsdom`); si en el futuro se quiere testear componentes, hay que sumar
+  esas piezas.
+
+**Nota fuera del plan**: ninguna.
+
+**Siguiente lote**: S-3 · Carrito visible en móvil en las cards (🟢), según
+el orden de ejecución del plan.
