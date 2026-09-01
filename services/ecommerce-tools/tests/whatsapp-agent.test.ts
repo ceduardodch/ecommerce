@@ -66,6 +66,7 @@ describe("createWhatsAppAgentReply", () => {
     expect(payload.instructions).toContain("recomienda máximo dos opciones")
     expect(payload.instructions).toContain("Guía el cierre sin presionar")
     expect(payload.instructions).toContain("Ante una objeción")
+    expect(payload.instructions).toContain("sin volver a presentarte")
   })
 
   it("agrega las reglas activas del backoffice al prompt", async () => {
@@ -191,6 +192,35 @@ describe("createWhatsAppAgentReply", () => {
     }))
     expect(JSON.parse(String(fetchMock.mock.calls[0][1].body)).input)
       .toContain("Olla de granito")
+  })
+
+  it("limita el catálogo de respaldo a cocina cuando el mensaje pide ollas", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Sí tenemos ollas." }] }],
+    }), { status: 200 }))
+    const wellnessProduct = {
+      ...products[0],
+      id: "p2",
+      variantId: "v2",
+      sku: "BIEN-01",
+      title: "Pistola de percusión",
+      description: "Producto de bienestar",
+      category: "bienestar",
+      vertical: "bienestar" as const,
+    }
+    const kitchenProduct = { ...products[0], vertical: "cocina" as const }
+    const catalogLoader = vi.fn().mockResolvedValue([wellnessProduct, kitchenProduct])
+
+    await createWhatsAppAgentReply(
+      config(),
+      { text: "Como si tienes ollas", products: [] },
+      fetchMock as unknown as typeof fetch,
+      catalogLoader,
+    )
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { input: string }
+    expect(payload.input).toContain("Olla de granito")
+    expect(payload.input).not.toContain("Pistola de percusión")
   })
 
   it("un cliente que ya compró una olla no recibe la oferta de esa misma olla", async () => {
