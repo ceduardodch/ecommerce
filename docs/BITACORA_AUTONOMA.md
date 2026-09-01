@@ -145,3 +145,66 @@ mitad del catálogo sin datos estructurados.
 
 **Siguiente lote**: S-4 · `Organization` + `WebSite` en el layout (🟢), según
 el orden de ejecución del plan.
+
+---
+
+## 2026-09-01 · Lote 3 (autónomo, fuera del orden del plan)
+
+**Motivo**: el dueño reportó en la sesión (fuera del backlog) que "los
+últimos 4 despliegues traen error" en Coolify, con el log real del build
+fallido. Se investigó y arregló antes de seguir con S-4, porque un deploy
+roto es más urgente que cualquier ítem 🟢 del backlog.
+
+**Diagnóstico**: `apps/backend/Dockerfile` falla en
+`RUN npm run backend:build` (stage `builder`) con
+`error TS2307: Cannot find module '../data/kitchen-catalog-august-2026'`.
+Causa raíz: el `.dockerignore` de la raíz excluye cualquier carpeta llamada
+`data` (patrones `data` y `**/data`) del contexto de build, para no mandar
+volúmenes locales (uploads, dumps) a Docker. El commit `a3b787a` (lote previo,
+2026-08-31) movió `kitchen-catalog-august-2026.ts` a `src/data/` para sacarlo
+de `migration-scripts/` — el archivo queda *tracked* en git (por eso
+`git status` no mostraba nada raro y CI, que no construye la imagen Docker,
+nunca lo vio) pero es invisible para `COPY . .` dentro del Dockerfile. Rompe
+solo en el build de Docker, nunca en local ni en CI. Empezó a fallar en el
+primer deploy después de `a3b787a`, es decir, los 4 despliegues desde
+entonces (`7abe79a`, `b4288d6`, `7cb4a5b`, `4fac594`/`8bfb2ef`).
+
+**Qué se hizo**: se movió el archivo de `src/data/` a
+`src/catalog-data/` (fuera del patrón del `.dockerignore`) y se ajustó el
+único import que lo consume (`migration-scripts/kitchen-catalog-seed.ts`).
+
+**Commit en `main`**: `ac99c17`
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`
+- `npm run tools:test` → `Test Files 10 passed (10)` / `Tests 88 passed (88)`
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total`
+- **Reproducción real del fallo de Coolify**:
+  `docker build -f apps/backend/Dockerfile --target builder .` — con el
+  código de ANTES del fix, reproduce exactamente el mismo error
+  (`Cannot find module '../data/kitchen-catalog-august-2026'`) que el log de
+  Coolify pegado por el dueño. Con el fix aplicado, el mismo comando
+  Docker completa: `Backend build completed successfully`, `Frontend build
+  completed successfully`, imagen exportada sin errores.
+- CI en `main` tras el push: run `33539310635`, job `ci` en verde (Build,
+  Typecheck, Test tools, Test backend, Validate compose — todos ✓, 2m32s).
+
+**Pendiente/Asumido**:
+- No tengo acceso al dashboard de Coolify desde esta sesión: no pude
+  confirmar directamente que el redeploy automático (disparado por este
+  push a `main`) terminó en verde en producción. La verificación se hizo
+  reproduciendo el build de Docker exacto en local con el mismo Dockerfile
+  y el mismo target que usa Coolify — es la evidencia más fuerte disponible
+  sin ese acceso, pero el dueño debería confirmar en Coolify que el
+  despliegue de `ac99c17` terminó exitoso.
+- No se revisó si además hay que forzar un redeploy manual en Coolify o si
+  el push a `main` dispara uno automáticamente (el plan asume que sí, según
+  la nota de la sección 1 del `SPRINT_AUTONOMO.md`).
+
+**Nota fuera del plan**: este ítem no estaba en el backlog. Se ejecutó porque
+el dueño lo reportó activamente durante la sesión y un deploy roto bloquea
+cualquier otro trabajo (nada de lo que la rutina haga en `main` llega a
+producción hasta que esto se arregle). Después de esto, la rutina retoma
+S-4 donde lo había dejado.
