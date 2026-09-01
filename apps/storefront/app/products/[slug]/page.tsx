@@ -234,6 +234,30 @@ function buildProductJsonLd(
 }
 
 /**
+ * Datos estructurados schema.org de las migas de pan.
+ *
+ * Mismo `items` que se le pasa al componente `Breadcrumbs`, para que el
+ * schema nunca se desalinee de lo que el usuario ve en pantalla.
+ */
+function buildBreadcrumbJsonLd(
+  product: Product,
+  items: { label: string; href?: string }[],
+) {
+  const baseUrl = publicBaseUrlForVertical(product.vertical)
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      ...(item.href ? { item: absoluteUrl(item.href, baseUrl) } : {}),
+    })),
+  }
+}
+
+/**
  * Resuelve la ficha una sola vez por petición.
  *
  * `generateMetadata` y el render se ejecutan por separado y cada uno cargaba el
@@ -303,6 +327,12 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const useCases = productUseCases(product)
   const reviewSummary = await getReviewSummary(product.id)
   const productJsonLd = buildProductJsonLd(product, gallery, reviewSummary)
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: product.category || "Productos" },
+    { label: product.title },
+  ]
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(product, breadcrumbItems)
   return (
     <main
       data-theme="cocina"
@@ -313,6 +343,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         // El contenido lo construimos nosotros desde el catálogo, no viene del
         // usuario; JSON.stringify ya escapa las comillas del texto.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <PageAmbient />
       <PageAnalytics featured={product} />
@@ -328,13 +362,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
       {/* 1.5. Breadcrumbs (desktop-only) */}
       <div className="px-4 pt-4">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: product.category || "Productos" },
-            { label: product.title },
-          ]}
-        />
+        <Breadcrumbs items={breadcrumbItems} />
       </div>
 
       {/* Galería y compra: dos columnas en escritorio; una columna en móvil. */}
