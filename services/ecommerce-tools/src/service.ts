@@ -60,6 +60,14 @@ import type {
 // refresca /checkout/resultado mientras el primer request sigue en vuelo.
 const inflightDatafastResults = new Set<string>()
 
+// Ventana del barrido de checkouts pendientes (reconcilePendingDatafastCheckouts).
+/** Margen para no interrumpir a quien todavía está pagando en el widget. */
+const DATAFAST_PENDING_GRACE_MS = 10 * 60 * 1000
+/** Datafast deja de exponer los checkouts viejos; más allá no hay nada que consultar. */
+const DATAFAST_PENDING_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000
+/** Tope por pasada para no martillar la API de Datafast. */
+const DATAFAST_PENDING_MAX_PER_RUN = 25
+
 type CheckoutCatalogEntry = readonly [
   sku: string,
   title: string,
@@ -537,7 +545,10 @@ export function createCommerceService(config: AppConfig) {
     return linkedRecord
   }
 
-  return {
+  // Con nombre para que un método pueda reutilizar a otro (el barrido de
+  // pendientes reaprovecha `datafastResult`, que ya es idempotente) sin
+  // depender de cómo se invoque el servicio desde fuera.
+  const api = {
     /** Recupera pagos verificados tras reinicios o callbacks expirados. */
     async reconcileDatafastLedger() {
       if (config.crmBackend !== "medusa") {
@@ -1404,7 +1415,65 @@ export function createCommerceService(config: AppConfig) {
           })),
       }
     },
+
+    /**
+     * Cobros aprobados de los que nunca nos enteramos.
+     *
+     * `datafastResult` solo corre cuando el navegador vuelve a
+     * /checkout/resultado. Si al cliente se le cae la conexión, cierra la
+     * pestaña o el banco tarda más que su paciencia, el cargo a la tarjeta
+     * existe y nosotros nos quedamos con el checkout en `pending`: sin pedido,
+     * sin evento en el CRM, sin aviso por WhatsApp y sin Purchase a Meta.
+     *
+     * Este barrido le pregunta a Datafast por los pendientes y los resuelve
+     * por el mismo camino que el callback del navegador, que ya es idempotente
+     * (`registered` + `inflightDatafastResults`), así que un cobro no puede
+     * registrarse dos veces aunque el cliente vuelva justo a la vez.
+     *
+     * Nunca lanza: es un trabajo de fondo, un fallo suyo no puede tumbar el
+     * servicio que está cobrando.
+     */
+    async reconcilePendingDatafastCheckouts(
+      options: { asOf?: string; maxPerRun?: number } = {},
+    ) {
+      const now = options.asOf ? Date.parse(options.asOf) : Date.now()
+      const maxPerRun = options.maxPerRun ?? DATAFAST_PENDING_MAX_PER_RUN
+      const records = await readDatafastCheckouts(config.dataDir)
+
+      const candidates = records
+        .filter((record) => record.status === "pending")
+        .filter((record) => {
+          const age = now - Date.parse(record.createdAt)
+          if (!Number.isFinite(age)) return false
+          // Ni recién nacidos (el cliente puede seguir en el widget) ni
+          // fósiles: Datafast deja de exponer los checkouts viejos y seguir
+          // preguntando por ellos es ruido en cada arranque.
+          return age >= DATAFAST_PENDING_GRACE_MS && age <= DATAFAST_PENDING_MAX_AGE_MS
+        })
+        .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt))
+        .slice(0, maxPerRun)
+
+      let recovered = 0
+      let stillPending = 0
+      let failed = 0
+
+      for (const record of candidates) {
+        try {
+          const result = await api.datafastResult(record.checkoutId)
+          if (result.status === "paid") recovered += 1
+          else stillPending += 1
+        } catch {
+          // Un checkout que Datafast ya no reconoce no debe cortar el barrido
+          // del resto.
+          failed += 1
+        }
+      }
+
+      return { scanned: candidates.length, recovered, stillPending, failed }
+    },
   }
+
+  return api
 }
 
 // ─── Aviso de compra por WhatsApp (vía Vicky / OpenClaw) ────────────────────

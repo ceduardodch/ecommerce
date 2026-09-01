@@ -238,6 +238,9 @@ mountWhatsappReplyRoute(
   },
 )
 
+/** Cada cuánto se revisan los checkouts que quedaron sin resolver. */
+const DATAFAST_SWEEP_INTERVAL_MS = 10 * 60 * 1000
+
 async function reconcileDatafastWhenMedusaIsReady() {
   // Coolify levanta los contenedores en paralelo. Esperar evita que el ledger
   // se marque como fallido sólo porque Medusa aún está iniciando.
@@ -264,11 +267,42 @@ async function reconcileDatafastWhenMedusaIsReady() {
   }
 }
 
+/**
+ * Barrido periódico de checkouts que quedaron en `pending`.
+ *
+ * Un cobro aprobado no puede depender de que el navegador del cliente vuelva a
+ * /checkout/resultado. Cada pasada le pregunta a Datafast por los pendientes
+ * con más de unos minutos y los resuelve por el camino idempotente de siempre.
+ */
+async function sweepPendingDatafastCheckouts() {
+  try {
+    const sweep = await service.reconcilePendingDatafastCheckouts()
+    if (sweep.recovered > 0) {
+      app.log.warn(sweep, "Recovered DataFast payments whose callback never arrived")
+    } else if (sweep.scanned > 0) {
+      app.log.info(sweep, "DataFast pending sweep finished")
+    }
+  } catch (error) {
+    app.log.error(error, "DataFast pending sweep failed")
+  }
+}
+
 try {
   await app.listen({ port: config.port, host: "0.0.0.0" })
-  void reconcileDatafastWhenMedusaIsReady().catch((error) => {
-    app.log.error(error, "Unexpected DataFast reconciliation failure")
-  })
+  void reconcileDatafastWhenMedusaIsReady()
+    .catch((error) => {
+      app.log.error(error, "Unexpected DataFast reconciliation failure")
+    })
+    // El primer barrido va después de la reconciliación con Medusa: si Medusa
+    // aún no está lista, recuperar un pago no podría crear su pedido.
+    .then(sweepPendingDatafastCheckouts)
+
+  // `unref()` para que el temporizador no impida que el proceso termine cuando
+  // Coolify lo reinicie.
+  setInterval(
+    () => void sweepPendingDatafastCheckouts(),
+    DATAFAST_SWEEP_INTERVAL_MS,
+  ).unref()
 } catch (error) {
   app.log.error(error)
   process.exit(1)
