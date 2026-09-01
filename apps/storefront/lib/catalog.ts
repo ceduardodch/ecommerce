@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   defaultCouponCode,
   defaultPaymentMethods,
@@ -2647,7 +2648,27 @@ function normalizeProduct(
   };
 }
 
-async function fetchProducts(vertical?: "cocina" | "bienestar") {
+/**
+ * Cuántos segundos se reutiliza el catálogo antes de volver a pedirlo.
+ *
+ * Cada render llamaba a `ecommerce-tools` con `no-store`, y tools a su vez a
+ * Medusa: dos saltos de red por visita, en la página a la que apunta la pauta y
+ * con ~80% de tráfico móvil. El catálogo cambia como mucho un par de veces por
+ * semana; 5 minutos de desfase es un precio razonable por quitar esos saltos
+ * del camino crítico.
+ *
+ * Si un precio tiene que verse YA, el redeploy invalida la caché.
+ */
+export const CATALOG_REVALIDATE_SECONDS = 300;
+
+/**
+ * `cache()` de React deduplica las llamadas idénticas DENTRO de un mismo
+ * render: la ficha pedía el catálogo en `generateMetadata` y otra vez al
+ * pintar. `next.revalidate` es lo que lo reutiliza ENTRE peticiones.
+ */
+const fetchProducts = cache(async function fetchProducts(
+  vertical?: "cocina" | "bienestar",
+) {
   const toolsUrl =
     process.env.TOOLS_API_INTERNAL_URL ||
     process.env.NEXT_PUBLIC_TOOLS_API_URL ||
@@ -2663,7 +2684,7 @@ async function fetchProducts(vertical?: "cocina" | "bienestar") {
     url.searchParams.set("limit", "100");
     if (vertical) url.searchParams.set("vertical", vertical);
     const response = await fetch(url, {
-      cache: "no-store",
+      next: { revalidate: CATALOG_REVALIDATE_SECONDS, tags: ["catalog"] },
       headers,
     });
     if (!response.ok) throw new Error("tools unavailable");
@@ -2672,7 +2693,7 @@ async function fetchProducts(vertical?: "cocina" | "bienestar") {
   } catch {
     return undefined;
   }
-}
+});
 
 export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
   const allowDemoCatalog =

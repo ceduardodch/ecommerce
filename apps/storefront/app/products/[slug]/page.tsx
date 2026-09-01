@@ -1,6 +1,7 @@
 import { PageAmbient } from "../../components/ui/page-ambient"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
+import { cache } from "react"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { BookOpen } from "lucide-react"
@@ -37,8 +38,14 @@ type ProductPageProps = {
   params: Promise<{ slug: string }>
 }
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
+// La ficha no depende de searchParams ni de cabeceras, así que puede servirse
+// de la caché de ruta. Era `force-dynamic`: cada visita desde la pauta pagaba
+// storefront → tools → Medusa antes de pintar el primer píxel.
+//
+// Literal a propósito: Next exige que la config de segmento sea analizable
+// estáticamente y no acepta una constante importada. Mantener en 300, igual que
+// `CATALOG_REVALIDATE_SECONDS` en lib/catalog.
+export const revalidate = 300
 
 function money(amount: number) {
   return `$${amount.toFixed(2)}`
@@ -226,11 +233,27 @@ function buildProductJsonLd(
   }
 }
 
+/**
+ * Resuelve la ficha una sola vez por petición.
+ *
+ * `generateMetadata` y el render se ejecutan por separado y cada uno cargaba el
+ * catálogo por su cuenta — dos o tres viajes a `ecommerce-tools` para pintar una
+ * ficha. `cache()` hace que el segundo reciba el resultado del primero.
+ */
+const resolveProduct = cache(async (slug: string) => {
+  const products = await getProducts()
+  const decoded = decodeURIComponent(slug)
+  const match = products.find((item) => productSlug(item) === decoded)
+  // Solo si no está en la vertical de cocina vale la pena pedir el catálogo
+  // completo (una ficha de bienestar servida por este host).
+  return { products, product: match ?? (await getProductBySlug(slug)) }
+})
+
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = await getProductBySlug(slug)
+  const { product } = await resolveProduct(slug)
 
   if (!product) {
     return {
@@ -265,10 +288,7 @@ export async function generateMetadata({
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const products = await getProducts()
-  const product =
-    products.find((item) => productSlug(item) === decodeURIComponent(slug)) ||
-    (await getProductBySlug(slug))
+  const { products, product } = await resolveProduct(slug)
 
   if (!product) notFound()
 

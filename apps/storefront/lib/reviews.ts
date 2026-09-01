@@ -28,9 +28,13 @@ export async function getReviewSummary(
   productId: string,
 ): Promise<ReviewSummary | undefined> {
   try {
+    // Cacheado como el catálogo: un `no-store` aquí volvería dinámica toda la
+    // ficha y anularía su `revalidate`. El bloque de reseñas que ve el usuario
+    // se sigue pidiendo en vivo desde el navegador; esto es solo para el
+    // JSON-LD, donde 5 minutos de desfase no cambian nada.
     const response = await fetch(
       `${medusaUrl()}/b2b/reviews?product_id=${encodeURIComponent(productId)}`,
-      { cache: "no-store" },
+      { next: { revalidate: 300, tags: ["reviews"] } },
     )
     if (!response.ok) return undefined
 
