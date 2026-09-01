@@ -420,3 +420,86 @@ tocó código de la aplicación.
 
 **Siguiente lote**: V-1 · Historial de conversación en el prompt de Vicky
 (🔴 → rama + PR, sin merge a `main`), según el orden de ejecución del plan.
+
+---
+
+## 2026-09-01 · Lote 7 (dueño presente) — V-1, 🔴
+
+**Ítem trabajado**: V-1 · Historial de conversación en el prompt de Vicky.
+Primer ítem 🔴 del sprint: rama + PR, **sin mergear a `main`**.
+
+**Qué se hizo**: `createWhatsAppAgentReply`
+(`services/ecommerce-tools/src/whatsapp-agent.ts`) llamaba a OpenAI con solo
+el mensaje actual del cliente — sin ningún turno anterior. Se agregó:
+
+- `input.history?: CustomerEventRecord[]`: nuevo parámetro opcional. La
+  función arma un bloque `"Historial reciente (más antiguo primero):"` con
+  los últimos 10 turnos (`message_in`/`message_out`) antes del mensaje del
+  cliente, extrayendo `payload.text` de cada evento e ignorando cualquier
+  otro tipo de evento o eventos sin texto.
+- Los eventos se ordenan explícitamente por `at` (ascendente) antes de
+  recortar a los últimos 10: Medusa los devuelve `DESC` por fecha
+  (`listCustomerEvents`, `apps/backend/.../b2b-crm/service.ts:459-464`) pero
+  el almacenamiento local en archivo los devuelve en el orden en que se
+  insertaron (`ASC`, `storage.ts`). Sin ese ordenamiento, `slice(-10)` habría
+  tomado los turnos más VIEJOS en vez de los más recientes cuando el CRM
+  backend es Medusa (que es el que corre en producción).
+- `whatsapp-webhook.ts`: se eliminó una llamada duplicada a `getCustomer`.
+  Antes se consultaba dos veces por mensaje: una antes de registrar el
+  mensaje entrante (para `followup_reason`/NPS) y otra después (para el
+  flujo de venta). Se adelantó y reutiliza una sola consulta. Efecto
+  colateral bueno: como esa consulta ocurre ANTES de registrar el mensaje
+  entrante, el snapshot de `.events` que recibe `createWhatsAppAgentReply`
+  nunca incluye el turno que se está procesando — si se hubiera reusado la
+  consulta posterior (después de `recordInboundEvent`), el mensaje actual
+  del cliente habría aparecido duplicado: una vez en el historial y otra vez
+  en "Mensaje del cliente: ...".
+
+**No se tocó** (fuera del alcance de V-1, para no pisar V-2): el tool/método
+`aiContext` de `service.ts` ni el campo `ai_context` que pide V-2 (no existe
+como columna persistida; `aiContext` es un cálculo on-the-fly ya existente).
+
+**Commit en la rama**: `dd9e663`
+
+**Rama**: `feat/v1-vicky-historial` (pusheada, **no mergeada a `main`** —
+correcto para 🔴)
+
+**PR**: [#10](https://github.com/ceduardodch/ecommerce/pull/10)
+
+**Verificado** (output real):
+- `npm run typecheck` → `Tasks: 3 successful, 3 total`
+- `npm run build` → `Tasks: 3 successful, 3 total`
+- `npm run tools:test` → `Test Files 10 passed (10)` /
+  `Tests 91 passed (91)` (88 previos + 3 nuevos en `whatsapp-agent.test.ts`).
+  Incluye el escenario exacto del CA: el cliente responde "4" a "¿Para
+  cuántas personas cocinas?" y el prompt trae el historial ANTES del mensaje
+  actual (se verificó el orden con `indexOf` sobre el string armado). Los
+  otros dos tests cubren: historial desordenado + más de 10 turnos (recorta
+  a los 10 más recientes, ordenados) y eventos sin texto/de otro tipo
+  (se ignoran, no aparece el bloque "Historial reciente").
+- `npm run backend:test:unit` → `Test Suites: 7 passed, 7 total` /
+  `Tests: 85 passed, 85 total` (sin cambios, no se tocó el backend).
+- `npm run storefront:test` → `Test Files 3 passed (3)` /
+  `Tests 37 passed (37)` (sin cambios).
+- CI del PR: run `33547654224`, job `ci` en verde (Build, Typecheck, Test
+  tools, Test backend, Test storefront, Validate compose — todos ✓, 2m6s).
+
+**Pendiente/Asumido**:
+- **No verificado contra WhatsApp real**: no tengo credenciales de
+  producción (`WHATSAPP_ACCESS_TOKEN`, `OPENAI_API_KEY` reales) en esta
+  sesión. La verificación es a nivel de unit test del prompt armado
+  (aserciones sobre el string que se le manda a OpenAI), no un mensaje real
+  ida y vuelta con Vicky. El dueño debería probar un intercambio real antes
+  de mergear, o pedirle a alguien que lo haga.
+- El límite de 10 turnos (`HISTORY_TURN_LIMIT`) es una elección razonable
+  propia, no algo que el CA especificara con un número — si en la práctica
+  hace falta más o menos contexto, es un solo número para ajustar.
+- Queda 🔴 en rama, tal como pide la regla del sprint para cualquier cambio
+  que toque el flujo de mensajes a clientes. NO se mergeó a `main`.
+
+**Nota fuera del plan**: ninguna.
+
+**Siguiente lote**: V-2 · Contexto del cliente en el prompt de Vicky (🔴 →
+rama + PR, sin merge a `main`), según el orden de ejecución del plan. Puede
+construirse sobre la rama `feat/v1-vicky-historial` una vez que el dueño la
+revise, o esperar a que se mergee primero — a decidir por el dueño.
