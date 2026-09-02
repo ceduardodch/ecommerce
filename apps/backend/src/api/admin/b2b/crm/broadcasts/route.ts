@@ -4,6 +4,7 @@ import { crmService } from "../../_shared"
 import {
   selectDispatchTargets,
   dispatchFollowup,
+  campaignFirstName,
   loadDispatchConfig,
   renderTemplate,
 } from "../../../../../modules/b2b-crm/followup-dispatch"
@@ -140,7 +141,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     // Si el cliente escribió en las últimas 24 h, Meta permite el mensaje de
     // campaña con su media como free-form. Fuera de esa ventana se mantiene la
     // plantilla aprobada y nunca se intenta adjuntar media libre.
-    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const firstName = campaignFirstName(customer.name)
     const lastProductTitle =
       (customer.purchased_products as Array<{ title?: string }> | null | undefined)
         ?.slice(-1)[0]?.title || "tu compra"

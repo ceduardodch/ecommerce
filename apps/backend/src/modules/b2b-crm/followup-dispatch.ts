@@ -126,11 +126,25 @@ export type TemplateCustomer = {
   followup_reason?: string | null
 }
 
+/**
+ * Devuelve el primer nombre para personalizar mensajes sin alterar el nombre
+ * completo guardado en el CRM. Tolera espacios de contactos importados y
+ * caracteres invisibles comunes en archivos VCF.
+ */
+export function campaignFirstName(name?: string | null): string {
+  const normalized = String(name || "")
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, " ")
+    .trim()
+
+  return normalized.split(/\s+/)[0] || "Cliente"
+}
+
 export function buildFollowupMessage(customer: TemplateCustomer) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
-  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
-  const greeting = firstName ? `Hola ${firstName}` : "Hola"
+  const firstName = campaignFirstName(customer.name)
+  const greeting = customer.name ? `Hola ${firstName}` : "Hola"
 
   if (lastProduct?.title) {
     return `${greeting}, vi que compraste ${lastProduct.title}. Te puedo ayudar con mantenimiento, complemento o reposicion para que sigas equipando tu cocina?`
@@ -153,12 +167,12 @@ export function renderTemplate(
 ) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
-  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
+  const firstName = campaignFirstName(customer.name)
   const productName = lastProduct?.title || "tu compra"
   const days = customer.daysSincePurchase || 30
 
   let message = template.body
-    .replace(/\{nombre\}/gi, firstName || "Cliente")
+    .replace(/\{nombre\}/gi, firstName)
     .replace(/\{producto\}/gi, String(productName))
     .replace(/\{dias\}/gi, String(days))
 
@@ -303,6 +317,7 @@ export function buildMetaTemplatePayload(
 ): MetaTemplatePayload {
   const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
   const promotionalVideo = templateKey === "promo_coleccion_exotica"
+  const firstName = campaignFirstName(vars.nombre)
   const components: MetaTemplatePayload["template"]["components"] = []
   if (promotionalVideo && media) {
     components.push({
@@ -320,9 +335,9 @@ export function buildMetaTemplatePayload(
   components.push({
     type: "body",
     parameters: promotionalVideo
-      ? [{ type: "text", text: vars.nombre }]
+      ? [{ type: "text", text: firstName }]
       : [
-          { type: "text", text: vars.nombre },
+          { type: "text", text: firstName },
           { type: "text", text: vars.producto },
           { type: "text", text: vars.dias },
         ],
@@ -450,7 +465,7 @@ export async function dispatchFollowup(
 
     // Fuera de ventana → plantilla
     const templateKey = extra?.templateKey ?? "generico"
-    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const firstName = campaignFirstName(customer.name)
     const vars = extra?.vars ?? {
       nombre: firstName,
       producto: "tu compra",
@@ -620,9 +635,7 @@ export async function runFollowupDispatch(
       lastInboundAt instanceof Date &&
       now.getTime() - lastInboundAt.getTime() < 24 * 60 * 60 * 1000
 
-    const firstName = (customer as any).name
-      ? String((customer as any).name).split(" ")[0]
-      : "Cliente"
+    const firstName = campaignFirstName((customer as any).name)
     const lastPurchaseTitleForMeta =
       ((customer as any).purchased_products as Array<{ title?: string }> | null)?.slice(-1)[0]?.title || "tu compra"
     const daysSincePurchaseMeta = (customer as any).last_purchase_at

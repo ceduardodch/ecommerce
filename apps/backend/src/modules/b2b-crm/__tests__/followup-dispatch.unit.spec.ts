@@ -1,6 +1,7 @@
 import {
   buildFollowupMessage,
   buildMetaMediaPayload,
+  campaignFirstName,
   isWithinSendWindow,
   loadDispatchConfig,
   renderTemplate,
@@ -139,6 +140,21 @@ describe("buildFollowupMessage", () => {
   })
 })
 
+describe("campaignFirstName", () => {
+  it("usa solo la primera palabra del nombre del CRM", () => {
+    expect(campaignFirstName("Carlos Ollas 25 de julio")).toBe("Carlos")
+  })
+
+  it("tolera espacios e invisibles de contactos importados", () => {
+    expect(campaignFirstName("\uFEFF  María\u00A0Sartenes ")).toBe("María")
+  })
+
+  it("usa Cliente cuando falta el nombre", () => {
+    expect(campaignFirstName("   ")).toBe("Cliente")
+    expect(campaignFirstName(null)).toBe("Cliente")
+  })
+})
+
 describe("buildMetaMediaPayload (adjunto de plantilla)", () => {
   it("arma un mensaje de video con caption", () => {
     const payload = buildMetaMediaPayload(
@@ -203,5 +219,15 @@ describe("plantillas base en español", () => {
     expect(message).toContain("Wok de granito 32 cm")
     expect(message).toContain("92")
     expect(message).not.toContain("{")
+  })
+
+  it("la vista previa no incluye las etiquetas añadidas al contacto", () => {
+    const promo = DEFAULT_CRM_TEMPLATES.find((t) => t.key === "promo_coleccion_exotica")!
+    const message = renderTemplate(promo, {
+      name: "Carlos Ollas 25 de julio",
+    })
+
+    expect(message).toContain("Hola Carlos")
+    expect(message).not.toContain("Ollas 25 de julio")
   })
 })

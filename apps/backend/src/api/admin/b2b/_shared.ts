@@ -14,7 +14,11 @@ import {
 import { B2B_CRM_MODULE } from "../../../modules/b2b-crm"
 import type B2bCrmModuleService from "../../../modules/b2b-crm/service"
 import type { CrmCustomerInput } from "../../../modules/b2b-crm/types"
-import { renderTemplate, templateKeyFromReason } from "../../../modules/b2b-crm/followup-dispatch"
+import {
+  campaignFirstName,
+  renderTemplate,
+  templateKeyFromReason,
+} from "../../../modules/b2b-crm/followup-dispatch"
 
 type CustomerPayload = {
   name?: string
@@ -188,8 +192,8 @@ export async function buildFollowupDraftAsync(
 export function buildFollowupDraft(customer: any) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
-  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
-  const greeting = firstName ? `Hola ${firstName}` : "Hola"
+  const firstName = campaignFirstName(customer.name)
+  const greeting = customer.name ? `Hola ${firstName}` : "Hola"
 
   if (lastProduct?.title) {
     return `${greeting}, vi que compraste ${lastProduct.title}. Te puedo ayudar con mantenimiento, complemento o reposicion para que sigas equipando tu cocina?`

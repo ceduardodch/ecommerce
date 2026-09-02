@@ -109,6 +109,23 @@ describe("buildMetaTemplatePayload", () => {
       parameters: [{ type: "text", text: "Carlos" }],
     })
   })
+
+  it("recorta el nombre compuesto antes de enviarlo a Meta", () => {
+    const payload = buildMetaTemplatePayload(
+      "+593979854915",
+      "promo_coleccion_exotica",
+      {
+        nombre: "Carlos Ollas 25 de julio",
+        producto: "Juego Negro",
+        dias: "30",
+      },
+    )
+
+    expect(payload.template.components[0]).toMatchObject({
+      type: "body",
+      parameters: [{ type: "text", text: "Carlos" }],
+    })
+  })
 })
 
 describe("buildMetaFreeformPayload", () => {
