@@ -88,7 +88,7 @@ Estado: dispatcher modo `meta` + webhook + reply construidos (W1–W4).
 ## C. CRM / RECOMPRA — operar con datos reales
 Estado: importación, ficha, recompra, kanban, RFM, NPS, estacionales → hechos.
 11. 🔴 Subir el **archivo de leads históricos** (OPS-1) por el wizard de importación.
-12. 🔴 Configurar **token/URL del hook OpenClaw** (OPS-3) para que Vicky envíe.
+12. 🔴 Activar el **envío automático por Cloud API** (`CRM_FOLLOWUP_DISPATCH_MODE=meta`, OPS-3).
 13. 🔴 **Aprobar textos** de plantillas, incluidas las de cross-sell (TPL-1, XS-2).
 14. 🔴 Dar las **frecuencias reales de recompra** de bienestar (XS-4).
 15. 🟡 **OPS-4**: línea base de métricas con datos reales (tras importar leads).
@@ -111,7 +111,7 @@ Estado: plan D1–D5 definido; código de hosts/SEO listo.
 24. ✅ **Auto-deploy** de Coolify desde `main` confirmado.
 25. ✅ **Volumen persistente** para `TOOLS_DATA_DIR=/data` (`tools-data`).
 26. 🔴 Revisar **variables de entorno** de producción (tokens Meta, payphone,
-    datafast, openclaw) en Coolify.
+    datafast) en Coolify.
 27. ✅ Healthchecks de storefront, Medusa y ecommerce-tools activos en Coolify.
 
 ## G. LEGAL / CONFIANZA
@@ -125,7 +125,7 @@ Estado: política de privacidad LOPDP + banner publicados.
 1. Desplegar lo ya hecho (F-24) y verificar rutas en prod.
 2. Datafast go-live: A-1..A-4 (credenciales → cobro real con tarjeta).
 3. Términos/envíos/devoluciones (G-29) — requisito típico de la pasarela.
-4. Leads + OpenClaw + plantillas (C-11..C-13) → recompra real por WhatsApp.
+4. Leads + envío por Cloud API + plantillas (C-11..C-13) → recompra real por WhatsApp.
 5. WhatsApp Cloud API (B) para escalar sin riesgo de ban.
 6. Dominio eter-niu.com (D) y pulido de marca (E).
 

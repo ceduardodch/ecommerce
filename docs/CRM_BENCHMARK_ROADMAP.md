@@ -23,8 +23,8 @@ Ya construido y en `release`:
 - Perfiles de cliente por teléfono, eventos, órdenes conversacionales (módulo `b2b-crm`).
 - Importación de leads CSV/Excel con mapeo de columnas desde el admin.
 - Gestión de leads: lista con filtros, ficha con historial, notas, compra manual, snooze, opt-out.
-- Recompra automática: job diario que despacha followups vencidos (modo `draft` o `openclaw` vía Vicky), con guardrails (consentimiento, opt-out, cooldown, tope, ventana horaria).
-- Vicky (OpenClaw) como vendedor conversacional con catálogo, cotizaciones y PayPhone.
+- Recompra automática: job diario que despacha followups vencidos (modo `draft` o `meta` por Cloud API), con guardrails (consentimiento, opt-out, cooldown, tope, ventana horaria).
+- Vicky como vendedora conversacional con catálogo, cotizaciones y pago con Datafast.
 - Dashboard con colas (leads calientes, followups, órdenes pendientes, cola de envío).
 
 ## 3. Benchmark: Kommo (WhatsApp-first CRM)
@@ -63,7 +63,7 @@ plantillas, broadcasts segmentados y reportes. Ese es el gap a cerrar.
 
 1. Importar todos los leads históricos (CSV) con etapa y fecha de seguimiento.
 2. Correr 2 semanas en modo `draft`: revisar la cola diaria y enviar manual con wa.me.
-3. Configurar el hook en OpenClaw y activar `CRM_FOLLOWUP_DISPATCH_MODE=openclaw` con `CRM_FOLLOWUP_MAX_PER_RUN=10`.
+3. Activar `CRM_FOLLOWUP_DISPATCH_MODE=meta` con `CRM_FOLLOWUP_MAX_PER_RUN=10`.
 4. Medir línea base: tasa de respuesta, opt-outs, ventas atribuidas a followups.
 
 ### Fase 2 — Cerrar el gap de mensajería (mes 1–2)

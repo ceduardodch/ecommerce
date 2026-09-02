@@ -34,7 +34,7 @@ Archivos clave:
 - `apps/backend/src/migration-scripts/kitchen-catalog-seed.ts`: seed idempotente de catalogo cocina.
 - `apps/backend/src/migration-scripts/wellness-catalog-seed.ts`: seed idempotente de catalogo bienestar.
 - `apps/backend/src/modules/b2b-crm`: modelos, servicio y migracion CRM WhatsApp.
-- `apps/backend/src/api/admin/b2b`: API interna/admin para CRM y ordenes OpenClaw.
+- `apps/backend/src/api/admin/b2b`: API interna/admin para CRM y ordenes conversacionales.
 - `apps/backend/src/admin/routes/crm-whatsapp/page.tsx`: vista CRM en Medusa Admin.
 
 Scripts:
@@ -90,7 +90,7 @@ npm run storefront:start
 
 ### `services/ecommerce-tools`
 
-Fastify HTTP API y MCP server para OpenClaw.
+Fastify HTTP API, MCP server y el agente de WhatsApp (Vicky).
 
 Responsabilidades:
 
@@ -102,7 +102,7 @@ Responsabilidades:
 - Exportar feed Meta catalog CSV.
 - Generar drafts para Facebook, Instagram y Marketplace.
 - En produccion delega CRM, followups y ordenes conversacionales al modulo Medusa `b2bCrm`.
-- Normaliza eventos de video/quiz/guia/WhatsApp y devuelve contexto enriquecido para Vicky/OpenClaw.
+- Normaliza eventos de video/quiz/guia/WhatsApp y devuelve contexto enriquecido para Vicky.
 
 Archivos clave:
 
@@ -131,48 +131,12 @@ npm run tools:test
 npm --workspace @b2b/ecommerce-tools run mcp
 ```
 
-## Agents
-
-### `agents`
-
-Prompts y ejemplos de configuracion para OpenClaw.
-
-Archivos clave:
-
-- `agents/openclaw-ecommerce-seller.md`: prompt canonico del vendedor ecommerce.
-- `agents/openclaw-ecommerce-config.example.env`: variables ejemplo para la app OpenClaw.
-- `agents/vicky-sales-bot.md`: prompt de Vicky, bot dedicado de ventas WhatsApp.
-- `agents/vicky-openclaw-config.example.env`: variables ejemplo para Vicky.
-
-## Skills
-
-### `skills`
-
-Skills repo-locales para agentes que retomen tareas del ecommerce.
-
-- `skills/ecommerce-sales/SKILL.md`: flujo de venta, busqueda, cotizacion y orden.
-- `skills/meta-marketplace-assistant/SKILL.md`: drafts Meta/Marketplace.
-- `skills/payphone-reconciliation/SKILL.md`: conciliacion de pago PayPhone.
-
-Cada skill incluye `agents/openai.yaml` como descriptor.
-
-## Infra
-
-### `infra`
-
-Configuracion ejemplo para servicios externos.
-
-- `infra/openclaw-ecommerce.env.example`: env base para OpenClaw ecommerce.
-- `infra/vicky-coolify.env.example`: env base para el despliegue Coolify de Vicky.
-
 ## Docs
 
 - `docs/ARCHITECTURE.md`: arquitectura general.
 - `docs/BRANCH_STRATEGY.md`: ramas y publicacion.
 - `docs/CI_BRANCH_PROTECTION.md`: proteccion CI.
 - `docs/COOLIFY_DEPLOYMENT.md`: despliegue Coolify.
-- `docs/OPENCLAW_SELLER_PROMPT.md`: puntero al prompt canonico.
-- `docs/OPENCLAW_HANDOFF.md`: retoma operativa de OpenClaw.
 - `docs/VICKY_BOT.md`: runbook de Vicky, URL, Coolify, variables y validacion.
 - `docs/CONTENT_MATRIX.md`: material pendiente de videos/fotos y reglas de publicacion.
 - `docs/CURRENT_STATE.md`: estado del proyecto.
@@ -221,4 +185,4 @@ MCP:
 - `ecommerce-tools`: tools HTTP/MCP para agente, interno.
 - `storefront`: Next.js publico.
 
-OpenClaw no esta dentro de este compose; va como app separada en Coolify.
+El agente de WhatsApp corre dentro del servicio `ecommerce-tools` de este compose.

@@ -8,7 +8,6 @@ Este archivo orienta a cualquier agente IA que retome el proyecto. Las reglas de
 2. `AI_HANDOFF.md`: contexto rapido del proyecto.
 3. `docs/CURRENT_STATE.md`: que existe, que falta y que fue validado.
 4. `docs/PROJECT_MAP.md`: mapa de carpetas, servicios y entrypoints.
-5. `docs/OPENCLAW_HANDOFF.md`: como debe conectarse OpenClaw al ecommerce.
 6. `docs/COOLIFY_DEPLOYMENT.md`: despliegue en Coolify.
 7. `docs/BRANCH_STRATEGY.md`: estrategia de ramas.
 
@@ -19,15 +18,13 @@ Construir `shop.b2b.com.ec` como ecommerce conversacional de cocina para Ecuador
 - Medusa v2 maneja catalogo, admin, inventario, clientes y ordenes.
 - Next.js muestra catalogo publico de ollas, cuchillos, utensilios, combos, feed Meta y enlaces a WhatsApp.
 - `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, followups, PayPhone y Meta; en produccion delega CRM y ordenes al modulo Medusa `b2bCrm`.
-- OpenClaw opera como vendedor dedicado por WhatsApp, en una app Coolify separada, con contexto de cliente antes de recomendar.
+- Vicky opera como vendedora por WhatsApp desde `ecommerce-tools`, con contexto de cliente antes de recomendar.
 - PayPhone API Link crea links de pago.
 - Meta se usa para catalogo, posts asistidos y Marketplace asistido.
 
 ## Estado mental correcto
 
-- Este repo no contiene el runtime completo de OpenClaw.
-- OpenClaw debe vivir como app separada con volumen propio.
-- Este repo contiene prompt, skills y variables ejemplo para conectar OpenClaw al servicio `ecommerce-tools`.
+- El agente de WhatsApp (Vicky) vive dentro de `services/ecommerce-tools`; su guion se edita en el Admin.
 - `main` es frontera de produccion y esta atado a Coolify; no tocarlo sin autorizacion explicita.
 - `release` es la rama de trabajo por defecto.
 - No escribir secretos reales en Git.
@@ -36,7 +33,7 @@ Construir `shop.b2b.com.ec` como ecommerce conversacional de cocina para Ecuador
 
 ```text
 Cliente WhatsApp
-  -> OpenClaw ecommerce seller
+  -> Agente de WhatsApp (Vicky)
     -> ecommerce-tools HTTP/MCP
       -> CRM customers/events/followups
       -> Medusa API
@@ -59,7 +56,7 @@ El `docker-compose.yml` del ecommerce incluye:
 - `ecommerce-tools`
 - `storefront`
 
-No incluye OpenClaw. OpenClaw se despliega aparte y debe poder llamar a:
+Todos los servicios corren en este compose. La base interna del servicio de herramientas es:
 
 ```text
 http://ecommerce-tools:8787
@@ -98,14 +95,14 @@ docker compose up --build
 - Separar siempre: estado local, commit local, remoto, PR, merge a `main` y despliegue Coolify.
 - PayPhone en `PAYPHONE_DRY_RUN=true` no cobra dinero real.
 - Marketplace Facebook en v1 es asistido: generar copy/checklist, no publicar sin confirmacion humana.
-- WhatsApp en v1 lo maneja OpenClaw, no WhatsApp Cloud API desde este repo.
+- WhatsApp entra por el webhook de Cloud API en `ecommerce-tools`.
 - Recontacto WhatsApp fuera de conversacion vigente debe ser consentido, aprobado o manual hasta tener canal Cloud API con plantillas.
 
 ## Siguiente trabajo natural
 
 - Configurar remoto GitHub cuando el usuario lo autorice.
 - Conectar Coolify a `release` para staging y `main` para produccion, segun la estrategia aprobada.
-- Levantar OpenClaw ecommerce como app separada con el prompt y skills de este repo.
+- Activar el agente de WhatsApp con `WHATSAPP_AGENT_MODE=openai` y revisar el guion en el Admin.
 - Cargar productos reales de cocina en Medusa Admin o ejecutar `npm --workspace apps/backend run seed:kitchen`.
 - Mantener `ALLOW_DEMO_CATALOG=false` en produccion para que no aparezca catalogo demo si Medusa falla.
 - Importar BD historica de clientes/compras por `/tools/customers/import`.

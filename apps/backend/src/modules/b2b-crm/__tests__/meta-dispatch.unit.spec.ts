@@ -116,15 +116,16 @@ describe("loadDispatchConfig con modo meta", () => {
     expect(config.metaApiVersion).toBe("v23.0")
   })
 
-  it("draft y openclaw siguen funcionando igual", () => {
+  it("cae a draft por defecto y también con el modo openclaw retirado", () => {
     expect(
       loadDispatchConfig({} as NodeJS.ProcessEnv).mode,
     ).toBe("draft")
+    // Un despliegue heredado con el gateway ya apagado no debe intentar enviar.
     expect(
       loadDispatchConfig({
         CRM_FOLLOWUP_DISPATCH_MODE: "openclaw",
       } as unknown as NodeJS.ProcessEnv).mode,
-    ).toBe("openclaw")
+    ).toBe("draft")
   })
 
   it("metaApiVersion tiene fallback v23.0", () => {
@@ -140,7 +141,6 @@ describe("loadDispatchConfig con modo meta", () => {
 const metaConfigBase: FollowupDispatchConfig = {
   enabled: true,
   mode: "meta",
-  gatewayHookPath: "/hooks/agent",
   cooldownDays: 7,
   maxPerRun: 20,
   retryDays: 7,

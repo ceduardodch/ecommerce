@@ -16,32 +16,26 @@ Keep these URLs in environment variables. If a storefront domain changes later, 
 
 ## Runtime
 
-Run Vicky as a separate OpenClaw Coolify app with its own persistent volume. Do not reuse Cody or Bruno state.
+Vicky corre **dentro de `ecommerce-tools`**, no como una app aparte. El webhook
+de WhatsApp Cloud API entra al servicio, el agente arma la respuesta en
+`services/ecommerce-tools/src/whatsapp-agent.ts` y contesta por el mismo canal.
 
-Recommended service name:
-
-```text
-vicky-sales-bot
-```
-
-Recommended domain:
+Interruptor:
 
 ```text
-vicky.b2b.com.ec
+WHATSAPP_AGENT_MODE=openai   # `off` lo apaga y las respuestas quedan manuales
+OPENAI_API_KEY=<clave>
+OPENAI_MODEL=gpt-5-mini
 ```
 
-Prompt:
+El guion no vive en un archivo del repo: son reglas en la base de datos que el
+dueño edita en Admin → CRM WhatsApp → **Guión IA**, más la configuración
+comercial de **Configuración**. Los cambios aplican sin redeploy.
 
-```text
-agents/vicky-sales-bot.md
-```
-
-Environment examples:
-
-```text
-agents/vicky-openclaw-config.example.env
-infra/vicky-coolify.env.example
-```
+Hasta agosto de 2026 Vicky fue una app OpenClaw separada, con su propio prompt
+en `agents/` y su gateway en `vicky.b2b.com.ec`. Ese runtime se retiró: si
+encuentras referencias a OpenClaw en documentos de planificación, son
+históricas.
 
 ## Data Boundaries
 
@@ -85,20 +79,16 @@ La misma respuesta trae la política de previo pago, el guion de confianza
 (videos de despacho en redes, guía de Servientrega, reseñas) y los enlaces a la
 página pública `/pagos`.
 
-## Coolify Setup
+## Puesta en marcha
 
-1. Create a separate OpenClaw app named `vicky-sales-bot`.
-2. Attach it to the same Docker network as the ecommerce stack when possible, so it can reach `http://ecommerce-tools:8787`.
-3. Mount a dedicated persistent volume for OpenClaw state, for example:
-
-```text
-/home/b2b/data/openclaw-vicky:/home/node/.openclaw
-```
-
-4. Set the variables from `infra/vicky-coolify.env.example`.
-5. Set `ECOMMERCE_TOOLS_TOKEN` to the same secret as ecommerce `TOOLS_API_TOKEN`.
-6. Route `vicky.b2b.com.ec` to the OpenClaw gateway port.
-7. Link only the ecommerce WhatsApp seller number during early testing.
+1. Cargar `OPENAI_API_KEY` en el servicio `ecommerce-tools` y poner
+   `WHATSAPP_AGENT_MODE=openai`.
+2. Configurar el webhook de Meta contra `/webhooks/whatsapp` del mismo servicio
+   (`WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`,
+   `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`).
+3. Revisar el guion en Admin → CRM WhatsApp → Guión IA y la cuenta bancaria en
+   Configuración.
+4. Probar con el número de venta antes de abrirlo a las campañas.
 
 ## Validation
 
@@ -262,27 +252,16 @@ Verificar que cada conversación tenga N eventos `message_in` + `message_out` in
 
 Use `/tools/sales/payment-proof` for transfer screenshots under review and `/tools/sales/confirm` only after human confirmation.
 
-## Responder por Cloud API cuando el mensaje llegó con replyVia: "cloud_api" (W3)
+## Responder por Cloud API (ventana de 24 h)
 
-Cuando el webhook de Meta reenvía un mensaje entrante a Vicky, incluye el campo
-`replyVia: "cloud_api"` en el body del hook de OpenClaw. Esto indica que la
-conversación llegó por el número dedicado a Cloud API y que **Vicky debe
-responder por ese canal**, no por la sesión OpenClaw del número original.
+Cuando entra un mensaje por el webhook de Meta, la respuesta sale por el mismo
+canal de Cloud API. Fuera de la ventana de 24 h ya no se puede mandar texto
+libre y hay que usar una plantilla aprobada.
 
 ### Flujo
 
-1. El webhook POST /webhooks/whatsapp recibe el mensaje y hace forward a Vicky:
-
-```json
-{
-  "name": "whatsapp-inbound",
-  "channel": "whatsapp",
-  "to": "+593979854915",
-  "deliver": true,
-  "message": "Hola, me interesa la olla",
-  "replyVia": "cloud_api"
-}
-```
+1. `POST /webhooks/whatsapp` recibe el mensaje, lo registra como `message_in` y
+   se lo pasa al agente.
 
 2. Vicky procesa el mensaje y, al responder, llama a:
 
@@ -355,43 +334,23 @@ curl -X POST "https://adminshop.b2b.com.ec/admin/b2b/crm/followups/dispatch" \
 - `draft` (default, safe lane): no message is sent. Each due customer gets a
   `followup_queued` CRM event with the suggested message, visible in the admin
   dashboard ("Cola de envío de recompra") for manual sending via wa.me.
-- `openclaw`: the job POSTs each followup to the OpenClaw gateway so Vicky
-  sends it through the existing WhatsApp session. On success a `followup_sent`
-  event is recorded; on any HTTP/network failure it degrades to
-  `followup_queued`.
+- `meta`: el job envía por WhatsApp Cloud API. Dentro de la ventana de 24 h va
+  como texto libre; fuera de ella, como plantilla aprobada. Si el envío falla,
+  degrada a `followup_queued`.
+
+Existió un tercer modo, `openclaw`, que empujaba el mensaje a un gateway
+externo. Ese runtime se retiró: un valor heredado cae a `draft` y encola sin
+enviar.
 
 In both modes `next_followup_at` advances `CRM_FOLLOWUP_RETRY_DAYS` (default 7)
 so customers are not reprocessed on every run.
-
-### OpenClaw hook contract (mode `openclaw`)
-
-Request sent by the backend:
-
-```http
-POST ${OPENCLAW_GATEWAY_URL}${OPENCLAW_GATEWAY_HOOK_PATH:-/hooks/agent}
-Authorization: Bearer ${OPENCLAW_HOOKS_TOKEN}
-Content-Type: application/json
-
-{
-  "name": "crm-followup",
-  "channel": "whatsapp",
-  "to": "+593979854915",
-  "deliver": true,
-  "message": "Hola Maria, vi que compraste ..."
-}
-```
-
-Any 2xx response counts as sent. Configure the OpenClaw side (Coolify app) to
-accept this webhook and deliver `message` to `to` over the connected WhatsApp
-channel, respecting `OPENCLAW_WHATSAPP_DM_POLICY`.
 
 ### Enabling automatic sending in Coolify
 
 1. Verify the queue works in `draft` mode first (events `followup_queued`).
 2. Set on the ecommerce stack (medusa-api service):
-   - `CRM_FOLLOWUP_DISPATCH_MODE=openclaw`
-   - `OPENCLAW_GATEWAY_URL=https://vicky.b2b.com.ec` (or internal URL)
-   - `OPENCLAW_HOOKS_TOKEN=<shared token>`
+   - `CRM_FOLLOWUP_DISPATCH_MODE=meta`
+   - `WHATSAPP_PHONE_NUMBER_ID` y `WHATSAPP_ACCESS_TOKEN` cargados
 3. Optional tuning: `CRM_FOLLOWUP_MAX_PER_RUN` (default 20),
    `CRM_FOLLOWUP_WINDOW` (default `9-19`, Guayaquil hours),
    `CRM_FOLLOWUP_CRON`, `CRM_FOLLOWUP_ENABLED=false` as kill-switch.

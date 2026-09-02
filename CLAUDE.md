@@ -24,7 +24,7 @@ lo que no comprobaste:
 
 - `apps/backend` — Medusa v2 + módulo CRM `b2b-crm` (perfiles, eventos, recompra)
 - `apps/storefront` — Next.js 15 (cocina/bienestar por host; rediseño en curso)
-- `services/ecommerce-tools` — Fastify, fachada para Vicky (OpenClaw, app externa)
+- `services/ecommerce-tools` — Fastify: herramientas de venta y el agente de WhatsApp (Vicky) que corre dentro del servicio
 - `scripts/` — validación de campañas, sync catálogo, reset CRM
 
 ## Planes ejecutables (fuente de verdad; las decisiones ahí están CERRADAS)

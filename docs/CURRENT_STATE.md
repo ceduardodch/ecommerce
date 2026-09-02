@@ -19,7 +19,7 @@ Estado de retoma creado el 2026-05-26, zona horaria America/Guayaquil.
 - MCP server para tools en `services/ecommerce-tools/src/mcp-server.ts`.
 - Docker Compose Coolify-ready.
 - Skills repo-locales para ventas, Meta/Marketplace y PayPhone.
-- Prompt/config ejemplo para OpenClaw ecommerce.
+- Agente de WhatsApp (Vicky) dentro de `ecommerce-tools`.
 - Docs de arquitectura, Coolify, ramas y CI.
 
 ## Servicios existentes
@@ -32,7 +32,7 @@ El compose del ecommerce levanta:
 - `ecommerce-tools`
 - `storefront`
 
-OpenClaw no esta en este compose. Debe desplegarse como app separada en Coolify con volumen propio.
+El agente de WhatsApp corre dentro del servicio `ecommerce-tools` de este compose; se activa con `WHATSAPP_AGENT_MODE=openai`.
 
 `medusa-api` y `ecommerce-tools` deben quedar internos; el compose usa `expose` para esos servicios. El unico servicio publicado al host es el storefront por `STOREFRONT_PORT_MAPPING`, con default `127.0.0.1:18214:3000`, detras de `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` y el legado `shop.b2b.com.ec`.
 
@@ -149,7 +149,7 @@ Metadata estandar esperada desde storefront: `journeyStage`, `householdPeople`, 
 - PayPhone esta preparado como API Link.
 - `PAYPHONE_DRY_RUN=true` es el modo seguro inicial.
 - Para live se requieren `PAYPHONE_TOKEN`, `PAYPHONE_STORE_ID` y validacion de webhook.
-- No pedir ni guardar datos de tarjeta en este repo ni en OpenClaw.
+- No pedir ni guardar datos de tarjeta en este repo ni en el bot.
 
 ## Meta y Marketplace
 
@@ -157,24 +157,11 @@ Metadata estandar esperada desde storefront: `journeyStage`, `householdPeople`, 
 - Productos Medusa por vertical deben llevar `metadata.vertical=cocina|bienestar`; `ecommerce-tools` tambien infiere `MGC-*` como cocina y `BIEN-*` como bienestar.
 - Drafts organicos disponibles por `/tools/meta-post-draft`.
 - Pixel/CAPI v1 disponible con `NEXT_PUBLIC_META_PIXEL_ID`, `META_ACCESS_TOKEN`, `META_DATASET_ID`/`META_PIXEL_ID` y `PIXEL_ENABLED`.
-- Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened`, videos `video_interest`, quiz `quiz_completed`, guia `guide_downloaded` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material, diametro, placement y recomendacion para que OpenClaw una interes web con conversacion.
+- Eventos web se guardan en CRM por `POST /tools/events`; WhatsApp abre `whatsapp_opened`, videos `video_interest`, quiz `quiz_completed`, guia `guide_downloaded` e interes de producto `product_interest` incluyen `Lead`, SKU, precio, material, diametro, placement y recomendacion para que Vicky una interes web con conversacion.
 - WhatsApp CTA v2: home, cards, fichas y quiz muestran cupon `GRANITOHOY`, envio gratis, transferencia o tarjeta Datafast (las dos unicas formas de pago) y compatibilidad gas/induccion/vitroceramica. El mensaje empieza con `Hola, quiero la olla de granito {producto}.` y agrega campos estructurados para Vicky.
 - `payment_proof_received` existe como evento CRM/manual para comprobantes de transferencia; no dispara `Purchase` CAPI hasta confirmacion humana o webhook de pago.
 - Marketplace en v1 es asistido: la IA prepara titulo, copy, precio, fotos/checklist; humano confirma/publica.
 - No automatizar gasto publicitario ni publicar sin confirmacion explicita.
-
-## OpenClaw
-
-- Prompt canonico: `agents/openclaw-ecommerce-seller.md`.
-- Env ejemplo: `infra/openclaw-ecommerce.env.example`.
-- Bot dedicado recomendado: `Vicky`.
-- Prompt de Vicky: `agents/vicky-sales-bot.md`.
-- URL recomendada para Vicky: `https://vicky.b2b.com.ec`.
-- Env Coolify de Vicky: `infra/vicky-coolify.env.example`.
-- Runbook de Vicky: `docs/VICKY_BOT.md`.
-- Skills: `skills/ecommerce-sales`, `skills/meta-marketplace-assistant`, `skills/payphone-reconciliation`.
-- Base URL esperada desde OpenClaw: `http://ecommerce-tools:8787`.
-- Token esperado: `ECOMMERCE_TOOLS_TOKEN` debe coincidir con `TOOLS_API_TOKEN`.
 
 ## Validaciones ejecutadas
 
@@ -232,7 +219,7 @@ curl "http://localhost:8787/feeds/meta/catalog.csv?vertical=bienestar"
 - Cargar secretos reales en Coolify, no en Git.
 - Crear productos reales en Medusa.
 - Validar PayPhone sandbox y webhook.
-- Levantar OpenClaw ecommerce separado y vincular WhatsApp vendedor.
+- Activar el agente de WhatsApp (`WHATSAPP_AGENT_MODE=openai`) y vincular el numero vendedor.
 - Importar BD historica de clientes/compras y verificar consentimiento.
 - Probar end-to-end WhatsApp -> cotizacion -> orden -> link -> pago -> despacho.
 - Definir politica operativa de facturacion, entrega, garantia e instalacion.

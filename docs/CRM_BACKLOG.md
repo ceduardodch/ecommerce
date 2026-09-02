@@ -27,10 +27,10 @@ Orden de ejecución sugerido al final. Convenciones existentes a reutilizar siem
 |---|---|---|
 | OPS-1 | Importar leads históricos vía admin (CSV) | Todos los leads en la lista con etapa y próximo seguimiento |
 | OPS-2 | 2 semanas en modo `draft` revisando la cola diaria | ≥ 10 followups enviados manual, opt-outs registrados |
-| OPS-3 | Configurar hook en OpenClaw y activar `CRM_FOLLOWUP_DISPATCH_MODE=openclaw` con `MAX_PER_RUN=10` | Evento `followup_sent` automático visible en dashboard |
+| OPS-3 | Activar `CRM_FOLLOWUP_DISPATCH_MODE=meta` (Cloud API) con `MAX_PER_RUN=10` | Evento `followup_sent` automático visible en dashboard |
 | OPS-4 | Línea base de KPIs (tasa respuesta, opt-out, ventas por followup) | Números anotados para comparar tras Fase RPT |
 
-**Inputs del dueño**: archivo de leads; token compartido con OpenClaw.
+**Inputs del dueño**: archivo de leads; credenciales de WhatsApp Cloud API.
 
 ---
 
@@ -138,7 +138,7 @@ agendada automáticamente en noviembre.
 | BRC (broadcasts) | ✅ BRC-1, BRC-2 hechos |
 | XSELL | ✅ XS-1..4 completados |
 | BMK (P3) | ✅ BMK-1, BMK-2, BMK-3 completados (jun 2026) |
-| EPIC 0 (operación) | ⚠️ Tareas del dueño — sin verificar (leads reales, hook OpenClaw) |
+| EPIC 0 (operación) | ⚠️ Tareas del dueño — sin verificar (leads reales, envío por Cloud API) |
 | Bandeja operativa de WhatsApp | ✅ Hecha por el dueño (2026-09-01, PR #12+#13, fuera de este backlog — no tiene ID de historia aquí). Conversación + asignación + modo `human`/`ai` + notas internas + adjuntos, ver `docs/CRM_WHATSAPP_INBOX.md`. **Pendiente de verificar**: los pasos de "Antes de promover" del propio doc (migración en staging, volumen `crm-whatsapp-media` montado en Coolify, prueba con un número real) — no confirmados en esta sesión. |
 
 **Decisión jun 2026**: se prioriza el frente VISUAL (ver
@@ -158,7 +158,7 @@ EPIC 0 (operación) corre en paralelo desde hoy — no depende de ningún sprint
 ## Inputs pendientes del dueño
 
 - [ ] Archivo de leads históricos (OPS-1).
-- [ ] Token/URL del hook OpenClaw configurado (OPS-3).
+- [ ] Envío automático por Cloud API activado (OPS-3).
 - [ ] Aprobación de los textos de plantillas, incluidos los de cross-sell (TPL-1, XS-2).
 - [ ] Frecuencias reales de recompra de los productos de bienestar (XS-4).
 

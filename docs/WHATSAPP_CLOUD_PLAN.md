@@ -1,5 +1,9 @@
 # Plan WhatsApp Cloud API: iniciar conversaciones sin riesgo de bloqueo
 
+> Nota (sep 2026): el modo `openclaw` que este plan conservaba como fallback
+> ya no existe. El runtime de OpenClaw se retiró y el agente vive dentro de
+> `ecommerce-tools`. Lo que sigue queda como registro del diseño.
+
 > Junio 2026. Documento autosuficiente (ejecutable por cualquier agente).
 > Decisión del dueño: las conversaciones INICIADAS por el negocio (recompra,
 > broadcasts) deben salir por la **WhatsApp Business Platform oficial de Meta**

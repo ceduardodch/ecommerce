@@ -41,7 +41,7 @@ WhatsApp, a través de `GET /tools/payment-methods` (canal autenticado).
 Admin (crm_setting)
    └─ GET /admin/b2b/crm/commerce-settings
         └─ ecommerce-tools  ── refresco cada 5 min y antes de hablar de pagos
-             ├─ Vicky (agente propio + prompts de OpenClaw)
+             ├─ Vicky (agente de WhatsApp dentro del servicio)
              ├─ catálogo servido al storefront (cupón por línea)
              └─ GET /tools/commerce-settings (subconjunto público)
                   └─ storefront (/pagos, footer, envíos)

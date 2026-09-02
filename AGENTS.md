@@ -41,12 +41,12 @@ Estas acciones estan prohibidas sin autorizacion explicita:
 - No decir que algo esta en produccion solo porque compila o porque esta en `release`.
 - No tocar `main` sin autorizacion expresa del usuario.
 - No cambiar pagos, calculos de montos, CORS, secretos, Docker Compose productivo o variables de PayPhone/Meta sin avisar.
-- Mantener OpenClaw, PayPhone y Meta con fronteras claras: vendedor, pago y publicacion no son el mismo estado.
+- Mantener vendedor, pago y publicacion con fronteras claras: no son el mismo estado.
 
 ## Referencia de arquitectura
 
 - Commerce core: Medusa v2.
 - Storefront: Next.js.
-- Tools: `services/ecommerce-tools` para OpenClaw, PayPhone y Meta.
+- Tools: `services/ecommerce-tools` para el agente de WhatsApp, Datafast y Meta.
 - Deploy: Coolify con Docker Compose.
-- Ver `AI_HANDOFF.md`, `docs/CURRENT_STATE.md`, `docs/PROJECT_MAP.md`, `docs/OPENCLAW_HANDOFF.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/COOLIFY_DEPLOYMENT.md` y `docs/BRANCH_STRATEGY.md`.
+- Ver `AI_HANDOFF.md`, `docs/CURRENT_STATE.md`, `docs/PROJECT_MAP.md`, `docs/VICKY_BOT.md`, `README.md`, `docs/ARCHITECTURE.md`, `docs/COOLIFY_DEPLOYMENT.md` y `docs/BRANCH_STRATEGY.md`.

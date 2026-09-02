@@ -155,12 +155,8 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       phone: customer.phone,
       type: outcome.status === "sent" ? "broadcast_sent" : "broadcast_queued",
       at: now.toISOString(),
-      source:
-        outcome.status === "sent"
-          ? config.mode === "meta"
-            ? "meta-broadcast"
-            : "openclaw-broadcast"
-          : "crm-broadcast",
+      // Solo el modo `meta` llega a "sent"; `draft` siempre encola.
+      source: outcome.status === "sent" ? "meta-broadcast" : "crm-broadcast",
       payload: {
         suggestedMessage: message,
         templateKey: input.templateKey,
