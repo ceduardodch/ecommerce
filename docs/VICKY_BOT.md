@@ -4,13 +4,13 @@ Vicky is the dedicated ecommerce sales bot for WhatsApp and web/social leads.
 
 ## Public URLs
 
-- Bot gateway: `https://vicky.b2b.com.ec`
-- Cocina storefront: `https://cocina.b2b.com.ec`
-- Bienestar storefront: `https://bienestar.b2b.com.ec`
-- Legacy storefront: `https://shop.b2b.com.ec`
-- CRM backoffice: `https://adminshop.b2b.com.ec/app/crm-whatsapp`
-- Meta catalog cocina: `https://cocina.b2b.com.ec/feeds/meta/catalog.csv`
-- Meta catalog bienestar: `https://bienestar.b2b.com.ec/feeds/meta/catalog.csv`
+- Bot gateway: `https://whatsapp-test.eter-niu.com`
+- Cocina storefront: `https://cocina.eter-niu.com`
+- Bienestar storefront: `https://bienestar.eter-niu.com`
+- Portal de marca: `https://eter-niu.com`
+- CRM backoffice: `https://admin.eter-niu.com/app/crm-whatsapp`
+- Meta catalog cocina: `https://cocina.eter-niu.com/feeds/meta/catalog.csv`
+- Meta catalog bienestar: `https://bienestar.eter-niu.com/feeds/meta/catalog.csv`
 
 Keep these URLs in environment variables. If a storefront domain changes later, update `STORE_PUBLIC_URL`, `COCINA_PUBLIC_URL`, `BIENESTAR_PUBLIC_URL`, `NEXT_PUBLIC_STORE_URL`, `NEXT_PUBLIC_COCINA_URL`, `NEXT_PUBLIC_BIENESTAR_URL`, `META_CATALOG_URL` and Meta catalog settings instead of changing code.
 
@@ -95,17 +95,17 @@ página pública `/pagos`.
 Validate the current ecommerce stack before enabling the bot:
 
 ```bash
-curl -fsS https://cocina.b2b.com.ec/ | head
-curl -fsS https://bienestar.b2b.com.ec/ | head
-curl -fsS https://cocina.b2b.com.ec/feeds/meta/catalog.csv | head
-curl -fsS https://bienestar.b2b.com.ec/feeds/meta/catalog.csv | head
-curl -fsS https://adminshop.b2b.com.ec/app/crm-whatsapp | head
+curl -fsS https://cocina.eter-niu.com/ | head
+curl -fsS https://bienestar.eter-niu.com/ | head
+curl -fsS https://cocina.eter-niu.com/feeds/meta/catalog.csv | head
+curl -fsS https://bienestar.eter-niu.com/feeds/meta/catalog.csv | head
+curl -fsS https://admin.eter-niu.com/app/crm-whatsapp | head
 ```
 
 Validate Vicky after deployment:
 
 ```bash
-curl -fsS https://vicky.b2b.com.ec/healthz
+curl -fsS https://whatsapp-test.eter-niu.com/healthz
 ```
 
 Then run a controlled WhatsApp test:
@@ -323,7 +323,7 @@ It can also be triggered manually from the admin dashboard ("Ejecutar followups
 ahora") or via:
 
 ```bash
-curl -X POST "https://adminshop.b2b.com.ec/admin/b2b/crm/followups/dispatch" \
+curl -X POST "https://admin.eter-niu.com/admin/b2b/crm/followups/dispatch" \
   -H "Content-Type: application/json" \
   -b "$MEDUSA_ADMIN_COOKIE" \
   -d '{"dryRun": true}'

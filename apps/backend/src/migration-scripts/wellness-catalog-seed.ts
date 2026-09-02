@@ -40,7 +40,7 @@ const products: WellnessProduct[] = [
     price: 139,
     originalPrice: 139,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-juego-te-japones.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-juego-te-japones.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Ceramica y accesorios",
@@ -80,7 +80,7 @@ const products: WellnessProduct[] = [
     price: 20,
     originalPrice: 20,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-termo-sus304.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-termo-sus304.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable SUS 304",
@@ -120,7 +120,7 @@ const products: WellnessProduct[] = [
     price: 28.5,
     originalPrice: 28.5,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-termo-sus304.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-termo-sus304.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable SUS 304",
@@ -160,7 +160,7 @@ const products: WellnessProduct[] = [
     price: 79.99,
     originalPrice: 79.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-yoga-mat-suede.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-yoga-mat-suede.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Suede",
@@ -200,7 +200,7 @@ const products: WellnessProduct[] = [
     price: 33,
     originalPrice: 33,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-meditador-mandala.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-meditador-mandala.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "PU rubber",
@@ -240,7 +240,7 @@ const products: WellnessProduct[] = [
     price: 199,
     originalPrice: 199,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-pistola-percusion.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-pistola-percusion.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Equipo de masaje",
@@ -280,7 +280,7 @@ const products: WellnessProduct[] = [
     price: 45,
     originalPrice: 45,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-cuenco-bronce.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-cuenco-bronce.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -320,7 +320,7 @@ const products: WellnessProduct[] = [
     price: 65,
     originalPrice: 65,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-cuenco-bronce.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-cuenco-bronce.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -360,7 +360,7 @@ const products: WellnessProduct[] = [
     price: 65,
     originalPrice: 65,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-tambor-lengua.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-tambor-lengua.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Metal",
@@ -400,7 +400,7 @@ const products: WellnessProduct[] = [
     price: 43,
     originalPrice: 43,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925",
@@ -440,7 +440,7 @@ const products: WellnessProduct[] = [
     price: 74,
     originalPrice: 74,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925 por confirmar",
@@ -480,7 +480,7 @@ const products: WellnessProduct[] = [
     price: 38,
     originalPrice: 38,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925",
@@ -520,7 +520,7 @@ const products: WellnessProduct[] = [
     price: 12,
     originalPrice: 12,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-cascada-humo.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-cascada-humo.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Accesorio decorativo",
@@ -560,7 +560,7 @@ const products: WellnessProduct[] = [
     price: 13.33,
     originalPrice: 13.33,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Piedras y metal por confirmar",
@@ -600,7 +600,7 @@ const products: WellnessProduct[] = [
     price: 65,
     originalPrice: 65,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-lampara-sal.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-lampara-sal.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Sal del Himalaya",
@@ -640,7 +640,7 @@ const products: WellnessProduct[] = [
     price: 20,
     originalPrice: 20,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-moxas-chinas.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-moxas-chinas.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Moxa por confirmar",
@@ -680,7 +680,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-mat.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-mat.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "EVA por confirmar",
@@ -720,7 +720,7 @@ const products: WellnessProduct[] = [
     price: 12,
     originalPrice: 12,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Madera",
@@ -760,7 +760,7 @@ const products: WellnessProduct[] = [
     price: 350,
     originalPrice: 350,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Metal por confirmar",
@@ -800,7 +800,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925 por confirmar",
@@ -840,7 +840,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-portaincienso-metal.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-portaincienso-metal.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Metal",
@@ -880,7 +880,7 @@ const products: WellnessProduct[] = [
     price: 29.99,
     originalPrice: 29.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-portaincienso-metal.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-portaincienso-metal.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -920,7 +920,7 @@ const products: WellnessProduct[] = [
     price: 39.99,
     originalPrice: 39.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -960,7 +960,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1000,7 +1000,7 @@ const products: WellnessProduct[] = [
     price: 33,
     originalPrice: 33,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925",
@@ -1040,7 +1040,7 @@ const products: WellnessProduct[] = [
     price: 29.99,
     originalPrice: 29.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Plata 925",
@@ -1080,7 +1080,7 @@ const products: WellnessProduct[] = [
     price: 19.99,
     originalPrice: 19.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1120,7 +1120,7 @@ const products: WellnessProduct[] = [
     price: 9.99,
     originalPrice: 9.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1160,7 +1160,7 @@ const products: WellnessProduct[] = [
     price: 5,
     originalPrice: 5,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1200,7 +1200,7 @@ const products: WellnessProduct[] = [
     price: 19.99,
     originalPrice: 19.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1240,7 +1240,7 @@ const products: WellnessProduct[] = [
     price: 19.99,
     originalPrice: 19.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1280,7 +1280,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1320,7 +1320,7 @@ const products: WellnessProduct[] = [
     price: 9.99,
     originalPrice: 9.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Acero inoxidable",
@@ -1360,7 +1360,7 @@ const products: WellnessProduct[] = [
     price: 19.99,
     originalPrice: 19.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-aroma.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-aroma.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Quarzos naturales por confirmar",
@@ -1400,7 +1400,7 @@ const products: WellnessProduct[] = [
     price: 4.99,
     originalPrice: 4.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-velas-mandala.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-velas-mandala.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Cera por confirmar",
@@ -1440,7 +1440,7 @@ const products: WellnessProduct[] = [
     price: 3.99,
     originalPrice: 3.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-velas-mandala.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-velas-mandala.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Cera por confirmar",
@@ -1480,7 +1480,7 @@ const products: WellnessProduct[] = [
     price: 5,
     originalPrice: 5,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-piedra-alumbre.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-piedra-alumbre.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Alumbre",
@@ -1520,7 +1520,7 @@ const products: WellnessProduct[] = [
     price: 11,
     originalPrice: 11,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-lampara-ghee-bronce.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-lampara-ghee-bronce.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -1560,7 +1560,7 @@ const products: WellnessProduct[] = [
     price: 55,
     originalPrice: 55,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-nataraj-bronce.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-nataraj-bronce.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Bronce",
@@ -1600,7 +1600,7 @@ const products: WellnessProduct[] = [
     price: 4.99,
     originalPrice: 4.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-incienso-ullas.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-incienso-ullas.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Incienso",
@@ -1640,7 +1640,7 @@ const products: WellnessProduct[] = [
     price: 9,
     originalPrice: 9,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-straps.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-straps.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Tela por confirmar",
@@ -1680,7 +1680,7 @@ const products: WellnessProduct[] = [
     price: 11,
     originalPrice: 11,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-straps.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-straps.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Tela por confirmar",
@@ -1720,7 +1720,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-limpiador-lengua-cobre.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-limpiador-lengua-cobre.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Cobre",
@@ -1760,7 +1760,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-tetera-vidrio-450.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-tetera-vidrio-450.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Vidrio",
@@ -1800,7 +1800,7 @@ const products: WellnessProduct[] = [
     price: 4.99,
     originalPrice: 4.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-incienso-ullas.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-incienso-ullas.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Incienso organico por confirmar",
@@ -1840,7 +1840,7 @@ const products: WellnessProduct[] = [
     price: 15,
     originalPrice: 15,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-tetera-vidrio-1600.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-tetera-vidrio-1600.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Vidrio",
@@ -1880,7 +1880,7 @@ const products: WellnessProduct[] = [
     price: 35,
     originalPrice: 35,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-mat.svg",
+    image: "https://bienestar.eter-niu.com/media/wellness-mat.svg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Textil por confirmar",
@@ -1920,7 +1920,7 @@ const products: WellnessProduct[] = [
     price: 39.99,
     originalPrice: 39.99,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-juego-te-japones.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-juego-te-japones.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Ceramica por confirmar",
@@ -1960,7 +1960,7 @@ const products: WellnessProduct[] = [
     price: 3.5,
     originalPrice: 3.5,
     stock: 1,
-    image: "https://bienestar.b2b.com.ec/media/wellness-billete-1-millon.jpg",
+    image: "https://bienestar.eter-niu.com/media/wellness-billete-1-millon.jpg",
     metadata: {
         "brand": "Eter Niu Bienestar",
         "material": "Papel decorativo",

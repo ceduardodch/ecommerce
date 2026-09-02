@@ -245,8 +245,8 @@ export function followupPriority(reason: string) {
 function generatedEmail(phone?: string) {
   const normalized = phone ? normalizePhone(phone).replace(/[^\d]/g, "") : ""
   return normalized
-    ? `wa-${normalized}@customers.shop.b2b.com.ec`
-    : `wa-${Date.now()}@customers.shop.b2b.com.ec`
+    ? `wa-${normalized}@customers.eter-niu.com`
+    : `wa-${Date.now()}@customers.eter-niu.com`
 }
 
 function customerNameParts(name?: string) {

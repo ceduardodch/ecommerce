@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { crmService } from "../../_shared"
+import { canonicalizeEterNiuPublicUrls } from "../../../../../modules/b2b-crm/followup-dispatch"
 
 const MEDIA_KINDS = ["video", "image", "document"] as const
 type MediaKind = (typeof MEDIA_KINDS)[number]
@@ -64,10 +65,10 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 
   const template = await crmService(req).upsertTemplate({
     key,
-    body,
+    body: canonicalizeEterNiuPublicUrls(body),
     label,
     active,
-    mediaUrl: mediaUrl ?? null,
+    mediaUrl: mediaUrl ? canonicalizeEterNiuPublicUrls(mediaUrl) : null,
     mediaType: mediaType ?? null,
   })
 
@@ -92,10 +93,10 @@ export async function PATCH(req: MedusaRequest, res: MedusaResponse) {
   if (!media.ok) return res.status(400).json({ error: media.error })
 
   const updated = await crmService(req).updateTemplate(key, {
-    body,
+    body: body ? canonicalizeEterNiuPublicUrls(body) : body,
     active,
     label,
-    mediaUrl,
+    mediaUrl: mediaUrl ? canonicalizeEterNiuPublicUrls(mediaUrl) : mediaUrl,
     mediaType,
   })
 

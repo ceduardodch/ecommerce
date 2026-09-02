@@ -11,6 +11,7 @@
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import { z } from "zod"
 import type { AppConfig } from "./config.js"
+import { canonicalizeEterNiuPublicUrls } from "./public-domains.js"
 
 // ---------------------------------------------------------------------------
 // Schema de entrada
@@ -71,7 +72,7 @@ export async function sendWhatsappFreeform(
         messaging_product: "whatsapp",
         to: phone,
         type: "text",
-        text: { body: text },
+        text: { body: canonicalizeEterNiuPublicUrls(text) },
       }),
     })
 

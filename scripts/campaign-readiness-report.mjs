@@ -3,7 +3,7 @@
 import { execFileSync } from "node:child_process"
 
 const config = {
-  storeUrl: process.env.STORE_URL || "https://cocina.b2b.com.ec",
+  storeUrl: process.env.STORE_URL || "https://cocina.eter-niu.com",
   toolsUrl: process.env.TOOLS_URL,
   toolsToken: process.env.TOOLS_API_TOKEN,
   requireTools: ["1", "true", "yes"].includes(

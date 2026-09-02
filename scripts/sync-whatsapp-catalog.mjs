@@ -1015,8 +1015,8 @@ function writeCsv(file, products, vertical) {
 
   const baseUrl =
     vertical === "cocina"
-      ? "https://cocina.b2b.com.ec"
-      : "https://bienestar.b2b.com.ec"
+      ? "https://cocina.eter-niu.com"
+      : "https://bienestar.eter-niu.com"
   const rows = products.map((product) => {
     const imageUrl = `${baseUrl}/media/${product.image}`
     const row = {
@@ -1159,8 +1159,8 @@ function toolsKitchenArray() {
         freeShipping: true,
         paymentMethods: ["transferencia", "tarjeta"],
         couponCode: "GRANITOHOY",
-        imageUrl: `https://cocina.b2b.com.ec/media/${product.image}`,
-        productUrl: `https://cocina.b2b.com.ec/products/${product.handle}`,
+        imageUrl: `https://cocina.eter-niu.com/media/${product.image}`,
+        productUrl: `https://cocina.eter-niu.com/products/${product.handle}`,
       }
       return `  {\n    ...kitchenDefaults,\n${ts(object, 4)
         .slice(2, -2)
@@ -1198,7 +1198,7 @@ function seedProductsArray(products, vertical) {
   const isKitchen = vertical === "cocina"
   const media = isKitchen
     ? (image) => `kitchenMediaUrl(${JSON.stringify(image)})`
-    : (image) => JSON.stringify(`https://bienestar.b2b.com.ec/media/${image}`)
+    : (image) => JSON.stringify(`https://bienestar.eter-niu.com/media/${image}`)
   const commercial = isKitchen ? "Eter Niu Cocina" : "Eter Niu Bienestar"
   const body = products
     .map((product) => {

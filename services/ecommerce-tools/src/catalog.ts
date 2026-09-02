@@ -2,6 +2,7 @@ import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
 import { withCommerceCombos } from "./combo-catalog.js"
+import { canonicalizeEterNiuPublicUrls } from "./public-domains.js"
 
 // Solo hay dos formas de pago: transferencia y tarjeta (Datafast).
 const supportedPaymentMethods = ["transferencia", "tarjeta"]
@@ -206,18 +207,10 @@ function withGeneratedImages(config: AppConfig, products: Product[]) {
     return {
       ...product,
       vertical,
-      imageUrl: imageForProduct(
-        config,
-        { ...product, vertical },
-        product.imageUrl,
-      ).replace(
-        "https://shop.b2b.com.ec",
-        baseUrlForVertical(config, vertical),
+      imageUrl: canonicalizeEterNiuPublicUrls(
+        imageForProduct(config, { ...product, vertical }, product.imageUrl),
       ),
-      productUrl: product.productUrl.replace(
-        "https://shop.b2b.com.ec",
-        baseUrlForVertical(config, vertical),
-      ),
+      productUrl: canonicalizeEterNiuPublicUrls(product.productUrl),
       deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
       freeShipping: product.freeShipping ?? true,
       paymentMethods: normalizePaymentMethods(product.paymentMethods),
@@ -339,10 +332,12 @@ function normalizeMedusaProduct(
     // El cero es un valor válido. No usar `||` aquí: con ese operador un
     // producto agotado podía tomar un stock alterno y volver a venderse.
     stock: Number(product.metadata?.stock ?? variant?.metadata?.stock ?? 0),
-    imageUrl: imageForProduct(
-      config,
-      { sku, title: product.title, category, vertical },
-      product.thumbnail || product.images?.[0]?.url,
+    imageUrl: canonicalizeEterNiuPublicUrls(
+      imageForProduct(
+        config,
+        { sku, title: product.title, category, vertical },
+        product.thumbnail || product.images?.[0]?.url,
+      ),
     ),
     productUrl: productUrl(config, product, vertical, sku),
     tags: [

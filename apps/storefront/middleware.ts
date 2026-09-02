@@ -24,7 +24,7 @@ const legacyHostTargets: Record<string, string> = {
 }
 
 const wellnessBase =
-  process.env.NEXT_PUBLIC_BIENESTAR_URL || "https://bienestar.b2b.com.ec"
+  process.env.NEXT_PUBLIC_BIENESTAR_URL || "https://bienestar.eter-niu.com"
 
 function cleanHost(request: NextRequest) {
   return (request.headers.get("host") || "")

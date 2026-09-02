@@ -2,16 +2,17 @@
 
 Conversational social commerce with two public verticals, one shared Medusa core, a WhatsApp sales agent, CRM followups, Datafast card checkout, and Meta catalog export.
 
-- `cocina.b2b.com.ec`: cocina saludable, ollas/woks de granito, campanas Meta -> WhatsApp.
-- `bienestar.b2b.com.ec`: bienestar lifestyle, productos no cocina, campanas por SKU -> WhatsApp.
-- `shop.b2b.com.ec`: dominio legado/operativo mientras se completa la migracion publica.
+- `eter-niu.com`: portal principal de la marca.
+- `cocina.eter-niu.com`: cocina saludable, ollas/woks de granito y campañas Meta → WhatsApp.
+- `bienestar.eter-niu.com`: bienestar, productos no cocina y campañas por SKU → WhatsApp.
+- `admin.eter-niu.com`: administración y CRM. Los hosts viejos solo redirigen.
 
 ## Apps
 
 - `apps/backend`: Medusa v2 commerce backend and admin.
 - `apps/storefront`: Next.js public storefront with host-based vertical routing.
 - `services/ecommerce-tools`: HTTP and MCP tools, plus the WhatsApp sales agent (Vicky).
-- `skills`: repo-local skills for sales, Meta/Marketplace drafts, and PayPhone reconciliation.
+- `skills`: repo-local skills for sales, Meta/Marketplace drafts and payment reconciliation.
 
 ## AI handoff
 
@@ -43,10 +44,10 @@ Useful URLs:
 
 - Storefront dev: `http://localhost:3000`
 - Storefront Docker compose: `http://localhost:18214`
-- Public cocina: `https://cocina.b2b.com.ec`
-- Public bienestar: `https://bienestar.b2b.com.ec`
+- Public cocina: `https://cocina.eter-niu.com`
+- Public bienestar: `https://bienestar.eter-niu.com`
 - Medusa: `http://localhost:9000`
-- Medusa Admin production route: `https://adminshop.b2b.com.ec/app`
+- Medusa Admin production route: `https://admin.eter-niu.com/app`
 - Tools API: `http://localhost:8787/healthz`
 - Meta feed cocina: `http://localhost:8787/feeds/meta/catalog.csv?vertical=cocina`
 - Meta feed bienestar: `http://localhost:8787/feeds/meta/catalog.csv?vertical=bienestar`
@@ -58,7 +59,7 @@ The seller agent should call `services/ecommerce-tools`:
 - `GET /tools/search-products`
 - `POST /tools/quote`
 - `POST /tools/orders`
-- `POST /tools/payphone-link`
+- `POST /tools/datafast/checkout`
 - `POST /tools/customers/import`
 - `GET /tools/customers/:phone`
 - `GET /tools/ai-context/customer/:phone`
@@ -149,7 +150,10 @@ El CRM WhatsApp vive en el modulo Medusa `b2bCrm`:
 
 ## Deployment
 
-Use `docker-compose.yml` as the Coolify compose app. Route `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` and the legacy `shop.b2b.com.ec` to the storefront host port. Route `adminshop.b2b.com.ec` through Cloudflare Access to the Medusa Admin host port.
+Use `docker-compose.yml` as the Coolify compose app. Route `eter-niu.com`,
+`cocina.eter-niu.com` and `bienestar.eter-niu.com` to the storefront host port.
+Route `admin.eter-niu.com` through Cloudflare Access to the Medusa Admin host
+port. Hosts públicos viejos solo mantienen redirecciones 301.
 
 ## Branch Strategy
 

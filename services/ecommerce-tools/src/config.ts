@@ -1,3 +1,8 @@
+import {
+  canonicalizeEterNiuPublicUrls,
+  ETER_NIU_PUBLIC_URLS,
+} from "./public-domains.js"
+
 export type AppConfig = {
   port: number
   dataDir: string
@@ -86,15 +91,16 @@ export function loadConfig(env = process.env): AppConfig {
   const nodeEnv = env.NODE_ENV || "development"
   const crmBackend =
     env.CRM_BACKEND || (nodeEnv === "production" ? "medusa" : "json")
-  const kitchenPublicUrl =
+  const kitchenPublicUrl = canonicalizeEterNiuPublicUrls(
     env.COCINA_PUBLIC_URL ||
-    env.NEXT_PUBLIC_COCINA_URL ||
-    env.STORE_PUBLIC_URL ||
-    "https://cocina.b2b.com.ec"
-  const wellnessPublicUrl =
+      env.NEXT_PUBLIC_COCINA_URL ||
+      ETER_NIU_PUBLIC_URLS.kitchen,
+  )
+  const wellnessPublicUrl = canonicalizeEterNiuPublicUrls(
     env.BIENESTAR_PUBLIC_URL ||
-    env.NEXT_PUBLIC_BIENESTAR_URL ||
-    "https://bienestar.b2b.com.ec"
+      env.NEXT_PUBLIC_BIENESTAR_URL ||
+      ETER_NIU_PUBLIC_URLS.wellness,
+  )
 
   return {
     port: Number(env.PORT || env.TOOLS_PORT || 8787),
@@ -102,7 +108,9 @@ export function loadConfig(env = process.env): AppConfig {
     allowDemoCatalog: bool(env.ALLOW_DEMO_CATALOG, nodeEnv !== "production"),
     crmBackend: crmBackend === "json" ? "json" : "medusa",
     toolsApiToken: env.TOOLS_API_TOKEN,
-    storePublicUrl: env.STORE_PUBLIC_URL || kitchenPublicUrl,
+    storePublicUrl: canonicalizeEterNiuPublicUrls(
+      env.STORE_PUBLIC_URL || ETER_NIU_PUBLIC_URLS.brand,
+    ),
     kitchenPublicUrl,
     wellnessPublicUrl,
     medusaStoreApiUrl: env.MEDUSA_STORE_API_URL || "http://localhost:9000",

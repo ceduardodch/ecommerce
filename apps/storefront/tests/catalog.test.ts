@@ -32,8 +32,8 @@ function baseProduct(overrides: Partial<Product> = {}): Product {
     category: "Woks granito",
     brand: "Eter Niu Cocina",
     price: { amount: 55, currency: "USD" },
-    imageUrl: "https://cocina.b2b.com.ec/media/product-wok-granito-32.jpg",
-    productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+    imageUrl: "https://cocina.eter-niu.com/media/product-wok-granito-32.jpg",
+    productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     stock: 5,
     tags: [],
     ...overrides,
@@ -43,7 +43,7 @@ function baseProduct(overrides: Partial<Product> = {}): Product {
 describe("productSlug", () => {
   it("extrae el slug de productUrl cuando trae /products/<slug>", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+      productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     })
 
     expect(productSlug(product)).toBe("wok-granito-32cm-tapa")
@@ -51,7 +51,7 @@ describe("productSlug", () => {
 
   it("decodifica caracteres escapados en el slug de la URL", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/sart%C3%A9n-20cm",
+      productUrl: "https://cocina.eter-niu.com/products/sart%C3%A9n-20cm",
     })
 
     expect(productSlug(product)).toBe("sartén-20cm")
@@ -59,7 +59,7 @@ describe("productSlug", () => {
 
   it("ignora query string y hash al extraer el slug", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/olla-20cm?utm_source=meta#top",
+      productUrl: "https://cocina.eter-niu.com/products/olla-20cm?utm_source=meta#top",
     })
 
     expect(productSlug(product)).toBe("olla-20cm")
@@ -68,7 +68,7 @@ describe("productSlug", () => {
   it("cae a slugify(title) cuando productUrl no tiene el patrón /products/<slug>", () => {
     const product = baseProduct({
       title: "Wok 32 cm Granito Premium",
-      productUrl: "https://cocina.b2b.com.ec/otra-ruta",
+      productUrl: "https://cocina.eter-niu.com/otra-ruta",
     })
 
     expect(productSlug(product)).toBe("wok-32-cm-granito-premium")
@@ -106,7 +106,7 @@ describe("productSlug", () => {
 describe("productPath", () => {
   it("arma la ruta /products/<slug>", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+      productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     })
 
     expect(productPath(product)).toBe("/products/wok-granito-32cm-tapa")
