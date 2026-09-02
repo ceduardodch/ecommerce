@@ -2,6 +2,7 @@ import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
 import { buildFollowupAction, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
+import { expandCommerceItems } from "./combo-catalog.js"
 import {
   consumeCartSession,
   createCartSession,
@@ -600,6 +601,7 @@ export function createCommerceService(config: AppConfig) {
     async quote(input: {
       items: Array<{ productId: string; variantId?: string; quantity: number }>
       customer?: CustomerInput
+      selectionSku?: string
     }) {
       const products = await loadProducts(config)
       const quote = buildQuote(config, products, input.items)
@@ -611,6 +613,7 @@ export function createCommerceService(config: AppConfig) {
         source: "whatsapp",
         payload: {
           total: quote.total,
+          selectionSku: input.selectionSku,
           items: quote.lines.map((line) => ({
             sku: line.sku,
             title: line.title,
@@ -632,7 +635,8 @@ export function createCommerceService(config: AppConfig) {
       items: Array<{ productId: string; variantId?: string; quantity: number }>
     }) {
       const products = await loadProducts(config)
-      const lines: CartSessionLine[] = input.items.map((item) => {
+      const expandedItems = expandCommerceItems(products, input.items)
+      const lines: CartSessionLine[] = expandedItems.map((item) => {
         const product = products.find(
           (candidate) => candidate.id === item.productId &&
             (!item.variantId || candidate.variantId === item.variantId),

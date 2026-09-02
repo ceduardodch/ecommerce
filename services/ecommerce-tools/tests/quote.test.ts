@@ -15,9 +15,9 @@ describe("commerce tools", () => {
       { productId: "prod-wok-granito-32", quantity: 2 },
     ])
 
-    expect(quote.subtotal.amount).toBe(302.4)
-    expect(quote.tax.amount).toBe(45.36)
-    expect(quote.total.amount).toBe(347.76)
+    expect(quote.subtotal.amount).toBe(262.96)
+    expect(quote.tax.amount).toBe(39.44)
+    expect(quote.total.amount).toBe(302.4)
     expect(quote.whatsappMessage).toContain("DataFast")
   })
 

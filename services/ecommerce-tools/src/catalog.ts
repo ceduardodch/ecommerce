@@ -1,6 +1,7 @@
 import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
+import { withCommerceCombos } from "./combo-catalog.js"
 
 const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
@@ -561,13 +562,13 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
     )
     const supportedProducts = productsForVertical(products)
     return supportedProducts.length
-      ? supportedProducts
+      ? withCommerceCombos(config, supportedProducts)
       : config.allowDemoCatalog
-        ? withGeneratedImages(config, demoCatalog)
+        ? withCommerceCombos(config, withGeneratedImages(config, demoCatalog))
         : []
   } catch {
     return config.allowDemoCatalog
-      ? withGeneratedImages(config, demoCatalog)
+      ? withCommerceCombos(config, withGeneratedImages(config, demoCatalog))
       : []
   }
 }

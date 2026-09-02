@@ -45,6 +45,26 @@ export const DEFAULT_CRM_TEMPLATES: CrmTemplateSeed[] = [
       "Te la comparto por aquí si te interesa. ¿Te la envío?",
   },
   {
+    key: "promo_coleccion_exotica",
+    label: "Promo Onyx Imperial con video",
+    body:
+      "Hola {nombre} 👋 Soy Vicky de Eter Niu.\n\n" +
+      "🖤🔥 ONYX IMPERIAL — 15 PIEZAS 🔥🖤\n\n" +
+      "💥 Antes: $508.99\n" +
+      "🔥 Hoy: $426.96\n" +
+      "✨ Ahorras $82.03\n\n" +
+      "🍳 Sartenes de 20, 24 y 28 cm\n" +
+      "🥘 Ollas de 18, 20 y 24 cm\n" +
+      "🔥 Wok de 32 cm\n\n" +
+      "Puedes pedir el set completo o cambiar las piezas y armar tu combo aquí:\n" +
+      "https://cocina.b2b.com.ec/?utm_source=whatsapp&utm_medium=crm&utm_campaign=onyx_imperial#arma-tu-combo\n\n" +
+      "¿Quieres el set completo o prefieres que te ayude a armar uno?\n" +
+      "Si no deseas recibir promociones, responde SALIR.",
+    mediaUrl:
+      "https://cocina.b2b.com.ec/media/mgc-imperial/onyx-imperial-conjunto-actual-real.mp4",
+    mediaType: "video",
+  },
+  {
     key: "cross_sell_cocina",
     label: "Cross-sell hacia cocina",
     body:

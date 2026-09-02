@@ -529,6 +529,7 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
     expect(quote).toHaveBeenCalledWith({
       items: [{ productId: "p1", variantId: "v1", quantity: 1 }],
       customer: { phone: "+593987654321" },
+      selectionSku: "OLLA-01",
     })
     expect(createCart).not.toHaveBeenCalled()
   })

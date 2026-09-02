@@ -98,7 +98,7 @@ export function selectDispatchTargets<T extends CustomerLike>(
     }
 
     const recentDispatch = events.some((event) => {
-      if (!["followup_sent", "followup_queued"].includes(event.type)) {
+      if (!["followup_sent", "followup_queued", "broadcast_sent", "broadcast_queued"].includes(event.type)) {
         return false
       }
       const at = event.at ? new Date(event.at).getTime() : NaN
@@ -216,6 +216,7 @@ const META_TEMPLATE_MAP: Record<string, string> = {
   nps: "eterniu_nps",
   referido: "eterniu_referido",
   generico: "eterniu_recompra",
+  promo_coleccion_exotica: "eterniu_promo_onyx_video",
 }
 
 export type MetaTemplatePayload = {
@@ -225,10 +226,21 @@ export type MetaTemplatePayload = {
   template: {
     name: string
     language: { code: string }
-    components: Array<{
-      type: "body"
-      parameters: Array<{ type: "text"; text: string }>
-    }>
+    components: Array<
+      | {
+          type: "body"
+          parameters: Array<{ type: "text"; text: string }>
+        }
+      | {
+          type: "header"
+          parameters: Array<{
+            type: MediaKind
+            video?: { link: string }
+            image?: { link: string }
+            document?: { link: string }
+          }>
+        }
+    >
   }
 }
 
@@ -287,8 +299,34 @@ export function buildMetaTemplatePayload(
   phone: string,
   templateKey: string,
   vars: { nombre: string; producto: string; dias: string },
+  media?: TemplateMedia | null,
 ): MetaTemplatePayload {
   const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
+  const promotionalVideo = templateKey === "promo_coleccion_exotica"
+  const components: MetaTemplatePayload["template"]["components"] = []
+  if (promotionalVideo && media) {
+    components.push({
+      type: "header",
+      parameters: [{
+        type: media.kind,
+        ...(media.kind === "video"
+          ? { video: { link: media.url } }
+          : media.kind === "image"
+            ? { image: { link: media.url } }
+            : { document: { link: media.url } }),
+      }],
+    })
+  }
+  components.push({
+    type: "body",
+    parameters: promotionalVideo
+      ? [{ type: "text", text: vars.nombre }]
+      : [
+          { type: "text", text: vars.nombre },
+          { type: "text", text: vars.producto },
+          { type: "text", text: vars.dias },
+        ],
+  })
 
   return {
     messaging_product: "whatsapp",
@@ -297,16 +335,7 @@ export function buildMetaTemplatePayload(
     template: {
       name: templateName,
       language: { code: "es" },
-      components: [
-        {
-          type: "body",
-          parameters: [
-            { type: "text", text: vars.nombre },
-            { type: "text", text: vars.producto },
-            { type: "text", text: vars.dias },
-          ],
-        },
-      ],
+      components,
     },
   }
 }
@@ -367,7 +396,10 @@ export async function dispatchMetaMessage(
       return { status: "queued", detail: `meta_http_${response.status}` }
     }
 
-    return { status: "sent" }
+    const body = await response.json().catch(() => ({})) as {
+      messages?: Array<{ id?: string }>
+    }
+    return { status: "sent", messageId: body.messages?.[0]?.id }
   } catch (cause) {
     return {
       status: "queued",
@@ -381,6 +413,8 @@ export async function dispatchMetaMessage(
 export type DispatchOutcome = {
   status: "sent" | "queued"
   detail?: string
+  /** ID wamid devuelto por Meta; permite casar sent/delivered/read. */
+  messageId?: string
 }
 
 export async function dispatchFollowup(
@@ -423,7 +457,7 @@ export async function dispatchFollowup(
       dias: "30",
     }
     return dispatchMetaMessage(
-      buildMetaTemplatePayload(customer.phone, templateKey, vars),
+      buildMetaTemplatePayload(customer.phone, templateKey, vars, extra?.media),
       config,
     )
   }

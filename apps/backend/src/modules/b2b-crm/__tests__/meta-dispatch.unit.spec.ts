@@ -87,6 +87,28 @@ describe("buildMetaTemplatePayload", () => {
       payload.template.components[0].parameters.every((p) => p.type === "text"),
     ).toBe(true)
   })
+
+  it("arma la plantilla Onyx con header de video y solo el nombre", () => {
+    const payload = buildMetaTemplatePayload(
+      "+593979854915",
+      "promo_coleccion_exotica",
+      { nombre: "Carlos", producto: "Olla", dias: "30" },
+      { kind: "video", url: "https://cocina.b2b.com.ec/onyx.mp4" },
+    )
+
+    expect(payload.template.name).toBe("eterniu_promo_onyx_video")
+    expect(payload.template.components[0]).toMatchObject({
+      type: "header",
+      parameters: [{
+        type: "video",
+        video: { link: "https://cocina.b2b.com.ec/onyx.mp4" },
+      }],
+    })
+    expect(payload.template.components[1]).toMatchObject({
+      type: "body",
+      parameters: [{ type: "text", text: "Carlos" }],
+    })
+  })
 })
 
 describe("buildMetaFreeformPayload", () => {
