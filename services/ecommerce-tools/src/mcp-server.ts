@@ -7,6 +7,7 @@ import {
 import { loadConfig } from "./config.js"
 import { createCommerceService } from "./service.js"
 import { paymentMethodsInfo } from "./payments.js"
+import { refreshCommerceSettings } from "./settings.js"
 import {
   customerEventInputSchema,
   customerImportSchema,
@@ -320,6 +321,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (request.params.name === "payment_methods") {
+    // La cuenta y el estado de la transferencia viven en el Admin: se releen
+    // antes de responder para no dictar datos viejos.
+    await refreshCommerceSettings(config)
     return {
       content: [
         {

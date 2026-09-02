@@ -2,6 +2,7 @@ import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { brandBaseUrl } from "../../lib/domains"
 import { SELLER_WHATSAPP_LOCAL } from "../../lib/whatsapp"
+import { getCommerceSettings } from "../../lib/settings"
 
 export const metadata: Metadata = {
   title: "Envíos y Devoluciones | Eter Niu",
@@ -30,7 +31,8 @@ function LI({ children }: { children: React.ReactNode }) {
   return <li className="text-[15px] leading-relaxed text-[#b8c2ae]">{children}</li>
 }
 
-export default function EnviosDevolucionesPage() {
+export default async function EnviosDevolucionesPage() {
+  const { instagramUrl } = await getCommerceSettings()
   return (
     <main className="relative isolate min-h-screen bg-[#10160e]">
       <PageAmbient />
@@ -74,7 +76,7 @@ export default function EnviosDevolucionesPage() {
             Te compartimos la guía de seguimiento por WhatsApp cuando tu pedido sale
             a despacho. Además publicamos los videos de los despachos del día en{" "}
             <a
-              href="https://instagram.com/eter.niu"
+              href={instagramUrl}
               target="_blank"
               rel="noreferrer"
               className="text-[#d3fa99] underline"

@@ -67,22 +67,14 @@ The tools service is responsible for Medusa, CRM WhatsApp, Meta events, Datafast
 Vicky ofrece **solo dos**: transferencia/depósito bancario y tarjeta con
 Datafast. No hay pago contra entrega — se despacha después de confirmar el pago.
 
-Los datos de la cuenta bancaria **no viven en el repo** (es público). Se cargan
-por entorno en el servicio `ecommerce-tools` y Vicky los lee con
-`GET /tools/payment-methods`:
+Los datos de la cuenta bancaria **no viven en el repo** (es público) **ni en
+variables de entorno**: se editan en Admin → CRM WhatsApp → **Configuración** y
+Vicky los lee con `GET /tools/payment-methods`. Ver
+[CONFIG_COMERCIAL.md](CONFIG_COMERCIAL.md).
 
-```text
-BANK_TRANSFER_ENABLED=true
-BANK_NAME=Banco Pichincha
-BANK_ACCOUNT_HOLDER=<titular de la cuenta>
-BANK_ACCOUNT_TAX_ID=<RUC o cedula>
-BANK_ACCOUNT_TYPE=Ahorros
-BANK_ACCOUNT_NUMBER=<numero de cuenta>
-BRAND_INSTAGRAM_URL=https://instagram.com/eter.niu
-```
-
-Sin esas variables, la respuesta marca `configured: false` y el prompt obliga a
-escalar a un humano en lugar de dictar una cuenta inventada. Verificación:
+Sin la cuenta cargada, la respuesta marca `configured: false` y tanto el prompt
+como el agente propio obligan a escalar a un humano en lugar de dictar una
+cuenta inventada. Verificación:
 
 ```bash
 curl -fsS "$ECOMMERCE_TOOLS_BASE_URL/tools/payment-methods" \

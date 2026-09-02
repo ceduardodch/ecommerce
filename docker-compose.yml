@@ -99,6 +99,9 @@ services:
       MEDUSA_ADMIN_API_URL: http://medusa-api:9000
       MEDUSA_PUBLISHABLE_KEY: ${MEDUSA_PUBLISHABLE_KEY:-}
       MEDUSA_ADMIN_API_KEY: ${MEDUSA_ADMIN_API_KEY:-}
+      # Cuenta bancaria, cupón, IVA, redes y nombre comercial se editan en
+      # Admin → CRM WhatsApp → Configuración, no aquí. Estas dos quedan como
+      # respaldo de arranque para no cambiar IVA ni número de venta en silencio.
       ECOMMERCE_TAX_RATE: ${ECOMMERCE_TAX_RATE:-0.15}
       WHATSAPP_SELLER_NUMBER: ${WHATSAPP_SELLER_NUMBER:-593987135207}
       DATAFAST_ENV: ${DATAFAST_ENV:-test}
@@ -109,17 +112,6 @@ services:
       DATAFAST_TID: ${DATAFAST_TID:-}
       DATAFAST_ECOMMERCE_ID: ${DATAFAST_ECOMMERCE_ID:-}
       DATAFAST_SERVICE_PROVIDER_ID: ${DATAFAST_SERVICE_PROVIDER_ID:-}
-      DATAFAST_CUSTOMER_NAME: ${DATAFAST_CUSTOMER_NAME:-ETERNIU}
-      # Transferencia bancaria: los datos reales solo por entorno (repo público).
-      # Sin ellos, /tools/payment-methods marca configured=false y Vicky escala.
-      BANK_TRANSFER_ENABLED: ${BANK_TRANSFER_ENABLED:-true}
-      BANK_NAME: "${BANK_NAME:-Banco Pichincha}"
-      BANK_ACCOUNT_HOLDER: "${BANK_ACCOUNT_HOLDER:-}"
-      BANK_ACCOUNT_TAX_ID: ${BANK_ACCOUNT_TAX_ID:-}
-      BANK_ACCOUNT_TYPE: "${BANK_ACCOUNT_TYPE:-Ahorros}"
-      BANK_ACCOUNT_NUMBER: ${BANK_ACCOUNT_NUMBER:-}
-      BRAND_INSTAGRAM_URL: ${BRAND_INSTAGRAM_URL:-https://instagram.com/eter.niu}
-      META_CATALOG_BRAND: "${META_CATALOG_BRAND:-Eter Niu Cocina}"
       META_API_VERSION: ${META_API_VERSION:-v23.0}
       PIXEL_ENABLED: ${PIXEL_ENABLED:-false}
       META_PIXEL_ID: ${META_PIXEL_ID:-}

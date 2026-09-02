@@ -2,6 +2,7 @@ import { PageAmbient } from "../components/ui/page-ambient"
 import type { Metadata } from "next"
 import { brandBaseUrl } from "../../lib/domains"
 import { SELLER_WHATSAPP_LOCAL, SELLER_WHATSAPP_NUMBER } from "../../lib/whatsapp"
+import { getCommerceSettings } from "../../lib/settings"
 
 export const metadata: Metadata = {
   title: "Formas de pago | Eter Niu",
@@ -10,14 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: `${brandBaseUrl}/pagos` },
 }
 
-const INFO = {
-  razonSocial: "Viky Johanna Saavedra Puebla — INFINITY IMPORTS",
-  ruc: "1715523021001",
-  banco: "Banco Pichincha",
-  whatsapp: SELLER_WHATSAPP_LOCAL,
-  instagram: "https://instagram.com/eter.niu",
-  actualizacion: "1 de septiembre de 2026",
-}
+/** El banco y la razón social salen de la configuración del Admin. */
+const ACTUALIZACION = "1 de septiembre de 2026"
 
 const PASOS = [
   "Confirmamos contigo el producto, el precio final y tu dirección.",
@@ -63,7 +58,17 @@ function MethodCard({
   )
 }
 
-export default function PagosPage() {
+export default async function PagosPage() {
+  const settings = await getCommerceSettings()
+  const INFO = {
+    razonSocial: settings.payment.accountHolder,
+    ruc: settings.payment.taxId,
+    banco: settings.payment.bankName,
+    whatsapp: SELLER_WHATSAPP_LOCAL,
+    instagram: settings.instagramUrl,
+    actualizacion: ACTUALIZACION,
+  }
+
   return (
     <main className="relative isolate min-h-screen bg-[#10160e]">
       <PageAmbient />
