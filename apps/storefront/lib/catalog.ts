@@ -29,6 +29,8 @@ export type Product = {
   promoLabel?: string;
   stockSignal?: string;
   bundleEligible?: boolean;
+  /** Pieza disponible solo dentro de un juego; no se ofrece por unidad. */
+  bundleOnly?: boolean;
   deliveryBadge?: string;
   freeShipping?: boolean;
   paymentMethods?: string[];
@@ -94,6 +96,7 @@ function mgcCookware(input: MgcCookwareInput): Product {
     promoLabel: "Precio verde desde 3 productos",
     stockSignal: "Stock sujeto a confirmación",
     bundleEligible: true,
+    bundleOnly: input.sku === "MGC-FR-WOK-32-GN",
     deliveryBadge: "Entrega y costo de envío por confirmar",
     paymentMethods: defaultPaymentMethods,
     couponCode: defaultCouponCode,
@@ -125,10 +128,10 @@ function mgcCookware(input: MgcCookwareInput): Product {
 export const august2026FallbackProducts: Product[] = [
   [
     "MGC-FR-SARTEN-20-GN",
-    "Sartén Onyx Imperial 20 cm",
+    "Sartén Juego Negro 20 cm",
     "sarten-francesa-20cm-gris-negro",
     "Sartenes granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     20,
     96,
@@ -138,10 +141,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-SARTEN-24-GN",
-    "Sartén Onyx Imperial 24 cm",
+    "Sartén Juego Negro 24 cm",
     "sarten-francesa-24cm-gris-negro",
     "Sartenes granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     24,
     96,
@@ -151,10 +154,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-SARTEN-28-GN",
-    "Sartén Onyx Imperial 28 cm",
+    "Sartén Juego Negro 28 cm",
     "sarten-francesa-28cm-gris-negro",
     "Sartenes granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     28,
     96,
@@ -164,10 +167,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-LECHERA-18-GN",
-    "Olla lechera Onyx Imperial 18 cm",
+    "Olla lechera Juego Negro 18 cm",
     "olla-lechera-francesa-18cm-gris-negro",
     "Ollas granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     18,
     48,
@@ -177,10 +180,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-OLLA-20-GN",
-    "Olla Onyx Imperial 20 cm",
+    "Olla Juego Negro 20 cm",
     "olla-francesa-20cm-gris-negro",
     "Ollas granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     20,
     32,
@@ -190,10 +193,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-OLLA-24-GN",
-    "Olla Onyx Imperial 24 cm",
+    "Olla Juego Negro 24 cm",
     "olla-francesa-24cm-gris-negro",
     "Ollas granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     24,
     32,
@@ -203,10 +206,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-FR-WOK-32-GN",
-    "Wok Onyx Imperial 32 cm",
+    "Wok del Juego Negro 32 cm",
     "wok-frances-32cm-gris-negro",
     "Woks granito",
-    "Onyx Imperial",
+    "Juego Negro",
     "Negro granito",
     32,
     18,
@@ -229,10 +232,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-SARTEN-20-AZ",
-    "Sartén Azul Oceánico 20 cm",
+    "Sartén Oceánico 20 cm",
     "sarten-europea-20cm-azul",
     "Sartenes granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     20,
     16,
@@ -242,10 +245,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-SARTEN-24-AZ",
-    "Sartén Azul Oceánico 24 cm",
+    "Sartén Oceánico 24 cm",
     "sarten-europea-24cm-azul",
     "Sartenes granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     24,
     16,
@@ -255,10 +258,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-SARTEN-28-AZ",
-    "Sartén Azul Oceánico 28 cm",
+    "Sartén Oceánico 28 cm",
     "sarten-europea-28cm-azul",
     "Sartenes granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     28,
     16,
@@ -268,10 +271,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-LECHERA-16-AZ",
-    "Olla lechera Azul Oceánico 16 cm",
+    "Olla lechera Oceánico 16 cm",
     "olla-lechera-europea-16cm-azul",
     "Ollas granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     16,
     8,
@@ -281,10 +284,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-OLLA-20-AZ",
-    "Olla Azul Oceánico 20 cm",
+    "Olla Oceánico 20 cm",
     "olla-europea-20cm-azul",
     "Ollas granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     20,
     8,
@@ -294,10 +297,10 @@ export const august2026FallbackProducts: Product[] = [
   ],
   [
     "MGC-EU-OLLA-24-AZ",
-    "Olla Azul Oceánico 24 cm",
+    "Olla Oceánico 24 cm",
     "olla-europea-24cm-azul",
     "Ollas granito",
-    "Azul Oceánico",
+    "Oceánico",
     "Azul granito",
     24,
     8,
@@ -345,7 +348,7 @@ export const mgcCollectionComboDeals: Product[] = [
     variantId: "var-mgc-set-onyx-imperial-15",
     sku: "MGC-SET-ONYX-IMPERIAL-15",
     vertical: "cocina",
-    title: "Combo Onyx Imperial · 15 piezas",
+    title: "Juego Negro · 15 piezas",
     description:
       "Sartenes 20, 24 y 28 cm; ollas 18, 20 y 24 cm; wok 32 cm. Precio especial por tiempo limitado.",
     category: "Combos de cocina",
@@ -359,7 +362,7 @@ export const mgcCollectionComboDeals: Product[] = [
     couponCode: defaultCouponCode,
     material: "Granito; mangos de madera",
     pieces: 15,
-    collection: "Onyx Imperial",
+    collection: "Juego Negro",
     color: "Negro granito",
     stoveCompatibility: "Compatibilidad por confirmar",
     careTips: "Usar utensilios de silicona o madera y lavar con esponja suave.",
@@ -369,7 +372,7 @@ export const mgcCollectionComboDeals: Product[] = [
     stock: 0,
     imageUrl: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
     productUrl: `${kitchenBaseUrl}/products/combo-onyx-imperial-15-piezas`,
-    tags: ["mgc", "combo", "onyx-imperial", "15-piezas"],
+    tags: ["mgc", "combo", "juego-negro", "onyx", "onyx-imperial", "15-piezas"],
   },
   {
     id: "prod-mgc-set-ebano-plata-12",
@@ -2590,7 +2593,10 @@ const retiredPublicSkus = new Set(["MGC-PALETA-WOK-DATAFAST-TEST"]);
  * pagos anteriores. Esta frontera evita volver a publicarlos o venderlos.
  */
 export function isPublicCatalogProduct(product: Product) {
-  return !retiredPublicSkus.has(product.sku.trim().toUpperCase());
+  return (
+    !retiredPublicSkus.has(product.sku.trim().toUpperCase()) &&
+    product.bundleOnly !== true
+  );
 }
 
 export function normalizeProduct(
@@ -2692,14 +2698,18 @@ export async function getProductsForVertical(vertical: "cocina" | "bienestar") {
     // El catálogo MGC aprobado también debe mostrarse mientras el inventario
     // de Medusa se carga o se recupera. Evita una portada vacía en producción.
     if (allowDemoCatalog) {
-      return fallback.map((product) => normalizeProduct(product, vertical));
+      return fallback
+        .filter(isPublicCatalogProduct)
+        .map((product) => normalizeProduct(product, vertical));
     }
 
     return [];
   }
 
   if (allowDemoCatalog) {
-    return fallback.map((product) => normalizeProduct(product, vertical));
+    return fallback
+      .filter(isPublicCatalogProduct)
+      .map((product) => normalizeProduct(product, vertical));
   }
 
   return [];
@@ -2733,7 +2743,7 @@ export async function getAllProducts() {
       ? normalized
       : allowDemoCatalog
         ? [
-            ...cocinaFallbackProducts.map((product) =>
+            ...cocinaFallbackProducts.filter(isPublicCatalogProduct).map((product) =>
               normalizeProduct(product),
             ),
             ...wellnessFallbackProducts.map((product) =>
@@ -2745,7 +2755,7 @@ export async function getAllProducts() {
 
   return allowDemoCatalog
     ? [
-        ...cocinaFallbackProducts.map((product) =>
+        ...cocinaFallbackProducts.filter(isPublicCatalogProduct).map((product) =>
           normalizeProduct(product),
         ),
         ...wellnessFallbackProducts.map((product) =>
@@ -2767,6 +2777,7 @@ export async function getProductBySlug(slug: string) {
     process.env.NODE_ENV !== "production";
   return allowDemoCatalog
     ? cocinaFallbackProducts
+        .filter(isPublicCatalogProduct)
         .map((item) => normalizeProduct(item, "cocina"))
         .find((item) => productSlug(item) === normalizedSlug)
     : undefined;

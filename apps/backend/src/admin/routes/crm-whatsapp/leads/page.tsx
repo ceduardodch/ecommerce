@@ -140,6 +140,7 @@ type DryRunResult = {
   skipped: number
   skipReasons: Record<string, number>
   sample: Array<{ phone: string; name?: string; renderedMessage: string }>
+  targets: Array<{ phone: string; name?: string }>
 }
 
 type SendResult = {
@@ -174,6 +175,7 @@ function CampaignModal({
   const [sent, setSent] = useState<SendResult | undefined>()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | undefined>()
+  const [limit, setLimit] = useState(10)
 
   async function call(dryRun: boolean) {
     setBusy(true)
@@ -183,7 +185,15 @@ function CampaignModal({
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filter, templateKey, dryRun }),
+        body: JSON.stringify({
+          filter,
+          templateKey,
+          dryRun,
+          limit,
+          ...(!dryRun && preview
+            ? { expectedPhones: preview.targets.map((target) => target.phone) }
+            : {}),
+        }),
       })
       if (!response.ok) {
         const detail = await response.json().catch(() => ({}))
@@ -269,6 +279,22 @@ function CampaignModal({
           </select>
         </label>
 
+        <label style={{ display: "block", fontSize: 13, marginTop: 12 }}>
+          Máximo de contactos para esta prueba
+          <input
+            type="number"
+            min={1}
+            max={50}
+            value={limit}
+            onChange={(event) => {
+              setLimit(Math.max(1, Math.min(50, Number(event.target.value) || 1)))
+              setPreview(undefined)
+              setSent(undefined)
+            }}
+            style={{ ...inputStyle, width: "100%", marginTop: 4 }}
+          />
+        </label>
+
         <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
           <button onClick={() => call(true)} disabled={busy} style={buttonStyle}>
             {busy ? "Calculando..." : "Vista previa (dry-run)"}
@@ -323,6 +349,16 @@ function CampaignModal({
             ))}
             {preview.sample.length === 0 ? (
               <p style={{ color: "var(--fg-subtle)" }}>Sin clientes elegibles con este filtro.</p>
+            ) : null}
+            {preview.targets.length ? (
+              <details style={{ marginTop: 10 }}>
+                <summary>Ver los {preview.targets.length} destinatarios exactos</summary>
+                <ul>
+                  {preview.targets.map((target) => (
+                    <li key={target.phone}>{target.name || "Sin nombre"} · {target.phone}</li>
+                  ))}
+                </ul>
+              </details>
             ) : null}
           </div>
         ) : null}
@@ -424,7 +460,9 @@ function LeadsPage() {
     () => ({
       stage: stage || undefined,
       tag: tag.trim() || undefined,
-      consent: consent === "1" ? true : consent === "0" ? false : undefined,
+      // Una campaña promocional nunca incluye contactos sin consentimiento,
+      // aunque la tabla esté mostrando otro filtro.
+      consent: true,
       vertical: vertical || undefined,
       rfmSegment: rfmSegment || undefined,
     }),

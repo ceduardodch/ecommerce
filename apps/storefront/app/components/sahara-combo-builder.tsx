@@ -15,6 +15,8 @@ type ComboOption = {
   subtitle: string;
   image: string;
   video?: string;
+  poster?: string;
+  pieces: number;
   skus: string[];
 };
 
@@ -32,10 +34,12 @@ const azulSkus = august2026FallbackProducts
 const comboOptions: ComboOption[] = [
   {
     id: "onyx",
-    title: "Onyx Imperial",
-    subtitle: "Set sugerido de 7 piezas, incluido el wok de 32 cm.",
+    title: "Juego Negro",
+    subtitle: "Juego de 15 piezas, incluido el wok de 32 cm. El wok no se vende por unidad.",
     image: "/media/mgc-imperial/onyx-imperial-conjunto-actual-real.jpeg",
     video: "/media/mgc-imperial/onyx-imperial-conjunto-actual-real.mp4",
+    poster: "/media/mgc-imperial/juego-negro-video-poster.jpeg",
+    pieces: 15,
     skus: onyxSkus,
   },
   {
@@ -43,13 +47,15 @@ const comboOptions: ComboOption[] = [
     title: "Ébano & Plata",
     subtitle: "Set sugerido de 6 piezas para cocina diaria.",
     image: "/media/mgc-ebano-plata/ebano-plata-conjunto-frontal.jpg",
+    pieces: 12,
     skus: onyxSkus.filter((sku) => sku !== "MGC-FR-WOK-32-GN"),
   },
   {
     id: "azul",
-    title: "Azul Oceánico",
+    title: "Oceánico",
     subtitle: "Set sugerido de 6 piezas en azul granito.",
     image: "/media/mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
+    pieces: 12,
     skus: azulSkus,
   },
   {
@@ -57,6 +63,7 @@ const comboOptions: ComboOption[] = [
     title: "Sahara negro",
     subtitle: "Set sugerido de 3 sartenes con tapa.",
     image: "/media/mgc-sahara/sahara-negro-set-real.jpeg",
+    pieces: 6,
     skus: mgcSaharaPanProducts
       .filter((product) => product.color === "Negro")
       .map((product) => product.sku),
@@ -66,6 +73,7 @@ const comboOptions: ComboOption[] = [
     title: "Sahara gris",
     subtitle: "Set sugerido de 3 sartenes con tapa.",
     image: "/media/mgc-sahara/sahara-gris-set-real.jpeg",
+    pieces: 6,
     skus: mgcSaharaPanProducts
       .filter((product) => product.color === "Gris")
       .map((product) => product.sku),
@@ -106,6 +114,14 @@ export function ComboBuilder() {
     selectedSkus.includes(product.sku),
   );
   const qualifiesForCombo = selectedPieces.length >= 3;
+  const hasBundleOnlyPiece = selectedPieces.some(
+    (product) => product.bundleOnly === true,
+  );
+  const selectionCanBeAdded =
+    selectedPieces.length > 0 && (!hasBundleOnlyPiece || qualifiesForCombo);
+  const fullPresetSelected =
+    selectedPieces.length === activeOption.skus.length &&
+    activeOption.skus.every((sku) => selectedSkus.includes(sku));
   const regularTotal = selectedPieces.reduce(
     (sum, product) => sum + product.price.amount,
     0,
@@ -161,9 +177,9 @@ export function ComboBuilder() {
           <div className="relative min-h-[340px] overflow-hidden bg-[#0b1009] p-6 sm:p-8">
             {activeOption.video ? (
               <video
-                className="absolute inset-0 h-full w-full object-cover opacity-80"
+                className="absolute inset-0 h-full w-full object-contain opacity-85"
                 src={activeOption.video}
-                poster={activeOption.image}
+                poster={activeOption.poster || activeOption.image}
                 autoPlay
                 muted
                 loop
@@ -174,7 +190,7 @@ export function ComboBuilder() {
                 src={activeOption.image}
                 alt={`Combo ${activeOption.title} MGC`}
                 fill
-                className="object-cover opacity-80"
+                className="object-contain p-3 opacity-85"
                 sizes="(min-width: 1024px) 45vw, 100vw"
               />
             )}
@@ -226,26 +242,35 @@ export function ComboBuilder() {
                 </p>
               </div>
               <span className="shrink-0 rounded-lg bg-white/8 px-3 py-2 text-sm font-bold text-white">
-                {selectedPieces.length} piezas
+                {fullPresetSelected
+                  ? `${activeOption.pieces} piezas`
+                  : `${selectedPieces.length} recipientes`}
               </span>
             </div>
 
             <div className="mt-5 grid gap-2 sm:grid-cols-2">
               {pieces.map((product) => {
                 const selected = selectedSkus.includes(product.sku);
+                const bundleOnly = product.bundleOnly === true;
                 return (
                   <label
                     key={product.sku}
-                    className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition ${selected ? "border-lime-300/70 bg-lime-300/10" : "border-white/10 bg-black/10 hover:border-white/25"}`}
+                    className={`flex items-center gap-3 rounded-xl border p-3 transition ${bundleOnly ? "cursor-not-allowed border-white/10 bg-white/[0.04]" : "cursor-pointer"} ${selected ? "border-lime-300/70 bg-lime-300/10" : "border-white/10 bg-black/10 hover:border-white/25"}`}
                   >
                     <input
                       type="checkbox"
                       checked={selected}
+                      disabled={bundleOnly}
                       onChange={() => togglePiece(product.sku)}
                       className="h-4 w-4 accent-lime-300"
                     />
                     <span className="min-w-0 flex-1 text-sm font-bold text-white">
                       {pieceName(product)}
+                      {bundleOnly ? (
+                        <span className="mt-0.5 block text-[11px] font-medium text-white/55">
+                          Incluido solo en el juego
+                        </span>
+                      ) : null}
                     </span>
                     <span className="text-right text-xs text-white/60">
                       {money(product.price.amount)}
@@ -281,7 +306,7 @@ export function ComboBuilder() {
               <button
                 type="button"
                 onClick={addSelection}
-                disabled={selectedPieces.length === 0}
+                disabled={!selectionCanBeAdded}
                 className="mt-4 w-full rounded-xl bg-lime-300 px-4 py-3 text-sm font-black text-[#172012] transition hover:bg-lime-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Agregar {selectedPieces.length === 1 ? "pieza" : "selección"} al

@@ -4,6 +4,7 @@ import { crmService } from "../../_shared"
 import {
   selectDispatchTargets,
   dispatchFollowup,
+  campaignFirstName,
   loadDispatchConfig,
   renderTemplate,
 } from "../../../../../modules/b2b-crm/followup-dispatch"
@@ -16,6 +17,8 @@ const broadcastSchema = z.object({
     vertical: z.enum(["cocina", "bienestar", "cross-sell-cocina", "cross-sell-bienestar"]).optional(),
   }),
   templateKey: z.string().min(1),
+  limit: z.number().int().min(1).max(50).default(10),
+  expectedPhones: z.array(z.string()).max(50).optional(),
   dryRun: z.boolean().default(false),
 })
 
@@ -25,6 +28,12 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
   // Validar input
   const input = broadcastSchema.parse(req.body)
+  if (input.filter.consent !== true) {
+    return res.status(400).json({
+      error: "consent_required",
+      message: "Las campañas promocionales requieren el filtro de consentimiento activo.",
+    })
+  }
 
   // Resolver segmento con searchCustomers
   const { customers } = await crm.searchCustomers({
@@ -43,9 +52,20 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   const maxPerDay = Number(process.env.CRM_BROADCAST_MAX_PER_DAY || "50")
   const { targets, skipped } = selectDispatchTargets(customers, eventsByPhone, {
     cooldownDays: config.cooldownDays,
-    maxPerRun: maxPerDay,
+    maxPerRun: Math.min(maxPerDay, input.limit),
     now: new Date(),
   })
+
+  if (!input.dryRun && input.expectedPhones) {
+    const expected = [...input.expectedPhones].sort()
+    const current = targets.map((customer: any) => String(customer.phone)).sort()
+    if (expected.length !== current.length || expected.some((phone, index) => phone !== current[index])) {
+      return res.status(409).json({
+        error: "broadcast_targets_changed",
+        message: "Los destinatarios cambiaron desde la vista previa. Vuelve a revisar antes de enviar.",
+      })
+    }
+  }
 
   // Obtener plantilla
   const template = await crm.getTemplate(input.templateKey)
@@ -87,6 +107,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         return acc
       }, {}),
       sample,
+      targets: targets.map((customer: any) => ({
+        phone: customer.phone,
+        name: customer.name,
+      })),
       media:
         template.media_url && template.media_type
           ? { url: template.media_url, kind: template.media_type }
@@ -117,7 +141,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     // Si el cliente escribió en las últimas 24 h, Meta permite el mensaje de
     // campaña con su media como free-form. Fuera de esa ventana se mantiene la
     // plantilla aprobada y nunca se intenta adjuntar media libre.
-    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const firstName = campaignFirstName(customer.name)
     const lastProductTitle =
       (customer.purchased_products as Array<{ title?: string }> | null | undefined)
         ?.slice(-1)[0]?.title || "tu compra"
@@ -163,6 +187,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         filter: input.filter,
         mode: eventMode,
         detail: outcome.detail,
+        messageId: outcome.messageId,
       },
     })
 
@@ -170,6 +195,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       phone: customer.phone,
       status: outcome.status,
       detail: outcome.detail,
+      messageId: outcome.messageId,
     })
   }
 

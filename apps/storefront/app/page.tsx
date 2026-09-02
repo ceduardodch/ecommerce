@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 
 // ---- data -------------------------------------------------------------------
 
-const HERO_SKU = "MGC-FR-WOK-32-GN";
+const HERO_SKU = "MGC-FR-SARTEN-28-GN";
 
 // Orden visual: primero la colección francesa y después la europea.
 const GRID_ORDER = [

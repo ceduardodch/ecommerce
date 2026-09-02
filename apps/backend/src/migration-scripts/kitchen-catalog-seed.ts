@@ -83,6 +83,7 @@ const legacyKitchenProducts: KitchenProduct[] = [
       deliveryBadge: "Envio gratis Ecuador",
       stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
+      bundleOnly: true,
       price: 151.2,
       originalPrice: 151.2,
       stock: 1,

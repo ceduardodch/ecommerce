@@ -207,6 +207,32 @@ describe("catálogo de campaña", () => {
     expect(isPublicCatalogProduct(baseProduct())).toBe(true)
   })
 
+  it("no ofrece por unidad una pieza reservada para un juego", () => {
+    expect(
+      isPublicCatalogProduct(
+        baseProduct({ sku: "MGC-FR-WOK-32-GN", bundleOnly: true }),
+      ),
+    ).toBe(false)
+    expect(
+      august2026FallbackProducts.find(
+        (product) => product.sku === "MGC-FR-WOK-32-GN",
+      )?.bundleOnly,
+    ).toBe(true)
+  })
+
+  it("usa los nombres corregidos de Juego Negro y Oceánico", () => {
+    expect(
+      august2026FallbackProducts.find(
+        (product) => product.sku === "MGC-FR-SARTEN-20-GN",
+      ),
+    ).toMatchObject({ title: "Sartén Juego Negro 20 cm", collection: "Juego Negro" })
+    expect(
+      august2026FallbackProducts.find(
+        (product) => product.sku === "MGC-EU-SARTEN-20-AZ",
+      ),
+    ).toMatchObject({ title: "Sartén Oceánico 20 cm", collection: "Oceánico" })
+  })
+
   it("mantiene los cuatro totales anunciados al armar el combo", () => {
     const onyx = august2026FallbackProducts.filter(
       (product) =>

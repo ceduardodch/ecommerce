@@ -99,7 +99,7 @@ export function selectDispatchTargets<T extends CustomerLike>(
     }
 
     const recentDispatch = events.some((event) => {
-      if (!["followup_sent", "followup_queued"].includes(event.type)) {
+      if (!["followup_sent", "followup_queued", "broadcast_sent", "broadcast_queued"].includes(event.type)) {
         return false
       }
       const at = event.at ? new Date(event.at).getTime() : NaN
@@ -127,11 +127,25 @@ export type TemplateCustomer = {
   followup_reason?: string | null
 }
 
+/**
+ * Devuelve el primer nombre para personalizar mensajes sin alterar el nombre
+ * completo guardado en el CRM. Tolera espacios de contactos importados y
+ * caracteres invisibles comunes en archivos VCF.
+ */
+export function campaignFirstName(name?: string | null): string {
+  const normalized = String(name || "")
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g, " ")
+    .trim()
+
+  return normalized.split(/\s+/)[0] || "Cliente"
+}
+
 export function buildFollowupMessage(customer: TemplateCustomer) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
-  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
-  const greeting = firstName ? `Hola ${firstName}` : "Hola"
+  const firstName = campaignFirstName(customer.name)
+  const greeting = customer.name ? `Hola ${firstName}` : "Hola"
 
   if (lastProduct?.title) {
     return `${greeting}, vi que compraste ${lastProduct.title}. Te puedo ayudar con mantenimiento, complemento o reposicion para que sigas equipando tu cocina?`
@@ -154,12 +168,12 @@ export function renderTemplate(
 ) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
-  const firstName = customer.name ? String(customer.name).split(" ")[0] : ""
+  const firstName = campaignFirstName(customer.name)
   const productName = lastProduct?.title || "tu compra"
   const days = customer.daysSincePurchase || 30
 
   let message = template.body
-    .replace(/\{nombre\}/gi, firstName || "Cliente")
+    .replace(/\{nombre\}/gi, firstName)
     .replace(/\{producto\}/gi, String(productName))
     .replace(/\{dias\}/gi, String(days))
 
@@ -217,6 +231,7 @@ const META_TEMPLATE_MAP: Record<string, string> = {
   nps: "eterniu_nps",
   referido: "eterniu_referido",
   generico: "eterniu_recompra",
+  promo_coleccion_exotica: "eterniu_promo_onyx_video",
 }
 
 export type MetaTemplatePayload = {
@@ -226,10 +241,21 @@ export type MetaTemplatePayload = {
   template: {
     name: string
     language: { code: string }
-    components: Array<{
-      type: "body"
-      parameters: Array<{ type: "text"; text: string }>
-    }>
+    components: Array<
+      | {
+          type: "body"
+          parameters: Array<{ type: "text"; text: string }>
+        }
+      | {
+          type: "header"
+          parameters: Array<{
+            type: MediaKind
+            video?: { link: string }
+            image?: { link: string }
+            document?: { link: string }
+          }>
+        }
+    >
   }
 }
 
@@ -288,8 +314,35 @@ export function buildMetaTemplatePayload(
   phone: string,
   templateKey: string,
   vars: { nombre: string; producto: string; dias: string },
+  media?: TemplateMedia | null,
 ): MetaTemplatePayload {
   const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
+  const promotionalVideo = templateKey === "promo_coleccion_exotica"
+  const firstName = campaignFirstName(vars.nombre)
+  const components: MetaTemplatePayload["template"]["components"] = []
+  if (promotionalVideo && media) {
+    components.push({
+      type: "header",
+      parameters: [{
+        type: media.kind,
+        ...(media.kind === "video"
+          ? { video: { link: media.url } }
+          : media.kind === "image"
+            ? { image: { link: media.url } }
+            : { document: { link: media.url } }),
+      }],
+    })
+  }
+  components.push({
+    type: "body",
+    parameters: promotionalVideo
+      ? [{ type: "text", text: firstName }]
+      : [
+          { type: "text", text: firstName },
+          { type: "text", text: vars.producto },
+          { type: "text", text: vars.dias },
+        ],
+  })
 
   return {
     messaging_product: "whatsapp",
@@ -298,16 +351,7 @@ export function buildMetaTemplatePayload(
     template: {
       name: templateName,
       language: { code: "es" },
-      components: [
-        {
-          type: "body",
-          parameters: [
-            { type: "text", text: vars.nombre },
-            { type: "text", text: vars.producto },
-            { type: "text", text: vars.dias },
-          ],
-        },
-      ],
+      components,
     },
   }
 }
@@ -368,7 +412,10 @@ export async function dispatchMetaMessage(
       return { status: "queued", detail: `meta_http_${response.status}` }
     }
 
-    return { status: "sent" }
+    const body = await response.json().catch(() => ({})) as {
+      messages?: Array<{ id?: string }>
+    }
+    return { status: "sent", messageId: body.messages?.[0]?.id }
   } catch (cause) {
     return {
       status: "queued",
@@ -382,6 +429,8 @@ export async function dispatchMetaMessage(
 export type DispatchOutcome = {
   status: "sent" | "queued"
   detail?: string
+  /** ID wamid devuelto por Meta; permite casar sent/delivered/read. */
+  messageId?: string
 }
 
 export async function dispatchFollowup(
@@ -417,14 +466,14 @@ export async function dispatchFollowup(
 
     // Fuera de ventana → plantilla
     const templateKey = extra?.templateKey ?? "generico"
-    const firstName = customer.name ? String(customer.name).split(" ")[0] : "Cliente"
+    const firstName = campaignFirstName(customer.name)
     const vars = extra?.vars ?? {
       nombre: firstName,
       producto: "tu compra",
       dias: "30",
     }
     return dispatchMetaMessage(
-      buildMetaTemplatePayload(customer.phone, templateKey, vars),
+      buildMetaTemplatePayload(customer.phone, templateKey, vars, extra?.media),
       config,
     )
   }
@@ -545,9 +594,7 @@ export async function runFollowupDispatch(
       lastInboundAt instanceof Date &&
       now.getTime() - lastInboundAt.getTime() < 24 * 60 * 60 * 1000
 
-    const firstName = (customer as any).name
-      ? String((customer as any).name).split(" ")[0]
-      : "Cliente"
+    const firstName = campaignFirstName((customer as any).name)
     const lastPurchaseTitleForMeta =
       ((customer as any).purchased_products as Array<{ title?: string }> | null)?.slice(-1)[0]?.title || "tu compra"
     const daysSincePurchaseMeta = (customer as any).last_purchase_at

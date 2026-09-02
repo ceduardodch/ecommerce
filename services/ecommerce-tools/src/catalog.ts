@@ -1,6 +1,7 @@
 import type { AppConfig } from "./config.js"
 import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
+import { withCommerceCombos } from "./combo-catalog.js"
 
 // Solo hay dos formas de pago: transferencia y tarjeta (Datafast).
 const supportedPaymentMethods = ["transferencia", "tarjeta"]
@@ -31,6 +32,8 @@ function normalizePaymentMethods(methods?: string[] | null) {
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
 const defaultDeliveryBadge = "Envio gratis"
 export type ProductVertical = "cocina" | "bienestar"
+
+const bundleOnlySkus = new Set(["MGC-FR-WOK-32-GN"])
 
 type MedusaProduct = {
   id: string
@@ -287,6 +290,9 @@ function normalizeMedusaProduct(
     bundleEligible:
       product.metadata?.bundleEligible === true ||
       product.metadata?.bundleEligible === "true",
+    bundleOnly:
+      bundleOnlySkus.has(sku.trim().toUpperCase()) ||
+      booleanFromMetadata(product.metadata?.bundleOnly),
     deliveryBadge:
       stringFromMetadata(product.metadata?.deliveryBadge) ||
       defaultDeliveryBadge,
@@ -473,6 +479,8 @@ function productHaystack(product: Product) {
     product.sku,
     product.material || "",
     product.coating || "",
+    product.collection || "",
+    product.color || "",
     product.tipoCocina || "",
     product.bundleUseCase || "",
     product.healthAngle || "",
@@ -582,13 +590,13 @@ export async function loadProducts(config: AppConfig): Promise<Product[]> {
     )
     const supportedProducts = productsForVertical(products)
     return supportedProducts.length
-      ? supportedProducts
+      ? withCommerceCombos(config, supportedProducts)
       : config.allowDemoCatalog
-        ? withGeneratedImages(config, demoCatalog)
+        ? withCommerceCombos(config, withGeneratedImages(config, demoCatalog))
         : []
   } catch {
     return config.allowDemoCatalog
-      ? withGeneratedImages(config, demoCatalog)
+      ? withCommerceCombos(config, withGeneratedImages(config, demoCatalog))
       : []
   }
 }
@@ -610,6 +618,7 @@ export function searchProducts(
   )
 
   return productsForVertical(products, vertical)
+    .filter((product) => product.bundleOnly !== true || Boolean(product.bundleItems?.length))
     .filter((product) => {
       if (input.category && product.category !== input.category) return false
       if (
@@ -634,6 +643,8 @@ export function searchProducts(
         product.sku,
         product.material || "",
         product.coating || "",
+        product.collection || "",
+        product.color || "",
         product.tipoCocina || "",
         product.nivel || "",
         product.bundleUseCase || "",

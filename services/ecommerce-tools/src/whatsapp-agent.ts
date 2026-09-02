@@ -29,6 +29,7 @@ export type CommerceTools = {
   quote: (input: {
     items: Array<{ productId: string; variantId?: string; quantity: number }>
     customer?: CustomerInput
+    selectionSku?: string
   }) => Promise<Quote>
   createCart: (input: {
     phone: string
@@ -76,6 +77,13 @@ function productContext(products: Product[]): string {
   return products.map((product) => [
     `- ${product.title}`,
     `precio USD ${product.price.amount.toFixed(2)}`,
+    product.originalPrice && product.originalPrice.amount > product.price.amount
+      ? `antes USD ${product.originalPrice.amount.toFixed(2)}`
+      : "",
+    product.promoLabel || "",
+    product.bundleItems?.length
+      ? `incluye: ${product.bundleItems.map((item) => item.title).join(", ")}`
+      : "",
     product.category ? `categoría: ${product.category}` : "",
     product.stock > 0 ? "disponible" : "sin stock confirmado",
     product.productUrl ? `link: ${product.productUrl}` : "",
@@ -91,6 +99,8 @@ function normalizeForMatch(value: string): string {
 
 function quoteSku(event: CustomerEventRecord): string | undefined {
   if (event.type !== "quote_created" || !event.payload || typeof event.payload !== "object") return undefined
+  const selectionSku = (event.payload as { selectionSku?: unknown }).selectionSku
+  if (typeof selectionSku === "string") return selectionSku
   const items = (event.payload as { items?: unknown }).items
   if (!Array.isArray(items) || items.length !== 1 || !items[0] || typeof items[0] !== "object") return undefined
   const sku = (items[0] as { sku?: unknown }).sku
@@ -304,6 +314,7 @@ async function executeCommerceTool(
       const quote = await ctx.commerce.quote({
         items: [{ productId: product.id, variantId: product.variantId, quantity }],
         customer: { phone: ctx.phone },
+        selectionSku: product.sku,
       })
       ctx.quotedSkus.add(product.sku)
       return {
@@ -375,6 +386,7 @@ function toolInstructions() {
     "Llama a quote antes de prometer un total si no estás segura del precio exacto (por ejemplo, si hay precio combo).",
     "Llama a create_cart SOLO cuando el cliente ya confirmó explícitamente que quiere comprar (dijo que sí, que lo quiere, que le mandes el link) Y ya tenés su nombre y su ciudad de entrega. Si falta alguno de esos tres datos, pregúntalo antes de llamar la herramienta — nunca inventes nombre o ciudad.",
     "Usa siempre el SKU exacto del catálogo relevante en las herramientas; nunca inventes uno.",
+    "Los productos cuyo título empieza con Combo ya representan el set completo. Su cantidad es el número de sets, no el número de piezas. Puedes explicar sus piezas y también ofrecer el enlace para cambiar la selección antes de pagar.",
     "Después de crear el carrito, compártele el link al cliente y explica que revisa el pedido y paga con tarjeta en DataFast — vos nunca pedís ni procesás datos de tarjeta.",
   ]
 }

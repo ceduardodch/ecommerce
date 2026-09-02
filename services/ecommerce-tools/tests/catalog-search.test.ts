@@ -76,4 +76,34 @@ describe("búsqueda de catálogo para WhatsApp", () => {
 
     expect(result.map((product) => product.sku)).not.toContain(retired.sku)
   })
+
+  it("oculta piezas que solo se venden dentro de un juego", () => {
+    const wok = {
+      ...products[1],
+      id: "wok-juego",
+      variantId: "wok-juego-v1",
+      sku: "MGC-FR-WOK-32-GN",
+      title: "Wok del Juego Negro 32 cm",
+      bundleOnly: true,
+    }
+    const juego = {
+      ...products[1],
+      id: "juego-negro",
+      variantId: "juego-negro-v1",
+      sku: "MGC-SET-ONYX-IMPERIAL-15",
+      title: "Juego Negro · 15 piezas",
+      bundleItems: [{
+        productId: wok.id,
+        variantId: wok.variantId,
+        sku: wok.sku,
+        title: wok.title,
+        quantity: 1,
+      }],
+    }
+
+    const result = searchProducts([...products, wok, juego], { vertical: "cocina" })
+
+    expect(result.map((product) => product.sku)).not.toContain(wok.sku)
+    expect(result.map((product) => product.sku)).toContain(juego.sku)
+  })
 })

@@ -1,6 +1,7 @@
 import {
   buildFollowupMessage,
   buildMetaMediaPayload,
+  campaignFirstName,
   isWithinSendWindow,
   loadDispatchConfig,
   renderTemplate,
@@ -44,6 +45,20 @@ describe("selectDispatchTargets", () => {
       "cooldown",
       "cooldown",
     ])
+  })
+
+  it("evita repetir una campaña dentro del cooldown", () => {
+    const events = new Map([
+      ["+5931", [{ type: "broadcast_sent", at: "2026-06-09T00:00:00Z" }]],
+      ["+5932", [{ type: "broadcast_queued", at: "2026-06-09T00:00:00Z" }]],
+    ])
+    const { targets, skipped } = selectDispatchTargets(
+      [customer("+5931"), customer("+5932")],
+      events,
+      { cooldownDays: 7, maxPerRun: 10, now: NOW },
+    )
+    expect(targets).toHaveLength(0)
+    expect(skipped.map((entry) => entry.reason)).toEqual(["cooldown", "cooldown"])
   })
 
   it("corta en maxPerRun", () => {
@@ -124,6 +139,21 @@ describe("buildFollowupMessage", () => {
   })
 })
 
+describe("campaignFirstName", () => {
+  it("usa solo la primera palabra del nombre del CRM", () => {
+    expect(campaignFirstName("Carlos Ollas 25 de julio")).toBe("Carlos")
+  })
+
+  it("tolera espacios e invisibles de contactos importados", () => {
+    expect(campaignFirstName("\uFEFF  María\u00A0Sartenes ")).toBe("María")
+  })
+
+  it("usa Cliente cuando falta el nombre", () => {
+    expect(campaignFirstName("   ")).toBe("Cliente")
+    expect(campaignFirstName(null)).toBe("Cliente")
+  })
+})
+
 describe("buildMetaMediaPayload (adjunto de plantilla)", () => {
   it("arma un mensaje de video con caption", () => {
     const payload = buildMetaMediaPayload(
@@ -158,6 +188,7 @@ describe("plantillas base en español", () => {
       "complemento",
       "cuidado",
       "estacional",
+      "promo_coleccion_exotica",
       "cross_sell_cocina",
       "cross_sell_bienestar",
       "nps",
@@ -166,6 +197,14 @@ describe("plantillas base en español", () => {
     ]) {
       expect(keys).toContain(expected)
     }
+  })
+
+  it("la promo Onyx conserva precio, enlace, opt-out y video", () => {
+    const promo = DEFAULT_CRM_TEMPLATES.find((t) => t.key === "promo_coleccion_exotica")!
+    expect(promo.body).toContain("$426.96")
+    expect(promo.body).toContain("#arma-tu-combo")
+    expect(promo.body).toContain("SALIR")
+    expect(promo.mediaType).toBe("video")
   })
 
   it("la plantilla de recompra renderiza las 3 variables", () => {
@@ -179,5 +218,15 @@ describe("plantillas base en español", () => {
     expect(message).toContain("Wok de granito 32 cm")
     expect(message).toContain("92")
     expect(message).not.toContain("{")
+  })
+
+  it("la vista previa no incluye las etiquetas añadidas al contacto", () => {
+    const promo = DEFAULT_CRM_TEMPLATES.find((t) => t.key === "promo_coleccion_exotica")!
+    const message = renderTemplate(promo, {
+      name: "Carlos Ollas 25 de julio",
+    })
+
+    expect(message).toContain("Hola Carlos")
+    expect(message).not.toContain("Ollas 25 de julio")
   })
 })

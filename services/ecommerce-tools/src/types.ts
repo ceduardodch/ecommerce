@@ -23,6 +23,8 @@ export type Product = {
   promoLabel?: string
   stockSignal?: string
   bundleEligible?: boolean
+  /** Pieza cobrable solo cuando pertenece a un juego. */
+  bundleOnly?: boolean
   deliveryBadge?: string
   freeShipping?: boolean
   paymentMethods?: string[]
@@ -55,6 +57,18 @@ export type Product = {
   imageUrl: string
   productUrl: string
   tags: string[]
+  /**
+   * Componentes reales de un combo comercial. El SKU del combo sirve para
+   * buscarlo y conversar; cotizacion, carrito y DataFast siempre operan con
+   * estas variantes reales.
+   */
+  bundleItems?: Array<{
+    productId: string
+    variantId: string
+    sku: string
+    title: string
+    quantity: number
+  }>
 }
 
 export type QuoteLine = {
