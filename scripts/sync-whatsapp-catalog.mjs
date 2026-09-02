@@ -1157,7 +1157,7 @@ function toolsKitchenArray() {
         vertical: "cocina",
         brand: "Eter Niu Cocina",
         freeShipping: true,
-        paymentMethods: ["transferencia", "deuna", "payphone"],
+        paymentMethods: ["transferencia", "tarjeta"],
         couponCode: "GRANITOHOY",
         imageUrl: `https://cocina.b2b.com.ec/media/${product.image}`,
         productUrl: `https://cocina.b2b.com.ec/products/${product.handle}`,

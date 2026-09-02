@@ -2,14 +2,19 @@ import type { MedusaContainer } from "@medusajs/framework/types"
 import { B2B_CRM_MODULE } from "./index"
 import type B2bCrmModuleService from "./service"
 
-export type DispatchMode = "draft" | "openclaw" | "meta"
+/**
+ * `draft` encola para envío manual; `meta` envía por WhatsApp Cloud API.
+ *
+ * Existió un tercer modo, `openclaw`, que empujaba el mensaje a un gateway
+ * externo. Ese runtime se retiró: hoy el bot vive dentro de `ecommerce-tools`.
+ * Un `CRM_FOLLOWUP_DISPATCH_MODE=openclaw` heredado cae a `draft`, que encola
+ * sin enviar — es lo seguro frente a hablarle a un gateway que ya no existe.
+ */
+export type DispatchMode = "draft" | "meta"
 
 export type FollowupDispatchConfig = {
   enabled: boolean
   mode: DispatchMode
-  gatewayUrl?: string
-  gatewayHookPath: string
-  gatewayToken?: string
   cooldownDays: number
   maxPerRun: number
   retryDays: number
@@ -29,18 +34,14 @@ export function loadDispatchConfig(
     .split("-")
     .map((value) => Number(value))
 
-  const rawMode = env.CRM_FOLLOWUP_DISPATCH_MODE
   const mode: DispatchMode =
-    rawMode === "openclaw" ? "openclaw" : rawMode === "meta" ? "meta" : "draft"
+    env.CRM_FOLLOWUP_DISPATCH_MODE === "meta" ? "meta" : "draft"
 
   return {
     enabled: !["0", "false", "no"].includes(
       String(env.CRM_FOLLOWUP_ENABLED ?? "true").toLowerCase(),
     ),
     mode,
-    gatewayUrl: env.OPENCLAW_GATEWAY_URL,
-    gatewayHookPath: env.OPENCLAW_GATEWAY_HOOK_PATH || "/hooks/agent",
-    gatewayToken: env.OPENCLAW_HOOKS_TOKEN,
     cooldownDays: Number(env.CRM_FOLLOWUP_COOLDOWN_DAYS || 7),
     maxPerRun: Number(env.CRM_FOLLOWUP_MAX_PER_RUN || 20),
     retryDays: Number(env.CRM_FOLLOWUP_RETRY_DAYS || 7),
@@ -477,49 +478,7 @@ export async function dispatchFollowup(
     )
   }
 
-  if (config.mode !== "openclaw" || !config.gatewayUrl) {
-    return { status: "queued", detail: "modo_draft" }
-  }
-
-  const url = `${config.gatewayUrl.replace(/\/$/, "")}${config.gatewayHookPath}`
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 10_000)
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...(config.gatewayToken
-          ? { Authorization: `Bearer ${config.gatewayToken}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        name: "crm-followup",
-        channel: "whatsapp",
-        to: customer.phone,
-        deliver: true,
-        message,
-        ...(extra?.media
-          ? { mediaUrl: extra.media.url, mediaType: extra.media.kind }
-          : {}),
-      }),
-    })
-
-    if (!response.ok) {
-      return { status: "queued", detail: `gateway_http_${response.status}` }
-    }
-
-    return { status: "sent" }
-  } catch (cause) {
-    return {
-      status: "queued",
-      detail: `gateway_error_${cause instanceof Error ? cause.name : "unknown"}`,
-    }
-  } finally {
-    clearTimeout(timeout)
-  }
+  return { status: "queued", detail: "modo_draft" }
 }
 
 export type DispatchRunResult = {
@@ -670,7 +629,8 @@ export async function runFollowupDispatch(
       phone: customer.phone,
       type: outcome.status === "sent" ? "followup_sent" : "followup_queued",
       at: now.toISOString(),
-      source: outcome.status === "sent" ? (config.mode === "meta" ? "meta-dispatch" : "openclaw-dispatch") : "crm-job",
+      // Solo el modo `meta` llega a "sent"; `draft` siempre encola.
+      source: outcome.status === "sent" ? "meta-dispatch" : "crm-job",
       nextFollowupAt: retryAt.toISOString(),
       payload: {
         suggestedMessage: message,

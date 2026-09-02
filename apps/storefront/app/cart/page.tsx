@@ -200,8 +200,14 @@ export default function CartPage() {
                 </a>
 
                 <p className="text-[12px] text-[#6B6B66] text-center">
-                  WhatsApp: el vendedor recibe tu lista completa y puede armar tu
-                  combo. Tarjeta: pago seguro online por Datafast (IVA incluido).
+                  WhatsApp: el vendedor recibe tu lista completa, puede armar tu
+                  combo y te pasa los datos para transferencia. Tarjeta: pago
+                  seguro online por Datafast (IVA incluido). Confirmamos el pago
+                  y despachamos con guía de seguimiento.{" "}
+                  <a href="/pagos" className="underline">
+                    Ver formas de pago
+                  </a>
+                  .
                 </p>
               </div>
             </div>

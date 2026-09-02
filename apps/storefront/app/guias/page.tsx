@@ -29,7 +29,7 @@ export default async function GuidesPage() {
 
   return (
     <div data-theme="cocina">
-      <PromoBar message="Envío gratis a todo Ecuador · Paga al recibir" />
+      <PromoBar message="Envío gratis a todo Ecuador · Pago con tarjeta o transferencia" />
       <SiteHeader vertical="cocina" compact surface="dark" backHref="/" compactTitle="Guías" />
 
       <main className="relative isolate bg-[#10160e] pb-20">

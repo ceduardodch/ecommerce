@@ -1,6 +1,6 @@
 # Eter Niu AI Native Social Commerce
 
-Conversational social commerce with two public verticals, one shared Medusa core, OpenClaw tool endpoints, CRM followups, PayPhone API Link, and Meta catalog export.
+Conversational social commerce with two public verticals, one shared Medusa core, a WhatsApp sales agent, CRM followups, Datafast card checkout, and Meta catalog export.
 
 - `cocina.b2b.com.ec`: cocina saludable, ollas/woks de granito, campanas Meta -> WhatsApp.
 - `bienestar.b2b.com.ec`: bienestar lifestyle, productos no cocina, campanas por SKU -> WhatsApp.
@@ -10,8 +10,7 @@ Conversational social commerce with two public verticals, one shared Medusa core
 
 - `apps/backend`: Medusa v2 commerce backend and admin.
 - `apps/storefront`: Next.js public storefront with host-based vertical routing.
-- `services/ecommerce-tools`: HTTP and MCP tools for OpenClaw seller workflows.
-- `agents`: OpenClaw seller prompt and example runtime config.
+- `services/ecommerce-tools`: HTTP and MCP tools, plus the WhatsApp sales agent (Vicky).
 - `skills`: repo-local skills for sales, Meta/Marketplace drafts, and PayPhone reconciliation.
 
 ## AI handoff
@@ -22,7 +21,6 @@ For any IA agent retaking this repo, read in this order:
 - `AI_HANDOFF.md`
 - `docs/CURRENT_STATE.md`
 - `docs/PROJECT_MAP.md`
-- `docs/OPENCLAW_HANDOFF.md`
 
 Practical rule: `AGENTS.md` governs behavior; `AI_HANDOFF.md` gives project context.
 
@@ -53,7 +51,7 @@ Useful URLs:
 - Meta feed cocina: `http://localhost:8787/feeds/meta/catalog.csv?vertical=cocina`
 - Meta feed bienestar: `http://localhost:8787/feeds/meta/catalog.csv?vertical=bienestar`
 
-## OpenClaw tools
+## Tools
 
 The seller agent should call `services/ecommerce-tools`:
 
@@ -78,13 +76,8 @@ npm run tools:build
 npm --workspace @b2b/ecommerce-tools run mcp
 ```
 
-Use the dedicated seller agent and skills:
-
-- `agents/openclaw-ecommerce-seller.md`
-- `agents/openclaw-ecommerce-config.example.env`
-- `skills/ecommerce-sales/SKILL.md`
-- `skills/meta-marketplace-assistant/SKILL.md`
-- `skills/payphone-reconciliation/SKILL.md`
+El guion de venta de Vicky no vive en el repo: son reglas en el CRM que el dueño
+edita en Admin → CRM WhatsApp → Guión IA. Ver `docs/VICKY_BOT.md`.
 
 ## Verticales + CRM
 
@@ -152,7 +145,7 @@ El CRM WhatsApp vive en el modulo Medusa `b2bCrm`:
 - API admin: `/admin/b2b/crm/*` y `/admin/b2b/orders/*`.
 - Tablas: `crm_customer_profile`, `crm_customer_event`, `conversational_order`.
 
-`ecommerce-tools` queda como fachada para OpenClaw/PayPhone/Meta. En produccion usar `CRM_BACKEND=medusa` y `MEDUSA_ADMIN_API_KEY` con secret key `sk_...`.
+`ecommerce-tools` concentra las herramientas de venta, el agente de WhatsApp, Datafast y Meta. En produccion usar `CRM_BACKEND=medusa` y `MEDUSA_ADMIN_API_KEY` con secret key `sk_...`.
 
 ## Deployment
 
@@ -177,5 +170,3 @@ See:
 - `docs/CURRENT_STATE.md`
 - `docs/PROJECT_MAP.md`
 - `docs/COOLIFY_DEPLOYMENT.md`
-- `docs/OPENCLAW_HANDOFF.md`
-- `docs/OPENCLAW_SELLER_PROMPT.md`

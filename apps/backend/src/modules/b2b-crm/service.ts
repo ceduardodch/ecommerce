@@ -3,6 +3,10 @@ import { normalizeEcPhone } from "../../lib/ec-phone"
 import { DEFAULT_CRM_TEMPLATES } from "./default-templates"
 import { DEFAULT_AGENT_PLAYBOOK } from "./default-agent-playbook"
 import {
+  DEFAULT_COMMERCE_SETTINGS,
+  isCommerceSettingKey,
+} from "./default-commerce-settings"
+import {
   ConversationalOrder,
   CrmConversation,
   CrmConversationAssignment,
@@ -11,6 +15,7 @@ import {
   CrmCustomerProfile,
   CrmInternalNote,
   CrmMessageTemplate,
+  CrmSetting,
   ProductReview,
 } from "./models"
 import type {
@@ -50,6 +55,9 @@ type AnyB2bCrmService = {
   listCrmMessageTemplates: (filters?: unknown, config?: unknown) => Promise<any[]>
   createCrmMessageTemplates: (data: unknown) => Promise<any>
   updateCrmMessageTemplates: (data: unknown) => Promise<any>
+  listCrmSettings: (filters?: unknown, config?: unknown) => Promise<any[]>
+  createCrmSettings: (data: unknown) => Promise<any>
+  updateCrmSettings: (data: unknown) => Promise<any>
   listProductReviews: (filters?: unknown, config?: unknown) => Promise<any[]>
   listAndCountProductReviews: (
     filters?: unknown,
@@ -239,6 +247,7 @@ class B2bCrmModuleService extends MedusaService({
   CrmCustomerProfile,
   CrmInternalNote,
   CrmMessageTemplate,
+  CrmSetting,
   ProductReview,
 }) {
   private service_() {
@@ -1060,6 +1069,50 @@ class B2bCrmModuleService extends MedusaService({
       }))
     }
     return saved
+  }
+
+  /**
+   * Configuración comercial (cuenta bancaria, cupón, IVA, número de venta).
+   * Devuelve siempre la lista completa: lo guardado pisa al valor base, y si
+   * la tabla no responde el consumidor sigue con los valores base en vez de
+   * quedarse sin cupón o sin IVA.
+   */
+  async commerceSettings() {
+    const saved = await this.service_()
+      .listCrmSettings({}, { order: { key: "ASC" } })
+      .catch(() => [])
+    const byKey = new Map(
+      (saved as any[]).map((item) => [item.key, item]),
+    )
+
+    return DEFAULT_COMMERCE_SETTINGS.map((seed) => {
+      const stored: any = byKey.get(seed.key)
+      return {
+        key: seed.key,
+        label: seed.label,
+        help: seed.help,
+        group: seed.group,
+        kind: seed.kind,
+        publico: seed.publico,
+        value: stored?.value ?? seed.value,
+        isDefault: stored?.value === undefined,
+        updatedAt: stored?.updated_at,
+      }
+    })
+  }
+
+  async saveCommerceSettings(items: Array<{ key: string; value: string }>) {
+    const service = this.service_()
+    for (const item of items) {
+      if (!isCommerceSettingKey(item.key)) continue
+      const [existing] = await service.listCrmSettings({ key: item.key }, { take: 1 })
+      if (existing) {
+        await service.updateCrmSettings({ id: existing.id, value: item.value })
+      } else {
+        await service.createCrmSettings({ key: item.key, value: item.value })
+      }
+    }
+    return this.commerceSettings()
   }
 
   async getTemplate(key: string) {

@@ -8,6 +8,8 @@ const PLAYBOOK_KEYS = new Set([
   "agent_objecion_envio",
   "agent_objecion_pensarlo",
   "agent_preguntas_frecuentes",
+  "agent_formas_de_pago",
+  "agent_confianza",
   "agent_cierre",
 ])
 

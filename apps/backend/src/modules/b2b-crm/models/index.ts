@@ -6,4 +6,5 @@ export { default as CrmConversationAssignment } from "./crm-conversation-assignm
 export { default as CrmConversationMessage } from "./crm-conversation-message"
 export { default as CrmInternalNote } from "./crm-internal-note"
 export { default as CrmMessageTemplate } from "./crm-message-template"
+export { default as CrmSetting } from "./crm-setting"
 export { default as ProductReview } from "./product-review"

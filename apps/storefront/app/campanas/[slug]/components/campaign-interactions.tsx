@@ -219,7 +219,7 @@ export function CampaignWhatsAppPanel({
           Reclamar cupon y confirmar stock por WhatsApp
         </TrackedWhatsAppLink>
         <small className="text-[12px] text-[#6B6B66] leading-snug">
-          Incluye {commerce.freeShippingLabel.toLowerCase()},{" "}
+          Incluye {commerce.freeShippingLabel.toLowerCase()}, pago por{" "}
           {commerce.paymentMethodsLabel} y{" "}
           {complement
             ? product.deliveryBadge || product.category

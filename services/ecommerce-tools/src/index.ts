@@ -15,6 +15,12 @@ import {
   saleFeedbackInputSchema,
   toolsEventInputSchema,
 } from "./contracts.js"
+import { paymentMethodsInfo } from "./payments.js"
+import {
+  publicCommerceSettings,
+  refreshCommerceSettings,
+  startCommerceSettingsRefresh,
+} from "./settings.js"
 import { mountWhatsappWebhookRoutes } from "./whatsapp-webhook.js"
 import { mountWhatsappReplyRoute, sendWhatsappCloudReply } from "./whatsapp-reply.js"
 import type { CustomerRecord } from "./types.js"
@@ -92,6 +98,22 @@ app.post("/tools/whatsapp-cart-sessions/:token/consume", async (request, reply) 
   const session = await service.consumeWhatsappCart(params.token)
   if (!session) return reply.code(404).send({ error: "cart_session_unavailable" })
   return { session }
+})
+
+// Formas de pago (dos: transferencia y tarjeta Datafast) + guion de confianza.
+// Vicky debe leer esto antes de dictar datos bancarios o prometer despacho.
+app.get("/tools/payment-methods", async () => {
+  // La cuenta puede haber cambiado en el Admin hace un minuto; el refresco es
+  // barato comparado con dictarle al cliente una cuenta vieja.
+  await refreshCommerceSettings(config)
+  return paymentMethodsInfo(config)
+})
+
+// Configuración comercial publicable (cupón, IVA, número de venta, redes).
+// La consume el storefront; el número de cuenta NO sale por aquí.
+app.get("/tools/commerce-settings", async () => {
+  await refreshCommerceSettings(config)
+  return publicCommerceSettings(config)
 })
 
 // ─── Datafast (botón de pagos con tarjeta) ───
@@ -294,6 +316,13 @@ async function sweepPendingDatafastCheckouts() {
 
 try {
   await app.listen({ port: config.port, host: "0.0.0.0" })
+
+  // Configuración comercial del Admin (cupón, IVA, cuenta bancaria, número de
+  // venta). No bloquea el arranque: si Medusa aún no responde, el servicio
+  // queda con los valores base y el refresco periódico lo corrige.
+  void refreshCommerceSettings(config)
+  startCommerceSettingsRefresh(config)
+
   void reconcileDatafastWhenMedusaIsReady()
     .catch((error) => {
       app.log.error(error, "Unexpected DataFast reconciliation failure")

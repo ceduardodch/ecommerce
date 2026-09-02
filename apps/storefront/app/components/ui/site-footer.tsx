@@ -1,4 +1,5 @@
 import { NewsletterSignup } from "./newsletter-signup"
+import { getCommerceSettings } from "../../../lib/settings"
 import { Isotipo } from "./isotipo"
 import { kitchenBaseUrl, wellnessBaseUrl } from "../../../lib/domains"
 import {
@@ -49,7 +50,13 @@ function BrandLockup() {
   )
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  // El Instagram sale de la configuración del Admin, no de una constante ni de
+  // una variable de entorno: es el enlace que Vicky también usa como prueba de
+  // confianza, y debe cambiar en un solo lugar.
+  const { instagramUrl } = await getCommerceSettings()
+  const instagramHandle = `@${instagramUrl.replace(/\/$/, "").split("/").pop() || "eter.niu"}`
+
   return (
     <footer className="border-t border-white/10 bg-[#10160e] px-4 py-12">
       <div className="mx-auto max-w-5xl">
@@ -64,12 +71,15 @@ export function SiteFooter() {
               Guías
             </a>
             <a
-              href="https://instagram.com/eter.niu"
+              href={instagramUrl}
               target="_blank"
               rel="noreferrer"
               className="text-[#d3fa99] hover:text-[#FAF7F2] transition-colors"
             >
-              @eter.niu
+              {instagramHandle}
+            </a>
+            <a href="/pagos" className="hover:text-[#d3fa99] transition-colors">
+              Formas de pago
             </a>
             <a href="/privacidad" className="hover:text-[#d3fa99] transition-colors">
               Privacidad
@@ -93,7 +103,7 @@ export function SiteFooter() {
             </a>
           </p>
           <p className="mt-3 text-[11px] text-[#b8c2ae]">
-            Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
+            Envío gratis a todo Ecuador por Servientrega · Pago con tarjeta o transferencia
           </p>
         </div>
 
@@ -161,6 +171,14 @@ export function SiteFooter() {
               </li>
               <li>
                 <a
+                  href="/pagos"
+                  className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
+                >
+                  Formas de pago
+                </a>
+              </li>
+              <li>
+                <a
                   href="/privacidad"
                   className="text-[13px] text-[#b8c2ae] hover:text-[#d3fa99] transition-colors"
                 >
@@ -194,13 +212,13 @@ export function SiteFooter() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://instagram.com/eter.niu"
+                  href={instagramUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 text-[13px] text-[#d3fa99] hover:text-[#FAF7F2] transition-colors"
                 >
                   <InstagramIcon />
-                  @eter.niu
+                  {instagramHandle}
                 </a>
               </li>
               <li>
@@ -238,7 +256,7 @@ export function SiteFooter() {
 
         {/* Bottom notice (both mobile & desktop) */}
         <p className="mt-8 text-[11px] text-[#b8c2ae]">
-          Envío gratis a todo Ecuador por Servientrega · Pagas al recibir
+          Envío gratis a todo Ecuador por Servientrega · Pago con tarjeta o transferencia
         </p>
       </div>
     </footer>

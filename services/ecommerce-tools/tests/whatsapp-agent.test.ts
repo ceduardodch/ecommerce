@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { loadConfig } from "../src/config.js"
+import { applyCommerceSettings } from "../src/settings.js"
 import { cityFromConversation, commerceHistoryAfterReset, createWhatsAppAgentReply, lockedProductFromHistory, mentionedProducts } from "../src/whatsapp-agent.js"
 
 function config(overrides: Record<string, string> = {}) {
@@ -156,6 +157,38 @@ describe("createWhatsAppAgentReply", () => {
     expect(payload.instructions).toContain("Guía el cierre sin presionar")
     expect(payload.instructions).toContain("Ante una objeción")
     expect(payload.instructions).toContain("sin volver a presentarte")
+  })
+
+  it("le dice las DOS formas de pago y dicta la cuenta que cargó el Admin", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Te ayudo." }] }],
+    }), { status: 200 }))
+    const configured = applyCommerceSettings(config(), [
+      { key: "pago_banco_nombre", value: "Banco Pichincha", publico: true },
+      { key: "pago_banco_titular", value: "Nombre Apellido", publico: true },
+      { key: "pago_banco_ruc", value: "1700000000001", publico: true },
+      { key: "pago_banco_tipo_cuenta", value: "Ahorros", publico: true },
+      { key: "pago_banco_numero", value: "1234567890", publico: false },
+    ])
+
+    await createWhatsAppAgentReply(configured, { text: "¿Cómo pago?", products }, fetchMock as unknown as typeof fetch)
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { instructions: string }
+    expect(payload.instructions).toContain("transferencia")
+    expect(payload.instructions).toContain("Datafast")
+    expect(payload.instructions).toContain("1234567890")
+    expect(payload.instructions).toContain("Nunca prometas pago contra entrega")
+  })
+
+  it("sin cuenta cargada, manda a derivar en vez de inventar una", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      output: [{ type: "message", content: [{ type: "output_text", text: "Te ayudo." }] }],
+    }), { status: 200 }))
+
+    await createWhatsAppAgentReply(config(), { text: "¿Cómo pago?", products }, fetchMock as unknown as typeof fetch)
+
+    const payload = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { instructions: string }
+    expect(payload.instructions).toContain("Nunca inventes un número de cuenta")
   })
 
   it("agrega las reglas activas del backoffice al prompt", async () => {

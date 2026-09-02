@@ -15,7 +15,7 @@ import {
   productSlug,
   type Product,
 } from "../../../../lib/catalog"
-import { commercialInfo } from "../../../../lib/commercial"
+import { commercialInfo, paymentBadgeLabel } from "../../../../lib/commercial"
 import { publicCampaignPath, wellnessBaseUrl } from "../../../../lib/domains"
 import { absoluteUrl } from "../../../../lib/seo"
 import { wellnessOpeningLine } from "../../../../lib/wellness"
@@ -139,7 +139,7 @@ function TrustGrid({ product }: { product: Product }) {
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">
         <BadgeDollarSign size={20} className="text-white" />
         <span className="text-[10.5px] leading-snug text-[#b8c2ae]">
-          Pagas al recibir
+          {paymentBadgeLabel}
         </span>
       </div>
       <div className="flex flex-col items-center gap-1.5 px-2 py-4 text-center">

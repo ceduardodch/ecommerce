@@ -56,9 +56,6 @@ services:
       CRM_FOLLOWUP_COOLDOWN_DAYS: ${CRM_FOLLOWUP_COOLDOWN_DAYS:-7}
       CRM_FOLLOWUP_RETRY_DAYS: ${CRM_FOLLOWUP_RETRY_DAYS:-7}
       CRM_FOLLOWUP_WINDOW: ${CRM_FOLLOWUP_WINDOW:-9-19}
-      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-}
-      OPENCLAW_GATEWAY_HOOK_PATH: ${OPENCLAW_GATEWAY_HOOK_PATH:-/hooks/agent}
-      OPENCLAW_HOOKS_TOKEN: ${OPENCLAW_HOOKS_TOKEN:-}
       # WhatsApp Cloud API (modo "meta"; dejar en blanco para no activar)
       WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
       WHATSAPP_ACCESS_TOKEN: ${WHATSAPP_ACCESS_TOKEN:-}
@@ -99,6 +96,9 @@ services:
       MEDUSA_ADMIN_API_URL: http://medusa-api:9000
       MEDUSA_PUBLISHABLE_KEY: ${MEDUSA_PUBLISHABLE_KEY:-}
       MEDUSA_ADMIN_API_KEY: ${MEDUSA_ADMIN_API_KEY:-}
+      # Cuenta bancaria, cupón, IVA, redes y nombre comercial se editan en
+      # Admin → CRM WhatsApp → Configuración, no aquí. Estas dos quedan como
+      # respaldo de arranque para no cambiar IVA ni número de venta en silencio.
       ECOMMERCE_TAX_RATE: ${ECOMMERCE_TAX_RATE:-0.15}
       WHATSAPP_SELLER_NUMBER: ${WHATSAPP_SELLER_NUMBER:-593987135207}
       DATAFAST_ENV: ${DATAFAST_ENV:-test}
@@ -109,8 +109,6 @@ services:
       DATAFAST_TID: ${DATAFAST_TID:-}
       DATAFAST_ECOMMERCE_ID: ${DATAFAST_ECOMMERCE_ID:-}
       DATAFAST_SERVICE_PROVIDER_ID: ${DATAFAST_SERVICE_PROVIDER_ID:-}
-      DATAFAST_CUSTOMER_NAME: ${DATAFAST_CUSTOMER_NAME:-ETERNIU}
-      META_CATALOG_BRAND: "${META_CATALOG_BRAND:-Eter Niu Cocina}"
       META_API_VERSION: ${META_API_VERSION:-v23.0}
       PIXEL_ENABLED: ${PIXEL_ENABLED:-false}
       META_PIXEL_ID: ${META_PIXEL_ID:-}
@@ -128,9 +126,6 @@ services:
       WHATSAPP_AGENT_MODE: ${WHATSAPP_AGENT_MODE:-off}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5-mini}
-      OPENCLAW_GATEWAY_URL: ${OPENCLAW_GATEWAY_URL:-}
-      OPENCLAW_GATEWAY_HOOK_PATH: ${OPENCLAW_GATEWAY_HOOK_PATH:-/hooks/agent}
-      OPENCLAW_HOOKS_TOKEN: ${OPENCLAW_HOOKS_TOKEN:-}
     volumes:
       - tools-data:/data
       - crm-whatsapp-media:/app/data/whatsapp-media

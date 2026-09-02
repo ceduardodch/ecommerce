@@ -110,14 +110,13 @@ describe("loadDispatchConfig", () => {
     expect(config.windowEndHour).toBe(19)
   })
 
-  it("activa openclaw solo cuando se pide explícitamente", () => {
+  it("respeta kill-switch y ventana, y descarta el modo openclaw retirado", () => {
     const config = loadDispatchConfig({
       CRM_FOLLOWUP_DISPATCH_MODE: "openclaw",
-      OPENCLAW_GATEWAY_URL: "https://vicky.b2b.com.ec",
       CRM_FOLLOWUP_ENABLED: "false",
       CRM_FOLLOWUP_WINDOW: "8-20",
     } as unknown as NodeJS.ProcessEnv)
-    expect(config.mode).toBe("openclaw")
+    expect(config.mode).toBe("draft")
     expect(config.enabled).toBe(false)
     expect(config.windowStartHour).toBe(8)
     expect(config.windowEndHour).toBe(20)

@@ -11,8 +11,13 @@ export type AppConfig = {
   medusaAdminApiUrl: string
   medusaPublishableKey?: string
   medusaAdminApiKey?: string
+  // Configuración comercial: valores de ARRANQUE. Los definitivos los sirve el
+  // backend (`crm_setting`, Admin → CRM WhatsApp → Configuración) y los aplica
+  // `settings.ts` sobre este mismo objeto. Ver docs/CONFIG_COMERCIAL.md.
   taxRate: number
   whatsappSellerNumber: string
+  couponCodeCocina: string
+  couponCodeBienestar: string
   // Datafast (DataFast Ecuador / ACI oppwa) — botón de pagos con tarjeta
   datafastEnv: "test" | "live"
   datafastDryRun: boolean
@@ -23,6 +28,15 @@ export type AppConfig = {
   datafastEcommerceId?: string
   datafastServiceProviderId?: string
   datafastCustomerName?: string
+  // Transferencia bancaria — la cuenta llega del backend, nunca del repo ni de
+  // variables de entorno.
+  bankTransferEnabled: boolean
+  bankName: string
+  bankAccountHolder?: string
+  bankAccountTaxId?: string
+  bankAccountType: string
+  bankAccountNumber?: string
+  brandInstagramUrl: string
   metaCatalogBrand: string
   metaApiVersion: string
   pixelEnabled: boolean
@@ -95,10 +109,16 @@ export function loadConfig(env = process.env): AppConfig {
     medusaAdminApiUrl: env.MEDUSA_ADMIN_API_URL || "http://localhost:9000",
     medusaPublishableKey: env.MEDUSA_PUBLISHABLE_KEY,
     medusaAdminApiKey: env.MEDUSA_ADMIN_API_KEY,
+    // ECOMMERCE_TAX_RATE y WHATSAPP_SELLER_NUMBER siguen leyéndose como
+    // respaldo de arranque: un despliegue que hoy los tenga puestos no debe
+    // cambiar de IVA ni de número de venta en silencio al desplegar. El ajuste
+    // del backend pisa a ambos en cuanto responde.
     taxRate: Number(env.ECOMMERCE_TAX_RATE ?? 0.15),
     whatsappSellerNumber: normalizeWhatsappSellerNumber(
       env.WHATSAPP_SELLER_NUMBER || "0987135207",
     ),
+    couponCodeCocina: "GRANITOHOY",
+    couponCodeBienestar: "BIENESTARHOY",
     // Datafast: dry-run por defecto hasta tener credenciales aprobadas
     datafastEnv: env.DATAFAST_ENV === "live" ? "live" : "test",
     datafastDryRun: bool(env.DATAFAST_DRY_RUN, true),
@@ -108,8 +128,18 @@ export function loadConfig(env = process.env): AppConfig {
     datafastTid: env.DATAFAST_TID,
     datafastEcommerceId: env.DATAFAST_ECOMMERCE_ID,
     datafastServiceProviderId: env.DATAFAST_SERVICE_PROVIDER_ID,
-    datafastCustomerName: env.DATAFAST_CUSTOMER_NAME,
-    metaCatalogBrand: env.META_CATALOG_BRAND || "Eter Niu Cocina",
+    datafastCustomerName: "ETERNIU",
+    // Arranque de la transferencia. El número de cuenta llega SOLO del backend:
+    // vacío aquí significa "sin configurar", y entonces el bot escala a un
+    // humano en vez de dictar una cuenta inventada.
+    bankTransferEnabled: true,
+    bankName: "Banco Pichincha",
+    bankAccountHolder: undefined,
+    bankAccountTaxId: undefined,
+    bankAccountType: "Ahorros",
+    bankAccountNumber: undefined,
+    brandInstagramUrl: "https://instagram.com/eter.niu",
+    metaCatalogBrand: "Eter Niu Cocina",
     metaApiVersion: env.META_API_VERSION || "v23.0",
     pixelEnabled: bool(env.PIXEL_ENABLED || env.NEXT_PUBLIC_PIXEL_ENABLED, true),
     metaPixelId: env.META_PIXEL_ID || env.NEXT_PUBLIC_META_PIXEL_ID,

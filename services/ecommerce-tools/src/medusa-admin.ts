@@ -179,6 +179,21 @@ export type AgentPlaybookItem = {
   active: boolean
 }
 
+export type CommerceSettingRecord = {
+  key: string
+  value: string
+  publico: boolean
+}
+
+/** Configuración comercial que el dueño edita en Admin → CRM → Configuración. */
+export async function getMedusaCommerceSettings(config: AppConfig) {
+  const result = await medusaAdminFetch<{ items: CommerceSettingRecord[] }>(
+    config,
+    "/admin/b2b/crm/commerce-settings",
+  )
+  return result.items
+}
+
 export async function getMedusaAgentPlaybook(config: AppConfig) {
   const result = await medusaAdminFetch<{ items: AgentPlaybookItem[] }>(
     config,

@@ -14,8 +14,8 @@ function predictedMode(
   customer: any,
   configMode: string,
   now: Date,
-): "meta_freeform" | "meta_template" | "openclaw" | "draft" {
-  if (configMode !== "meta") return configMode as "openclaw" | "draft"
+): "meta_freeform" | "meta_template" | "draft" {
+  if (configMode !== "meta") return "draft"
 
   const lastInboundRaw = customer.metadata?.lastInboundAt as string | undefined
   if (!lastInboundRaw) return "meta_template"

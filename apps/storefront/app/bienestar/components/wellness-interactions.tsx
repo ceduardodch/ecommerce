@@ -217,7 +217,7 @@ export function WellnessRoutinePanel({
           </TrackedWhatsAppLink>
 
           <p className="text-center text-[12px] text-[#6B6B66]">
-            Incluye {commerce.freeShippingLabel.toLowerCase()},{" "}
+            Incluye {commerce.freeShippingLabel.toLowerCase()}, pago por{" "}
             {commerce.paymentMethodsLabel} y asesoría por WhatsApp.
           </p>
         </div>

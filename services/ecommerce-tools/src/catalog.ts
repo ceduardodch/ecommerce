@@ -3,9 +3,33 @@ import { demoCatalog } from "./demo-catalog.js"
 import type { Product } from "./types.js"
 import { withCommerceCombos } from "./combo-catalog.js"
 
-const defaultPaymentMethods = ["transferencia", "deuna", "tarjeta"]
+// Solo hay dos formas de pago: transferencia y tarjeta (Datafast).
+const supportedPaymentMethods = ["transferencia", "tarjeta"]
+const defaultPaymentMethods = supportedPaymentMethods
+
+/**
+ * Descarta métodos legacy (deuna!, payphone, contra entrega) que sigan
+ * guardados en la metadata de Medusa o en el catálogo demo.
+ */
+/**
+ * El cupón vigente por línea sale de la configuración del Admin y pisa a la
+ * metadata del producto: los seeds escribieron el mismo cupón en cada ficha, así
+ * que respetarla dejaría la configuración sin efecto y obligaría a editar
+ * producto por producto para cambiar una promoción.
+ */
+function couponForVertical(config: AppConfig, vertical: ProductVertical) {
+  return vertical === "bienestar"
+    ? config.couponCodeBienestar
+    : config.couponCodeCocina
+}
+
+function normalizePaymentMethods(methods?: string[] | null) {
+  const kept = (methods || []).filter((method) =>
+    supportedPaymentMethods.includes(method.trim().toLowerCase()),
+  )
+  return kept.length ? kept : defaultPaymentMethods
+}
 const defaultStoveCompatibility = "Gas, induccion y vitroceramica"
-const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"
 export type ProductVertical = "cocina" | "bienestar"
 
@@ -196,10 +220,8 @@ function withGeneratedImages(config: AppConfig, products: Product[]) {
       ),
       deliveryBadge: product.deliveryBadge || defaultDeliveryBadge,
       freeShipping: product.freeShipping ?? true,
-      paymentMethods: product.paymentMethods?.length
-        ? product.paymentMethods
-        : defaultPaymentMethods,
-      couponCode: product.couponCode || defaultCouponCode,
+      paymentMethods: normalizePaymentMethods(product.paymentMethods),
+      couponCode: couponForVertical(config, vertical),
       stoveCompatibility:
         product.stoveCompatibility ||
         (vertical === "bienestar"
@@ -278,11 +300,10 @@ function normalizeMedusaProduct(
       product.metadata?.freeShipping === undefined
         ? true
         : booleanFromMetadata(product.metadata?.freeShipping),
-    paymentMethods:
-      stringArrayFromMetadata(product.metadata?.paymentMethods) ||
-      defaultPaymentMethods,
-    couponCode:
-      stringFromMetadata(product.metadata?.couponCode) || defaultCouponCode,
+    paymentMethods: normalizePaymentMethods(
+      stringArrayFromMetadata(product.metadata?.paymentMethods),
+    ),
+    couponCode: couponForVertical(config, vertical),
     material: stringFromMetadata(product.metadata?.material),
     coating: stringFromMetadata(product.metadata?.coating),
     teflonFree: booleanFromMetadata(product.metadata?.teflonFree),

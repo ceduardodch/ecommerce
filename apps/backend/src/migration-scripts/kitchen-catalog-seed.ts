@@ -30,7 +30,7 @@ type KitchenProduct = {
 const commercialMetadata = {
   vertical: "cocina",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "tarjeta DataFast"],
+  paymentMethods: ["transferencia", "tarjeta"],
   couponCode: "GRANITOHOY",
 };
 

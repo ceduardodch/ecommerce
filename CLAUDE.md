@@ -24,7 +24,7 @@ lo que no comprobaste:
 
 - `apps/backend` — Medusa v2 + módulo CRM `b2b-crm` (perfiles, eventos, recompra)
 - `apps/storefront` — Next.js 15 (cocina/bienestar por host; rediseño en curso)
-- `services/ecommerce-tools` — Fastify, fachada para Vicky (OpenClaw, app externa)
+- `services/ecommerce-tools` — Fastify: herramientas de venta y el agente de WhatsApp (Vicky) que corre dentro del servicio
 - `scripts/` — validación de campañas, sync catálogo, reset CRM
 
 ## Planes ejecutables (fuente de verdad; las decisiones ahí están CERRADAS)
@@ -32,6 +32,7 @@ lo que no comprobaste:
 - `docs/CRM_BACKLOG.md` — CRM nivel benchmark (épicas TPL/CONV/RPT/BRC/XSELL/BMK)
 - `docs/WEB_REDESIGN_PLAN.md` — rediseño premium editorial (WFND/WCMP/WPRD/WHOM/WCLN)
 - `docs/DOMAIN_PLAN.md` — migración a eter-niu.com (D1–D5)
+- `docs/CONFIG_COMERCIAL.md` — qué es config del Admin y qué es variable de entorno
 - `docs/AGENT_WORKFLOW.md` — coordinación de agentes y estrategia de tokens
 - `docs/LESSONS_LEARNED.md` — lecciones del proyecto
 

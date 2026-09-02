@@ -129,7 +129,7 @@ describe("normalizeProduct", () => {
 
     expect(normalized.brand).toBe("Eter Niu Cocina")
     expect(normalized.freeShipping).toBe(true)
-    expect(normalized.paymentMethods).toEqual(["transferencia", "deuna", "tarjeta"])
+    expect(normalized.paymentMethods).toEqual(["transferencia", "tarjeta"])
     expect(normalized.couponCode).toBe("GRANITOHOY")
     expect(normalized.stoveCompatibility).toBe("Gas, induccion y vitroceramica")
     expect(normalized.tags).toEqual([])
