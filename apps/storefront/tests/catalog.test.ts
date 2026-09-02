@@ -102,7 +102,6 @@ describe("productSlug", () => {
     expect(productSlug(product)).toBe("mgc-olla-20")
   })
 })
-
 describe("productPath", () => {
   it("arma la ruta /products/<slug>", () => {
     const product = baseProduct({
@@ -231,6 +230,36 @@ describe("catálogo de campaña", () => {
         (product) => product.sku === "MGC-EU-SARTEN-20-AZ",
       ),
     ).toMatchObject({ title: "Sartén Oceánico 20 cm", collection: "Oceánico" })
+  })
+
+  it("usa una foto real distinta para cada pieza del Juego Negro", () => {
+    const juegoNegroImages = august2026FallbackProducts
+      .filter(
+        (product) =>
+          product.sku.startsWith("MGC-FR-") &&
+          !product.sku.endsWith("-RO") &&
+          product.sku !== "MGC-FR-WOK-32-GN",
+      )
+      .map((product) => product.imageUrl)
+
+    expect(new Set(juegoNegroImages).size).toBe(juegoNegroImages.length)
+    expect(juegoNegroImages).toEqual(
+      expect.arrayContaining([
+        "/media/mgc-productos/juego-negro/sarten-20/vista-01.jpg",
+        "/media/mgc-productos/juego-negro/olla-24/vista-01.jpg",
+      ]),
+    )
+  })
+
+  it("usa fotos reales para la sartén roja y no la marca como referencial", () => {
+    const redPan = august2026FallbackProducts.find(
+      (product) => product.sku === "MGC-FR-SARTEN-24-RO",
+    )
+
+    expect(redPan?.imageUrl).toBe(
+      "/media/mgc-productos/rojo/sarten-24/vista-01.jpg",
+    )
+    expect(redPan?.description).not.toContain("referencial")
   })
 
   it("mantiene los cuatro totales anunciados al armar el combo", () => {

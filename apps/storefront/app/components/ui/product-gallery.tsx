@@ -8,7 +8,6 @@ type ProductGalleryProps = {
   media: ProductMediaItem[]
   productName: string
 }
-
 export function ProductGallery({ media, productName }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [expanded, setExpanded] = useState(false)
@@ -117,7 +116,7 @@ export function ProductGallery({ media, productName }: ProductGalleryProps) {
                     alt=""
                     fill
                     sizes="64px"
-                    className="object-cover"
+                    className="object-contain p-1"
                   />
                 )}
                 {item.type === "video" && (

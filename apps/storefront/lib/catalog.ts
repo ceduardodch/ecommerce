@@ -86,7 +86,7 @@ function mgcCookware(input: MgcCookwareInput): Product {
     sku: input.sku,
     vertical: "cocina",
     title: input.title,
-    description: `${input.title} de granito con mango de madera.${input.color === "Rojo" ? " Imagen referencial de color; confirma el acabado con el vendedor por WhatsApp." : ""} Confirma stock, compatibilidad y garantía por WhatsApp.`,
+    description: `${input.title} de granito con mango de madera. Confirma stock, compatibilidad y garantía por WhatsApp.`,
     category: input.category,
     brand: "MGC",
     price: { amount: input.pvp, currency: "USD" },
@@ -113,7 +113,7 @@ function mgcCookware(input: MgcCookwareInput): Product {
     claimNote:
       "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
     stock: input.stock,
-    imageUrl: `/media/mgc-agosto-2026/${input.image}`,
+    imageUrl: `/media/${input.image}`,
     productUrl: `${kitchenBaseUrl}/products/${input.handle}`,
     tags: [
       "mgc",
@@ -124,7 +124,6 @@ function mgcCookware(input: MgcCookwareInput): Product {
     ],
   };
 }
-
 export const august2026FallbackProducts: Product[] = [
   [
     "MGC-FR-SARTEN-20-GN",
@@ -137,7 +136,7 @@ export const august2026FallbackProducts: Product[] = [
     96,
     55,
     39.99,
-    "catalogo-coleccion-french-gris-negro.jpg",
+    "mgc-productos/juego-negro/sarten-20/vista-01.jpg",
   ],
   [
     "MGC-FR-SARTEN-24-GN",
@@ -150,7 +149,7 @@ export const august2026FallbackProducts: Product[] = [
     96,
     60,
     49.99,
-    "catalogo-coleccion-french-gris-negro.jpg",
+    "mgc-productos/juego-negro/sarten-24/vista-01.jpg",
   ],
   [
     "MGC-FR-SARTEN-28-GN",
@@ -163,7 +162,7 @@ export const august2026FallbackProducts: Product[] = [
     96,
     65,
     59.99,
-    "catalogo-coleccion-french-gris-negro.jpg",
+    "mgc-productos/juego-negro/sarten-28/vista-01.jpg",
   ],
   [
     "MGC-FR-LECHERA-18-GN",
@@ -176,7 +175,7 @@ export const august2026FallbackProducts: Product[] = [
     48,
     53,
     39,
-    "catalogo-sarten-con-tapa-gris-negro.jpg",
+    "mgc-productos/juego-negro/olla-18/vista-01.jpg",
   ],
   [
     "MGC-FR-OLLA-20-GN",
@@ -189,7 +188,7 @@ export const august2026FallbackProducts: Product[] = [
     32,
     63,
     49,
-    "catalogo-sarten-con-tapa-gris-negro.jpg",
+    "mgc-productos/juego-negro/olla-20/vista-01.jpg",
   ],
   [
     "MGC-FR-OLLA-24-GN",
@@ -202,7 +201,7 @@ export const august2026FallbackProducts: Product[] = [
     32,
     73,
     59,
-    "catalogo-sarten-con-tapa-gris-negro.jpg",
+    "mgc-productos/juego-negro/olla-24/vista-01.jpg",
   ],
   [
     "MGC-FR-WOK-32-GN",
@@ -215,7 +214,7 @@ export const august2026FallbackProducts: Product[] = [
     18,
     139.99,
     129.99,
-    "catalogo-sarten-con-tapa-gris-negro.jpg",
+    "mgc-imperial/onyx-wok-32-tapa-rectangular-real.png",
   ],
   [
     "MGC-FR-SARTEN-24-RO",
@@ -228,7 +227,7 @@ export const august2026FallbackProducts: Product[] = [
     8,
     60,
     55,
-    "catalogo-sarten-angular-roja-referencial.png",
+    "mgc-productos/rojo/sarten-24/vista-01.jpg",
   ],
   [
     "MGC-EU-SARTEN-20-AZ",
@@ -241,7 +240,7 @@ export const august2026FallbackProducts: Product[] = [
     16,
     55,
     45,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   ],
   [
     "MGC-EU-SARTEN-24-AZ",
@@ -254,7 +253,7 @@ export const august2026FallbackProducts: Product[] = [
     16,
     60,
     55,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   ],
   [
     "MGC-EU-SARTEN-28-AZ",
@@ -267,7 +266,7 @@ export const august2026FallbackProducts: Product[] = [
     16,
     65,
     60,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   ],
   [
     "MGC-EU-LECHERA-16-AZ",
@@ -280,7 +279,7 @@ export const august2026FallbackProducts: Product[] = [
     8,
     53,
     45,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-productos/oceanico/item-01/vista-01.jpg",
   ],
   [
     "MGC-EU-OLLA-20-AZ",
@@ -293,7 +292,7 @@ export const august2026FallbackProducts: Product[] = [
     8,
     63,
     55,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-productos/oceanico/item-02/vista-01.jpg",
   ],
   [
     "MGC-EU-OLLA-24-AZ",
@@ -306,7 +305,7 @@ export const august2026FallbackProducts: Product[] = [
     8,
     73,
     65,
-    "catalogo-coleccion-europea-azul.jpg",
+    "mgc-productos/oceanico/item-02/vista-01.jpg",
   ],
 ].map(
   ([
@@ -370,7 +369,7 @@ export const mgcCollectionComboDeals: Product[] = [
     claimNote:
       "No publicar compatibilidad, certificaciones ni claims de salud sin respaldo del proveedor.",
     stock: 0,
-    imageUrl: "/media/mgc-imperial/onyx-wok-32-real.jpeg",
+    imageUrl: "/media/mgc-imperial/onyx-imperial-conjunto-actual-real.jpeg",
     productUrl: `${kitchenBaseUrl}/products/combo-onyx-imperial-15-piezas`,
     tags: ["mgc", "combo", "juego-negro", "onyx", "onyx-imperial", "15-piezas"],
   },

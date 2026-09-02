@@ -14,7 +14,6 @@ type FloatingProductProps = {
   /** Marca la imagen como LCP (next/image priority). Solo variant hero-dark. */
   priority?: boolean
 }
-
 // Destellos: posición, tamaño, color y timing escalonado (solo opacity+transform).
 const SPARKLES: Array<{
   style: React.CSSProperties
@@ -62,7 +61,7 @@ export function FloatingProduct({
                 fill
                 priority={priority}
                 sizes="(max-width: 768px) 92vw, 620px"
-                className="object-cover"
+                className="object-contain p-3"
               />
               {/* Barrido de brillo periódico (solo transform) */}
               <span
