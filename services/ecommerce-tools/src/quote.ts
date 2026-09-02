@@ -1,6 +1,6 @@
 import type { AppConfig } from "./config.js"
 import type { Product, Quote, QuoteLine } from "./types.js"
-import { expandCommerceItems } from "./combo-catalog.js"
+import { assertDirectItemsSellable, expandCommerceItems } from "./combo-catalog.js"
 
 function roundMoney(amount: number) {
   return Math.round((amount + Number.EPSILON) * 100) / 100
@@ -15,6 +15,7 @@ export function buildQuote(
   products: Product[],
   items: Array<{ productId: string; variantId?: string; quantity: number }>,
 ): Quote {
+  assertDirectItemsSellable(products, items)
   const expandedItems = expandCommerceItems(products, items)
   const comboGroups = new Map<string, { items: number; minimum: number }>()
   expandedItems.forEach((item) => {

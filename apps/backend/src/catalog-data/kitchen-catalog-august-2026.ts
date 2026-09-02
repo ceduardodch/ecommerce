@@ -40,7 +40,7 @@ function cookware(input: {
   title: string
   handle: string
   category: string
-  collection: "Francesa" | "Europea"
+  collection: "Juego Negro" | "Oceánico" | "Francesa"
   color: "Gris negro" | "Azul" | "Rojo" | "Negro" | "Gris"
   diameter: number
   stock: number
@@ -83,6 +83,7 @@ function cookware(input: {
         ? "Stock confirmado en importación; entrega por confirmar"
         : "No publicar hasta contar con foto real",
       bundleEligible: true,
+      bundleOnly: input.sku === "MGC-FR-WOK-32-GN",
       deliveryBadge: "Entrega y costo de envío por confirmar",
       careTips:
         "Usar utensilios de silicona o madera y lavar con esponja suave.",
@@ -97,10 +98,10 @@ function cookware(input: {
 export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   cookware({
     sku: "MGC-FR-SARTEN-20-GN",
-    title: "Sartén francesa 20 cm",
+    title: "Sartén Juego Negro 20 cm",
     handle: "sarten-francesa-20cm-gris-negro",
     category: "Sartenes granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 20,
     stock: 96,
@@ -111,10 +112,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-SARTEN-24-GN",
-    title: "Sartén francesa 24 cm",
+    title: "Sartén Juego Negro 24 cm",
     handle: "sarten-francesa-24cm-gris-negro",
     category: "Sartenes granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 24,
     stock: 96,
@@ -125,10 +126,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-SARTEN-28-GN",
-    title: "Sartén francesa 28 cm",
+    title: "Sartén Juego Negro 28 cm",
     handle: "sarten-francesa-28cm-gris-negro",
     category: "Sartenes granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 28,
     stock: 96,
@@ -139,10 +140,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-LECHERA-18-GN",
-    title: "Olla lechera francesa 18 cm",
+    title: "Olla lechera Juego Negro 18 cm",
     handle: "olla-lechera-francesa-18cm-gris-negro",
     category: "Ollas granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 18,
     stock: 48,
@@ -153,10 +154,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-OLLA-20-GN",
-    title: "Olla francesa 20 cm",
+    title: "Olla Juego Negro 20 cm",
     handle: "olla-francesa-20cm-gris-negro",
     category: "Ollas granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 20,
     stock: 32,
@@ -167,10 +168,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-OLLA-24-GN",
-    title: "Olla francesa 24 cm",
+    title: "Olla Juego Negro 24 cm",
     handle: "olla-francesa-24cm-gris-negro",
     category: "Ollas granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 24,
     stock: 32,
@@ -181,10 +182,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-FR-WOK-32-GN",
-    title: "Wok francés 32 cm",
+    title: "Wok del Juego Negro 32 cm",
     handle: "wok-frances-32cm-gris-negro",
     category: "Woks granito",
-    collection: "Francesa",
+    collection: "Juego Negro",
     color: "Gris negro",
     diameter: 32,
     stock: 18,
@@ -209,10 +210,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-SARTEN-20-AZ",
-    title: "Sartén europea 20 cm",
+    title: "Sartén Oceánico 20 cm",
     handle: "sarten-europea-20cm-azul",
     category: "Sartenes granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 20,
     stock: 16,
@@ -223,10 +224,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-SARTEN-24-AZ",
-    title: "Sartén europea 24 cm",
+    title: "Sartén Oceánico 24 cm",
     handle: "sarten-europea-24cm-azul",
     category: "Sartenes granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 24,
     stock: 16,
@@ -237,10 +238,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-SARTEN-28-AZ",
-    title: "Sartén europea 28 cm",
+    title: "Sartén Oceánico 28 cm",
     handle: "sarten-europea-28cm-azul",
     category: "Sartenes granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 28,
     stock: 16,
@@ -251,10 +252,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-LECHERA-16-AZ",
-    title: "Olla lechera europea 16 cm",
+    title: "Olla lechera Oceánico 16 cm",
     handle: "olla-lechera-europea-16cm-azul",
     category: "Ollas granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 16,
     stock: 8,
@@ -265,10 +266,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-OLLA-20-AZ",
-    title: "Olla europea 20 cm",
+    title: "Olla Oceánico 20 cm",
     handle: "olla-europea-20cm-azul",
     category: "Ollas granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 20,
     stock: 8,
@@ -279,10 +280,10 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
   }),
   cookware({
     sku: "MGC-EU-OLLA-24-AZ",
-    title: "Olla europea 24 cm",
+    title: "Olla Oceánico 24 cm",
     handle: "olla-europea-24cm-azul",
     category: "Ollas granito",
-    collection: "Europea",
+    collection: "Oceánico",
     color: "Azul",
     diameter: 24,
     stock: 8,

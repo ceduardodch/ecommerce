@@ -30,7 +30,7 @@ type KitchenProduct = {
 const commercialMetadata = {
   vertical: "cocina",
   freeShipping: true,
-  paymentMethods: ["transferencia", "deuna", "payphone"],
+  paymentMethods: ["transferencia", "deuna", "tarjeta DataFast"],
   couponCode: "GRANITOHOY",
 };
 
@@ -83,6 +83,7 @@ const legacyKitchenProducts: KitchenProduct[] = [
       deliveryBadge: "Envio gratis Ecuador",
       stockSignal: "Stock por confirmar por WhatsApp",
       bundleEligible: true,
+      bundleOnly: true,
       price: 151.2,
       originalPrice: 151.2,
       stock: 1,

@@ -11,7 +11,7 @@ const otherCombos = [
     detail: "Sartenes 20, 24 y 28 cm.",
   },
   {
-    name: "Azul Oceánico",
+    name: "Oceánico",
     pieces: 12,
     originalPrice: 369,
     price: 325,
@@ -37,7 +37,7 @@ export function StarterKitSection() {
           Combos listos para cocinar.
         </h2>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[#b8c2ae]">
-          Precios especiales por tiempo limitado. Onyx Imperial y Ébano & Plata
+          Precios especiales por tiempo limitado. Juego Negro y Ébano & Plata
           usan fotos y videos reales recibidos.
         </p>
 
@@ -55,7 +55,7 @@ export function StarterKitSection() {
                     alt={`Combo ${combo.collection} MGC real`}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover"
+                    className="object-contain"
                   />
                   <span className="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
                     Fotos reales

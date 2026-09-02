@@ -9,6 +9,8 @@ const defaultCouponCode = "GRANITOHOY"
 const defaultDeliveryBadge = "Envio gratis"
 export type ProductVertical = "cocina" | "bienestar"
 
+const bundleOnlySkus = new Set(["MGC-FR-WOK-32-GN"])
+
 type MedusaProduct = {
   id: string
   title: string
@@ -266,6 +268,9 @@ function normalizeMedusaProduct(
     bundleEligible:
       product.metadata?.bundleEligible === true ||
       product.metadata?.bundleEligible === "true",
+    bundleOnly:
+      bundleOnlySkus.has(sku.trim().toUpperCase()) ||
+      booleanFromMetadata(product.metadata?.bundleOnly),
     deliveryBadge:
       stringFromMetadata(product.metadata?.deliveryBadge) ||
       defaultDeliveryBadge,
@@ -453,6 +458,8 @@ function productHaystack(product: Product) {
     product.sku,
     product.material || "",
     product.coating || "",
+    product.collection || "",
+    product.color || "",
     product.tipoCocina || "",
     product.bundleUseCase || "",
     product.healthAngle || "",
@@ -590,6 +597,7 @@ export function searchProducts(
   )
 
   return productsForVertical(products, vertical)
+    .filter((product) => product.bundleOnly !== true || Boolean(product.bundleItems?.length))
     .filter((product) => {
       if (input.category && product.category !== input.category) return false
       if (
@@ -614,6 +622,8 @@ export function searchProducts(
         product.sku,
         product.material || "",
         product.coating || "",
+        product.collection || "",
+        product.color || "",
         product.tipoCocina || "",
         product.nivel || "",
         product.bundleUseCase || "",

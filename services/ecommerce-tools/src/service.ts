@@ -2,7 +2,7 @@ import type { AppConfig } from "./config.js"
 import { loadProducts, searchProducts } from "./catalog.js"
 import { buildFollowupAction, parseCustomerImport } from "./customers.js"
 import { buildQuote } from "./quote.js"
-import { expandCommerceItems } from "./combo-catalog.js"
+import { assertDirectItemsSellable, expandCommerceItems } from "./combo-catalog.js"
 import {
   consumeCartSession,
   createCartSession,
@@ -116,20 +116,20 @@ function checkoutCatalogProduct([
 // Catálogo que autoriza cobros DataFast. Sus SKU y valores deben mantenerse
 // iguales a los publicados por la tienda y al seed de Medusa.
 const checkoutCatalogEntries = [
-  ["MGC-FR-SARTEN-20-GN", "Sartén Onyx Imperial 20 cm", 55, 96, 39.99],
-  ["MGC-FR-SARTEN-24-GN", "Sartén Onyx Imperial 24 cm", 60, 96, 49.99],
-  ["MGC-FR-SARTEN-28-GN", "Sartén Onyx Imperial 28 cm", 65, 96, 59.99],
-  ["MGC-FR-LECHERA-18-GN", "Olla lechera Onyx Imperial 18 cm", 53, 48, 39],
-  ["MGC-FR-OLLA-20-GN", "Olla Onyx Imperial 20 cm", 63, 32, 49],
-  ["MGC-FR-OLLA-24-GN", "Olla Onyx Imperial 24 cm", 73, 32, 59],
-  ["MGC-FR-WOK-32-GN", "Wok Onyx Imperial 32 cm", 139.99, 18, 129.99],
+  ["MGC-FR-SARTEN-20-GN", "Sartén Juego Negro 20 cm", 55, 96, 39.99],
+  ["MGC-FR-SARTEN-24-GN", "Sartén Juego Negro 24 cm", 60, 96, 49.99],
+  ["MGC-FR-SARTEN-28-GN", "Sartén Juego Negro 28 cm", 65, 96, 59.99],
+  ["MGC-FR-LECHERA-18-GN", "Olla lechera Juego Negro 18 cm", 53, 48, 39],
+  ["MGC-FR-OLLA-20-GN", "Olla Juego Negro 20 cm", 63, 32, 49],
+  ["MGC-FR-OLLA-24-GN", "Olla Juego Negro 24 cm", 73, 32, 59],
+  ["MGC-FR-WOK-32-GN", "Wok del Juego Negro 32 cm", 139.99, 18, 129.99],
   ["MGC-FR-SARTEN-24-RO", "Sartén francesa angular 24 cm", 60, 8, 55],
-  ["MGC-EU-SARTEN-20-AZ", "Sartén Azul Oceánico 20 cm", 55, 16, 45],
-  ["MGC-EU-SARTEN-24-AZ", "Sartén Azul Oceánico 24 cm", 60, 16, 55],
-  ["MGC-EU-SARTEN-28-AZ", "Sartén Azul Oceánico 28 cm", 65, 16, 60],
-  ["MGC-EU-LECHERA-16-AZ", "Olla lechera Azul Oceánico 16 cm", 53, 8, 45],
-  ["MGC-EU-OLLA-20-AZ", "Olla Azul Oceánico 20 cm", 63, 8, 55],
-  ["MGC-EU-OLLA-24-AZ", "Olla Azul Oceánico 24 cm", 73, 8, 65],
+  ["MGC-EU-SARTEN-20-AZ", "Sartén Oceánico 20 cm", 55, 16, 45],
+  ["MGC-EU-SARTEN-24-AZ", "Sartén Oceánico 24 cm", 60, 16, 55],
+  ["MGC-EU-SARTEN-28-AZ", "Sartén Oceánico 28 cm", 65, 16, 60],
+  ["MGC-EU-LECHERA-16-AZ", "Olla lechera Oceánico 16 cm", 53, 8, 45],
+  ["MGC-EU-OLLA-20-AZ", "Olla Oceánico 20 cm", 63, 8, 55],
+  ["MGC-EU-OLLA-24-AZ", "Olla Oceánico 24 cm", 73, 8, 65],
   ["MGC-SAHARA-NEGRO-SARTEN-20", "Sartén Sahara negro 20 cm", 55, 1, 39.99, "sahara-negro"],
   ["MGC-SAHARA-NEGRO-SARTEN-24", "Sartén Sahara negro 24 cm", 60, 1, 49.99, "sahara-negro"],
   ["MGC-SAHARA-NEGRO-SARTEN-28", "Sartén Sahara negro 28 cm", 65, 1, 59.99, "sahara-negro"],
@@ -635,6 +635,7 @@ export function createCommerceService(config: AppConfig) {
       items: Array<{ productId: string; variantId?: string; quantity: number }>
     }) {
       const products = await loadProducts(config)
+      assertDirectItemsSellable(products, input.items)
       const expandedItems = expandCommerceItems(products, input.items)
       const lines: CartSessionLine[] = expandedItems.map((item) => {
         const product = products.find(

@@ -17,7 +17,7 @@ type ComboRecipe = {
 export const COMBO_RECIPES: ComboRecipe[] = [
   {
     sku: "MGC-SET-ONYX-IMPERIAL-15",
-    title: "Combo Onyx Imperial · 15 piezas",
+    title: "Juego Negro · 15 piezas",
     pieces: 15,
     componentSkus: [
       "MGC-FR-SARTEN-20-GN",
@@ -28,7 +28,7 @@ export const COMBO_RECIPES: ComboRecipe[] = [
       "MGC-FR-OLLA-24-GN",
       "MGC-FR-WOK-32-GN",
     ],
-    aliases: ["onyx", "onyx imperial", "coleccion exotica", "combo 15 piezas"],
+    aliases: ["juego negro", "combo negro", "onyx", "onyx imperial", "coleccion exotica", "combo 15 piezas"],
     image: "mgc-imperial/onyx-imperial-conjunto-actual-real.jpeg",
   },
   {
@@ -48,7 +48,7 @@ export const COMBO_RECIPES: ComboRecipe[] = [
   },
   {
     sku: "MGC-SET-AZUL-OCEANICO-12",
-    title: "Combo Azul Oceánico · 12 piezas",
+    title: "Oceánico · 12 piezas",
     pieces: 12,
     componentSkus: [
       "MGC-EU-SARTEN-20-AZ",
@@ -58,7 +58,7 @@ export const COMBO_RECIPES: ComboRecipe[] = [
       "MGC-EU-OLLA-20-AZ",
       "MGC-EU-OLLA-24-AZ",
     ],
-    aliases: ["azul", "azul oceanico", "combo azul", "combo 12 piezas"],
+    aliases: ["oceanico", "azul", "azul oceanico", "combo azul", "combo 12 piezas"],
     image: "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   },
   {
@@ -164,4 +164,21 @@ export function expandCommerceItems(
       quantity: component.quantity * item.quantity,
     }))
   })
+}
+
+/** Impide cobrar una pieza reservada para juegos cuando llega como selección directa. */
+export function assertDirectItemsSellable(
+  products: Product[],
+  items: Array<{ productId: string; variantId?: string; quantity: number }>,
+) {
+  for (const item of items) {
+    const product = products.find((candidate) =>
+      candidate.id === item.productId ||
+      candidate.variantId === item.variantId ||
+      candidate.sku === item.productId,
+    )
+    if (product?.bundleOnly && !product.bundleItems?.length) {
+      throw new Error(`${product.title} solo está disponible dentro de un juego`)
+    }
+  }
 }

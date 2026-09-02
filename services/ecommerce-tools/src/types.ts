@@ -23,6 +23,8 @@ export type Product = {
   promoLabel?: string
   stockSignal?: string
   bundleEligible?: boolean
+  /** Pieza cobrable solo cuando pertenece a un juego. */
+  bundleOnly?: boolean
   deliveryBadge?: string
   freeShipping?: boolean
   paymentMethods?: string[]

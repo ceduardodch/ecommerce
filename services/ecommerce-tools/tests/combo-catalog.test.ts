@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import { loadConfig } from "../src/config.js"
-import { expandCommerceItems, withCommerceCombos } from "../src/combo-catalog.js"
+import { assertDirectItemsSellable, expandCommerceItems, withCommerceCombos } from "../src/combo-catalog.js"
 import { searchProducts } from "../src/catalog.js"
 import { buildQuote } from "../src/quote.js"
 import type { Product } from "../src/types.js"
@@ -63,7 +63,9 @@ describe("catalogo de combos para Vicky", () => {
     })
   })
 
-  it("encuentra Onyx y combos por el nombre que escribe el cliente", () => {
+  it("encuentra Juego Negro y conserva Onyx como alias", () => {
+    expect(searchProducts(catalog, { query: "juego negro", limit: 10 }).map((product) => product.sku))
+      .toContain("MGC-SET-ONYX-IMPERIAL-15")
     expect(searchProducts(catalog, { query: "combo onyx", limit: 10 }).map((product) => product.sku))
       .toContain("MGC-SET-ONYX-IMPERIAL-15")
     expect(searchProducts(catalog, { query: "combos", limit: 20 }).filter((product) => product.bundleItems))
@@ -80,5 +82,24 @@ describe("catalogo de combos para Vicky", () => {
     expect(quote.total.amount).toBe(426.96)
     expect(quote.subtotal.amount + quote.tax.amount).toBe(426.96)
     expect(quote.whatsappMessage).toContain("IVA incluido")
+  })
+
+  it("nombra el juego azul como Oceánico", () => {
+    expect(
+      catalog.find((product) => product.sku === "MGC-SET-AZUL-OCEANICO-12")?.title,
+    ).toBe("Oceánico · 12 piezas")
+  })
+
+  it("bloquea el wok por unidad y lo permite dentro del Juego Negro", () => {
+    const wok = products.find((product) => product.sku === "MGC-FR-WOK-32-GN")!
+    wok.bundleOnly = true
+    const juego = catalog.find((product) => product.sku === "MGC-SET-ONYX-IMPERIAL-15")!
+
+    expect(() => assertDirectItemsSellable(catalog, [{ productId: wok.id, quantity: 1 }]))
+      .toThrow("solo está disponible dentro de un juego")
+    expect(() => buildQuote(config, catalog, [{ productId: wok.id, quantity: 1 }]))
+      .toThrow("solo está disponible dentro de un juego")
+    expect(() => assertDirectItemsSellable(catalog, [{ productId: juego.id, quantity: 1 }]))
+      .not.toThrow()
   })
 })

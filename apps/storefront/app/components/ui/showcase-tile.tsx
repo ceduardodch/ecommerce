@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import type { Product } from "../../../lib/catalog"
 import { productPath } from "../../../lib/catalog"
 import { productMedia } from "../../../lib/product-media"
@@ -20,26 +20,7 @@ export function ShowcaseTile({
     () => productMedia(product).filter((item) => item.type === "image"),
     [product],
   )
-  const initialIndex = useMemo(
-    () =>
-      product.sku.split("").reduce((total, character) => total + character.charCodeAt(0), 0) %
-      Math.max(images.length, 1),
-    [images.length, product.sku],
-  )
-  const [activeIndex, setActiveIndex] = useState(initialIndex)
-  const [paused, setPaused] = useState(false)
-  const activeImage = images[activeIndex % Math.max(images.length, 1)]
-
-  useEffect(() => setActiveIndex(initialIndex), [initialIndex])
-
-  useEffect(() => {
-    if (paused || images.length < 2) return
-    const rotation = window.setInterval(
-      () => setActiveIndex((current) => (current + 1) % images.length),
-      4200,
-    )
-    return () => window.clearInterval(rotation)
-  }, [images.length, paused])
+  const activeImage = images[0]
 
   const hasPromo =
     product.originalPrice && product.originalPrice.amount > product.price.amount
@@ -50,10 +31,6 @@ export function ShowcaseTile({
         <a
           href={productPath(product)}
           className="block no-underline"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocus={() => setPaused(true)}
-          onBlur={() => setPaused(false)}
         >
           <ImageReveal className="relative aspect-square w-full rounded-[2px] bg-white">
             <Image
@@ -65,7 +42,7 @@ export function ShowcaseTile({
             />
             {images.length > 1 && (
               <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur">
-                {activeIndex % images.length + 1}/{images.length} · fotos
+                {images.length} fotos en la ficha
               </span>
             )}
             {hasPromo && (

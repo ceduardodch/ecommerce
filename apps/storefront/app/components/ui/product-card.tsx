@@ -54,7 +54,7 @@ export function ProductCard({ product, index }: { product: ProductCardData; inde
             alt={product.title}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
-            className="object-cover"
+            className="object-contain p-3"
           />
           {product.badge && (
             <div className="absolute top-2 left-2">

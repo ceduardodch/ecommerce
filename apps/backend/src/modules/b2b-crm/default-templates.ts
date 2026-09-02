@@ -46,10 +46,10 @@ export const DEFAULT_CRM_TEMPLATES: CrmTemplateSeed[] = [
   },
   {
     key: "promo_coleccion_exotica",
-    label: "Promo Onyx Imperial con video",
+    label: "Promo Juego Negro con video",
     body:
       "Hola {nombre} 👋 Soy Vicky de Eter Niu.\n\n" +
-      "🖤🔥 ONYX IMPERIAL — 15 PIEZAS 🔥🖤\n\n" +
+      "🖤🔥 JUEGO NEGRO — 15 PIEZAS 🔥🖤\n\n" +
       "💥 Antes: $508.99\n" +
       "🔥 Hoy: $426.96\n" +
       "✨ Ahorras $82.03\n\n" +
@@ -57,7 +57,7 @@ export const DEFAULT_CRM_TEMPLATES: CrmTemplateSeed[] = [
       "🥘 Ollas de 18, 20 y 24 cm\n" +
       "🔥 Wok de 32 cm\n\n" +
       "Puedes pedir el set completo o cambiar las piezas y armar tu combo aquí:\n" +
-      "https://cocina.b2b.com.ec/?utm_source=whatsapp&utm_medium=crm&utm_campaign=onyx_imperial#arma-tu-combo\n\n" +
+      "https://cocina.b2b.com.ec/?utm_source=whatsapp&utm_medium=crm&utm_campaign=juego_negro#arma-tu-combo\n\n" +
       "¿Quieres el set completo o prefieres que te ayude a armar uno?\n" +
       "Si no deseas recibir promociones, responde SALIR.",
     mediaUrl:
