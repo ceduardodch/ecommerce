@@ -10,11 +10,9 @@ Public routing:
 - `www.eter-niu.com` -> `storefront:3000`
 - `cocina.eter-niu.com` -> `storefront:3000`
 - `bienestar.eter-niu.com` -> `storefront:3000`
-- `cocina.b2b.com.ec` -> `storefront:3000`
-- `bienestar.b2b.com.ec` -> `storefront:3000`
-- `shop.b2b.com.ec` -> `storefront:3000` as legacy fallback during migration
-- `adminshop.b2b.com.ec/` -> `admin-redirect:80` or host port `127.0.0.1:18216` for the root redirect to `/app`
-- `adminshop.b2b.com.ec/app` and `/app/*` -> Medusa Admin on `medusa-api:9000` or host port `127.0.0.1:18215`
+- `admin.eter-niu.com/` -> `admin-redirect:80` or host port `127.0.0.1:18216` for the root redirect to `/app`
+- `admin.eter-niu.com/app` and `/app/*` -> Medusa Admin on `medusa-api:9000` or host port `127.0.0.1:18215`
+- Los hosts públicos anteriores bajo `b2b.com.ec` solo conservan redirecciones 301 al equivalente canónico.
 - `medusa-api:9000` and `ecommerce-tools:8787` are internal-only through Docker `expose`.
 - Do not publish `medusa-api` or `ecommerce-tools` directly to the host unless a specific webhook route is being protected and reviewed.
 - Default host bind for the public storefront is `127.0.0.1:18214:3000` through `STOREFRONT_PORT_MAPPING`.
@@ -32,19 +30,17 @@ Set these in Coolify environment variables, not in Git:
 - `JWT_SECRET`
 - `COOKIE_SECRET`
 - `TOOLS_API_TOKEN`
-- `PAYPHONE_TOKEN` when `PAYPHONE_DRY_RUN=false`
-- `PAYPHONE_STORE_ID` when `PAYPHONE_DRY_RUN=false`
 - `MEDUSA_PUBLISHABLE_KEY` after Medusa seed/admin setup
 - `MEDUSA_ADMIN_API_KEY` secret key `sk_...` for production CRM/order sync
 - `CRM_BACKEND=medusa`
 - `ALLOW_DEMO_CATALOG=false`
 - `STOREFRONT_PORT_MAPPING`, default `127.0.0.1:18214:3000`
-- `STORE_PUBLIC_URL=https://cocina.b2b.com.ec`
-- `COCINA_PUBLIC_URL=https://cocina.b2b.com.ec`
-- `BIENESTAR_PUBLIC_URL=https://bienestar.b2b.com.ec`
-- `NEXT_PUBLIC_STORE_URL=https://cocina.b2b.com.ec`
-- `NEXT_PUBLIC_COCINA_URL=https://cocina.b2b.com.ec`
-- `NEXT_PUBLIC_BIENESTAR_URL=https://bienestar.b2b.com.ec`
+- `STORE_PUBLIC_URL=https://eter-niu.com`
+- `COCINA_PUBLIC_URL=https://cocina.eter-niu.com`
+- `BIENESTAR_PUBLIC_URL=https://bienestar.eter-niu.com`
+- `NEXT_PUBLIC_STORE_URL=https://eter-niu.com`
+- `NEXT_PUBLIC_COCINA_URL=https://cocina.eter-niu.com`
+- `NEXT_PUBLIC_BIENESTAR_URL=https://bienestar.eter-niu.com`
 - `NEXT_PUBLIC_PIXEL_ENABLED=false` until Meta Events Manager is ready
 - `PIXEL_ENABLED=false` until CAPI credentials are validated
 - `NEXT_PUBLIC_META_PIXEL_ID`, `META_PIXEL_ID` or `META_DATASET_ID`
@@ -99,4 +95,3 @@ curl "http://ecommerce-tools:8787/feeds/meta/catalog.csv?vertical=bienestar"
 `GET http://ecommerce-tools:8787/healthz` must show `crmBackend: "medusa"`,
 `allowDemoCatalog: false`, `datafastMode: "test"` and `datafastConfigured: true`
 for Datafast certification review.
-

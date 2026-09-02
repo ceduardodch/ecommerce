@@ -13,8 +13,10 @@
 | `www.eter-niu.com` (+ apex) | **Portal de marca**: página corta con isotipo, tagline "Bienestar & Cocina Consciente" y dos puertas grandes (Cocina / Bienestar) + CTA WhatsApp | neutro (ink/ivory) |
 | `cocina.eter-niu.com` | Tienda cocina (hoy cocina.b2b.com.ec) | `data-theme="cocina"` (clay) |
 | `bienestar.eter-niu.com` | Tienda bienestar (hoy bienestar.b2b.com.ec) | `data-theme="bienestar"` (moss) |
+| `admin.eter-niu.com` | Administración Medusa y CRM WhatsApp | Admin |
+| `whatsapp-test.eter-niu.com` | Webhook actual de WhatsApp Cloud API | Interno operativo |
 | `cocina.b2b.com.ec`, `bienestar.b2b.com.ec` | **301 → equivalente nuevo** (mantener ≥ 12 meses: campañas Meta activas apuntan ahí) | — |
-| `adminshop.b2b.com.ec`, `vicky.b2b.com.ec` | Quedan igual (internos); opcional mover después a `admin.eter-niu.com` / `vicky.eter-niu.com` | — |
+| Hosts públicos anteriores bajo `b2b.com.ec` | Solo redirección o entrada de migración; nunca se emiten | — |
 
 **Por qué subdominios y no rutas o dos marcas separadas:**
 - El middleware actual YA enruta por host — los subdominios reutilizan esa
@@ -101,8 +103,8 @@ scroll largo. Es la URL para la bio de Instagram.
 - Re-seedear catálogos para actualizar URLs en metadata (`npm run seed:kitchen`,
   `seed:wellness` — son upserts).
 - Actualizar scripts de validación y correrlos contra el dominio nuevo.
-- Email de marca (`hola@eter-niu.com`) cuando se contrate correo; actualizar
-  email generado de clientes en `_shared.ts` en ese momento.
+- Email de marca (`hola@eter-niu.com`) cuando se contrate correo. Los correos
+  sintéticos de clientes ya usan `@customers.eter-niu.com` y no reciben correo.
 - Mantener los 301 de b2b.com.ec ≥ 12 meses; revisar en analytics cuándo el
   tráfico al dominio viejo llegue a ~0 antes de soltarlo.
 

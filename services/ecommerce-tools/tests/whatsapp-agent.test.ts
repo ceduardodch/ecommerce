@@ -492,7 +492,7 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
   })
 
   it("llama create_cart cuando el cliente confirma, con nombre y ciudad, y devuelve el link", async () => {
-    const createCart = vi.fn().mockResolvedValue({ cartUrl: "https://cocina.b2b.com.ec/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" })
+    const createCart = vi.fn().mockResolvedValue({ cartUrl: "https://cocina.eter-niu.com/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" })
     const quote = vi.fn()
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(functionCallResponse("r1", "call_1", "create_cart", {
@@ -501,7 +501,7 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
         customerName: "María",
         city: "Quito",
       }))
-      .mockResolvedValueOnce(textResponse("r2", "Listo María, tu carrito: https://cocina.b2b.com.ec/cart?session=abc"))
+      .mockResolvedValueOnce(textResponse("r2", "Listo María, tu carrito: https://cocina.eter-niu.com/cart?session=abc"))
 
     const result = await createWhatsAppAgentReply(
       config(),
@@ -541,7 +541,7 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
     expect(secondBody.input).toEqual([{
       type: "function_call_output",
       call_id: "call_1",
-      output: JSON.stringify({ cartUrl: "https://cocina.b2b.com.ec/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" }),
+      output: JSON.stringify({ cartUrl: "https://cocina.eter-niu.com/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" }),
     }])
   })
 

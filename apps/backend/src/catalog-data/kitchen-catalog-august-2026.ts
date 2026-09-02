@@ -30,10 +30,10 @@ type KitchenCatalogProduct = {
 const publicUrl = (
   process.env.COCINA_PUBLIC_URL ||
   process.env.STORE_PUBLIC_URL ||
-  "https://shop.b2b.com.ec"
+  "https://cocina.eter-niu.com"
 ).replace(/\/$/, "")
 
-const imageUrl = (file: string) => `${publicUrl}/media/mgc-agosto-2026/${file}`
+const imageUrl = (file: string) => `${publicUrl}/media/${file}`
 
 function cookware(input: {
   sku: string
@@ -56,7 +56,7 @@ function cookware(input: {
     handle: input.handle,
     sku: input.sku,
     category: input.category,
-    description: `${input.title} de granito con mango de madera.${input.color === "Rojo" ? " Imagen referencial de color; confirma el acabado con el vendedor por WhatsApp." : ""} Confirma disponibilidad, compatibilidad y garantía por WhatsApp.`,
+    description: `${input.title} de granito con mango de madera. Confirma disponibilidad, compatibilidad y garantía por WhatsApp.`,
     price: input.pvp,
     originalPrice: input.pvp,
     stock: input.stock,
@@ -77,9 +77,7 @@ function cookware(input: {
       distributorMinimumOrderUsd: 260,
       stock: input.stock,
       promoLabel: "Consulta promociones por WhatsApp",
-      stockSignal: input.color === "Rojo"
-        ? "Imagen referencial de color; stock confirmado en importación"
-        : hasImage
+      stockSignal: hasImage
         ? "Stock confirmado en importación; entrega por confirmar"
         : "No publicar hasta contar con foto real",
       bundleEligible: true,
@@ -108,7 +106,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 55,
     negotiable: 39.99,
     distributor: 28.56,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/sarten-20/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-SARTEN-24-GN",
@@ -122,7 +120,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 60,
     negotiable: 49.99,
     distributor: 36.92,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/sarten-24/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-SARTEN-28-GN",
@@ -136,7 +134,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 65,
     negotiable: 59.99,
     distributor: 48.8,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/sarten-28/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-LECHERA-18-GN",
@@ -150,7 +148,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 53,
     negotiable: 39,
     distributor: 35.12,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/olla-18/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-OLLA-20-GN",
@@ -164,7 +162,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 63,
     negotiable: 49,
     distributor: 45.84,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/olla-20/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-OLLA-24-GN",
@@ -178,7 +176,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 73,
     negotiable: 59,
     distributor: 60.72,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-productos/juego-negro/olla-24/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-FR-WOK-32-GN",
@@ -192,7 +190,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 139.99,
     negotiable: 129.99,
     distributor: 86.32,
-    image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+    image: "mgc-imperial/onyx-wok-32-tapa-rectangular-real.png",
   }),
   cookware({
     sku: "MGC-FR-SARTEN-24-RO",
@@ -206,7 +204,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 60,
     negotiable: 55,
     distributor: 46.44,
-    image: "catalogo-sarten-angular-roja-referencial.png",
+    image: "mgc-productos/rojo/sarten-24/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-EU-SARTEN-20-AZ",
@@ -220,7 +218,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 55,
     negotiable: 45,
     distributor: 35.72,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   }),
   cookware({
     sku: "MGC-EU-SARTEN-24-AZ",
@@ -234,7 +232,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 60,
     negotiable: 55,
     distributor: 39.28,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   }),
   cookware({
     sku: "MGC-EU-SARTEN-28-AZ",
@@ -248,7 +246,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 65,
     negotiable: 60,
     distributor: 50.6,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-azul-oceanico/azul-oceanico-conjunto-real.jpeg",
   }),
   cookware({
     sku: "MGC-EU-LECHERA-16-AZ",
@@ -262,7 +260,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 53,
     negotiable: 45,
     distributor: 35.72,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-productos/oceanico/item-01/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-EU-OLLA-20-AZ",
@@ -276,7 +274,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 63,
     negotiable: 55,
     distributor: 45.24,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-productos/oceanico/item-02/vista-01.jpg",
   }),
   cookware({
     sku: "MGC-EU-OLLA-24-AZ",
@@ -290,7 +288,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
     pvp: 73,
     negotiable: 65,
     distributor: 56.56,
-    image: "catalogo-coleccion-europea-azul.jpg",
+    image: "mgc-productos/oceanico/item-02/vista-01.jpg",
   }),
   // Sahara no aparece en el Excel de importación. Se mantiene una unidad por
   // variante hasta que el inventario definitivo llegue y se vuelve a ejecutar
@@ -313,7 +311,7 @@ export const august2026KitchenProducts: KitchenCatalogProduct[] = [
         negotiable: promo,
         distributor: 0,
         comboGroup: `sahara-${color.toLowerCase()}`,
-        image: "catalogo-sarten-con-tapa-gris-negro.jpg",
+        image: `mgc-sahara/sahara-${color.toLowerCase()}-set-real.jpeg`,
       })
     }),
   ),

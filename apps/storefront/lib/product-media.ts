@@ -9,66 +9,6 @@ export type ProductMediaItem = {
   poster?: string;
 };
 
-const frenchCollectionMedia: ProductMediaItem[] = [
-  {
-    id: "french-sartenes-studio",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-sartenes-estudio.png",
-    alt: "Tres sartenes de la colección francesa gris negro MGC sobre fondo blanco",
-    label: "Sartenes de la colección",
-  },
-  {
-    id: "french-portada",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-portada-iluminada.png",
-    alt: "Sartén de la colección francesa gris negro MGC con tapa de vidrio sobre fondo blanco",
-    label: "Vista principal de la colección",
-  },
-  {
-    id: "french-lateral",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-lateral-tapa.jpg",
-    alt: "Vista lateral de sartén MGC gris negro con tapa de vidrio",
-    label: "Vista lateral con tapa",
-  },
-  {
-    id: "french-superior",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-superior.jpg",
-    alt: "Vista superior de sartén MGC gris negro y su tapa",
-    label: "Vista superior",
-  },
-  {
-    id: "french-mango",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-mango.jpg",
-    alt: "Detalle del mango de madera de la colección francesa MGC",
-    label: "Detalle del mango",
-  },
-  {
-    id: "french-interior",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-interior.jpg",
-    alt: "Detalle del interior con acabado granito de la colección francesa MGC",
-    label: "Interior granito",
-  },
-  {
-    id: "french-collection",
-    type: "image",
-    src: "/media/mgc-catalog/french-gris-negro-coleccion.jpg",
-    alt: "Conjunto de sartenes gris negro de la colección francesa MGC",
-    label: "Vista de la colección",
-  },
-  {
-    id: "french-video",
-    type: "video",
-    src: "/media/mgc-catalog/french-gris-negro-en-movimiento.mp4",
-    poster: "/media/mgc-catalog/french-gris-negro-portada-iluminada.png",
-    alt: "Video de la colección francesa gris negro MGC en movimiento",
-    label: "Ver en movimiento",
-  },
-];
-
 const europeanCollectionMedia: ProductMediaItem[] = [
   {
     id: "azul-oceanico-conjunto-real",
@@ -94,85 +34,120 @@ const europeanCollectionMedia: ProductMediaItem[] = [
   },
 ];
 
-const onyxImperialMediaBySku: Record<string, ProductMediaItem[]> = {
-  "MGC-FR-SARTEN-20-GN": [
-    {
-      id: "onyx-sarten-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
-      alt: "Sartén del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-SARTEN-24-GN": [
-    {
-      id: "onyx-sarten-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
-      alt: "Sartén del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-SARTEN-28-GN": [
-    {
-      id: "onyx-sarten-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-sarten-real.jpeg",
-      alt: "Sartén del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-LECHERA-18-GN": [
-    {
-      id: "onyx-lechera-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-lechera-18-real.jpeg",
-      alt: "Olla lechera del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-OLLA-20-GN": [
-    {
-      id: "onyx-olla-20-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-olla-20-real.jpeg",
-      alt: "Olla del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-OLLA-24-GN": [
-    {
-      id: "onyx-olla-24-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-olla-24-real.jpeg",
-      alt: "Olla del Juego Negro MGC real, con tapa de vidrio",
-      label: "Pieza real",
-    },
-  ],
-  "MGC-FR-WOK-32-GN": [
-    {
-      id: "juego-negro-wok-contexto-real",
-      type: "image",
-      src: "/media/mgc-imperial/juego-negro-wok-contexto-real.jpeg",
-      alt: "Wok del Juego Negro MGC real con tapa de vidrio, mango de madera y espátula",
-      label: "Wok incluido en el juego",
-    },
-    {
-      id: "wok-tapa-rectangular-real",
-      type: "image",
-      src: "/media/mgc-imperial/onyx-wok-32-tapa-rectangular-real.png",
-      alt: "Wok MGC real de 32 cm, con tapa de vidrio y asa de madera rectangular",
-      label: "Wok 32 cm · pieza real",
-    },
-  ],
+function importedSeries(
+  id: string,
+  dir: string,
+  alt: string,
+): ProductMediaItem[] {
+  return [1, 2, 3, 4].map((view) => ({
+    id: `${id}-vista-${view}`,
+    type: "image" as const,
+    src: `/media/mgc-productos/${dir}/vista-${String(view).padStart(2, "0")}.jpg`,
+    alt: `${alt}. Vista real ${view}.`,
+    label: `Vista real ${view}`,
+  }));
+}
+
+const importedMediaBySku: Record<string, ProductMediaItem[]> = {
+  "MGC-FR-SARTEN-20-GN": importedSeries(
+    "juego-negro-sarten-20",
+    "juego-negro/sarten-20",
+    "Sartén Juego Negro MGC de 20 cm",
+  ),
+  "MGC-FR-SARTEN-24-GN": importedSeries(
+    "juego-negro-sarten-24",
+    "juego-negro/sarten-24",
+    "Sartén Juego Negro MGC de 24 cm",
+  ),
+  "MGC-FR-SARTEN-28-GN": importedSeries(
+    "juego-negro-sarten-28",
+    "juego-negro/sarten-28",
+    "Sartén Juego Negro MGC de 28 cm",
+  ),
+  "MGC-FR-LECHERA-18-GN": importedSeries(
+    "juego-negro-olla-18",
+    "juego-negro/olla-18",
+    "Olla lechera Juego Negro MGC de 18 cm",
+  ),
+  "MGC-FR-OLLA-20-GN": importedSeries(
+    "juego-negro-olla-20",
+    "juego-negro/olla-20",
+    "Olla Juego Negro MGC de 20 cm",
+  ),
+  "MGC-FR-OLLA-24-GN": importedSeries(
+    "juego-negro-olla-24",
+    "juego-negro/olla-24",
+    "Olla Juego Negro MGC de 24 cm",
+  ),
+  "MGC-FR-SARTEN-24-RO": importedSeries(
+    "rojo-sarten-24",
+    "rojo/sarten-24",
+    "Sartén roja MGC de 24 cm",
+  ),
+  "MGC-EU-LECHERA-16-AZ": importedSeries(
+    "oceanico-item-01",
+    "oceanico/item-01",
+    "Pieza Oceánico MGC identificada en la fuente como item 01; confirma la medida",
+  ),
+  "MGC-EU-OLLA-20-AZ": importedSeries(
+    "oceanico-item-02",
+    "oceanico/item-02",
+    "Olla Oceánico MGC identificada en la fuente como item 02; confirma la medida",
+  ),
+  "MGC-EU-OLLA-24-AZ": importedSeries(
+    "oceanico-item-02",
+    "oceanico/item-02",
+    "Olla Oceánico MGC identificada en la fuente como item 02; confirma la medida",
+  ),
+};
+
+const wokMedia: ProductMediaItem[] = [
+  {
+    id: "juego-negro-wok-contexto-real",
+    type: "image",
+    src: "/media/mgc-imperial/juego-negro-wok-contexto-real.jpeg",
+    alt: "Wok del Juego Negro MGC real con tapa de vidrio, mango de madera y espátula",
+    label: "Wok incluido en el juego",
+  },
+  {
+    id: "wok-tapa-rectangular-real",
+    type: "image",
+    src: "/media/mgc-imperial/onyx-wok-32-tapa-rectangular-real.png",
+    alt: "Wok MGC real de 32 cm, con tapa de vidrio y asa de madera rectangular",
+    label: "Wok 32 cm · pieza real",
+  },
+];
+
+const ebanoPlataImportedMedia: ProductMediaItem[] = [
+  ["sarten-20", "Sartén gris MGC de 20 cm"],
+  ["sarten-24", "Sartén gris MGC de 24 cm"],
+  ["sarten-28", "Sartén gris MGC de 28 cm"],
+  ["olla-18", "Olla gris MGC de 18 cm"],
+  ["olla-20", "Olla gris MGC de 20 cm"],
+  ["olla-24", "Olla gris MGC de 24 cm"],
+].map(([piece, alt]) => ({
+  id: `ebano-plata-${piece}`,
+  type: "image" as const,
+  src: `/media/mgc-productos/ebano-plata/${piece}/vista-01.jpg`,
+  alt: `${alt}. Foto real organizada por pieza.`,
+  label: alt,
+}));
+
+const ebanoPlataVideo: ProductMediaItem = {
+  id: "ebano-plata-video-real",
+  type: "video",
+  src: "/media/mgc-ebano-plata/ebano-plata-conjunto-real.mp4",
+  poster: "/media/mgc-ebano-plata/ebano-plata-conjunto-real.jpg",
+  alt: "Video real del combo Ébano & Plata MGC",
+  label: "Combo real en video",
 };
 
 const onyxImperialSetMedia: ProductMediaItem[] = [
   {
     id: "onyx-conjunto-video",
     type: "video",
-    src: "/media/mgc-imperial/onyx-imperial-conjunto-real.mp4",
-    poster: "/media/mgc-imperial/juego-negro-video-poster.jpeg",
+    src: "/media/mgc-imperial/onyx-imperial-conjunto-actual-real.mp4",
+    poster: "/media/mgc-imperial/onyx-imperial-conjunto-actual-real.jpeg",
     alt: "Video real de las piezas del Juego Negro MGC",
     label: "Conjunto real en video",
   },
@@ -203,20 +178,46 @@ function productCover(product: Product): ProductMediaItem {
  * fotos se muestran como colección para no atribuir un diámetro no verificado.
  */
 export function productMedia(product: Product): ProductMediaItem[] {
-  const onyxMedia = onyxImperialMediaBySku[product.sku];
-  if (onyxMedia) return [...onyxMedia, ...onyxImperialSetMedia];
+  const importedMedia = importedMediaBySku[product.sku] || [];
+
+  if (product.sku === "MGC-SET-ONYX-IMPERIAL-15") {
+    return [productCover(product), ...onyxImperialSetMedia];
+  }
+
+  if (product.sku === "MGC-SET-EBANO-PLATA-12") {
+    return [...ebanoPlataImportedMedia, ebanoPlataVideo];
+  }
+
+  if (product.sku === "MGC-FR-WOK-32-GN") {
+    return [...wokMedia, ...onyxImperialSetMedia];
+  }
+
+  if (product.sku.startsWith("MGC-FR-") && !product.sku.endsWith("-RO")) {
+    return [...importedMedia, ...onyxImperialSetMedia];
+  }
 
   const cover = productCover(product);
 
-  if (product.sku.startsWith("MGC-FR-") && !product.sku.endsWith("-RO")) {
-    return [cover, ...frenchCollectionMedia];
-  }
-
   if (product.sku.startsWith("MGC-EU-")) {
-    return europeanCollectionMedia;
+    return [...importedMedia, ...europeanCollectionMedia];
   }
 
-  return [cover];
+  if (product.sku.startsWith("MGC-SAHARA-")) {
+    const color = product.sku.includes("-GRIS-") ? "gris" : "negro";
+    return [
+      ...importedMedia,
+      {
+        id: `sahara-${color}-video-real`,
+        type: "video",
+        src: `/media/mgc-sahara/sahara-${color}-set-real.mp4`,
+        poster: `/media/mgc-sahara/sahara-${color}-set-real.jpeg`,
+        alt: `Video real del set Sahara ${color} MGC`,
+        label: "Set real en video",
+      },
+    ];
+  }
+
+  return importedMedia.length ? importedMedia : [cover];
 }
 
 const comparableSkuGroups = [

@@ -90,7 +90,7 @@ describe("buildMetaTemplatePayload", () => {
     ).toBe(true)
   })
 
-  it("arma la plantilla Onyx con header de video y solo el nombre", () => {
+  it("arma la plantilla Onyx v2 con dominio canónico y solo el nombre", () => {
     const payload = buildMetaTemplatePayload(
       "+593979854915",
       "promo_coleccion_exotica",
@@ -98,15 +98,9 @@ describe("buildMetaTemplatePayload", () => {
       { kind: "video", url: "https://cocina.b2b.com.ec/onyx.mp4" },
     )
 
-    expect(payload.template.name).toBe("eterniu_promo_onyx_video")
+    expect(payload.template.name).toBe("eterniu_promo_onyx_video_v2")
+    expect(payload.template.components).toHaveLength(1)
     expect(payload.template.components[0]).toMatchObject({
-      type: "header",
-      parameters: [{
-        type: "video",
-        video: { link: "https://cocina.b2b.com.ec/onyx.mp4" },
-      }],
-    })
-    expect(payload.template.components[1]).toMatchObject({
       type: "body",
       parameters: [{ type: "text", text: "Carlos" }],
     })
@@ -140,6 +134,16 @@ describe("buildMetaFreeformPayload", () => {
     expect(payload.to).toBe("+593979854915")
     expect(payload.type).toBe("text")
     expect(payload.text.body).toBe("Hola Maria, ¿te ayudo con algo más?")
+  })
+
+  it("corrige dominios heredados antes de enviar el mensaje", () => {
+    const payload = buildMetaFreeformPayload(
+      "+593979854915",
+      "Compra en https://adminshop.b2b.com.ec y https://cocina.b2b.com.ec",
+    )
+    expect(payload.text.body).toBe(
+      "Compra en https://admin.eter-niu.com y https://cocina.eter-niu.com",
+    )
   })
 })
 

@@ -32,8 +32,8 @@ function baseProduct(overrides: Partial<Product> = {}): Product {
     category: "Woks granito",
     brand: "Eter Niu Cocina",
     price: { amount: 55, currency: "USD" },
-    imageUrl: "https://cocina.b2b.com.ec/media/product-wok-granito-32.jpg",
-    productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+    imageUrl: "https://cocina.eter-niu.com/media/product-wok-granito-32.jpg",
+    productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     stock: 5,
     tags: [],
     ...overrides,
@@ -43,7 +43,7 @@ function baseProduct(overrides: Partial<Product> = {}): Product {
 describe("productSlug", () => {
   it("extrae el slug de productUrl cuando trae /products/<slug>", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+      productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     })
 
     expect(productSlug(product)).toBe("wok-granito-32cm-tapa")
@@ -51,7 +51,7 @@ describe("productSlug", () => {
 
   it("decodifica caracteres escapados en el slug de la URL", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/sart%C3%A9n-20cm",
+      productUrl: "https://cocina.eter-niu.com/products/sart%C3%A9n-20cm",
     })
 
     expect(productSlug(product)).toBe("sartén-20cm")
@@ -59,7 +59,7 @@ describe("productSlug", () => {
 
   it("ignora query string y hash al extraer el slug", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/olla-20cm?utm_source=meta#top",
+      productUrl: "https://cocina.eter-niu.com/products/olla-20cm?utm_source=meta#top",
     })
 
     expect(productSlug(product)).toBe("olla-20cm")
@@ -68,7 +68,7 @@ describe("productSlug", () => {
   it("cae a slugify(title) cuando productUrl no tiene el patrón /products/<slug>", () => {
     const product = baseProduct({
       title: "Wok 32 cm Granito Premium",
-      productUrl: "https://cocina.b2b.com.ec/otra-ruta",
+      productUrl: "https://cocina.eter-niu.com/otra-ruta",
     })
 
     expect(productSlug(product)).toBe("wok-32-cm-granito-premium")
@@ -102,11 +102,10 @@ describe("productSlug", () => {
     expect(productSlug(product)).toBe("mgc-olla-20")
   })
 })
-
 describe("productPath", () => {
   it("arma la ruta /products/<slug>", () => {
     const product = baseProduct({
-      productUrl: "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa",
+      productUrl: "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa",
     })
 
     expect(productPath(product)).toBe("/products/wok-granito-32cm-tapa")
@@ -231,6 +230,36 @@ describe("catálogo de campaña", () => {
         (product) => product.sku === "MGC-EU-SARTEN-20-AZ",
       ),
     ).toMatchObject({ title: "Sartén Oceánico 20 cm", collection: "Oceánico" })
+  })
+
+  it("usa una foto real distinta para cada pieza del Juego Negro", () => {
+    const juegoNegroImages = august2026FallbackProducts
+      .filter(
+        (product) =>
+          product.sku.startsWith("MGC-FR-") &&
+          !product.sku.endsWith("-RO") &&
+          product.sku !== "MGC-FR-WOK-32-GN",
+      )
+      .map((product) => product.imageUrl)
+
+    expect(new Set(juegoNegroImages).size).toBe(juegoNegroImages.length)
+    expect(juegoNegroImages).toEqual(
+      expect.arrayContaining([
+        "/media/mgc-productos/juego-negro/sarten-20/vista-01.jpg",
+        "/media/mgc-productos/juego-negro/olla-24/vista-01.jpg",
+      ]),
+    )
+  })
+
+  it("usa fotos reales para la sartén roja y no la marca como referencial", () => {
+    const redPan = august2026FallbackProducts.find(
+      (product) => product.sku === "MGC-FR-SARTEN-24-RO",
+    )
+
+    expect(redPan?.imageUrl).toBe(
+      "/media/mgc-productos/rojo/sarten-24/vista-01.jpg",
+    )
+    expect(redPan?.description).not.toContain("referencial")
   })
 
   it("mantiene los cuatro totales anunciados al armar el combo", () => {

@@ -141,6 +141,30 @@ export function campaignFirstName(name?: string | null): string {
   return normalized.split(/\s+/)[0] || "Cliente"
 }
 
+/**
+ * Los dominios anteriores solo se aceptan como entrada de migración. Ninguna
+ * URL pública que salga del CRM puede quedar fuera de eter-niu.com.
+ */
+export function canonicalizeEterNiuPublicUrls(value: string): string {
+  return value
+    .replace(
+      /https?:\/\/(?:www\.)?cocina\.b2b\.com\.ec/gi,
+      "https://cocina.eter-niu.com",
+    )
+    .replace(
+      /https?:\/\/(?:www\.)?bienestar\.b2b\.com\.ec/gi,
+      "https://bienestar.eter-niu.com",
+    )
+    .replace(
+      /https?:\/\/(?:www\.)?shop\.b2b\.com\.ec/gi,
+      "https://eter-niu.com",
+    )
+    .replace(
+      /https?:\/\/(?:www\.)?adminshop\.b2b\.com\.ec/gi,
+      "https://admin.eter-niu.com",
+    )
+}
+
 export function buildFollowupMessage(customer: TemplateCustomer) {
   const products = customer.purchased_products || []
   const lastProduct = products[products.length - 1]
@@ -172,7 +196,7 @@ export function renderTemplate(
   const productName = lastProduct?.title || "tu compra"
   const days = customer.daysSincePurchase || 30
 
-  let message = template.body
+  const message = canonicalizeEterNiuPublicUrls(template.body)
     .replace(/\{nombre\}/gi, firstName)
     .replace(/\{producto\}/gi, String(productName))
     .replace(/\{dias\}/gi, String(days))
@@ -231,7 +255,7 @@ const META_TEMPLATE_MAP: Record<string, string> = {
   nps: "eterniu_nps",
   referido: "eterniu_referido",
   generico: "eterniu_recompra",
-  promo_coleccion_exotica: "eterniu_promo_onyx_video",
+  promo_coleccion_exotica: "eterniu_promo_onyx_video_v2",
 }
 
 export type MetaTemplatePayload = {
@@ -292,7 +316,10 @@ export function buildMetaMediaPayload(
   media: TemplateMedia,
   caption?: string,
 ): MetaMediaPayload {
-  const body = { link: media.url, ...(caption ? { caption } : {}) }
+  const body = {
+    link: canonicalizeEterNiuPublicUrls(media.url),
+    ...(caption ? { caption: canonicalizeEterNiuPublicUrls(caption) } : {}),
+  }
   return {
     messaging_product: "whatsapp",
     to: phone,
@@ -317,25 +344,29 @@ export function buildMetaTemplatePayload(
   media?: TemplateMedia | null,
 ): MetaTemplatePayload {
   const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
-  const promotionalVideo = templateKey === "promo_coleccion_exotica"
+  const promotionalCampaign = templateKey === "promo_coleccion_exotica"
+  // La v2 aprobable usa texto: dentro de la ventana de 24 horas el mismo flujo
+  // conserva el video como mensaje multimedia; fuera de ella usa la plantilla.
+  const includesMediaHeader =
+    promotionalCampaign && templateName === "eterniu_promo_onyx_video"
   const firstName = campaignFirstName(vars.nombre)
   const components: MetaTemplatePayload["template"]["components"] = []
-  if (promotionalVideo && media) {
+  if (includesMediaHeader && media) {
     components.push({
       type: "header",
       parameters: [{
         type: media.kind,
         ...(media.kind === "video"
-          ? { video: { link: media.url } }
+          ? { video: { link: canonicalizeEterNiuPublicUrls(media.url) } }
           : media.kind === "image"
-            ? { image: { link: media.url } }
-            : { document: { link: media.url } }),
+            ? { image: { link: canonicalizeEterNiuPublicUrls(media.url) } }
+            : { document: { link: canonicalizeEterNiuPublicUrls(media.url) } }),
       }],
     })
   }
   components.push({
     type: "body",
-    parameters: promotionalVideo
+    parameters: promotionalCampaign
       ? [{ type: "text", text: firstName }]
       : [
           { type: "text", text: firstName },
@@ -369,7 +400,7 @@ export function buildMetaFreeformPayload(
     messaging_product: "whatsapp",
     to: phone,
     type: "text",
-    text: { body: text },
+    text: { body: canonicalizeEterNiuPublicUrls(text) },
   }
 }
 

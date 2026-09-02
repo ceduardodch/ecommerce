@@ -13,13 +13,14 @@ Este archivo orienta a cualquier agente IA que retome el proyecto. Las reglas de
 
 ## Objetivo del proyecto
 
-Construir `shop.b2b.com.ec` como ecommerce conversacional de cocina para Ecuador:
+Construir `eter-niu.com` como ecommerce conversacional para Ecuador, con cocina,
+bienestar y administración bajo el mismo dominio base:
 
 - Medusa v2 maneja catalogo, admin, inventario, clientes y ordenes.
 - Next.js muestra catalogo publico de ollas, cuchillos, utensilios, combos, feed Meta y enlaces a WhatsApp.
-- `ecommerce-tools` expone herramientas HTTP y MCP para busqueda, cotizacion, ordenes, followups, PayPhone y Meta; en produccion delega CRM y ordenes al modulo Medusa `b2bCrm`.
+- `ecommerce-tools` expone herramientas HTTP y MCP para búsqueda, cotización, órdenes, followups, DataFast y Meta; en producción delega CRM y órdenes al módulo Medusa `b2bCrm`.
 - Vicky opera como vendedora por WhatsApp desde `ecommerce-tools`, con contexto de cliente antes de recomendar.
-- PayPhone API Link crea links de pago.
+- DataFast procesa los pagos con tarjeta desde el checkout.
 - Meta se usa para catalogo, posts asistidos y Marketplace asistido.
 
 ## Estado mental correcto
@@ -37,7 +38,7 @@ Cliente WhatsApp
     -> ecommerce-tools HTTP/MCP
       -> CRM customers/events/followups
       -> Medusa API
-      -> PayPhone API Link
+      -> Checkout DataFast
       -> Meta catalog/drafts
 
 Cliente web
@@ -93,7 +94,7 @@ docker compose up --build
 
 - No asumir que algo esta desplegado si solo existe localmente.
 - Separar siempre: estado local, commit local, remoto, PR, merge a `main` y despliegue Coolify.
-- PayPhone en `PAYPHONE_DRY_RUN=true` no cobra dinero real.
+- DataFast solo cobra cuando usa credenciales y modo aprobados; el checkout nunca expone datos de tarjeta a Vicky.
 - Marketplace Facebook en v1 es asistido: generar copy/checklist, no publicar sin confirmacion humana.
 - WhatsApp entra por el webhook de Cloud API en `ecommerce-tools`.
 - Recontacto WhatsApp fuera de conversacion vigente debe ser consentido, aprobado o manual hasta tener canal Cloud API con plantillas.
@@ -106,5 +107,5 @@ docker compose up --build
 - Cargar productos reales de cocina en Medusa Admin o ejecutar `npm --workspace apps/backend run seed:kitchen`.
 - Mantener `ALLOW_DEMO_CATALOG=false` en produccion para que no aparezca catalogo demo si Medusa falla.
 - Importar BD historica de clientes/compras por `/tools/customers/import`.
-- Integrar PayPhone live despues de sandbox y webhook validado.
+- Validar DataFast en sandbox y luego en producción con webhook confirmado.
 - Completar publicacion Meta con confirmacion humana antes de publicar o pautar.

@@ -37,7 +37,7 @@ const commercialMetadata = {
 const kitchenPublicUrl = (
   process.env.COCINA_PUBLIC_URL ||
   process.env.STORE_PUBLIC_URL ||
-  "https://shop.b2b.com.ec"
+  "https://cocina.eter-niu.com"
 ).replace(/\/$/, "");
 
 const kitchenMediaUrl = (file: string) => `${kitchenPublicUrl}/media/${file}`;

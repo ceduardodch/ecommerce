@@ -57,11 +57,11 @@ export const DEFAULT_CRM_TEMPLATES: CrmTemplateSeed[] = [
       "🥘 Ollas de 18, 20 y 24 cm\n" +
       "🔥 Wok de 32 cm\n\n" +
       "Puedes pedir el set completo o cambiar las piezas y armar tu combo aquí:\n" +
-      "https://cocina.b2b.com.ec/?utm_source=whatsapp&utm_medium=crm&utm_campaign=juego_negro#arma-tu-combo\n\n" +
+      "https://cocina.eter-niu.com/?utm_source=whatsapp&utm_medium=crm&utm_campaign=juego_negro#arma-tu-combo\n\n" +
       "¿Quieres el set completo o prefieres que te ayude a armar uno?\n" +
       "Si no deseas recibir promociones, responde SALIR.",
     mediaUrl:
-      "https://cocina.b2b.com.ec/media/mgc-imperial/onyx-imperial-conjunto-actual-real.mp4",
+      "https://cocina.eter-niu.com/media/mgc-imperial/onyx-imperial-conjunto-actual-real.mp4",
     mediaType: "video",
   },
   {

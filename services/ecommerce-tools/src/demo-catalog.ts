@@ -84,8 +84,8 @@ const kitchenCatalog: Product[] = [
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
-        "imageUrl": "https://cocina.b2b.com.ec/media/photo-receta-wok.jpg",
-        "productUrl": "https://cocina.b2b.com.ec/products/wok-granito-32cm-tapa"
+        "imageUrl": "https://cocina.eter-niu.com/media/photo-receta-wok.jpg",
+        "productUrl": "https://cocina.eter-niu.com/products/wok-granito-32cm-tapa"
   },
   {
     ...kitchenDefaults,
@@ -148,8 +148,8 @@ const kitchenCatalog: Product[] = [
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
-        "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
-        "productUrl": "https://cocina.b2b.com.ec/products/olla-granito-20cm"
+        "imageUrl": "https://cocina.eter-niu.com/media/photo-product-olla-20.jpg",
+        "productUrl": "https://cocina.eter-niu.com/products/olla-granito-20cm"
   },
   {
     ...kitchenDefaults,
@@ -212,8 +212,8 @@ const kitchenCatalog: Product[] = [
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
-        "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-olla-20.jpg",
-        "productUrl": "https://cocina.b2b.com.ec/products/olla-granito-18cm"
+        "imageUrl": "https://cocina.eter-niu.com/media/photo-product-olla-20.jpg",
+        "productUrl": "https://cocina.eter-niu.com/products/olla-granito-18cm"
   },
   {
     ...kitchenDefaults,
@@ -276,8 +276,8 @@ const kitchenCatalog: Product[] = [
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
-        "imageUrl": "https://cocina.b2b.com.ec/media/photo-detalle-wok.jpg",
-        "productUrl": "https://cocina.b2b.com.ec/products/sarten-plano-granito-22cm"
+        "imageUrl": "https://cocina.eter-niu.com/media/photo-detalle-wok.jpg",
+        "productUrl": "https://cocina.eter-niu.com/products/sarten-plano-granito-22cm"
   },
   {
     ...kitchenDefaults,
@@ -335,8 +335,8 @@ const kitchenCatalog: Product[] = [
             "tarjeta"
         ],
         "couponCode": "GRANITOHOY",
-        "imageUrl": "https://cocina.b2b.com.ec/media/photo-product-cuchillo-samurai.jpg",
-        "productUrl": "https://cocina.b2b.com.ec/products/cuchillo-samurai-japones-todo-uso"
+        "imageUrl": "https://cocina.eter-niu.com/media/photo-product-cuchillo-samurai.jpg",
+        "productUrl": "https://cocina.eter-niu.com/products/cuchillo-samurai-japones-todo-uso"
   },
 ]
 
@@ -1252,8 +1252,8 @@ const wellnessProducts: Product[] = wellnessCatalog.map((product) => ({
     "No publicar claims medicos, terapeuticos o espirituales absolutos.",
   reorderAfterDays: 180,
   stock: 1,
-  imageUrl: `https://bienestar.b2b.com.ec/media/${product.image}`,
-  productUrl: `https://bienestar.b2b.com.ec/campanas/${product.handle}?sku=${product.sku}`,
+  imageUrl: `https://bienestar.eter-niu.com/media/${product.image}`,
+  productUrl: `https://bienestar.eter-niu.com/campanas/${product.handle}?sku=${product.sku}`,
   tags: [...product.tags],
 }));
 
