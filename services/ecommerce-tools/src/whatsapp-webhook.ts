@@ -200,13 +200,37 @@ export function extractMessageStatuses(body: MetaWebhookBody): MetaWebhookStatus
 }
 
 /**
- * Detecta si el texto es una solicitud de opt-out.
- * "BAJA" al inicio o como mensaje completo (case-insensitive).
+ * Palabras que dan de baja al cliente. `SALIR` es la que anuncian las
+ * plantillas promocionales ("Si no deseas recibir promociones, responde
+ * SALIR"), así que es la que más llega; `BAJA` y `STOP` se aceptan porque son
+ * las convenciones que la gente ya trae de otros remitentes.
+ *
+ * Cualquier palabra que se anuncie en una plantilla TIENE que estar aquí: si
+ * el cliente sigue la instrucción y no lo registramos, lo seguimos contactando
+ * contra su voluntad expresa y Meta lo cobra en la calificación del número.
+ */
+const OPT_OUT_KEYWORDS = ["SALIR", "BAJA", "STOP"]
+
+/**
+ * Detecta si el texto es una solicitud de opt-out: una palabra clave como
+ * mensaje completo, o al inicio seguida de espacio ("BAJA por favor").
+ *
+ * Se ignoran signos y acentos para que "¡Salir!" o "salir." cuenten, sin
+ * abrir la puerta a falsos positivos como "BAJO precio" o "salirme del grupo",
+ * que no empiezan por la palabra exacta.
  */
 export function isOptOutText(text: string): boolean {
-  const trimmed = text.trim()
-  const upper = trimmed.toUpperCase()
-  return upper === "BAJA" || upper.startsWith("BAJA ")
+  const normalized = String(text || "")
+    .normalize("NFD")
+    // Quita diacríticos para que "bája" o "salír" no se escapen.
+    .replace(/[̀-ͯ]/g, "")
+    // Signos de apertura/cierre y puntuación de borde, no los internos.
+    .replace(/^[\s¡!¿?.,;:"'()-]+|[\s¡!¿?.,;:"'()-]+$/g, "")
+    .toUpperCase()
+
+  return OPT_OUT_KEYWORDS.some(
+    (keyword) => normalized === keyword || normalized.startsWith(`${keyword} `),
+  )
 }
 
 /**
@@ -288,7 +312,7 @@ async function recordInboundEvent(
       type: "opt_out",
       at: new Date().toISOString(),
       source: "whatsapp_cloud_api",
-      payload: { trigger: "keyword_baja", originalText: text },
+      payload: { trigger: "keyword_opt_out", originalText: text },
       metadata: {},
     })
     return

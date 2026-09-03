@@ -232,6 +232,11 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
       filter: event.payload?.filter,
       mode: event.payload?.mode,
       source: event.source,
+      // El wamid es la única llave que casa un despacho con su acuse de
+      // entrega (eventos `message_status`). Sin exponerlo, un `sent` solo
+      // prueba que Meta aceptó el mensaje, no que llegó.
+      messageId: event.payload?.messageId,
+      detail: event.payload?.detail,
     })),
   })
 }

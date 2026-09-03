@@ -261,6 +261,38 @@ describe("isOptOutText", () => {
     expect(isOptOutText("BAJO precio")).toBe(false)
     expect(isOptOutText("BAJADO el precio")).toBe(false)
   })
+
+  // La plantilla promocional anuncia SALIR, no BAJA. Antes se ignoraba, así que
+  // quien seguía la instrucción del propio mensaje seguía recibiendo campañas.
+  it("detecta 'SALIR', la palabra que anuncian las plantillas", () => {
+    expect(isOptOutText("SALIR")).toBe(true)
+    expect(isOptOutText("salir")).toBe(true)
+    expect(isOptOutText("  Salir  ")).toBe(true)
+    expect(isOptOutText("SALIR por favor")).toBe(true)
+  })
+
+  it("detecta 'STOP', convención común de otros remitentes", () => {
+    expect(isOptOutText("STOP")).toBe(true)
+    expect(isOptOutText("stop")).toBe(true)
+  })
+
+  it("tolera signos y acentos alrededor de la palabra", () => {
+    expect(isOptOutText("¡SALIR!")).toBe(true)
+    expect(isOptOutText("salir.")).toBe(true)
+    expect(isOptOutText("BAJA,")).toBe(true)
+  })
+
+  it("NO confunde palabras que empiezan igual", () => {
+    expect(isOptOutText("salirme del grupo no")).toBe(false)
+    expect(isOptOutText("SALIRSE")).toBe(false)
+    expect(isOptOutText("stopper")).toBe(false)
+  })
+
+  // Un desinterés no es una baja: la clienta puede seguir interesada en otra
+  // línea. Se atiende en la conversación, no dándola de baja en silencio.
+  it("NO trata un desinterés suelto como opt-out", () => {
+    expect(isOptOutText("No estoy interesada eso producto")).toBe(false)
+  })
 })
 
 // ---------------------------------------------------------------------------
