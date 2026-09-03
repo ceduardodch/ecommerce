@@ -90,7 +90,7 @@ describe("buildMetaTemplatePayload", () => {
     ).toBe(true)
   })
 
-  it("arma la plantilla Onyx v2 con dominio canónico y solo el nombre", () => {
+  it("arma la plantilla Onyx v3 con video, dominio canónico y solo el nombre", () => {
     const payload = buildMetaTemplatePayload(
       "+593979854915",
       "promo_coleccion_exotica",
@@ -98,9 +98,16 @@ describe("buildMetaTemplatePayload", () => {
       { kind: "video", url: "https://cocina.b2b.com.ec/onyx.mp4" },
     )
 
-    expect(payload.template.name).toBe("eterniu_promo_onyx_video_v2")
-    expect(payload.template.components).toHaveLength(1)
+    expect(payload.template.name).toBe("eterniu_promo_onyx_video_v3")
+    expect(payload.template.components).toHaveLength(2)
     expect(payload.template.components[0]).toMatchObject({
+      type: "header",
+      parameters: [{
+        type: "video",
+        video: { link: "https://cocina.eter-niu.com/onyx.mp4" },
+      }],
+    })
+    expect(payload.template.components.find((component) => component.type === "body")).toMatchObject({
       type: "body",
       parameters: [{ type: "text", text: "Carlos" }],
     })
@@ -117,7 +124,7 @@ describe("buildMetaTemplatePayload", () => {
       },
     )
 
-    expect(payload.template.components[0]).toMatchObject({
+    expect(payload.template.components.find((component) => component.type === "body")).toMatchObject({
       type: "body",
       parameters: [{ type: "text", text: "Carlos" }],
     })
