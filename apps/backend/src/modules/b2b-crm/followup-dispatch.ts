@@ -255,7 +255,7 @@ const META_TEMPLATE_MAP: Record<string, string> = {
   nps: "eterniu_nps",
   referido: "eterniu_referido",
   generico: "eterniu_recompra",
-  promo_coleccion_exotica: "eterniu_promo_onyx_video_v2",
+  promo_coleccion_exotica: "eterniu_promo_onyx_video_v3",
 }
 
 export type MetaTemplatePayload = {
@@ -345,10 +345,11 @@ export function buildMetaTemplatePayload(
 ): MetaTemplatePayload {
   const templateName = META_TEMPLATE_MAP[templateKey] ?? "eterniu_recompra"
   const promotionalCampaign = templateKey === "promo_coleccion_exotica"
-  // La v2 aprobable usa texto: dentro de la ventana de 24 horas el mismo flujo
-  // conserva el video como mensaje multimedia; fuera de ella usa la plantilla.
+  // La v3 aprobada usa cabecera de video. Dentro de la ventana de 24 horas el
+  // mismo flujo conserva el video como mensaje multimedia; fuera de ella usa
+  // la plantilla aprobada con el video en la cabecera.
   const includesMediaHeader =
-    promotionalCampaign && templateName === "eterniu_promo_onyx_video"
+    promotionalCampaign && templateName === "eterniu_promo_onyx_video_v3"
   const firstName = campaignFirstName(vars.nombre)
   const components: MetaTemplatePayload["template"]["components"] = []
   if (includesMediaHeader && media) {
