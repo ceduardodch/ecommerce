@@ -242,9 +242,11 @@ async function verifyCampaign(config, templateKey, limit = 100) {
   if (tally.sin_acuse === relevant.length) {
     console.log(
       "\n⚠ Ningún mensaje tiene acuse de entrega.\n" +
-        "  Puede ser (a) el webhook de estados no está llegando al servicio, o\n" +
-        "  (b) los eventos de broadcast no guardan el wamid en un campo que la\n" +
-        "  API GET exponga. Revisa con: node scripts/prod-inspect.mjs statuses",
+        "  El webhook de Meta sí funciona (los mensajes conversacionales tienen\n" +
+        "  `delivered` y `read`). Lo que falla es que un despacho sin fila en la\n" +
+        "  conversación no deja wamid al que pegar el acuse, y se descarta.\n" +
+        "  Si sigues viendo esto tras desplegar el arreglo de\n" +
+        "  `conversationMessageFromEvent`, es un problema nuevo.",
     )
   }
 }
