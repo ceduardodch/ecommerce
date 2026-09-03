@@ -669,6 +669,9 @@ export async function runFollowupDispatch(
         reason: (customer as any).followup_reason || undefined,
         mode: metaMode,
         detail: outcome.detail,
+        // Sin el wamid aquí, el acuse de entrega que manda Meta después no
+        // tiene con qué casarse y se descarta.
+        messageId: outcome.messageId,
       },
     })
 
