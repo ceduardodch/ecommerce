@@ -220,10 +220,7 @@ const OPT_OUT_KEYWORDS = ["SALIR", "BAJA", "STOP"]
  * que no empiezan por la palabra exacta.
  */
 export function isOptOutText(text: string): boolean {
-  const normalized = String(text || "")
-    .normalize("NFD")
-    // Quita diacríticos para que "bája" o "salír" no se escapen.
-    .replace(/[̀-ͯ]/g, "")
+  const normalized = stripAccents(String(text || ""))
     // Signos de apertura/cierre y puntuación de borde, no los internos.
     .replace(/^[\s¡!¿?.,;:"'()-]+|[\s¡!¿?.,;:"'()-]+$/g, "")
     .toUpperCase()
@@ -231,6 +228,48 @@ export function isOptOutText(text: string): boolean {
   return OPT_OUT_KEYWORDS.some(
     (keyword) => normalized === keyword || normalized.startsWith(`${keyword} `),
   )
+}
+
+/** Quita diacríticos para que "bája" o "salír" no se escapen. */
+function stripAccents(value: string): string {
+  return value.normalize("NFD").replace(/[̀-ͯ]/g, "")
+}
+
+/**
+ * Peticiones de baja escritas en lenguaje natural, no con la palabra clave.
+ *
+ * Nace de un caso real: una clienta escribió "Eliminar mi contacto de sus
+ * listas", Vicky contestó que lo tramitaba y no se tramitó nada, porque solo
+ * se reconocía la palabra exacta. Prometer una baja y no ejecutarla es peor
+ * que no ofrecerla.
+ *
+ * Cada patrón exige verbo Y objeto ("elimina" + "mi contacto"/"de la lista")
+ * para no confundirse con frases de venta legítimas como "quiero eliminar un
+ * producto del pedido", donde el objeto es el producto y no el contacto.
+ */
+const OPT_OUT_PATTERNS: RegExp[] = [
+  // "eliminen mi contacto", "borra mis datos", "quiten mi numero"
+  /\b(elimin|borr|quit|sac|remov)\w*\b[^.]{0,30}\b(mi|mis)\b[^.]{0,20}\b(contacto|numero|telefono|dato|datos|informacion)\b/,
+  // "quitame de la lista", "sacarme de sus listas", "eliminarme de la base"
+  /\b(elimin|borr|quit|sac|remov)\w*\b[^.]{0,30}\bde\b[^.]{0,20}\b(lista|listas|base|difusion|promociones)\b/,
+  // "no me escriban mas", "no me contacten", "no me manden nada"
+  /\bno\b[^.]{0,15}\bme\b[^.]{0,15}\b(escrib|contact|mand|envi|llam|molest)\w+/,
+  // "no quiero recibir promociones" — exige el objeto para no capturar
+  // "no quiero recibir el azul, prefiero el negro".
+  /\bno\b[^.]{0,10}\bquiero\b[^.]{0,20}\brecibir\b[^.]{0,30}\b(promo\w*|mensaje\w*|publicidad|propaganda|nada)\b/,
+  // "darme de baja", "denme de baja"
+  /\bd(ar|arme|arnos|enme|e)\b\s+de\s+baja\b/,
+]
+
+/**
+ * Verdadero si el cliente pide dejar de ser contactado, sea por palabra clave
+ * o en lenguaje natural. Es lo que debe consultar el webhook.
+ */
+export function isOptOutRequest(text: string): boolean {
+  if (isOptOutText(text)) return true
+
+  const normalized = stripAccents(String(text || "")).toLowerCase()
+  return OPT_OUT_PATTERNS.some((pattern) => pattern.test(normalized))
 }
 
 /**
@@ -451,7 +490,7 @@ export function mountWhatsappWebhookRoutes(
             app.log.info({ messageId }, "Ignoring duplicate WhatsApp webhook event")
             return
           }
-          const optOut = isOptOutText(text)
+          const optOut = isOptOutRequest(text)
           // Se consulta ANTES de registrar el mensaje entrante: así el
           // historial y el contexto que recibe Vicky (y el followupReason
           // para NPS) reflejan el estado previo a este turno, sin duplicar

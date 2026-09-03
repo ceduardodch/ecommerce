@@ -11,6 +11,7 @@ import {
   extractInboundMediaMessages,
   extractMessageStatuses,
   isOptOutText,
+  isOptOutRequest,
   parseNpsScore,
   npsDecision,
   type MetaWebhookBody,
@@ -292,6 +293,45 @@ describe("isOptOutText", () => {
   // línea. Se atiende en la conversación, no dándola de baja en silencio.
   it("NO trata un desinterés suelto como opt-out", () => {
     expect(isOptOutText("No estoy interesada eso producto")).toBe(false)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// isOptOutRequest — bajas pedidas en lenguaje natural
+// ---------------------------------------------------------------------------
+
+describe("isOptOutRequest", () => {
+  it("sigue reconociendo las palabras clave", () => {
+    expect(isOptOutRequest("SALIR")).toBe(true)
+    expect(isOptOutRequest("baja")).toBe(true)
+    expect(isOptOutRequest("STOP")).toBe(true)
+  })
+
+  // El mensaje exacto que una clienta envió el 2026-09-03: Vicky respondió que
+  // tramitaba la eliminación y no se registró nada.
+  it("reconoce el caso real que se perdió en producción", () => {
+    expect(isOptOutRequest("Eliminar mi contacto de sus listas")).toBe(true)
+  })
+
+  it("reconoce otras formas de pedir la baja", () => {
+    expect(isOptOutRequest("Borren mis datos por favor")).toBe(true)
+    expect(isOptOutRequest("quitenme de la lista")).toBe(true)
+    expect(isOptOutRequest("sacame de sus listas")).toBe(true)
+    expect(isOptOutRequest("No me escriban más")).toBe(true)
+    expect(isOptOutRequest("no me contacten")).toBe(true)
+    expect(isOptOutRequest("no quiero recibir promociones")).toBe(true)
+    expect(isOptOutRequest("quiero darme de baja")).toBe(true)
+  })
+
+  // Un falso positivo da de baja a quien quería comprar: cuesta una venta y es
+  // silencioso. Estos son los casos que más se parecen a una baja sin serlo.
+  it("NO confunde frases de venta con una baja", () => {
+    expect(isOptOutRequest("quiero eliminar un producto de mi pedido")).toBe(false)
+    expect(isOptOutRequest("no quiero recibir el azul, prefiero el negro")).toBe(false)
+    expect(isOptOutRequest("me puedes quitar el wok del combo?")).toBe(false)
+    expect(isOptOutRequest("No estoy interesada eso producto")).toBe(false)
+    expect(isOptOutRequest("borra ese item de la cotizacion")).toBe(false)
+    expect(isOptOutRequest("no me llego el pedido")).toBe(false)
   })
 })
 
