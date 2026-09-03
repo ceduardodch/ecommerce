@@ -207,6 +207,28 @@ describe("plantillas base en español", () => {
     expect(promo.mediaType).toBe("video")
   })
 
+  // Una plantilla prometió "responde SALIR" mientras el webhook solo reconocía
+  // "BAJA": quien seguía la instrucción seguía recibiendo campañas. El detector
+  // vive en services/ecommerce-tools, así que este test replica su lista y
+  // falla si una plantilla anuncia una palabra que allá no está contemplada.
+  it("toda palabra de baja que anuncia una plantilla es reconocida por el webhook", () => {
+    // Espejo de OPT_OUT_KEYWORDS en services/ecommerce-tools/src/whatsapp-webhook.ts
+    const reconocidas = ["SALIR", "BAJA", "STOP"]
+
+    // [plantilla, palabra] de cada anuncio, para que un fallo diga cuál falla.
+    const anunciadas: Array<[string, string]> = []
+    for (const template of DEFAULT_CRM_TEMPLATES) {
+      for (const frase of template.body.match(/responde\s+([A-ZÁÉÍÓÚÑ]{3,})/g) || []) {
+        anunciadas.push([template.key, frase.replace(/responde\s+/i, "").trim()])
+      }
+    }
+
+    const noReconocidas = anunciadas.filter(
+      ([, palabra]) => !reconocidas.includes(palabra),
+    )
+    expect(noReconocidas).toEqual([])
+  })
+
   it("la plantilla de recompra renderiza las 3 variables", () => {
     const recompra = DEFAULT_CRM_TEMPLATES.find((t) => t.key === "recompra")!
     const message = renderTemplate(recompra, {
