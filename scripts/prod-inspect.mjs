@@ -249,6 +249,72 @@ async function verifyCampaign(config, templateKey, limit = 100) {
   }
 }
 
+/**
+ * Respuestas entrantes de quienes recibieron una campaña. Sirve para medir la
+ * reacción real (incluidas quejas y pedidos de baja) sin abrir 20 chats a mano.
+ */
+async function replies(config, templateKey, limit = 100) {
+  const rows = await fetchBroadcasts(config, limit)
+  const filtered = templateKey
+    ? rows.filter((row) => row.templateKey === templateKey)
+    : rows
+
+  // Un mismo teléfono puede tener varios despachos (tandas distintas). Nos
+  // quedamos con el más antiguo para no perder respuestas intermedias.
+  const byPhone = new Map()
+  for (const row of filtered) {
+    const previous = byPhone.get(row.phone)
+    if (!previous || new Date(row.at) < new Date(previous.at)) {
+      byPhone.set(row.phone, row)
+    }
+  }
+  const relevant = [...byPhone.values()]
+
+  if (!relevant.length) {
+    console.log(`\nNo hay broadcasts${templateKey ? ` de "${templateKey}"` : ""}.\n`)
+    return
+  }
+
+  console.log(`\nLeyendo respuestas de ${relevant.length} destinatario(s)...\n`)
+
+  let withReply = 0
+  for (const row of relevant) {
+    const phone = row.phone
+    if (!phone) continue
+
+    const sentAt = new Date(row.at).getTime()
+    const response = await fetch(
+      new URL(
+        `/admin/b2b/crm/customers/${encodeURIComponent(phone)}?limit=50`,
+        config.baseUrl,
+      ),
+      { headers: { Authorization: authHeader(config.apiKey), Accept: "application/json" } },
+    )
+    if (!response.ok) continue
+
+    const data = await response.json()
+    // Solo lo que entró DESPUÉS del despacho: es la reacción a la campaña.
+    const inbound = (data.customer?.events || []).filter(
+      (event) =>
+        event.type === "message_in" &&
+        new Date(event.at).getTime() >= sentAt,
+    )
+    if (!inbound.length) continue
+
+    withReply += 1
+    console.log(`${phone}  (${data.customer?.name || "sin nombre"})`)
+    for (const event of inbound.reverse()) {
+      const text = String(event.payload?.text || "").replace(/\s+/g, " ").trim()
+      console.log(`   ${formatDate(event.at)}  ${text || "(sin texto)"}`)
+    }
+    console.log("")
+  }
+
+  console.log(
+    `${withReply} de ${relevant.length} respondieron tras recibir la campaña.`,
+  )
+}
+
 async function customer(config, phone) {
   if (!phone) fail("Falta el teléfono. Uso: prod-inspect.mjs customer 5939XXXXXXX")
   const data = await getJson(
@@ -259,6 +325,10 @@ async function customer(config, phone) {
   console.log(`\n${record.name || "(sin nombre)"} — ${record.phone}`)
   console.log(`  consentimiento: ${record.whatsappConsent ? "sí" : "no"}`)
   console.log(`  etapa:          ${record.journeyStage || "-"}`)
+  console.log(`  etiquetas:      ${(record.tags || []).join(", ") || "-"}`)
+  // La procedencia del consentimiento es lo que respalda un envío promocional
+  // ante un reclamo. Si está vacía, no hay con qué sustentarlo.
+  console.log(`  metadata:       ${JSON.stringify(record.metadata || {})}`)
   console.log(`\nEventos (${record.events?.length || 0}):`)
   for (const event of record.events || []) {
     console.log(`  ${formatDate(event.at)}  ${String(event.type).padEnd(20)} ${event.source || ""}`)
@@ -288,6 +358,8 @@ async function main() {
       return statuses(config, Number(args[0]) || 200)
     case "verify-campaign":
       return verifyCampaign(config, args[0], Number(args[1]) || 100)
+    case "replies":
+      return replies(config, args[0], Number(args[1]) || 100)
     case "customer":
       return customer(config, args[0])
     default:
@@ -297,6 +369,7 @@ async function main() {
           "  broadcasts [limit]                  eventos de campaña recientes\n" +
           "  statuses [limit]                    acuses de entrega de Meta\n" +
           "  verify-campaign [key] [limit]       cruza despacho contra entrega\n" +
+          "  replies [key] [limit]               respuestas entrantes tras la campaña\n" +
           "  customer <telefono>                 ficha y eventos de un cliente\n",
       )
   }
