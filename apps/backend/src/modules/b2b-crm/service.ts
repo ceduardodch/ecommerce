@@ -26,6 +26,7 @@ import type {
 } from "./types"
 import { recompraMetrics as calculateRecompraMetrics } from "./recompra-metrics"
 import { calculateRfm, type RfmSegment } from "./rfm"
+import { conversationMessageFromEvent } from "./conversation-message"
 
 type AnyB2bCrmService = {
   listCrmCustomerProfiles: (filters?: unknown, config?: unknown) => Promise<any[]>
@@ -771,19 +772,17 @@ class B2bCrmModuleService extends MedusaService({
       payload: payloadWithMetadata(input.payload, metadata),
     })
 
-    if (input.type === "message_in" || input.type === "message_out") {
-      const payload = (input.payload || {}) as Record<string, unknown>
+    const payload = (input.payload || {}) as Record<string, unknown>
+    const draft = conversationMessageFromEvent(input.type, payload)
+
+    if (draft) {
       const media = payload.media && typeof payload.media === "object"
         ? payload.media as { type?: string; path?: string; name?: string; mimeType?: string; size?: number }
         : { type: payload.mediaType as string | undefined, path: payload.mediaUrl as string | undefined }
       await this.recordConversationMessage({
         phone,
-        direction: input.type === "message_in" ? "in" : "out",
-        senderType: input.type === "message_in" ? "customer" : String(payload.senderType || "ai") as "ai" | "human" | "system",
-        text: typeof payload.text === "string" ? payload.text : undefined,
-        metaMessageId: typeof payload.messageId === "string" ? payload.messageId : undefined,
+        ...draft,
         media,
-        status: typeof payload.status === "string" ? payload.status : undefined,
         at: input.at,
         payload,
         actor: typeof payload.actor === "object" && payload.actor ? payload.actor as ConversationActor : undefined,
