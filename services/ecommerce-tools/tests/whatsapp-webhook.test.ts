@@ -12,6 +12,7 @@ import {
   extractMessageStatuses,
   isOptOutText,
   isOptOutRequest,
+  OPT_OUT_CONFIRMATION,
   parseNpsScore,
   npsDecision,
   type MetaWebhookBody,
@@ -437,5 +438,30 @@ describe("npsDecision", () => {
       recordNpsScore: true,
       scheduleReferido: true,
     })
+  })
+})
+
+// ---------------------------------------------------------------------------
+// OPT_OUT_CONFIRMATION
+// ---------------------------------------------------------------------------
+
+describe("OPT_OUT_CONFIRMATION", () => {
+  // Nace de una conversación real: el agente redactaba la respuesta y le pedía
+  // confirmación a quien ya se había despedido, cinco veces seguidas. Un texto
+  // fijo no puede negociar ni volver a preguntar.
+  it("confirma y cierra, sin preguntar nada", () => {
+    expect(OPT_OUT_CONFIRMATION).not.toContain("?")
+    expect(OPT_OUT_CONFIRMATION).not.toContain("¿")
+  })
+
+  it("no intenta retener ni reofrecer", () => {
+    const texto = OPT_OUT_CONFIRMATION.toLowerCase()
+    for (const gancho of ["confirmas", "seguro", "prefieres", "quieres", "oferta", "descuento"]) {
+      expect(texto).not.toContain(gancho)
+    }
+  })
+
+  it("le dice al cliente que ya quedó hecho", () => {
+    expect(OPT_OUT_CONFIRMATION.toLowerCase()).toMatch(/listo|te saqu|ya no/)
   })
 })
