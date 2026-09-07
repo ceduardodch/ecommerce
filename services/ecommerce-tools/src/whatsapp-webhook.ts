@@ -262,6 +262,13 @@ const OPT_OUT_PATTERNS: RegExp[] = [
 ]
 
 /**
+ * Única respuesta ante una baja: confirma y cierra. Sin preguntas, sin ofertas
+ * de retención y sin pedir confirmación — quien pide salir ya decidió.
+ */
+export const OPT_OUT_CONFIRMATION =
+  "Listo, te saqué de nuestra lista. No vas a recibir más mensajes promocionales. Gracias por avisarnos 🙏"
+
+/**
  * Verdadero si el cliente pide dejar de ser contactado, sea por palabra clave
  * o en lenguaje natural. Es lo que debe consultar el webhook.
  */
@@ -529,6 +536,19 @@ export function mountWhatsappWebhookRoutes(
           } catch (err) {
             app.log.error({ err, waId }, "Error recording whatsapp inbound event")
           }
+
+          // Una baja se confirma una vez y se cierra. El texto es fijo a
+          // propósito: cuando esto lo redactaba el agente, le pedía confirmación
+          // a quien ya se había despedido —"¿confirmas que quieres eliminar?"—
+          // y la clienta tuvo que repetirlo cinco veces. Un mensaje fijo no
+          // puede negociar ni volver a preguntar. Tampoco vale quedarse mudo:
+          // quien pide salir merece saber que se hizo.
+          if (optOut && sendReply) {
+            await sendReply({ phone: `+${waId}`, text: OPT_OUT_CONFIRMATION }).catch(
+              (err) => app.log.error({ err, waId }, "Error sending opt-out confirmation"),
+            )
+          }
+
           // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
           if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
             const products = await searchProducts(text).catch(() => [])
