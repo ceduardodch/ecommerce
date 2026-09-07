@@ -54,6 +54,17 @@ uploads/
 .claude/launch.json
 .claude/worktrees/
 
+# Scratch de agentes y trazas del navegador automatizado: se regeneran solas
+# en cada sesión y no describen el proyecto.
+.codex-tmp/
+.playwright-mcp/
+
+# Capturas sueltas en la raíz. Los assets de verdad viven versionados en
+# apps/storefront/public/ y en data/biblioteca/, nunca aquí.
+/*.png
+/*.jpg
+/*.jpeg
+
 # Generated certification artifacts can contain payment test data
 outputs/
 
