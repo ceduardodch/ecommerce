@@ -528,8 +528,8 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
     expect(quote).not.toHaveBeenCalled()
     expect(fetchMock).toHaveBeenCalledTimes(2)
 
-    // La primera llamada declara las tools; la segunda continúa con
-    // previous_response_id y manda el resultado de la tool ejecutada.
+    // La segunda ronda lleva contexto, llamada y resultado sin pedir
+    // una respuesta almacenada al proveedor.
     const firstBody = JSON.parse(String(fetchMock.mock.calls[0][1].body)) as { tools?: Array<{ name: string }> }
     expect(firstBody.tools?.map((tool) => tool.name)).toEqual(["quote", "create_cart"])
 
@@ -537,8 +537,11 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
       previous_response_id?: string
       input: Array<{ type: string; call_id: string; output: string }>
     }
-    expect(secondBody.previous_response_id).toBe("r1")
-    expect(secondBody.input).toEqual([{
+    expect(secondBody.previous_response_id).toBeUndefined()
+    expect(secondBody.input).toEqual([
+      expect.objectContaining({ role: "user", content: expect.stringContaining("María") }),
+      expect.objectContaining({ type: "function_call", call_id: "call_1", name: "create_cart" }),
+      {
       type: "function_call_output",
       call_id: "call_1",
       output: JSON.stringify({ cartUrl: "https://cocina.eter-niu.com/cart?session=abc", expiresAt: "2026-09-02T00:00:00.000Z" }),
@@ -586,7 +589,7 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
 
     expect(createCart).not.toHaveBeenCalled()
     const secondBody = JSON.parse(String(fetchMock.mock.calls[1][1].body)) as { input: Array<{ output: string }> }
-    expect(JSON.parse(secondBody.input[0].output)).toMatchObject({ error: "sku_not_found" })
+    expect(JSON.parse(secondBody.input.find((item: { type: string }) => item.type === "function_call_output").output)).toMatchObject({ error: "sku_not_found" })
   })
 
   it("no crea el carrito si faltan nombre o ciudad, aunque el modelo llame la herramienta", async () => {
@@ -624,5 +627,49 @@ describe("createWhatsAppAgentReply — herramientas reales (V-3)", () => {
     expect(result).toBeNull()
     // 1 llamada inicial + MAX_TOOL_ROUNDS(3) reintentos = 4 llamadas a fetch.
     expect(fetchMock).toHaveBeenCalledTimes(4)
+    expect(quote).toHaveBeenCalledTimes(1)
   })
+  it("conserva razonamiento y resultados durante cotización, carrito y respuesta final", async () => {
+    const quote = vi.fn().mockResolvedValue(quoteResult)
+    const createCart = vi.fn().mockResolvedValue({ cartUrl: "https://cocina.eter-niu.com/cart?session=test", expiresAt: "2026-09-08" })
+    const reasoning = { type: "reasoning", id: "rs_test", summary: [], encrypted_content: "opaque-test-context" }
+    const quoteCall = { type: "function_call", id: "fc1", call_id: "c1", name: "quote", arguments: JSON.stringify({ sku: "OLLA-01", quantity: 1 }) }
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ output: [reasoning, quoteCall] })))
+      .mockResolvedValueOnce(functionCallResponse("r2", "c2", "create_cart", { sku: "OLLA-01", quantity: 1, customerName: "María", city: "Quito" }))
+      .mockResolvedValueOnce(textResponse("r3", "Tu carrito está listo."))
+    const result = await createWhatsAppAgentReply(config(), {
+      text: "Cotiza la olla y prepara mi carrito. Soy María de Quito.", products,
+      phone: "+593987654321", commerce: { quote, createCart },
+    }, fetchMock as unknown as typeof fetch)
+    expect(result).toBe("Tu carrito está listo.")
+    expect(quote).toHaveBeenCalledOnce()
+    expect(createCart).toHaveBeenCalledOnce()
+    const last = JSON.parse(String(fetchMock.mock.calls[2][1].body))
+    expect(last.previous_response_id).toBeUndefined()
+    expect(last.store).toBe(false)
+    expect(last.include).toContain("reasoning.encrypted_content")
+    expect(last.input).toEqual([
+      expect.objectContaining({ role: "user" }), reasoning, quoteCall,
+      expect.objectContaining({ type: "function_call_output", call_id: "c1" }),
+      expect.objectContaining({ type: "function_call", call_id: "c2" }),
+      expect.objectContaining({ type: "function_call_output", call_id: "c2" }),
+    ])
+  })
+
+  it("ejecuta en orden quote y create_cart pedidos en una misma respuesta", async () => {
+    const quote = vi.fn().mockResolvedValue(quoteResult)
+    const createCart = vi.fn().mockResolvedValue({ cartUrl: "https://cocina.eter-niu.com/cart?session=test", expiresAt: "2026-09-08" })
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ output: [
+        { type: "function_call", call_id: "q", name: "quote", arguments: JSON.stringify({ sku: "OLLA-01", quantity: 1 }) },
+        { type: "function_call", call_id: "c", name: "create_cart", arguments: JSON.stringify({ sku: "OLLA-01", quantity: 1, customerName: "María", city: "Quito" }) },
+      ] })))
+      .mockResolvedValueOnce(textResponse("r2", "Carrito listo."))
+    await createWhatsAppAgentReply(config(), { text: "Soy María de Quito, quiero esa olla.", products, phone: "+593987654321", commerce: { quote, createCart } }, fetchMock as unknown as typeof fetch)
+    expect(quote).toHaveBeenCalledOnce()
+    expect(createCart).toHaveBeenCalledOnce()
+    expect(quote.mock.invocationCallOrder[0]).toBeLessThan(createCart.mock.invocationCallOrder[0])
+  })
+
 })

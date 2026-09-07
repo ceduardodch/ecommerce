@@ -54,7 +54,7 @@ const MAX_TOOL_ROUNDS = 3
  */
 const HISTORY_TURN_LIMIT = 10
 
-type OpenAiResponseItem = {
+type OpenAiResponseItem = Record<string, unknown> & {
   type?: string
   content?: Array<{ type?: string; text?: string }>
   call_id?: string
@@ -514,7 +514,6 @@ export async function createWhatsAppAgentReply(
     const quotedSkus = new Set(
       commerceHistory.map(quoteSku).filter((sku): sku is string => Boolean(sku)),
     )
-    let previousResponseId: string | undefined
     let nextInput: string | Array<Record<string, unknown>> = [
       customerContext && `Contexto del cliente:\n${customerContext}`,
       conversationHistory && `Historial reciente (más antiguo primero):\n${conversationHistory}`,
@@ -525,10 +524,9 @@ export async function createWhatsAppAgentReply(
       .filter(Boolean)
       .join("\n\n")
 
-    // Loop de tool-calling: el modelo puede pedir quote/create_cart antes de
-    // dar la respuesta final. Cada vuelta ejecuta las tool calls localmente
-    // y le devuelve el resultado al modelo con previous_response_id, hasta
-    // que responda con texto o se llegue al techo de rondas.
+    // Sin almacenamiento remoto, cada ronda lleva el historial completo,
+    // incluido el razonamiento cifrado y los resultados de las herramientas.
+    const toolResults = new Map<string, unknown>()
     for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
       const response = await fetchImpl("https://api.openai.com/v1/responses", {
         method: "POST",
@@ -540,13 +538,13 @@ export async function createWhatsAppAgentReply(
         body: JSON.stringify({
           model: config.openaiModel,
           store: false,
+          include: ["reasoning.encrypted_content"],
           // Los modelos de razonamiento pueden gastar el límite antes de emitir
           // texto. Para un chat breve, reducir el razonamiento y dejar margen
           // suficiente evita respuestas vacías.
           reasoning: { effort: "low" },
           max_output_tokens: 500,
           instructions,
-          ...(previousResponseId ? { previous_response_id: previousResponseId } : {}),
           input: nextInput,
           ...(tools ? { tools } : {}),
         }),
@@ -574,20 +572,45 @@ export async function createWhatsAppAgentReply(
         return reply
       }
 
-      const outputs = await Promise.all(functionCalls.map(async (call) => ({
-        type: "function_call_output",
-        call_id: call.call_id,
-        output: JSON.stringify(await executeCommerceTool(call.name || "", call.arguments || "{}", {
-          phone: input.phone!,
-          products,
-          commerce: input.commerce!,
-          quotedSkus,
-          lockedSku: lockedProduct?.sku,
-          onDiagnostic: input.onDiagnostic,
-        })),
-      })))
-      previousResponseId = data.id
-      nextInput = outputs
+      if (round === MAX_TOOL_ROUNDS) break
+
+      const outputs: Array<Record<string, unknown>> = []
+      // Una cotización puede habilitar el carrito de la misma respuesta.
+      // Ejecutar en orden también evita repetir efectos en rondas posteriores.
+      for (const call of functionCalls) {
+        if (!call.call_id) throw new Error("missing_tool_call_id")
+        let argumentsKey = call.arguments
+        try {
+          const args = JSON.parse(call.arguments || "{}")
+          argumentsKey = JSON.stringify(args, Object.keys(args).sort())
+        } catch { /* executeCommerceTool devuelve el error de argumentos. */ }
+        const key = `${call.name}:${argumentsKey}`
+        if (!toolResults.has(key)) {
+          const result = await executeCommerceTool(call.name || "", call.arguments || "{}", {
+            phone: input.phone!,
+            products,
+            commerce: input.commerce!,
+            quotedSkus,
+            lockedSku: lockedProduct?.sku,
+            onDiagnostic: input.onDiagnostic,
+          })
+          if (result && typeof result === "object" && "error" in result) {
+            outputs.push({ type: "function_call_output", call_id: call.call_id, output: JSON.stringify(result) })
+            continue
+          }
+          toolResults.set(key, result)
+        }
+        outputs.push({
+          type: "function_call_output",
+          call_id: call.call_id,
+          output: JSON.stringify(toolResults.get(key)),
+        })
+      }
+      nextInput = [
+        ...(typeof nextInput === "string" ? [{ role: "user", content: nextInput }] : nextInput),
+        ...(data.output || []),
+        ...outputs,
+      ]
     }
 
     logAgentDiagnostic("tool_call_round_limit_reached")

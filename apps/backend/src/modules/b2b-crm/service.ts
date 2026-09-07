@@ -26,6 +26,7 @@ import type {
 } from "./types"
 import { recompraMetrics as calculateRecompraMetrics } from "./recompra-metrics"
 import { calculateRfm, type RfmSegment } from "./rfm"
+import { recordRecoveryNotice } from "./recovery-notice"
 
 type AnyB2bCrmService = {
   listCrmCustomerProfiles: (filters?: unknown, config?: unknown) => Promise<any[]>
@@ -788,6 +789,11 @@ class B2bCrmModuleService extends MedusaService({
         payload,
         actor: typeof payload.actor === "object" && payload.actor ? payload.actor as ConversationActor : undefined,
       })
+    }
+
+    if (input.type === "human_handoff" && input.source === "whatsapp_recovery") {
+      const conversation = await this.getOrCreateConversation(phone)
+      await recordRecoveryNotice(this.service_(), conversation, (input.payload || {}) as Record<string, unknown>)
     }
 
     // Al registrar un evento `delivered`, agendar followup NPS a +7 días,

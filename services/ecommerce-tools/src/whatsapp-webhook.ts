@@ -8,13 +8,12 @@
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto"
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises"
-import path from "node:path"
 import type { FastifyInstance, FastifyRequest, FastifyReply } from "fastify"
 import type { AppConfig } from "./config.js"
 import { downloadWhatsappMedia, type WhatsappMediaReference } from "./whatsapp-media.js"
 import type { CustomerEventRecord, Product, PurchasedProduct } from "./types.js"
 import { createWhatsAppAgentReply } from "./whatsapp-agent.js"
+import { InboxProcessingError, WhatsappInbox, type InboxMessage } from "./whatsapp-inbox.js"
 import { advanceWhatsappSale, requiresHuman, type CommerceState } from "./whatsapp-sales-flow.js"
 
 // ---------------------------------------------------------------------------
@@ -59,60 +58,6 @@ export type MetaWebhookEntry = {
 export type MetaWebhookBody = {
   object?: string
   entry?: MetaWebhookEntry[]
-}
-
-const WEBHOOK_DEDUPE_TTL_MS = 7 * 24 * 60 * 60 * 1000
-
-type WebhookDedupeRecord = Record<string, number>
-
-/**
- * Conserva los IDs de Meta ya procesados en el volumen de datos. Meta puede
- * reenviar el mismo evento; sólo el primer recibo puede disparar una respuesta.
- */
-class WebhookMessageDeduper {
-  private readonly filePath: string
-  private readonly ids = new Map<string, number>()
-  private readonly loaded: Promise<void>
-
-  constructor(dataDir: string) {
-    this.filePath = path.join(dataDir, "whatsapp-webhook-dedupe.json")
-    this.loaded = this.load()
-  }
-
-  private async load() {
-    try {
-      const raw = await readFile(this.filePath, "utf8")
-      const records = JSON.parse(raw) as WebhookDedupeRecord
-      for (const [id, at] of Object.entries(records)) {
-        if (Number.isFinite(at) && at > Date.now() - WEBHOOK_DEDUPE_TTL_MS) {
-          this.ids.set(id, at)
-        }
-      }
-    } catch {
-      // El primer arranque no tiene archivo; se crea al aceptar el primer evento.
-    }
-  }
-
-  private async persist() {
-    await mkdir(path.dirname(this.filePath), { recursive: true })
-    const retained = Object.fromEntries(this.ids)
-    const temporary = `${this.filePath}.tmp`
-    await writeFile(temporary, `${JSON.stringify(retained)}\n`, "utf8")
-    await rename(temporary, this.filePath)
-  }
-
-  async claim(messageId: string): Promise<boolean> {
-    await this.loaded
-    if (this.ids.has(messageId)) return false
-
-    const cutoff = Date.now() - WEBHOOK_DEDUPE_TTL_MS
-    for (const [id, at] of this.ids) {
-      if (at < cutoff) this.ids.delete(id)
-    }
-    this.ids.set(messageId, Date.now())
-    await this.persist()
-    return true
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -360,7 +305,130 @@ export function mountWhatsappWebhookRoutes(
   isAiPaused?: (phone: string) => Promise<boolean>,
 ): void {
   const nodeEnv = process.env.NODE_ENV || "development"
-  const deduper = new WebhookMessageDeduper(config.dataDir)
+  const notifyReview = async (message: InboxMessage, reason: string) => {
+    await addCustomerEvent({
+      phone: `+${message.waId}`,
+      type: "human_handoff",
+      at: new Date().toISOString(),
+      source: "whatsapp_recovery",
+      payload: { messageId: message.messageId, reason, text: message.text },
+      metadata: { journeyStage: "revision_humana", whatsappFailureReason: reason },
+    })
+  }
+  const inbox = new WhatsappInbox(config.dataDir, async (message) => {
+    const { waId, text, timestamp, messageId, mediaType, media: mediaReference } = message
+    const optOut = isOptOutText(text)
+    // Se consulta ANTES de registrar el mensaje entrante: así el
+    // historial y el contexto que recibe Vicky (y el followupReason
+    // para NPS) reflejan el estado previo a este turno, sin duplicar
+    // el mensaje actual (ya en camino a guardarse) dentro del propio
+    // prompt.
+    let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
+    if (!optOut && getCustomer) {
+      try {
+        customer = await getCustomer(`+${waId}`)
+      } catch {
+        throw new InboxProcessingError("context_unavailable")
+      }
+    }
+    try {
+      let media
+      if (mediaType && mediaReference) {
+        try { media = await downloadWhatsappMedia(config, mediaType, messageId, mediaReference) }
+        catch (err) { app.log.error({ err, messageId }, "Unable to download WhatsApp media") }
+      }
+      await recordInboundEvent(
+        config,
+        waId,
+        text,
+        timestamp,
+        addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
+        optOut,
+        // Antes decía `customer?.followup_reason` (snake_case): el
+        // campo real es `followupReason` en ambos backends
+        // (`CustomerRecord` local y `serializeCustomer` de Medusa), así
+        // que esto siempre leía `undefined` y la lógica de NPS nunca
+        // detectaba que un cliente estaba en seguimiento NPS.
+        customer?.followupReason,
+        messageId,
+        media,
+      )
+    } catch (err) {
+      throw new InboxProcessingError("inbound_not_recorded")
+    }
+    // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
+    if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
+      const products = await searchProducts(text).catch(() => [])
+      const customerContext = customer ? {
+        purchasedProducts: customer.purchasedProducts,
+        journeyStage: customer.metadata?.journeyStage as string | undefined,
+        nextFollowupAt: customer.nextFollowupAt,
+        followupReason: customer.followupReason ?? undefined,
+      } : undefined
+
+      let replyText: string | null | undefined
+
+      if (requiresHuman(text)) {
+        // Mismo criterio y mismo mensaje que usaba advanceWhatsappSale:
+        // factura, garantía, descuento y similares nunca los resuelve
+        // un agente (regex o IA) sin una persona.
+        replyText = "Para confirmar eso sin inventarte datos, te conecto con una persona del equipo."
+        await addCustomerEvent({ phone: `+${waId}`, type: "human_handoff", at: new Date().toISOString(), source: "whatsapp_ai", payload: {}, metadata: { journeyStage: "revision_humana" } })
+      } else if (commerce && config.whatsappAgentMode === "openai") {
+        // V-3: Vicky cierra la venta por su cuenta (cotiza y crea el
+        // carrito de pago vía tool-calling) en vez de pasar por la
+        // máquina de estados de whatsapp-sales-flow.ts. quote/createCart
+        // ya registran sus propios eventos CRM (quote_created,
+        // cart_link_sent), así que no hace falta duplicarlos acá.
+        replyText = await createWhatsAppAgentReply(config, {
+          text,
+          products,
+          history: customer?.events,
+          customerContext,
+          phone: `+${waId}`,
+          commerce: { quote: commerce.quote, createCart: commerce.createCart },
+          // La traza queda en la conversación CRM y no expone texto,
+          // credenciales ni URLs de carrito. Permite detectar cambios
+          // de SKU, intentos de carrito sin cotización y bloqueos.
+          onDiagnostic: async (diagnostic) => {
+            await addCustomerEvent({
+              phone: `+${waId}`,
+              type: "note",
+              at: new Date().toISOString(),
+              source: "whatsapp_ai_guardrail",
+              payload: { event: diagnostic.event, sku: diagnostic.sku, detail: diagnostic.detail },
+              metadata: { agentGuardrail: diagnostic.event, agentGuardrailSku: diagnostic.sku },
+            })
+          },
+        })
+      } else {
+        // Vicky (IA) apagada: se conserva el flujo determinista como
+        // respaldo, para no dejar la venta sin respuesta si
+        // WHATSAPP_AGENT_MODE no es "openai".
+        const sale = commerce ? await advanceWhatsappSale({
+          text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
+          state: customer?.metadata?.agentCommerce as CommerceState | undefined,
+          quote: commerce.quote,
+          createCart: commerce.createCart,
+        }).catch(() => undefined) : undefined
+        if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
+        replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
+      }
+
+      if (!replyText?.trim()) {
+        await notifyReview(message, "agent_unavailable")
+        replyText = "No pude completar tu consulta ahora. La dejé registrada para que el equipo la revise."
+      }
+      // Una persona puede haber tomado el caso mientras la IA respondía.
+      if (await isAiPaused?.(`+${waId}`)) return
+      const sent = await sendReply({ phone: `+${waId}`, text: replyText })
+      if (sent && typeof sent === "object" && "ok" in sent && sent.ok === false) {
+        throw new InboxProcessingError("reply_failed")
+      }
+    }
+  }, notifyReview, (code) => app.log.error({ code }, "WhatsApp inbox needs attention"))
+  app.addHook("onReady", async () => { await inbox.start() })
+  app.addHook("onClose", async () => { await inbox.close() })
 
   // GET /webhooks/whatsapp — verificación del webhook en Meta
   app.get(
@@ -410,126 +478,18 @@ export function mountWhatsappWebhookRoutes(
 
       const body = request.body as MetaWebhookBody
 
-      // Siempre responder 200 inmediatamente (Meta reintenta si no-2xx)
-      // Procesar de forma async sin bloquear la respuesta
+      // Meta recibe 200 sólo después de persistir los mensajes entrantes.
       const messages = extractInboundMessages(body)
       const mediaMessages = extractInboundMediaMessages(body)
       const statuses = extractMessageStatuses(body)
 
-      // Procesar mensajes en paralelo (fire-and-forget con log de errores)
+      // La cola ordena cada conversación y recupera mensajes tras un reinicio.
       const inbound = [
         ...messages.map((message) => ({ ...message, mediaType: undefined as string | undefined, media: undefined as WhatsappMediaReference | undefined })),
         ...mediaMessages,
       ]
-      Promise.all([
-        ...inbound.map(async ({ waId, text, timestamp, messageId, mediaType, media: mediaReference }) => {
-          if (!(await deduper.claim(messageId))) {
-            app.log.info({ messageId }, "Ignoring duplicate WhatsApp webhook event")
-            return
-          }
-          const optOut = isOptOutText(text)
-          // Se consulta ANTES de registrar el mensaje entrante: así el
-          // historial y el contexto que recibe Vicky (y el followupReason
-          // para NPS) reflejan el estado previo a este turno, sin duplicar
-          // el mensaje actual (ya en camino a guardarse) dentro del propio
-          // prompt.
-          let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
-          if (!optOut && getCustomer) {
-            try {
-              customer = await getCustomer(`+${waId}`)
-            } catch {
-              // No bloquear el procesamiento si falla la búsqueda
-            }
-          }
-          try {
-            let media
-            if (mediaType && mediaReference) {
-              try { media = await downloadWhatsappMedia(config, mediaType, messageId, mediaReference) }
-              catch (err) { app.log.error({ err, messageId }, "Unable to download WhatsApp media") }
-            }
-            await recordInboundEvent(
-              config,
-              waId,
-              text,
-              timestamp,
-              addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
-              optOut,
-              // Antes decía `customer?.followup_reason` (snake_case): el
-              // campo real es `followupReason` en ambos backends
-              // (`CustomerRecord` local y `serializeCustomer` de Medusa), así
-              // que esto siempre leía `undefined` y la lógica de NPS nunca
-              // detectaba que un cliente estaba en seguimiento NPS.
-              customer?.followupReason,
-              messageId,
-              media,
-            )
-          } catch (err) {
-            app.log.error({ err, waId }, "Error recording whatsapp inbound event")
-          }
-          // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
-          if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
-            const products = await searchProducts(text).catch(() => [])
-            const customerContext = customer ? {
-              purchasedProducts: customer.purchasedProducts,
-              journeyStage: customer.metadata?.journeyStage as string | undefined,
-              nextFollowupAt: customer.nextFollowupAt,
-              followupReason: customer.followupReason ?? undefined,
-            } : undefined
-
-            let replyText: string | null | undefined
-
-            if (requiresHuman(text)) {
-              // Mismo criterio y mismo mensaje que usaba advanceWhatsappSale:
-              // factura, garantía, descuento y similares nunca los resuelve
-              // un agente (regex o IA) sin una persona.
-              replyText = "Para confirmar eso sin inventarte datos, te conecto con una persona del equipo."
-              await addCustomerEvent({ phone: `+${waId}`, type: "human_handoff", at: new Date().toISOString(), source: "whatsapp_ai", payload: {}, metadata: { journeyStage: "revision_humana" } })
-            } else if (commerce && config.whatsappAgentMode === "openai") {
-              // V-3: Vicky cierra la venta por su cuenta (cotiza y crea el
-              // carrito de pago vía tool-calling) en vez de pasar por la
-              // máquina de estados de whatsapp-sales-flow.ts. quote/createCart
-              // ya registran sus propios eventos CRM (quote_created,
-              // cart_link_sent), así que no hace falta duplicarlos acá.
-              replyText = await createWhatsAppAgentReply(config, {
-                text,
-                products,
-                history: customer?.events,
-                customerContext,
-                phone: `+${waId}`,
-                commerce: { quote: commerce.quote, createCart: commerce.createCart },
-                // La traza queda en la conversación CRM y no expone texto,
-                // credenciales ni URLs de carrito. Permite detectar cambios
-                // de SKU, intentos de carrito sin cotización y bloqueos.
-                onDiagnostic: async (diagnostic) => {
-                  await addCustomerEvent({
-                    phone: `+${waId}`,
-                    type: "note",
-                    at: new Date().toISOString(),
-                    source: "whatsapp_ai_guardrail",
-                    payload: { event: diagnostic.event, sku: diagnostic.sku, detail: diagnostic.detail },
-                    metadata: { agentGuardrail: diagnostic.event, agentGuardrailSku: diagnostic.sku },
-                  })
-                },
-              })
-            } else {
-              // Vicky (IA) apagada: se conserva el flujo determinista como
-              // respaldo, para no dejar la venta sin respuesta si
-              // WHATSAPP_AGENT_MODE no es "openai".
-              const sale = commerce ? await advanceWhatsappSale({
-                text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
-                state: customer?.metadata?.agentCommerce as CommerceState | undefined,
-                quote: commerce.quote,
-                createCart: commerce.createCart,
-              }).catch(() => undefined) : undefined
-              if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
-              replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
-            }
-
-            if (replyText) {
-              await sendReply({ phone: `+${waId}`, text: replyText })
-            }
-          }
-        }),
+      await inbox.enqueue(inbound)
+      void Promise.all([
         ...statuses.map(async (status) => {
           await addCustomerEvent({
             phone: "status",
