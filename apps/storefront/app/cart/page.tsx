@@ -8,25 +8,10 @@ import { CartItemComponent } from "../components/cart/cart-item"
 import { CartSummary } from "../components/cart/cart-summary"
 import { CheckoutButton } from "../components/cart/checkout-button"
 
-type FormData = {
-  name: string
-  city: string
-}
-
 export default function CartPage() {
-  const { items, loaded, totalAmount, replaceCart, checkoutCustomer } = useCart()
+  const { items, loaded, replaceCart, checkoutCustomer, updateCheckoutCustomer } = useCart()
   const consumedSession = useRef<string | null>(null)
   const [sessionError, setSessionError] = useState("")
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    city: "",
-  })
-
-  useEffect(() => {
-    if (!checkoutCustomer.name && !checkoutCustomer.city) return
-    setFormData({ name: checkoutCustomer.name || "", city: checkoutCustomer.city || "" })
-  }, [checkoutCustomer.city, checkoutCustomer.name])
-
   useEffect(() => {
     const token = new URLSearchParams(window.location.search).get("session")
     if (!token || consumedSession.current === token) return
@@ -52,12 +37,6 @@ export default function CartPage() {
       })
       .catch((error) => setSessionError(error instanceof Error ? error.message : "No se pudo cargar el carrito"))
   }, [replaceCart])
-
-  const handleCheckout = () => {
-    // The CheckoutButton handles tracking and WhatsApp link generation
-    // This function is kept for future extensibility
-    console.log("Checkout initiated via CheckoutButton")
-  }
 
   // Detect vertical from hostname (client-side)
   const isWellness = typeof window !== "undefined" &&
@@ -145,9 +124,9 @@ export default function CartPage() {
                   <input
                     type="text"
                     id="name"
-                    value={formData.name}
+                    value={checkoutCustomer.name || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      updateCheckoutCustomer({ ...checkoutCustomer, name: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-[#E8E2D8] rounded-lg text-[14px] text-[#1A1A18] placeholder-[#6B6B66] focus:outline-none focus:border-[var(--accent)]"
                     placeholder="Ej: María García"
@@ -164,9 +143,9 @@ export default function CartPage() {
                   <input
                     type="text"
                     id="city"
-                    value={formData.city}
+                    value={checkoutCustomer.city || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, city: e.target.value })
+                      updateCheckoutCustomer({ ...checkoutCustomer, city: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-[#E8E2D8] rounded-lg text-[14px] text-[#1A1A18] placeholder-[#6B6B66] focus:outline-none focus:border-[var(--accent)]"
                     placeholder="Ej: Quito"
@@ -176,8 +155,8 @@ export default function CartPage() {
                 <CartSummary />
 
                 <CheckoutButton
-                  customerName={formData.name}
-                  customerCity={formData.city}
+                  customerName={checkoutCustomer.name || ""}
+                  customerCity={checkoutCustomer.city || ""}
                   className="w-full rounded-full bg-[#25D366] px-5 py-3 text-[14px] font-semibold text-white hover:opacity-85 transition-opacity cursor-pointer"
                   label="Cotizar mi carrito por WhatsApp"
                 />

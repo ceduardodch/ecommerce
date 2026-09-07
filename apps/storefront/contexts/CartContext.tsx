@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState, useCallback } from "react"
 import { calculateCartPricing } from "../lib/cart-pricing"
 
 export type CartItem = {
@@ -24,6 +24,7 @@ type CartContextType = {
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
   replaceCart: (items: CartItem[], customer?: { name?: string; city?: string }) => void
+  updateCheckoutCustomer: (customer: { name?: string; city?: string }) => void
   checkoutCustomer: { name?: string; city?: string }
   totalItems: number
   comboEligibleItems: number
@@ -87,8 +88,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, loaded])
 
   useEffect(() => {
-    if (loaded) localStorage.setItem(CART_CUSTOMER_STORAGE_KEY, JSON.stringify(checkoutCustomer))
+    if (!loaded) return
+    try {
+      localStorage.setItem(CART_CUSTOMER_STORAGE_KEY, JSON.stringify(checkoutCustomer))
+    } catch { /* El carrito sigue funcionando si el navegador bloquea el almacenamiento. */ }
   }, [checkoutCustomer, loaded])
+
+  const updateCheckoutCustomer = useCallback((customer: { name?: string; city?: string }) => {
+    setCheckoutCustomer(customer)
+    // Guardar antes de navegar: los enlaces de pago pueden cargar otra página.
+    try {
+      localStorage.setItem(CART_CUSTOMER_STORAGE_KEY, JSON.stringify(customer))
+    } catch { /* Mantener los datos en memoria cuando no hay almacenamiento. */ }
+  }, [])
 
   const addItem = (
     product: Omit<CartItem, "quantity">,
@@ -192,6 +204,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         replaceCart,
         checkoutCustomer,
+        updateCheckoutCustomer,
         totalItems,
         comboEligibleItems,
         subtotalAmount,

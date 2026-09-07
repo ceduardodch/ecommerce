@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useId, type InputHTMLAttributes } from "react"
 import { useCart } from "../../../contexts/CartContext"
 import { trackStorefrontEvent } from "../../components/analytics"
 
@@ -38,15 +38,17 @@ const EMPTY: Form = {
 }
 
 export default function PagoTarjetaPage() {
-  const { items, totalAmount, loaded, unitPriceForItem, checkoutCustomer } = useCart()
+  const { items, totalAmount, loaded, unitPriceForItem, checkoutCustomer, updateCheckoutCustomer } = useCart()
   const [form, setForm] = useState<Form>(EMPTY)
   const [checkout, setCheckout] = useState<CheckoutResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const customerLoaded = useRef(false)
   const widgetRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (!checkoutCustomer.name && !checkoutCustomer.city) return
+    if (!loaded || customerLoaded.current) return
+    customerLoaded.current = true
     const names = (checkoutCustomer.name || "").trim().split(/\s+/)
     setForm((current) => ({
       ...current,
@@ -54,7 +56,18 @@ export default function PagoTarjetaPage() {
       surname: current.surname || names.slice(1).join(" "),
       city: current.city || checkoutCustomer.city || "",
     }))
-  }, [checkoutCustomer.city, checkoutCustomer.name])
+  }, [loaded, checkoutCustomer.city, checkoutCustomer.name])
+
+  const changeForm = (patch: Partial<Form>) => {
+    const next = { ...form, ...patch }
+    setForm(next)
+    if ("givenName" in patch || "middleName" in patch || "surname" in patch || "city" in patch) {
+      updateCheckoutCustomer({
+        name: [next.givenName, next.middleName, next.surname].filter(Boolean).join(" "),
+        city: next.city,
+      })
+    }
+  }
 
   // Inyecta el widget Copy&Pay de Datafast cuando hay checkout real.
   useEffect(() => {
@@ -154,7 +167,9 @@ export default function PagoTarjetaPage() {
     }
   }, [checkout])
 
-  if (loaded && items.length === 0 && !checkout) {
+  if (!loaded) return <Shell><p role="status">Cargando tu pedido…</p></Shell>
+
+  if (items.length === 0 && !checkout) {
     return (
       <Shell>
         <p className="text-[16px] text-[#1A1A18]">Tu carrito está vacío.</p>
@@ -177,6 +192,7 @@ export default function PagoTarjetaPage() {
     "phone",
     "email",
     "street",
+    "city",
   ]
   const missing = required.filter((k) => !form[k].trim())
   // Ecuador: celular de 10 dígitos (09XXXXXXXX) — también acepta +593.
@@ -190,7 +206,7 @@ export default function PagoTarjetaPage() {
     setError(null)
     if (missing.length) {
       setError(
-        "Completa nombre, apellido, cédula, teléfono, email y dirección.",
+        "Completa nombre, apellido, cédula, teléfono, email, dirección y ciudad.",
       )
       return
     }
@@ -280,63 +296,70 @@ export default function PagoTarjetaPage() {
       </p>
 
       {!checkout && (
-        <div className="mt-6 space-y-3">
+        <form className="mt-6 space-y-3" onSubmit={(event) => { event.preventDefault(); void startCheckout() }}>
           <Row>
             <Field
               label="Primer nombre"
+              autoComplete="given-name"
               value={form.givenName}
-              onChange={(v) => setForm({ ...form, givenName: v })}
+              onChange={(v) => changeForm({ givenName: v })}
             />
             <Field
               label="Segundo nombre"
+              autoComplete="additional-name" required={false}
               value={form.middleName}
-              onChange={(v) => setForm({ ...form, middleName: v })}
+              onChange={(v) => changeForm({ middleName: v })}
             />
           </Row>
           <Row>
             <Field
               label="Apellidos"
+              autoComplete="family-name"
               value={form.surname}
-              onChange={(v) => setForm({ ...form, surname: v })}
+              onChange={(v) => changeForm({ surname: v })}
             />
             <Field
               label="Cédula"
+              inputMode="numeric" autoComplete="off"
               value={form.idNumber}
-              onChange={(v) => setForm({ ...form, idNumber: v })}
+              onChange={(v) => changeForm({ idNumber: v })}
             />
           </Row>
           <Row>
             <Field
               label="Teléfono"
+              type="tel" autoComplete="tel"
               value={form.phone}
-              onChange={(v) => setForm({ ...form, phone: v })}
+              onChange={(v) => changeForm({ phone: v })}
             />
             <Field
               label="Email"
+              type="email" autoComplete="email"
               value={form.email}
-              onChange={(v) => setForm({ ...form, email: v })}
+              onChange={(v) => changeForm({ email: v })}
             />
           </Row>
           <Field
             label="Dirección de envío"
+              autoComplete="street-address"
             value={form.street}
-            onChange={(v) => setForm({ ...form, street: v })}
+            onChange={(v) => changeForm({ street: v })}
           />
           <p className="-mt-2 text-[12px] leading-5 text-[#6B6B66]">
             Aquí coordinaremos y entregaremos tu pedido. Incluye calle, número,
             sector y una referencia útil.
           </p>
           <Field
-            label="Ciudad de envío (opcional)"
+            label="Ciudad de envío"
+              autoComplete="address-level2"
             value={form.city}
-            onChange={(v) => setForm({ ...form, city: v })}
+            onChange={(v) => changeForm({ city: v })}
           />
 
-          {error && <p className="text-[13px] text-[#C4502A]">{error}</p>}
+          {error && <p role="alert" className="text-[13px] text-[#C4502A]">{error}</p>}
 
           <button
-            type="button"
-            onClick={startCheckout}
+            type="submit"
             disabled={loading}
             className="w-full rounded-full bg-[var(--accent)] px-5 py-3 text-[14px] font-semibold text-[#FAF7F2] hover:opacity-85 disabled:opacity-50 transition-opacity"
           >
@@ -360,7 +383,7 @@ export default function PagoTarjetaPage() {
           >
             Volver al carrito
           </a>
-        </div>
+        </form>
       )}
 
       {checkout && checkout.provider === "datafast-dry-run" && (
@@ -418,20 +441,26 @@ function Field({
   label,
   value,
   onChange,
+  required = true,
+  ...inputProps
 }: {
   label: string
   value: string
   onChange: (v: string) => void
-}) {
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "value" | "onChange">) {
+  const id = useId()
   return (
     <div>
-      <label className="block text-[13px] font-medium text-[#1A1A18] mb-1">
+      <label htmlFor={id} className="block text-[13px] font-medium text-[#1A1A18] mb-1">
         {label}
       </label>
       <input
+        {...inputProps}
+        id={id}
+        required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-[#E8E2D8] px-3 py-2 text-[14px] text-[#1A1A18] focus:border-[var(--accent)] focus:outline-none"
+        className="w-full rounded-lg border border-[#E8E2D8] px-3 py-2 text-[16px] text-[#1A1A18] focus:border-[var(--accent)] focus:outline-none"
       />
     </div>
   )
