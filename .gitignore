@@ -70,6 +70,9 @@ graphify-out/*
 !graphify-out/cost.json
 !graphify-out/manifest.json
 
+# Credenciales de inspección de producción (nunca se commitean)
+.env.prod.local
+
 # Turbo
 .turbo
 
