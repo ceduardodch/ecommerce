@@ -77,4 +77,20 @@ describe("recuperación del webhook", () => {
     expect(createWhatsAppAgentReply).toHaveBeenCalledOnce()
     expect(send).not.toHaveBeenCalled()
   })
+
+  // La cola reconectó el procesamiento de mensajes entrantes: el handler quedó
+  // en otro archivo que el que edita quien arregla la detección de bajas. Si
+  // volviera a llamar a `isOptOutText` (sólo palabra clave) en lugar de
+  // `isOptOutRequest`, el caso real de la clienta que pidió "Eliminar mi
+  // contacto de sus listas" se perdería otra vez y ningún test de función pura
+  // lo notaría, porque `isOptOutRequest` seguiría estando bien.
+  it("una baja en lenguaje natural se registra aunque pase por la cola", async () => {
+    const { app, event, send } = setup()
+    await app.inject({ method: "POST", url: "/webhooks/whatsapp", payload: { entry: [{ id: "test", changes: [{ field: "messages", value: { messages: [
+      { id: "wamid.baja", from: "593991234567", timestamp: "1788800400", type: "text", text: { body: "Eliminar mi contacto de sus listas" } },
+    ] } }] }] } })
+    await app.close()
+    expect(event).toHaveBeenCalledWith(expect.objectContaining({ type: "opt_out" }))
+    expect(send).not.toHaveBeenCalled()
+  })
 })
