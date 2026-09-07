@@ -426,6 +426,19 @@ export function mountWhatsappWebhookRoutes(
     } catch (err) {
       throw new InboxProcessingError("inbound_not_recorded")
     }
+
+    // Una baja se confirma una vez y se cierra. El texto es fijo a
+    // propósito: cuando esto lo redactaba el agente, le pedía confirmación
+    // a quien ya se había despedido —"¿confirmas que quieres eliminar?"—
+    // y la clienta tuvo que repetirlo cinco veces. Un mensaje fijo no
+    // puede negociar ni volver a preguntar. Tampoco vale quedarse mudo:
+    // quien pide salir merece saber que se hizo.
+    if (optOut && sendReply) {
+      await sendReply({ phone: `+${waId}`, text: OPT_OUT_CONFIRMATION }).catch(
+        (err) => app.log.error({ err, waId }, "Error sending opt-out confirmation"),
+      )
+    }
+
     // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
     if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
       const products = await searchProducts(text).catch(() => [])
@@ -560,128 +573,6 @@ export function mountWhatsappWebhookRoutes(
       ]
       await inbox.enqueue(inbound)
       void Promise.all([
-      Promise.all([
-        ...inbound.map(async ({ waId, text, timestamp, messageId, mediaType, media: mediaReference }) => {
-          if (!(await deduper.claim(messageId))) {
-            app.log.info({ messageId }, "Ignoring duplicate WhatsApp webhook event")
-            return
-          }
-          const optOut = isOptOutRequest(text)
-          // Se consulta ANTES de registrar el mensaje entrante: así el
-          // historial y el contexto que recibe Vicky (y el followupReason
-          // para NPS) reflejan el estado previo a este turno, sin duplicar
-          // el mensaje actual (ya en camino a guardarse) dentro del propio
-          // prompt.
-          let customer: Awaited<ReturnType<NonNullable<typeof getCustomer>>> | undefined
-          if (!optOut && getCustomer) {
-            try {
-              customer = await getCustomer(`+${waId}`)
-            } catch {
-              // No bloquear el procesamiento si falla la búsqueda
-            }
-          }
-          try {
-            let media
-            if (mediaType && mediaReference) {
-              try { media = await downloadWhatsappMedia(config, mediaType, messageId, mediaReference) }
-              catch (err) { app.log.error({ err, messageId }, "Unable to download WhatsApp media") }
-            }
-            await recordInboundEvent(
-              config,
-              waId,
-              text,
-              timestamp,
-              addCustomerEvent as Parameters<typeof recordInboundEvent>[4],
-              optOut,
-              // Antes decía `customer?.followup_reason` (snake_case): el
-              // campo real es `followupReason` en ambos backends
-              // (`CustomerRecord` local y `serializeCustomer` de Medusa), así
-              // que esto siempre leía `undefined` y la lógica de NPS nunca
-              // detectaba que un cliente estaba en seguimiento NPS.
-              customer?.followupReason,
-              messageId,
-              media,
-            )
-          } catch (err) {
-            app.log.error({ err, waId }, "Error recording whatsapp inbound event")
-          }
-
-          // Una baja se confirma una vez y se cierra. El texto es fijo a
-          // propósito: cuando esto lo redactaba el agente, le pedía confirmación
-          // a quien ya se había despedido —"¿confirmas que quieres eliminar?"—
-          // y la clienta tuvo que repetirlo cinco veces. Un mensaje fijo no
-          // puede negociar ni volver a preguntar. Tampoco vale quedarse mudo:
-          // quien pide salir merece saber que se hizo.
-          if (optOut && sendReply) {
-            await sendReply({ phone: `+${waId}`, text: OPT_OUT_CONFIRMATION }).catch(
-              (err) => app.log.error({ err, waId }, "Error sending opt-out confirmation"),
-            )
-          }
-
-          // Un caso tomado por un vendedor no puede disparar una respuesta de Vicky.
-          if (!optOut && searchProducts && sendReply && !(await isAiPaused?.(`+${waId}`))) {
-            const products = await searchProducts(text).catch(() => [])
-            const customerContext = customer ? {
-              purchasedProducts: customer.purchasedProducts,
-              journeyStage: customer.metadata?.journeyStage as string | undefined,
-              nextFollowupAt: customer.nextFollowupAt,
-              followupReason: customer.followupReason ?? undefined,
-            } : undefined
-
-            let replyText: string | null | undefined
-
-            if (requiresHuman(text)) {
-              // Mismo criterio y mismo mensaje que usaba advanceWhatsappSale:
-              // factura, garantía, descuento y similares nunca los resuelve
-              // un agente (regex o IA) sin una persona.
-              replyText = "Para confirmar eso sin inventarte datos, te conecto con una persona del equipo."
-              await addCustomerEvent({ phone: `+${waId}`, type: "human_handoff", at: new Date().toISOString(), source: "whatsapp_ai", payload: {}, metadata: { journeyStage: "revision_humana" } })
-            } else if (commerce && config.whatsappAgentMode === "openai") {
-              // V-3: Vicky cierra la venta por su cuenta (cotiza y crea el
-              // carrito de pago vía tool-calling) en vez de pasar por la
-              // máquina de estados de whatsapp-sales-flow.ts. quote/createCart
-              // ya registran sus propios eventos CRM (quote_created,
-              // cart_link_sent), así que no hace falta duplicarlos acá.
-              replyText = await createWhatsAppAgentReply(config, {
-                text,
-                products,
-                history: customer?.events,
-                customerContext,
-                phone: `+${waId}`,
-                commerce: { quote: commerce.quote, createCart: commerce.createCart },
-                // La traza queda en la conversación CRM y no expone texto,
-                // credenciales ni URLs de carrito. Permite detectar cambios
-                // de SKU, intentos de carrito sin cotización y bloqueos.
-                onDiagnostic: async (diagnostic) => {
-                  await addCustomerEvent({
-                    phone: `+${waId}`,
-                    type: "note",
-                    at: new Date().toISOString(),
-                    source: "whatsapp_ai_guardrail",
-                    payload: { event: diagnostic.event, sku: diagnostic.sku, detail: diagnostic.detail },
-                    metadata: { agentGuardrail: diagnostic.event, agentGuardrailSku: diagnostic.sku },
-                  })
-                },
-              })
-            } else {
-              // Vicky (IA) apagada: se conserva el flujo determinista como
-              // respaldo, para no dejar la venta sin respuesta si
-              // WHATSAPP_AGENT_MODE no es "openai".
-              const sale = commerce ? await advanceWhatsappSale({
-                text, phone: `+${waId}`, products, customer: customer ? { name: customer.name, email: customer.email, metadata: customer.metadata } : undefined,
-                state: customer?.metadata?.agentCommerce as CommerceState | undefined,
-                quote: commerce.quote,
-                createCart: commerce.createCart,
-              }).catch(() => undefined) : undefined
-              if (sale?.state) await addCustomerEvent({ phone: `+${waId}`, type: sale.event || "note", at: new Date().toISOString(), source: "whatsapp_ai", payload: { agentCommerce: sale.state }, metadata: { agentCommerce: sale.state, journeyStage: sale.event === "cart_link_sent" ? "carrito_enviado" : sale.event === "human_handoff" ? "revision_humana" : "cotizacion_pendiente" } })
-              replyText = sale?.text || await createWhatsAppAgentReply(config, { text, products, history: customer?.events, customerContext })
-            }
-
-            if (replyText) {
-              await sendReply({ phone: `+${waId}`, text: replyText })
-            }
-          }
-        }),
         ...statuses.map(async (status) => {
           await addCustomerEvent({
             phone: "status",

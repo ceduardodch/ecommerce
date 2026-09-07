@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { loadConfig } from "../src/config.js"
-import { mountWhatsappWebhookRoutes } from "../src/whatsapp-webhook.js"
+import { mountWhatsappWebhookRoutes, OPT_OUT_CONFIRMATION } from "../src/whatsapp-webhook.js"
 import { createWhatsAppAgentReply } from "../src/whatsapp-agent.js"
 
 vi.mock("../src/whatsapp-agent.js", () => ({ createWhatsAppAgentReply: vi.fn() }))
@@ -84,13 +84,16 @@ describe("recuperación del webhook", () => {
   // `isOptOutRequest`, el caso real de la clienta que pidió "Eliminar mi
   // contacto de sus listas" se perdería otra vez y ningún test de función pura
   // lo notaría, porque `isOptOutRequest` seguiría estando bien.
-  it("una baja en lenguaje natural se registra aunque pase por la cola", async () => {
+  it("una baja en lenguaje natural se registra y se confirma aunque pase por la cola", async () => {
     const { app, event, send } = setup()
     await app.inject({ method: "POST", url: "/webhooks/whatsapp", payload: { entry: [{ id: "test", changes: [{ field: "messages", value: { messages: [
       { id: "wamid.baja", from: "593991234567", timestamp: "1788800400", type: "text", text: { body: "Eliminar mi contacto de sus listas" } },
     ] } }] }] } })
     await app.close()
     expect(event).toHaveBeenCalledWith(expect.objectContaining({ type: "opt_out" }))
-    expect(send).not.toHaveBeenCalled()
+    // Se confirma una vez, con el texto fijo, y no se intenta vender nada más.
+    expect(send).toHaveBeenCalledOnce()
+    expect(send).toHaveBeenCalledWith({ phone: "+593991234567", text: OPT_OUT_CONFIRMATION })
+    expect(createWhatsAppAgentReply).not.toHaveBeenCalled()
   })
 })
